@@ -1,0 +1,71 @@
+require '${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/ruby/openstudio'
+
+m = OpenStudio::Model::Model.new
+
+object_map = Hash.new
+
+all_idd_object_names = m.iddFile.objects.collect {|o| o.name}.reject {|name| name == 'OS:Version'}
+
+file_paths = Dir.glob('${CMAKE_SOURCE_DIR}/model/simulationtests/*.osm')
+
+output = File.new('${CMAKE_BINARY_DIR}/Coverage.csv','w+')
+
+header = 'Class Name,At Least one File'
+
+file_paths.each do |file_path|
+  path = OpenStudio::Path.new(file_path)
+
+  version_translator = OpenStudio::OSVersion::VersionTranslator.new 
+
+  model = version_translator.loadModel(path)
+
+  file_name = path.filename
+
+  if not model.empty? and model.get.isValid(OpenStudio::StrictnessLevel.new('Draft'))
+    object_map[file_name] = model.get.objects.collect {|o| o.iddObject.name }
+  else
+    object_map[file_name] = []
+  end
+end
+
+object_map.keys.sort.each do |file_name|
+  header << ',' << file_name
+end
+
+output << header
+
+output.puts
+
+all_idd_object_names.sort.each do |idd_name|
+  output << idd_name
+
+  output << ','
+
+  match_string = ''
+
+  hit = false;
+
+  object_map.keys.sort.each do |key|
+    idd_object_names = object_map[key]
+    if idd_object_names.include?(idd_name)
+      match_string << 'x ,'
+
+      hit = true;
+    else
+      match_string << ' ,'
+    end
+  end
+
+  if( hit )
+    match_string.insert(0,'x ,')
+  else
+    match_string.insert(0,' ,')
+  end
+
+  output << match_string
+
+  output.puts
+end
+
+output.close
+

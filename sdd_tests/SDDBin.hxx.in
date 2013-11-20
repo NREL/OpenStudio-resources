@@ -1,0 +1,22 @@
+#ifndef MODELBIN_HXX
+#define MODELBIN_HXX
+
+#include <utilities/core/Path.hpp>
+
+struct Paths
+{
+  static openstudio::path testsPath()
+  {
+    return openstudio::toPath("${CMAKE_SOURCE_DIR}/sdd_tests");
+  }
+
+  static openstudio::path testRunPath()
+  {
+    return openstudio::toPath("${CMAKE_BINARY_DIR}/sdd_testruns");
+  }
+
+};
+
+#endif //  MODELBIN_HXX
+
+

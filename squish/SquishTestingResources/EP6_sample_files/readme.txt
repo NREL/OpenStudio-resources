@@ -1,0 +1,1 @@
+For now I'm pulling this from the users local EnergyPlus 6 install, but at some point we may want them on the SVN
