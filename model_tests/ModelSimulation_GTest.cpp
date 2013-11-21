@@ -51,6 +51,74 @@
 #include <Windows.h>
 #endif
 
+std::vector<openstudio::SqlFile> runSimulationNTimes(const std::string t_filename, unsigned N)
+{ 
+  openstudio::path filePath = Paths::testsPath() / openstudio::toPath(t_filename);
+  openstudio::path outdir = Paths::testRunPath(); 
+
+  std::string numString = boost::lexical_cast<std::string>(N);
+
+  outdir /= openstudio::toPath(openstudio::toString(filePath.filename()) + "_" + numString + "Times");
+  boost::filesystem::remove_all(outdir); // Clean up test dir before starting
+  boost::filesystem::create_directories(outdir);
+
+  openstudio::path p(openstudio::toPath("rm.db"));
+
+  openstudio::path db = outdir / p;
+  openstudio::runmanager::RunManager kit(db, true);
+  kit.setPaused(true);
+
+  openstudio::runmanager::Tools tools 
+    = openstudio::runmanager::ConfigOptions::makeTools(
+        energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path(),
+        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+
+  openstudio::path epw = (resourcesPath() / openstudio::toPath("weatherdata") / openstudio::toPath("USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"));
+
+  std::vector<openstudio::runmanager::Job> jobs;
+  for (unsigned i = 0; i < N; ++i){
+
+    openstudio::runmanager::Workflow wf;
+
+    numString = boost::lexical_cast<std::string>(i);
+
+    openstudio::path outdir2 = outdir / openstudio::toPath(numString); 
+
+    boost::filesystem::create_directories(outdir2);
+
+    if (filePath.extension() == openstudio::toPath(".rb"))
+    {
+      openstudio::runmanager::RubyJobBuilder rubyJobBuilder;
+
+      rubyJobBuilder.setScriptFile(filePath);
+      rubyJobBuilder.addToolArgument("-I" + rubyOpenStudioDir()) ;
+      rubyJobBuilder.addToolArgument("-I" + openstudio::toString(sourcePath()) + "/model/simulationtests/") ;
+      rubyJobBuilder.copyRequiredFiles("rb", "osm", "in.epw");
+      rubyJobBuilder.addToWorkflow(wf);
+    }
+
+    wf.addWorkflow(openstudio::runmanager::Workflow("ModelToIdf->EnergyPlus"));
+
+    wf.add(tools);
+    openstudio::runmanager::Job j = wf.create(outdir2, filePath, epw);
+
+    jobs.push_back(j);
+
+    kit.enqueue(j, false);
+  }
+
+  kit.setPaused(false);
+
+  kit.waitForFinished();
+
+  std::vector<openstudio::SqlFile> result;
+  for (unsigned i = 0; i < N; ++i){
+    result.push_back(openstudio::SqlFile(jobs[i].treeAllFiles().getLastByFilename("eplusout.sql").fullPath));
+  }
+
+  return result;
+}
+
 openstudio::SqlFile runSimulation(const std::string t_filename)
 { 
 
@@ -119,6 +187,49 @@ TEST_F(ModelSimulationFixture, baseline_sys01_rb) {
   ASSERT_TRUE(hoursCoolingSetpointNotMet);
   EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
+
+// DLM: Kyle this is a superset of the tests in baseline_sys01_rb, should we combine these?
+TEST_F(ModelSimulationFixture, repeat_baseline_sys01_rb) {
+
+  unsigned N = 4;
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys01.rb", N);
+  ASSERT_EQ(N, sqls.size());
+
+  boost::optional<double> totalSiteEnergy;
+  boost::optional<double> hoursHeatingSetpointNotMet;
+  boost::optional<double> hoursCoolingSetpointNotMet;
+  for (unsigned i = 0; i < N; ++i){
+    if (!totalSiteEnergy){
+      totalSiteEnergy = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      EXPECT_LT(*totalSiteEnergy, 1000000);
+
+      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+    }else{
+      boost::optional<double> test = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+
+      test = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
+
+      test = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
+    }
+  }
+}
+
 
 TEST_F(ModelSimulationFixture, baseline_sys02_rb) {
   openstudio::SqlFile sql = runSimulation("baseline_sys02.rb");
