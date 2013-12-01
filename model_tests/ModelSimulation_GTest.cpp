@@ -940,3 +940,19 @@ TEST_F(ModelSimulationFixture, vrf_osm) {
   ASSERT_TRUE(totalSiteEnergy);
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
+
+TEST_F(ModelSimulationFixture,coolingtowers_rb) {
+  openstudio::SqlFile sql = runSimulation("coolingtowers.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture, coolingtowers_osm) {
+  openstudio::SqlFile sql = runSimulation("coolingtowers.osm");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
