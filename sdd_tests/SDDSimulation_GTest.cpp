@@ -760,4 +760,35 @@ TEST_F(SDDSimulationFixture, 2d_PrimOnly_MultChlr_VarSpdPumps_p_xml) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_ForIssue359_xml) {
+  openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - p_ForIssue359.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_ForIssue359_xml_autosize) {
+  openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - p_ForIssue359.xml",true);
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 00800_Warehouse_CECRef_p_ForIssue366_xml) {
+  openstudio::SqlFile sql = runSimulation("00800-Warehouse-CECRef - p_ForIssue366.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 00800_Warehouse_CECRef_p_ForIssue366_xml_autosize) {
+  openstudio::SqlFile sql = runSimulation("00800-Warehouse-CECRef - p_ForIssue366.xml",true);
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
  
