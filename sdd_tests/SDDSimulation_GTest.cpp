@@ -167,7 +167,6 @@ TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_p_xml) {
 
   boost::optional<openstudio::model::SimulationControl> simulationControl = model->getOptionalUniqueModelObject<openstudio::model::SimulationControl>();
   ASSERT_TRUE(simulationControl);
-  EXPECT_TRUE(simulationControl->runSimulationforSizingPeriods());
   EXPECT_TRUE(simulationControl->runSimulationforWeatherFileRunPeriods());
 
   std::vector<openstudio::model::RunPeriodControlSpecialDays> runPeriodControlSpecialDays = model->getModelObjects<openstudio::model::RunPeriodControlSpecialDays>();
