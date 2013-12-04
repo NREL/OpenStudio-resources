@@ -1814,3 +1814,43 @@ TEST_F(ModelSimulationFixture, vrf_osm) {
     }
   }  
 }
+
+TEST_F(ModelSimulationFixture, interior_partitions_rb) {
+  unsigned N = 4;
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("interior_partitions.rb", N);
+  ASSERT_EQ(N, sqls.size());
+
+  boost::optional<double> totalSiteEnergy;
+  boost::optional<double> hoursHeatingSetpointNotMet;
+  boost::optional<double> hoursCoolingSetpointNotMet;
+  for (unsigned i = 0; i < N; ++i){
+    if (!totalSiteEnergy){
+      totalSiteEnergy = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      EXPECT_LT(*totalSiteEnergy, 1000000);
+
+      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+    }else{
+      boost::optional<double> test = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+
+      test = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
+
+      test = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
+    }
+  }
+}
