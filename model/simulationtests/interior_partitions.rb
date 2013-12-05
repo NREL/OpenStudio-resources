@@ -4,10 +4,10 @@ require 'lib/baseline_model'
 
 model = BaselineModel.new
 
-#make a 1 story, 50m X 50m, 5 zone core/perimeter building
+#make a 2 story, 50m X 50m, 5 zone core/perimeter building
 model.add_geometry({"length" => 50,
               "width" => 50,
-              "num_floors" => 1,
+              "num_floors" => 2,
               "floor_to_floor_height" => 4,
               "plenum_height" => 0,
               "perimeter_zone_depth" => 6})
