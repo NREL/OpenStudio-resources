@@ -45,7 +45,7 @@ interiorConstruction.setName("Interior Partition Construction")
 interiorConstruction.insertLayer(0, interiorMaterial)
 
 # turn this on so we get ugly names and sorting order changes
-model.setFastNaming(true)
+#model.setFastNaming(true)
 
 # add some interior partition surfaces
 fractionOfExteriorSurfaceArea = 0.1
@@ -88,7 +88,7 @@ model.getSpaces.each do |space|
 end
 
 # turn this off
-model.setFastNaming(false)
+#model.setFastNaming(false)
 
 #add windows at a 40% window-to-wall ratio
 model.add_windows({"wwr" => 0.4,
