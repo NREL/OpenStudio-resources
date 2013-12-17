@@ -51,7 +51,7 @@
 #include <Windows.h>
 #endif
 
-std::vector<openstudio::SqlFile> runSimulationNTimes(const std::string t_filename, unsigned N)
+std::vector<openstudio::SqlFile> runSimulationNTimes(const std::string t_filename, unsigned N, const std::string& epwName = "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
 { 
   openstudio::path filePath = Paths::testsPath() / openstudio::toPath(t_filename);
   openstudio::path outdir = Paths::testRunPath(); 
@@ -71,7 +71,7 @@ std::vector<openstudio::SqlFile> runSimulationNTimes(const std::string t_filenam
         energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path(),
         openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
 
-  openstudio::path epw = (resourcesPath() / openstudio::toPath("weatherdata") / openstudio::toPath("USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"));
+  openstudio::path epw = (resourcesPath() / openstudio::toPath("weatherdata") / openstudio::toPath(epwName));
 
   std::vector<openstudio::runmanager::Job> jobs;
   for (unsigned i = 0; i < N; ++i){
@@ -95,7 +95,7 @@ std::vector<openstudio::SqlFile> runSimulationNTimes(const std::string t_filenam
       rubyJobBuilder.addToWorkflow(wf);
     }
 
-    wf.addWorkflow(openstudio::runmanager::Workflow("ModelToIdf->EnergyPlus"));
+    wf.addWorkflow(openstudio::runmanager::Workflow("ModelToIdf->EnergyPlusPreProcess->EnergyPlus"));
 
     wf.add(tools);
     openstudio::runmanager::Job j = wf.create(outdir2, filePath, epw);
@@ -1824,6 +1824,169 @@ TEST_F(ModelSimulationFixture, interior_partitions_rb) {
   boost::optional<double> hoursHeatingSetpointNotMet;
   boost::optional<double> hoursCoolingSetpointNotMet;
   for (unsigned i = 0; i < N; ++i){
+    if (!totalSiteEnergy){
+      totalSiteEnergy = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      EXPECT_LT(*totalSiteEnergy, 1000000);
+
+      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+    }else{
+      boost::optional<double> test = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+
+      test = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
+
+      test = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
+    }
+  }
+}
+
+
+
+TEST_F(ModelSimulationFixture, schedule_ruleset_2012_rb) {
+  unsigned N = 1;
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("schedule_ruleset_2012.rb", N, "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012.epw");
+  ASSERT_EQ(N, sqls.size());
+
+  // from test, schedule name "Test Schedule"
+  // winter design day, 0
+  // summer design day, 1
+  // weekdays, 0.9
+  // weekends, 0.3
+  // 5/28-8/28, 0.1
+
+  boost::optional<double> totalSiteEnergy;
+  boost::optional<double> hoursHeatingSetpointNotMet;
+  boost::optional<double> hoursCoolingSetpointNotMet;
+  for (unsigned i = 0; i < N; ++i){
+
+    // check timeseries data
+    boost::optional<openstudio::TimeSeries> timeSeries;
+    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "Test Schedule"); // DLM: should we handle this internal to SqlFile?
+    EXPECT_TRUE(timeSeries);
+    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "TEST SCHEDULE");
+    ASSERT_TRUE(timeSeries);
+    ASSERT_EQ(24*365, timeSeries->values().size());
+    ASSERT_TRUE(timeSeries->intervalLength());
+    EXPECT_EQ(60, timeSeries->intervalLength()->totalMinutes());
+    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), timeSeries->firstReportDateTime());
+
+    openstudio::DateTime dateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0));
+    openstudio::Vector values = timeSeries->values();
+    for (unsigned j = 0; j < values.size(); ++j){
+      if (dateTime.date() == openstudio::Date(2, 29, 2012)){
+        continue;
+      }
+
+      if (dateTime.time().hours() > 0){
+        if (dateTime.date() >= openstudio::Date(5,28,2012) && dateTime.date() < openstudio::Date(8,28,2012)){
+          EXPECT_EQ(0.1, values[j]) << dateTime << " " << values[j];
+        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Saturday){
+          EXPECT_EQ(0.3, values[j]) << dateTime << " " << values[j];
+        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Sunday){
+          EXPECT_EQ(0.3, values[j]) << dateTime << " " << values[j];
+        }else{
+          EXPECT_EQ(0.9, values[j]) << dateTime << " " << values[j];
+        }
+      }
+
+      dateTime += openstudio::Time(0,1,0,0);
+    }
+
+
+    if (!totalSiteEnergy){
+      totalSiteEnergy = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      EXPECT_LT(*totalSiteEnergy, 1000000);
+
+      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+    }else{
+      boost::optional<double> test = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+
+      test = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
+
+      test = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
+    }
+  }
+}
+
+
+TEST_F(ModelSimulationFixture, schedule_ruleset_2012_LeapYear_rb) {
+  unsigned N = 1;
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("schedule_ruleset_2012.rb", N, "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_LeapYear.epw");
+  ASSERT_EQ(N, sqls.size());
+
+  // from test, schedule name "Test Schedule"
+  // winter design day, 0
+  // summer design day, 1
+  // weekdays, 0.9
+  // weekends, 0.3
+  // 5/28-8/28, 0.1
+
+  boost::optional<double> totalSiteEnergy;
+  boost::optional<double> hoursHeatingSetpointNotMet;
+  boost::optional<double> hoursCoolingSetpointNotMet;
+  for (unsigned i = 0; i < N; ++i){
+
+    // check timeseries data
+    boost::optional<openstudio::TimeSeries> timeSeries;
+    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "Test Schedule"); // DLM: should we handle this internal to SqlFile?
+    EXPECT_TRUE(timeSeries);
+    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "TEST SCHEDULE");
+    ASSERT_TRUE(timeSeries);
+    ASSERT_EQ(24*366, timeSeries->values().size());
+    ASSERT_TRUE(timeSeries->intervalLength());
+    EXPECT_EQ(60, timeSeries->intervalLength()->totalMinutes());
+    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), timeSeries->firstReportDateTime());
+
+    openstudio::DateTime dateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0));
+    openstudio::Vector values = timeSeries->values();
+    for (unsigned j = 0; j < values.size(); ++j){
+      if (dateTime.time().hours() > 0){
+        if (dateTime.date() >= openstudio::Date(5,28,2012) && dateTime.date() < openstudio::Date(8,28,2012)){
+          EXPECT_EQ(0.1, values[j]) << dateTime << " " << values[j];
+        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Saturday){
+          EXPECT_EQ(0.3, values[j]) << dateTime << " " << values[j];
+        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Sunday){
+          EXPECT_EQ(0.3, values[j]) << dateTime << " " << values[j];
+        }else{
+          EXPECT_EQ(0.9, values[j]) << dateTime << " " << values[j];
+        }
+      }
+
+      dateTime += openstudio::Time(0,1,0,0);
+    }
+
+
     if (!totalSiteEnergy){
       totalSiteEnergy = sqls[i].totalSiteEnergy();
       ASSERT_TRUE(totalSiteEnergy);

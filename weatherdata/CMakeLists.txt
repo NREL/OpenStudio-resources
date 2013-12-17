@@ -9,6 +9,9 @@ SET(WEATHERDATA_OUTPUTS "")
 SET(weatherdata_resources_src
   USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw
   USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.ddy
+  USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012.epw
+  USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_LeapYear.epw
+  USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2013.epw
 )
 
 
