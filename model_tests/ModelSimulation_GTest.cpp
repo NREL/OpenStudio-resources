@@ -1885,22 +1885,38 @@ TEST_F(ModelSimulationFixture, schedule_ruleset_2012_NonLeapYear_rb) {
     EXPECT_EQ(60, timeSeries->intervalLength()->totalMinutes());
     EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), timeSeries->firstReportDateTime());
 
+    boost::optional<openstudio::TimeSeries> dayTypeTimeSeries;
+    dayTypeTimeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Site Day Type Index", "Environment");
+    ASSERT_TRUE(dayTypeTimeSeries);
+    ASSERT_EQ(24*365, dayTypeTimeSeries->values().size());
+    ASSERT_TRUE(dayTypeTimeSeries->intervalLength());
+    EXPECT_EQ(60, dayTypeTimeSeries->intervalLength()->totalMinutes());
+    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), dayTypeTimeSeries->firstReportDateTime());
+
     openstudio::DateTime dateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0));
     openstudio::Vector values = timeSeries->values();
+    openstudio::Vector dayTypeValues = dayTypeTimeSeries->values();
     for (unsigned j = 0; j < values.size(); ++j){
-      if (dateTime.date() == openstudio::Date(2, 29, 2012)){
-        continue;
-      }
 
       if (dateTime.time().hours() > 0){
+
+        EXPECT_EQ(dateTime.date().dayOfWeek().value(), dayTypeValues[j] - 1);
+
+        double expectedValue = 0;
         if (dateTime.date() >= openstudio::Date(5,28,2012) && dateTime.date() <= openstudio::Date(8,28,2012)){
-          EXPECT_EQ(0.1, values[j]) << dateTime << " " << values[j];
+          expectedValue = 0.1;
         }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Saturday){
-          EXPECT_EQ(0.3, values[j]) << dateTime << " " << values[j];
+          expectedValue = 0.3;
         }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Sunday){
-          EXPECT_EQ(0.3, values[j]) << dateTime << " " << values[j];
+          expectedValue = 0.3;
         }else{
-          EXPECT_EQ(0.9, values[j]) << dateTime << " " << values[j];
+          expectedValue = 0.9;
+        }
+
+        EXPECT_EQ(expectedValue, values[j]) << dateTime << " " << values[j];
+
+        if (expectedValue == values[j]){
+          std::cout << "Got it right! " << dateTime << " " << values[j];
         }
       }
 
@@ -1925,6 +1941,7 @@ TEST_F(ModelSimulationFixture, schedule_ruleset_2012_NonLeapYear_rb) {
       ASSERT_TRUE(totalSiteEnergy);
       ASSERT_TRUE(test);
       EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+
 
       test = sqls[i].hoursHeatingSetpointNotMet();
       ASSERT_TRUE(hoursHeatingSetpointNotMet);
@@ -1972,14 +1989,22 @@ TEST_F(ModelSimulationFixture, schedule_ruleset_2012_LeapYear_rb) {
     openstudio::Vector values = timeSeries->values();
     for (unsigned j = 0; j < values.size(); ++j){
       if (dateTime.time().hours() > 0){
+
+        double expectedValue = 0;
         if (dateTime.date() >= openstudio::Date(5,28,2012) && dateTime.date() <= openstudio::Date(8,28,2012)){
-          EXPECT_EQ(0.1, values[j]) << dateTime << " " << values[j];
+          expectedValue = 0.1;
         }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Saturday){
-          EXPECT_EQ(0.3, values[j]) << dateTime << " " << values[j];
+          expectedValue = 0.3;
         }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Sunday){
-          EXPECT_EQ(0.3, values[j]) << dateTime << " " << values[j];
+          expectedValue = 0.3;
         }else{
-          EXPECT_EQ(0.9, values[j]) << dateTime << " " << values[j];
+          expectedValue = 0.9;
+        }
+
+        EXPECT_EQ(expectedValue, values[j]) << dateTime << " " << values[j];
+
+        if (expectedValue == values[j]){
+          std::cout << "Got it right! " << dateTime << " " << values[j];
         }
       }
 
@@ -2050,14 +2075,22 @@ TEST_F(ModelSimulationFixture, schedule_ruleset_2013_rb) {
     openstudio::Vector values = timeSeries->values();
     for (unsigned j = 0; j < values.size(); ++j){
       if (dateTime.time().hours() > 0){
-        if (dateTime.date() >= openstudio::Date(5,28,2013) && dateTime.date() <= openstudio::Date(8,28,2013)){
-          EXPECT_EQ(0.1, values[j]) << dateTime << " " << values[j];
+
+        double expectedValue = 0;
+        if (dateTime.date() >= openstudio::Date(5,28,2012) && dateTime.date() <= openstudio::Date(8,28,2012)){
+          expectedValue = 0.1;
         }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Saturday){
-          EXPECT_EQ(0.3, values[j]) << dateTime << " " << values[j];
+          expectedValue = 0.3;
         }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Sunday){
-          EXPECT_EQ(0.3, values[j]) << dateTime << " " << values[j];
+          expectedValue = 0.3;
         }else{
-          EXPECT_EQ(0.9, values[j]) << dateTime << " " << values[j];
+          expectedValue = 0.9;
+        }
+
+        EXPECT_EQ(expectedValue, values[j]) << dateTime << " " << values[j];
+
+        if (expectedValue == values[j]){
+          std::cout << "Got it right! " << dateTime << " " << values[j] << std::endl;
         }
       }
 
