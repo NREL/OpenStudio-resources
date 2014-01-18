@@ -207,6 +207,43 @@ class BaselineModel < OpenStudio::Model::Model
     end
   
   end
+  
+  def add_daylighting(params)
+    
+    self.getThermalZones.each do |zone|
+      biggestWindow = nil
+      zone.spaces.each do |space|
+        space.surfaces.each do |surface|
+          if surface.surfaceType == "Wall" and surface.outsideBoundaryCondition == "Outdoors" 
+            surface.subSurfaces.each do |subSurface|
+              if subSurface.subSurfaceType == "FixedWindow" or subSurface.subSurfaceType == "OperableWindow"
+                if biggestWindow.nil? or subSurface.netArea > biggestWindow.netArea
+                  biggestWindow = subSurface
+                end
+              end
+            end
+          end
+        end
+      end
+      
+      if biggestWindow
+        vertices = biggestWindow.vertices
+        centroid = OpenStudio::getCentroid(vertices).get
+        outwardNormal = biggestWindow.outwardNormal
+        outwardNormal.setLength(-10.0)
+        position = centroid + outwardNormal
+        
+        dc = OpenStudio::Model::DaylightingControl.new(self)
+        dc.setSpace(biggestWindow.surface.get.space.get)
+        dc.setPositionXCoordinate(centroid.x)
+        dc.setPositionXCoordinate(centroid.y)
+        dc.setPositionXCoordinate(centroid.z)
+        zone.setPrimaryDaylightingControl(dc)
+        
+      end
+    end
+    
+  end
 
   def add_hvac(params)
     sys_num = params["ashrae_sys_num"]
