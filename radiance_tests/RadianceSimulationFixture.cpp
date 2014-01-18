@@ -21,15 +21,27 @@
 
 #include <utilities/core/FileLogSink.hpp>
 #include <utilities/core/Path.hpp>
+#include <utilities/core/ApplicationPathHelpers.hpp>
+
+#include <openstudio_lib/FileOperations.hpp>
+
+#include <OpenStudio.hxx>
 
 void RadianceSimulationFixture::SetUp() {}
 
 void RadianceSimulationFixture::TearDown() {}
 
 void RadianceSimulationFixture::SetUpTestCase() {
+
   // set up logging
   logFile = openstudio::FileLogSink(openstudio::toPath("./RadianceTestFixture.log"));
   logFile->setLogLevel(Debug);
+
+  // have to copy ruby libs to where getOpenStudioRubyScriptsPath thinks they are
+  QString src = openstudio::toQString(rubyLibDir());
+  QString dest = openstudio::toQString(openstudio::getOpenStudioRubyScriptsPath());
+  bool test = openstudio::copyDir(src, dest);
+  ASSERT_TRUE(test);
 }
 
 void RadianceSimulationFixture::TearDownTestCase() {}

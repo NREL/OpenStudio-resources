@@ -17,9 +17,6 @@ model.add_windows({"wwr" => 0.4,
                   "offset" => 1,
                   "application_type" => "Above Floor"})
                   
-# add daylighting
-model.add_daylighting({})
-
 #add ASHRAE System type 01, PTAC, Residential
 model.add_hvac({"ashrae_sys_num" => '01'})
 
@@ -35,7 +32,10 @@ model.set_space_type()
 
 #add design days to the model (Chicago)
 model.add_design_days()
-       
+
+# add daylighting
+model.add_daylighting({"shades" => false})
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "out.osm"})

@@ -209,6 +209,9 @@ class BaselineModel < OpenStudio::Model::Model
   end
   
   def add_daylighting(params)
+    shades = params["shades"]
+    
+    shading_control_hash = Hash.new
     
     self.getThermalZones.each do |zone|
       biggestWindow = nil
@@ -219,6 +222,18 @@ class BaselineModel < OpenStudio::Model::Model
               if subSurface.subSurfaceType == "FixedWindow" or subSurface.subSurfaceType == "OperableWindow"
                 if biggestWindow.nil? or subSurface.netArea > biggestWindow.netArea
                   biggestWindow = subSurface
+                end 
+                
+                if shades
+                  construction = subSurface.construction.get
+                  shading_control = shading_control_hash[construction.handle.to_s]
+                  if not shading_control
+                    material = OpenStudio::Model::Blind.new(self)
+                    shading_control = OpenStudio::Model::ShadingControl.new(material)
+                    shading_control_hash[construction.handle.to_s] = shading_control
+                  end
+                  subSurface.setShadingControl(shading_control)
+                  
                 end
               end
             end
@@ -230,14 +245,17 @@ class BaselineModel < OpenStudio::Model::Model
         vertices = biggestWindow.vertices
         centroid = OpenStudio::getCentroid(vertices).get
         outwardNormal = biggestWindow.outwardNormal
-        outwardNormal.setLength(-10.0)
+        outwardNormal.setLength(-2.0)
         position = centroid + outwardNormal
+        offsetX = 0.0
+        offsetY = 0.0
+        offsetZ = -1.0
         
         dc = OpenStudio::Model::DaylightingControl.new(self)
         dc.setSpace(biggestWindow.surface.get.space.get)
-        dc.setPositionXCoordinate(centroid.x)
-        dc.setPositionXCoordinate(centroid.y)
-        dc.setPositionXCoordinate(centroid.z)
+        dc.setPositionXCoordinate(position.x + offsetX)
+        dc.setPositionYCoordinate(position.y + offsetY)
+        dc.setPositionZCoordinate(position.z + offsetZ)
         zone.setPrimaryDaylightingControl(dc)
         
       end

@@ -187,6 +187,7 @@ SET(OPENSTUDIO_LIBS
   openstudio_analysisdriver
   openstudio_sdd
   openstudio_ruleset
+  openstudio_lib
 )
 
 if( BUILD_RULESENGINE_TESTS )
@@ -344,6 +345,8 @@ endif( BUILD_CONTAM_TESTS )
 if( BUILD_RADIANCE_TESTS )
   FIND_PROGRAM( RADIANCE_EXECUTABLE NAMES rad )
   add_subdirectory( radiance_tests )
+  
+  # copy radiance ruby files?
 endif( BUILD_RADIANCE_TESTS )
 
 if( BUILD_RUBY_TESTS )

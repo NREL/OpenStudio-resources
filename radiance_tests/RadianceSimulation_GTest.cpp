@@ -67,7 +67,7 @@ std::vector<openstudio::SqlFile> runSimulationNTimes(const std::string t_filenam
 
   openstudio::runmanager::Tools tools 
     = openstudio::runmanager::ConfigOptions::makeTools(
-        energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path(),
+        energyPlusExePath().parent_path(), openstudio::path(), Paths::radPath().parent_path(), rubyExePath().parent_path(), openstudio::path(),
         openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
 
   openstudio::path epw = (resourcesPath() / openstudio::toPath("weatherdata") / openstudio::toPath(epwName));
@@ -94,7 +94,7 @@ std::vector<openstudio::SqlFile> runSimulationNTimes(const std::string t_filenam
       rubyJobBuilder.addToWorkflow(wf);
     }
 
-    openstudio::runmanager::WorkItem radItem = openstudio::runmanager::Workflow::radianceDaylightCalculations(openstudio::getOpenStudioRubyIncludePath(), Paths::radPath());
+    openstudio::runmanager::WorkItem radItem = openstudio::runmanager::Workflow::radianceDaylightCalculations(openstudio::toPath(rubyOpenStudioDir()), Paths::radPath().parent_path());
     wf.addJob(radItem);
 
     wf.addWorkflow(openstudio::runmanager::Workflow("ModelToIdf->EnergyPlusPreProcess->EnergyPlus"));
