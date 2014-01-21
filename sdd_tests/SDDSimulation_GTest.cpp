@@ -188,7 +188,6 @@ TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_p_xml) {
 
   boost::optional<openstudio::model::SimulationControl> simulationControl = model->getOptionalUniqueModelObject<openstudio::model::SimulationControl>();
   ASSERT_TRUE(simulationControl);
-  EXPECT_TRUE(simulationControl->runSimulationforSizingPeriods());
   EXPECT_TRUE(simulationControl->runSimulationforWeatherFileRunPeriods());
 
   std::vector<openstudio::model::RunPeriodControlSpecialDays> runPeriodControlSpecialDays = model->getModelObjects<openstudio::model::RunPeriodControlSpecialDays>();
@@ -2205,4 +2204,35 @@ TEST_F(SDDSimulationFixture, 2d_PrimOnly_MultChlr_VarSpdPumps_p_xml) {
   }
 }
 
+TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_ForIssue359_xml) {
+  openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - p_ForIssue359.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_ForIssue359_xml_autosize) {
+  openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - p_ForIssue359.xml",true);
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 00800_Warehouse_CECRef_p_ForIssue366_xml) {
+  openstudio::SqlFile sql = runSimulation("00800-Warehouse-CECRef - p_ForIssue366.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 00800_Warehouse_CECRef_p_ForIssue366_xml_autosize) {
+  openstudio::SqlFile sql = runSimulation("00800-Warehouse-CECRef - p_ForIssue366.xml",true);
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
  
