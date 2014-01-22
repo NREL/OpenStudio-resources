@@ -89,6 +89,7 @@ std::vector<openstudio::SqlFile> runSimulationNTimes(const std::string t_filenam
 
       rubyJobBuilder.setScriptFile(filePath);
       rubyJobBuilder.addToolArgument("-I" + rubyOpenStudioDir()) ;
+      rubyJobBuilder.addToolArgument("-I" + rubyLibDir()) ;
       rubyJobBuilder.addToolArgument("-I" + openstudio::toString(sourcePath()) + "/model/simulationtests/") ;
       rubyJobBuilder.copyRequiredFiles("rb", "osm", "in.epw");
       rubyJobBuilder.addToWorkflow(wf);
