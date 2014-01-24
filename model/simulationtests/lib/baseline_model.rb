@@ -258,6 +258,15 @@ class BaselineModel < OpenStudio::Model::Model
         dc.setPositionZCoordinate(position.z + offsetZ)
         zone.setPrimaryDaylightingControl(dc)
         
+        ill = OpenStudio::Model::IlluminanceMap.new(self)
+        ill.setSpace(biggestWindow.surface.get.space.get)
+        ill.setOriginXCoordinate(position.x + offsetX - 0.5)
+        ill.setOriginYCoordinate(position.y + offsetY - 0.5)
+        ill.setOriginZCoordinate(position.z + offsetZ)
+        ill.setXLength(1)
+        ill.setYLength(1)
+        zone.setIlluminanceMap(ill)
+  
       end
     end
     
