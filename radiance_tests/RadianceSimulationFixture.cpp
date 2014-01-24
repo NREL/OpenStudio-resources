@@ -27,6 +27,8 @@
 
 #include <OpenStudio.hxx>
 
+#include <QDir>
+
 void RadianceSimulationFixture::SetUp() {}
 
 void RadianceSimulationFixture::TearDown() {}
@@ -38,10 +40,12 @@ void RadianceSimulationFixture::SetUpTestCase() {
   logFile->setLogLevel(Debug);
 
   // have to copy ruby libs to where getOpenStudioRubyScriptsPath thinks they are
-  QString src = openstudio::toQString(rubyLibDir());
-  QString dest = openstudio::toQString(openstudio::getOpenStudioRubyScriptsPath());
-  bool test = openstudio::copyDir(src, dest);
-  ASSERT_TRUE(test);
+  QString src = QDir(openstudio::toQString(rubyLibDir())).canonicalPath();
+  QString dest = QDir(openstudio::toQString(openstudio::getOpenStudioRubyScriptsPath())).canonicalPath();
+  if (src != dest){
+    bool test = openstudio::copyDir(src, dest);
+    ASSERT_TRUE(test);
+  }
 }
 
 void RadianceSimulationFixture::TearDownTestCase() {}
