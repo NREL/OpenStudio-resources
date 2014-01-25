@@ -139,655 +139,655 @@ openstudio::SqlFile runSimulation(const std::string t_filename, const bool maste
   return openstudio::SqlFile(j.treeAllFiles().getLastByFilename("eplusout.sql").fullPath);
 }
 
-TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_p_xml) {
-
-  openstudio::path inputPath = Paths::testsPath() / openstudio::toPath("00100-SchoolPrimary-CustomStd - p.xml");
-
-  openstudio::sdd::ReverseTranslator reverseTranslator;
-  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
-  ASSERT_TRUE(model);
-
-  openstudio::model::Building building = model->getUniqueModelObject<openstudio::model::Building>();
-  EXPECT_EQ(0.0, building.northAxis());
-  EXPECT_FALSE(building.isNorthAxisDefaulted());
-
-  boost::optional<openstudio::model::RunPeriod> runPeriod = model->getOptionalUniqueModelObject<openstudio::model::RunPeriod>();
-  ASSERT_TRUE(runPeriod);
-  EXPECT_EQ(1, runPeriod->getBeginMonth());
-  EXPECT_EQ(1, runPeriod->getBeginDayOfMonth());
-  EXPECT_EQ(12, runPeriod->getEndMonth());
-  EXPECT_EQ(31, runPeriod->getEndDayOfMonth());
-  EXPECT_FALSE(runPeriod->getUseWeatherFileHolidays());
-  EXPECT_FALSE(runPeriod->getUseWeatherFileDaylightSavings());
-  EXPECT_TRUE(runPeriod->getApplyWeekendHolidayRule());
-
-  boost::optional<openstudio::model::YearDescription> yearDescription = model->getOptionalUniqueModelObject<openstudio::model::YearDescription>();
-  ASSERT_TRUE(yearDescription);
-  EXPECT_EQ(2009, yearDescription->calendarYear());
-
-  boost::optional<openstudio::model::SimulationControl> simulationControl = model->getOptionalUniqueModelObject<openstudio::model::SimulationControl>();
-  ASSERT_TRUE(simulationControl);
-  EXPECT_TRUE(simulationControl->runSimulationforWeatherFileRunPeriods());
-
-  std::vector<openstudio::model::RunPeriodControlSpecialDays> runPeriodControlSpecialDays = model->getModelObjects<openstudio::model::RunPeriodControlSpecialDays>();
-  EXPECT_EQ(10u, runPeriodControlSpecialDays.size());
-
-  openstudio::SqlFile sql = runSimulation("00100-SchoolPrimary-CustomStd - p.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_p_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00100-SchoolPrimary-CustomStd - p.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_b_xml) {
-  openstudio::SqlFile sql = runSimulation("00100-SchoolPrimary-CustomStd - b.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_b_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00100-SchoolPrimary-CustomStd - b.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_bz_xml) {
-  openstudio::SqlFile sql = runSimulation("00100-SchoolPrimary-CustomStd - bz.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00101_SchoolPrimary_CustomProp_p_xml) {
-  openstudio::SqlFile sql = runSimulation("00101-SchoolPrimary-CustomProp - p.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00101_SchoolPrimary_CustomProp_p_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00101-SchoolPrimary-CustomProp - p.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00101_SchoolPrimary_CustomProp_b_xml) {
-  openstudio::SqlFile sql = runSimulation("00101-SchoolPrimary-CustomProp - b.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00101_SchoolPrimary_CustomProp_b_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00101-SchoolPrimary-CustomProp - b.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00101_SchoolPrimary_CustomProp_bz_xml) {
-  openstudio::SqlFile sql = runSimulation("00101-SchoolPrimary-CustomProp - bz.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_xml) {
-  openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - p.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - p.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_b_xml) {
-  openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - b.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_b_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - b.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_bz_xml) {
-  openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - bz.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00103_SchoolPrimary_CustomProp_p_xml) {
-  openstudio::SqlFile sql = runSimulation("00103-SchoolPrimary-CustomProp - p.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00103_SchoolPrimary_CustomProp_p_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00103-SchoolPrimary-CustomProp - p.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00103_SchoolPrimary_CustomProp_b_xml) {
-  openstudio::SqlFile sql = runSimulation("00103-SchoolPrimary-CustomProp - b.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00103_SchoolPrimary_CustomProp_b_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00103-SchoolPrimary-CustomProp - b.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00103_SchoolPrimary_CustomProp_bz_xml) {
-  openstudio::SqlFile sql = runSimulation("00103-SchoolPrimary-CustomProp - bz.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00200_OfficeSmall_CECRefProp_p_xml) {
-  openstudio::SqlFile sql = runSimulation("00200-OfficeSmall-CECRefProp - p.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00200_OfficeSmall_CECRefProp_p_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00200-OfficeSmall-CECRefProp - p.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00200_OfficeSmall_CECRefProp_b_xml) {
-  openstudio::SqlFile sql = runSimulation("00200-OfficeSmall-CECRefProp - b.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00200_OfficeSmall_CECRefProp_b_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00200-OfficeSmall-CECRefProp - b.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00200_OfficeSmall_CECRefProp_bz_xml) {
-  openstudio::SqlFile sql = runSimulation("00200-OfficeSmall-CECRefProp - bz.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00300_OfficeMedium_CECRefProp_p_xml) {
-  openstudio::SqlFile sql = runSimulation("00300-OfficeMedium-CECRefProp - p.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00300_OfficeMedium_CECRefProp_p_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00300-OfficeMedium-CECRefProp - p.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00300_OfficeMedium_CECRefProp_b_xml) {
-  openstudio::SqlFile sql = runSimulation("00300-OfficeMedium-CECRefProp - b.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00300_OfficeMedium_CECRefProp_b_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00300-OfficeMedium-CECRefProp - b.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00300_OfficeMedium_CECRefProp_bz_xml) {
-  openstudio::SqlFile sql = runSimulation("00300-OfficeMedium-CECRefProp - bz.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00400_OfficeLarge_CECRefProp_p_xml) {
-  openstudio::SqlFile sql = runSimulation("00400-OfficeLarge-CECRefProp - p.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00400_OfficeLarge_CECRefProp_p_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00400-OfficeLarge-CECRefProp - p.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00400_OfficeLarge_CECRefProp_b_xml) {
-  openstudio::SqlFile sql = runSimulation("00400-OfficeLarge-CECRefProp - b.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00400_OfficeLarge_CECRefProp_b_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00400-OfficeLarge-CECRefProp - b.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00400_OfficeLarge_CECRefProp_bz_xml) {
-  openstudio::SqlFile sql = runSimulation("00400-OfficeLarge-CECRefProp - bz.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00401_OfficeLarge_BlrsChlrsProp_p_xml) {
-  openstudio::SqlFile sql = runSimulation("00401-OfficeLarge-BlrsChlrsProp - p.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00401_OfficeLarge_BlrsChlrsProp_p_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00401-OfficeLarge-BlrsChlrsProp - p.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00401_OfficeLarge_BlrsChlrsProp_b_xml) {
-  openstudio::SqlFile sql = runSimulation("00401-OfficeLarge-BlrsChlrsProp - b.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00401_OfficeLarge_BlrsChlrsProp_b_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00401-OfficeLarge-BlrsChlrsProp - b.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00401_OfficeLarge_BlrsChlrsProp_bz_xml) {
-  openstudio::SqlFile sql = runSimulation("00401-OfficeLarge-BlrsChlrsProp - bz.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00500_RetailStandAlone_CECRefProp_p_xml) {
-  openstudio::SqlFile sql = runSimulation("00500-RetailStandAlone-CECRefProp - p.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00500_RetailStandAlone_CECRefProp_p_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00500-RetailStandAlone-CECRefProp - p.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00500_RetailStandAlone_CECRefProp_b_xml) {
-  openstudio::SqlFile sql = runSimulation("00500-RetailStandAlone-CECRefProp - b.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00500_RetailStandAlone_CECRefProp_b_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00500-RetailStandAlone-CECRefProp - b.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00500_RetailStandAlone_CECRefProp_bz_xml) {
-  openstudio::SqlFile sql = runSimulation("00500-RetailStandAlone-CECRefProp - bz.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00700_HotelSmall_CECRef_b_xml) {
-  openstudio::SqlFile sql = runSimulation("00700-HotelSmall-CECRef - b.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-}
-
-TEST_F(SDDSimulationFixture, 00700_HotelSmall_CECRef_b_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00700-HotelSmall-CECRef - b.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-}
-
-TEST_F(SDDSimulationFixture, 00700_HotelSmall_CECRef_p_xml) {
-  openstudio::SqlFile sql = runSimulation("00700-HotelSmall-CECRef - p.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-}
-
-TEST_F(SDDSimulationFixture, 00700_HotelSmall_CECRef_p_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00700-HotelSmall-CECRef - p.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-}
-
-TEST_F(SDDSimulationFixture, 00700_HotelSmall_CECRef_bz_xml) {
-  openstudio::SqlFile sql = runSimulation("00700-HotelSmall-CECRef - bz.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-}
-
-TEST_F(SDDSimulationFixture, 2d_PrimOnly_MultChlr_VarSpdPumps_p_xml) {
-  openstudio::SqlFile sql = runSimulation("2d-PrimOnly_MultChlr_VarSpdPumps - p.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-}
-
-TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_ForIssue359_xml) {
-  openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - p_ForIssue359.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-}
-
-TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_ForIssue359_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - p_ForIssue359.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-}
-
-TEST_F(SDDSimulationFixture, 00800_Warehouse_CECRef_p_ForIssue366_xml) {
-  openstudio::SqlFile sql = runSimulation("00800-Warehouse-CECRef - p_ForIssue366.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-}
-
-TEST_F(SDDSimulationFixture, 00800_Warehouse_CECRef_p_ForIssue366_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00800-Warehouse-CECRef - p_ForIssue366.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-}
+// TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_p_xml) {
+// 
+//   openstudio::path inputPath = Paths::testsPath() / openstudio::toPath("00100-SchoolPrimary-CustomStd - p.xml");
+// 
+//   openstudio::sdd::ReverseTranslator reverseTranslator;
+//   boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+//   ASSERT_TRUE(model);
+// 
+//   openstudio::model::Building building = model->getUniqueModelObject<openstudio::model::Building>();
+//   EXPECT_EQ(0.0, building.northAxis());
+//   EXPECT_FALSE(building.isNorthAxisDefaulted());
+// 
+//   boost::optional<openstudio::model::RunPeriod> runPeriod = model->getOptionalUniqueModelObject<openstudio::model::RunPeriod>();
+//   ASSERT_TRUE(runPeriod);
+//   EXPECT_EQ(1, runPeriod->getBeginMonth());
+//   EXPECT_EQ(1, runPeriod->getBeginDayOfMonth());
+//   EXPECT_EQ(12, runPeriod->getEndMonth());
+//   EXPECT_EQ(31, runPeriod->getEndDayOfMonth());
+//   EXPECT_FALSE(runPeriod->getUseWeatherFileHolidays());
+//   EXPECT_FALSE(runPeriod->getUseWeatherFileDaylightSavings());
+//   EXPECT_TRUE(runPeriod->getApplyWeekendHolidayRule());
+// 
+//   boost::optional<openstudio::model::YearDescription> yearDescription = model->getOptionalUniqueModelObject<openstudio::model::YearDescription>();
+//   ASSERT_TRUE(yearDescription);
+//   EXPECT_EQ(2009, yearDescription->calendarYear());
+// 
+//   boost::optional<openstudio::model::SimulationControl> simulationControl = model->getOptionalUniqueModelObject<openstudio::model::SimulationControl>();
+//   ASSERT_TRUE(simulationControl);
+//   EXPECT_TRUE(simulationControl->runSimulationforWeatherFileRunPeriods());
+// 
+//   std::vector<openstudio::model::RunPeriodControlSpecialDays> runPeriodControlSpecialDays = model->getModelObjects<openstudio::model::RunPeriodControlSpecialDays>();
+//   EXPECT_EQ(10u, runPeriodControlSpecialDays.size());
+// 
+//   openstudio::SqlFile sql = runSimulation("00100-SchoolPrimary-CustomStd - p.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_p_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00100-SchoolPrimary-CustomStd - p.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_b_xml) {
+//   openstudio::SqlFile sql = runSimulation("00100-SchoolPrimary-CustomStd - b.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_b_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00100-SchoolPrimary-CustomStd - b.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_bz_xml) {
+//   openstudio::SqlFile sql = runSimulation("00100-SchoolPrimary-CustomStd - bz.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00101_SchoolPrimary_CustomProp_p_xml) {
+//   openstudio::SqlFile sql = runSimulation("00101-SchoolPrimary-CustomProp - p.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00101_SchoolPrimary_CustomProp_p_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00101-SchoolPrimary-CustomProp - p.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00101_SchoolPrimary_CustomProp_b_xml) {
+//   openstudio::SqlFile sql = runSimulation("00101-SchoolPrimary-CustomProp - b.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00101_SchoolPrimary_CustomProp_b_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00101-SchoolPrimary-CustomProp - b.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00101_SchoolPrimary_CustomProp_bz_xml) {
+//   openstudio::SqlFile sql = runSimulation("00101-SchoolPrimary-CustomProp - bz.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_xml) {
+//   openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - p.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - p.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_b_xml) {
+//   openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - b.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_b_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - b.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_bz_xml) {
+//   openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - bz.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00103_SchoolPrimary_CustomProp_p_xml) {
+//   openstudio::SqlFile sql = runSimulation("00103-SchoolPrimary-CustomProp - p.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00103_SchoolPrimary_CustomProp_p_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00103-SchoolPrimary-CustomProp - p.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00103_SchoolPrimary_CustomProp_b_xml) {
+//   openstudio::SqlFile sql = runSimulation("00103-SchoolPrimary-CustomProp - b.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00103_SchoolPrimary_CustomProp_b_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00103-SchoolPrimary-CustomProp - b.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00103_SchoolPrimary_CustomProp_bz_xml) {
+//   openstudio::SqlFile sql = runSimulation("00103-SchoolPrimary-CustomProp - bz.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00200_OfficeSmall_CECRefProp_p_xml) {
+//   openstudio::SqlFile sql = runSimulation("00200-OfficeSmall-CECRefProp - p.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00200_OfficeSmall_CECRefProp_p_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00200-OfficeSmall-CECRefProp - p.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00200_OfficeSmall_CECRefProp_b_xml) {
+//   openstudio::SqlFile sql = runSimulation("00200-OfficeSmall-CECRefProp - b.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00200_OfficeSmall_CECRefProp_b_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00200-OfficeSmall-CECRefProp - b.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00200_OfficeSmall_CECRefProp_bz_xml) {
+//   openstudio::SqlFile sql = runSimulation("00200-OfficeSmall-CECRefProp - bz.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00300_OfficeMedium_CECRefProp_p_xml) {
+//   openstudio::SqlFile sql = runSimulation("00300-OfficeMedium-CECRefProp - p.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00300_OfficeMedium_CECRefProp_p_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00300-OfficeMedium-CECRefProp - p.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00300_OfficeMedium_CECRefProp_b_xml) {
+//   openstudio::SqlFile sql = runSimulation("00300-OfficeMedium-CECRefProp - b.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00300_OfficeMedium_CECRefProp_b_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00300-OfficeMedium-CECRefProp - b.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00300_OfficeMedium_CECRefProp_bz_xml) {
+//   openstudio::SqlFile sql = runSimulation("00300-OfficeMedium-CECRefProp - bz.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00400_OfficeLarge_CECRefProp_p_xml) {
+//   openstudio::SqlFile sql = runSimulation("00400-OfficeLarge-CECRefProp - p.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00400_OfficeLarge_CECRefProp_p_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00400-OfficeLarge-CECRefProp - p.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00400_OfficeLarge_CECRefProp_b_xml) {
+//   openstudio::SqlFile sql = runSimulation("00400-OfficeLarge-CECRefProp - b.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00400_OfficeLarge_CECRefProp_b_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00400-OfficeLarge-CECRefProp - b.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00400_OfficeLarge_CECRefProp_bz_xml) {
+//   openstudio::SqlFile sql = runSimulation("00400-OfficeLarge-CECRefProp - bz.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00401_OfficeLarge_BlrsChlrsProp_p_xml) {
+//   openstudio::SqlFile sql = runSimulation("00401-OfficeLarge-BlrsChlrsProp - p.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00401_OfficeLarge_BlrsChlrsProp_p_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00401-OfficeLarge-BlrsChlrsProp - p.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00401_OfficeLarge_BlrsChlrsProp_b_xml) {
+//   openstudio::SqlFile sql = runSimulation("00401-OfficeLarge-BlrsChlrsProp - b.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00401_OfficeLarge_BlrsChlrsProp_b_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00401-OfficeLarge-BlrsChlrsProp - b.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00401_OfficeLarge_BlrsChlrsProp_bz_xml) {
+//   openstudio::SqlFile sql = runSimulation("00401-OfficeLarge-BlrsChlrsProp - bz.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00500_RetailStandAlone_CECRefProp_p_xml) {
+//   openstudio::SqlFile sql = runSimulation("00500-RetailStandAlone-CECRefProp - p.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00500_RetailStandAlone_CECRefProp_p_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00500-RetailStandAlone-CECRefProp - p.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00500_RetailStandAlone_CECRefProp_b_xml) {
+//   openstudio::SqlFile sql = runSimulation("00500-RetailStandAlone-CECRefProp - b.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00500_RetailStandAlone_CECRefProp_b_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00500-RetailStandAlone-CECRefProp - b.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00500_RetailStandAlone_CECRefProp_bz_xml) {
+//   openstudio::SqlFile sql = runSimulation("00500-RetailStandAlone-CECRefProp - bz.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00700_HotelSmall_CECRef_b_xml) {
+//   openstudio::SqlFile sql = runSimulation("00700-HotelSmall-CECRef - b.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00700_HotelSmall_CECRef_b_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00700-HotelSmall-CECRef - b.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00700_HotelSmall_CECRef_p_xml) {
+//   openstudio::SqlFile sql = runSimulation("00700-HotelSmall-CECRef - p.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00700_HotelSmall_CECRef_p_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00700-HotelSmall-CECRef - p.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00700_HotelSmall_CECRef_bz_xml) {
+//   openstudio::SqlFile sql = runSimulation("00700-HotelSmall-CECRef - bz.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 2d_PrimOnly_MultChlr_VarSpdPumps_p_xml) {
+//   openstudio::SqlFile sql = runSimulation("2d-PrimOnly_MultChlr_VarSpdPumps - p.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_ForIssue359_xml) {
+//   openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - p_ForIssue359.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_ForIssue359_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - p_ForIssue359.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00800_Warehouse_CECRef_p_ForIssue366_xml) {
+//   openstudio::SqlFile sql = runSimulation("00800-Warehouse-CECRef - p_ForIssue366.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// }
+// 
+// TEST_F(SDDSimulationFixture, 00800_Warehouse_CECRef_p_ForIssue366_xml_autosize) {
+//   openstudio::SqlFile sql = runSimulation("00800-Warehouse-CECRef - p_ForIssue366.xml",true);
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// }
  
