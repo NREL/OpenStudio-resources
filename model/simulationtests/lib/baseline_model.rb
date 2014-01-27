@@ -171,6 +171,7 @@ class BaselineModel < OpenStudio::Model::Model
       if space.thermalZone.empty?
         new_thermal_zone = OpenStudio::Model::ThermalZone.new(self)
         space.setThermalZone(new_thermal_zone)
+        new_thermal_zone.setName(space.name.get.sub('Space','Thermal Zone'))
       end
     end
     

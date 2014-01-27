@@ -956,3 +956,11 @@ TEST_F(ModelSimulationFixture, coolingtowers_osm) {
   ASSERT_TRUE(totalSiteEnergy);
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
+
+TEST_F(ModelSimulationFixture,plenums_rb) {
+  openstudio::SqlFile sql = runSimulation("plenums.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
