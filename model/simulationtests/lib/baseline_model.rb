@@ -494,13 +494,13 @@ class BaselineModel < OpenStudio::Model::Model
     heating_sch.setName("Heating Sch")
     heating_sch.defaultDaySchedule.setName("Heating Sch Default")
     heating_sch.defaultDaySchedule.addValue(time_24hrs,heating_setpoint)      
-
-    new_thermostat = OpenStudio::Model::ThermostatSetpointDualSetpoint.new(self)
-    
-    new_thermostat.setHeatingSchedule(heating_sch)
-    new_thermostat.setCoolingSchedule(cooling_sch)
     
     self.getThermalZones.each do |zone|
+      new_thermostat = OpenStudio::Model::ThermostatSetpointDualSetpoint.new(self)
+      
+      new_thermostat.setHeatingSchedule(heating_sch)
+      new_thermostat.setCoolingSchedule(cooling_sch)
+
       zone.setThermostatSetpointDualSetpoint(new_thermostat)
     end
 
