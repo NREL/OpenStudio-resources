@@ -53,29 +53,19 @@ conditioned_zones.each do |zone|
   air_handler.removeBranchForZone(zone)
 end
 
-supply_plenum1 = OpenStudio::Model::AirLoopHVACSupplyPlenum.new(model)
-story_1_core_thermal_zone.thermostatSetpointDualSetpoint.get.remove()
-supply_plenum1.setThermalZone(story_1_core_thermal_zone)
-
-return_plenum1 = OpenStudio::Model::AirLoopHVACReturnPlenum.new(model)
-story_3_core_thermal_zone.thermostatSetpointDualSetpoint.get.remove
-return_plenum1.setThermalZone(story_3_core_thermal_zone)
-
-supply_plenum2 = OpenStudio::Model::AirLoopHVACSupplyPlenum.new(model)
-story_1_north_thermal_zone.thermostatSetpointDualSetpoint.get.remove()
-supply_plenum2.setThermalZone(story_1_north_thermal_zone);
-
-return_plenum2 = OpenStudio::Model::AirLoopHVACReturnPlenum.new(model)
-story_3_north_thermal_zone.thermostatSetpointDualSetpoint.get.remove
-return_plenum2.setThermalZone(story_3_north_thermal_zone);
+supply_plenum1 = story_1_core_thermal_zone
+return_plenum1 = story_3_core_thermal_zone
+supply_plenum2 = story_1_north_thermal_zone
+return_plenum2 = story_3_north_thermal_zone
 
 reheat_coil = OpenStudio::Model::CoilHeatingWater.new(model,always_on_schedule)
 terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(model,always_on_schedule,reheat_coil)
 hot_water_plant.addDemandBranchForComponent(terminal.reheatCoil())
 
 # Add zone between two plenums
-air_handler.addBranchForPlenums(supply_plenum1,return_plenum1)
-air_handler.addBranchForZone(story_2_core_thermal_zone,supply_plenum1,return_plenum1,terminal)
+air_handler.addBranchForZone(story_2_core_thermal_zone,terminal)
+story_2_core_thermal_zone.setSupplyPlenum(supply_plenum1)
+story_2_core_thermal_zone.setReturnPlenum(return_plenum1)
 
 # Add zone between zone splitter/mixer (no plenum)
 terminal = terminal.clone(model).to_AirTerminalSingleDuctVAVReheat.get
@@ -85,72 +75,60 @@ air_handler.addBranchForZone(story_2_north_thermal_zone,terminal)
 zone_splitter = air_handler.zoneSplitter()
 zone_mixer = air_handler.zoneMixer()
 
-# Supply plenum to zone mixer
-air_handler.addBranchForHVACComponent(supply_plenum2)
-
-# Zone splitter to return plenum
-air_handler.addBranchForHVACComponent(return_plenum2)
-
 
 # Add zones between zone splitter and return plenum 2
 terminal = terminal.clone(model).to_AirTerminalSingleDuctVAVReheat.get
 hot_water_plant.addDemandBranchForComponent(terminal.reheatCoil())
 air_handler.addBranchForZone(story_2_south_thermal_zone,
-                             zone_splitter,
-                             return_plenum2,
                              terminal)
+story_2_south_thermal_zone.setReturnPlenum(return_plenum2)
 
 terminal = terminal.clone(model).to_AirTerminalSingleDuctVAVReheat.get
 hot_water_plant.addDemandBranchForComponent(terminal.reheatCoil())
 air_handler.addBranchForZone(story_2_east_thermal_zone,
-                             zone_splitter,
-                             return_plenum2,
                              terminal)
+story_2_east_thermal_zone.setReturnPlenum(return_plenum2)
 
 terminal = terminal.clone(model).to_AirTerminalSingleDuctVAVReheat.get
 hot_water_plant.addDemandBranchForComponent(terminal.reheatCoil())
 air_handler.addBranchForZone(story_2_west_thermal_zone,
-                             zone_splitter,
-                             return_plenum2,
                              terminal)
+story_2_west_thermal_zone.setReturnPlenum(return_plenum2)
 
 # Add zones between supply plenum 2 and zone mixer
 terminal = terminal.clone(model).to_AirTerminalSingleDuctVAVReheat.get
 hot_water_plant.addDemandBranchForComponent(terminal.reheatCoil())
 air_handler.addBranchForZone(story_3_south_thermal_zone,
-                             supply_plenum2,
-                             zone_mixer,
                              terminal)
+story_3_south_thermal_zone.setSupplyPlenum(supply_plenum2)
 
 terminal = terminal.clone(model).to_AirTerminalSingleDuctVAVReheat.get
 hot_water_plant.addDemandBranchForComponent(terminal.reheatCoil())
 air_handler.addBranchForZone(story_3_east_thermal_zone,
-                             supply_plenum2,
-                             zone_mixer,
                              terminal)
+story_3_east_thermal_zone.setSupplyPlenum(supply_plenum2)
 
 terminal = terminal.clone(model).to_AirTerminalSingleDuctVAVReheat.get
 hot_water_plant.addDemandBranchForComponent(terminal.reheatCoil())
 air_handler.addBranchForZone(story_3_west_thermal_zone,
-                             supply_plenum2,
-                             zone_mixer,
                              terminal)
+story_3_west_thermal_zone.setSupplyPlenum(supply_plenum2)
 
 # Add zone between supply and return plenum 2
 terminal = terminal.clone(model).to_AirTerminalSingleDuctVAVReheat.get
 hot_water_plant.addDemandBranchForComponent(terminal.reheatCoil())
 air_handler.addBranchForZone(story_1_south_thermal_zone,
-                             supply_plenum2,
-                             return_plenum2,
                              terminal)
+story_1_south_thermal_zone.setSupplyPlenum(supply_plenum2)
+story_1_south_thermal_zone.setReturnPlenum(return_plenum2)
 
-# Add zone between supply and return plenum 2
+# Add zone between supply 1 and return plenum 2
 terminal = terminal.clone(model).to_AirTerminalSingleDuctVAVReheat.get
 hot_water_plant.addDemandBranchForComponent(terminal.reheatCoil())
 air_handler.addBranchForZone(story_1_west_thermal_zone,
-                             supply_plenum2,
-                             return_plenum2,
                              terminal)
+story_1_west_thermal_zone.setSupplyPlenum(supply_plenum1)
+story_1_west_thermal_zone.setReturnPlenum(return_plenum2)
 
               
 #assign constructions from a local library to the walls/windows/etc. in the model
