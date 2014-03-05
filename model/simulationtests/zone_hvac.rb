@@ -130,6 +130,49 @@ condenserWaterTempSchedule.defaultDaySchedule().addValue(osTime,24)
 condenserWaterSPM = OpenStudio::Model::SetpointManagerScheduled.new(model,condenserWaterTempSchedule)
 condenserWaterSPM.addToNode(condenserWaterOutletNode)      
 
+#chilled Water Temp Schedule
+#Schedule Ruleset
+chilled_water_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model)
+chilled_water_temp_sch.setName("Chilled_Water_Temperature")
+#Winter Design Day
+chilled_water_temp_schWinter = OpenStudio::Model::ScheduleDay.new(model)
+chilled_water_temp_sch.setWinterDesignDaySchedule(chilled_water_temp_schWinter)
+chilled_water_temp_sch.winterDesignDaySchedule().setName("Chilled_Water_Temperature_Winter_Design_Day")
+chilled_water_temp_sch.winterDesignDaySchedule().addValue(osTime,6.7)
+#Summer Design Day
+chilled_water_temp_schSummer = OpenStudio::Model::ScheduleDay.new(model)
+chilled_water_temp_sch.setSummerDesignDaySchedule(chilled_water_temp_schSummer)
+chilled_water_temp_sch.summerDesignDaySchedule().setName("Chilled_Water_Temperature_Summer_Design_Day")
+chilled_water_temp_sch.summerDesignDaySchedule().addValue(osTime,6.7)  
+#All other days
+chilled_water_temp_sch.defaultDaySchedule().setName("Chilled_Water_Temperature_Default")
+chilled_water_temp_sch.defaultDaySchedule().addValue(osTime,6.7)
+
+# Chilled Water Plant
+chilledWaterPlant = OpenStudio::Model::PlantLoop.new(model)
+chilledWaterPlant.setName("Chilled Water Plant")
+chilledWaterSizing = chilledWaterPlant.sizingPlant()
+chilledWaterSizing.setLoopType("Cooling")
+chilledWaterSizing.setDesignLoopExitTemperature(7.22)
+chilledWaterSizing.setLoopDesignTemperatureDifference(6.67)
+chilledWaterOutletNode = chilledWaterPlant.supplyOutletNode()
+chilledWaterInletNode = chilledWaterPlant.supplyInletNode()
+chilledWaterDemandOutletNode = chilledWaterPlant.demandOutletNode()
+chilledWaterDemandInletNode = chilledWaterPlant.demandInletNode()
+chilledWaterSPM = OpenStudio::Model::SetpointManagerScheduled.new(model,chilled_water_temp_sch)
+chilledWaterSPM.addToNode(chilledWaterOutletNode)
+
+#pump
+chilledWaterPump = OpenStudio::Model::PumpVariableSpeed.new(model)
+chilledWaterPump.addToNode(chilledWaterInletNode)
+
+#district cooling
+district_cooling = OpenStudio::Model::DistrictCooling.new(model)
+chilledWaterPlant.addSupplyBranchForComponent(district_cooling)
+
+chilledWaterDemandBypass = OpenStudio::Model::PipeAdiabatic.new(model)
+chilledWaterPlant.addSupplyBranchForComponent(chilledWaterDemandBypass)
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
@@ -201,6 +244,17 @@ wtahp.addToThermalZone(story_1_east_thermal_zone);
 
 condenserWaterPlant.addDemandBranchForComponent(wahpDXHC)
 condenserWaterPlant.addDemandBranchForComponent(wahpDXCC)
+
+# Add a four pipe fan coil
+
+fourPipeFan = OpenStudio::Model::FanOnOff.new(model,model.alwaysOnDiscreteSchedule())
+fourPipeHeat = OpenStudio::Model::CoilHeatingWater.new(model,model.alwaysOnDiscreteSchedule())
+hotWaterPlant.addDemandBranchForComponent(fourPipeHeat)
+fourPipeCool = OpenStudio::Model::CoilCoolingWater.new(model,model.alwaysOnDiscreteSchedule())
+chilledWaterPlant.addDemandBranchForComponent(fourPipeCool)
+fourPipeFanCoil = OpenStudio::Model::ZoneHVACFourPipeFanCoil.new(model,model.alwaysOnDiscreteSchedule(),
+                                                                 fourPipeFan,fourPipeCool,fourPipeHeat)
+fourPipeFanCoil.addToThermalZone(story_1_west_thermal_zone)
 
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
