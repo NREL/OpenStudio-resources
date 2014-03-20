@@ -226,12 +226,12 @@ class BaselineModel < OpenStudio::Model::Model
     #Add HVAC system type
       case sys_num
         #1: PTAC, Residential
-        when '01': hvac = OpenStudio::Model::addSystemType1(self, zones)
+        when '01' then hvac = OpenStudio::Model::addSystemType1(self, zones)
         #2: PTHP, Residential
-        when '02': 
+        when '02' then 
           hvac = OpenStudio::Model::addSystemType2(self, zones)
         #3: PSZ-AC
-        when '03': 
+        when '03' then
           zones.each do|zone|
             hvac = OpenStudio::Model::addSystemType3(self)
             hvac = hvac.to_AirLoopHVAC.get
@@ -241,7 +241,7 @@ class BaselineModel < OpenStudio::Model::Model
             setpoint_manager.setControlZone(zone)
           end
         #4: PSZ-HP
-        when '04': 
+        when '04' then
          zones.each do|zone|
             hvac = OpenStudio::Model::addSystemType4(self)
             hvac = hvac.to_AirLoopHVAC.get
@@ -251,35 +251,35 @@ class BaselineModel < OpenStudio::Model::Model
             setpoint_manager.setControlZone(zone)
           end
         #5: Packaged VAV w/ Reheat
-        when '05': 
+        when '05' then
           hvac = OpenStudio::Model::addSystemType5(self)
           hvac = hvac.to_AirLoopHVAC.get      
           zones.each do|zone|
             hvac.addBranchForZone(zone)      
           end
         #6: Packaged VAV w/ PFP Boxes
-        when '06': 
+        when '06' then
           hvac = OpenStudio::Model::addSystemType6(self)
           hvac = hvac.to_AirLoopHVAC.get      
           zones.each do|zone|
             hvac.addBranchForZone(zone)      
           end
         #7: VAV w/ Reheat
-        when '07': 
+        when '07' then
           hvac = OpenStudio::Model::addSystemType7(self)
           hvac = hvac.to_AirLoopHVAC.get      
           zones.each do|zone|
             hvac.addBranchForZone(zone)      
           end
         #8: VAV w/ PFP Boxes
-        when '08': 
+        when '08' then
           hvac = OpenStudio::Model::addSystemType8(self)
           hvac = hvac.to_AirLoopHVAC.get      
           zones.each do|zone|
             hvac.addBranchForZone(zone)      
           end
         #9: Warm air furnace, gas fired
-        when '09': 
+        when '09' then
           zones.each do|zone|
             hvac = OpenStudio::Model::addSystemType9(self)  
             hvac = hvac.to_AirLoopHVAC.get
@@ -289,7 +289,7 @@ class BaselineModel < OpenStudio::Model::Model
             setpoint_manager.setControlZone(zone)
           end
         #10: Warm air furnace, electric
-        when '10': 
+        when '10' then
           zones.each do|zone|
             hvac = OpenStudio::Model::addSystemType10(self)  
             hvac = hvac.to_AirLoopHVAC.get
