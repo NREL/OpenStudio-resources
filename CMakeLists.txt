@@ -212,8 +212,11 @@ FIND_PACKAGE( Ruby REQUIRED )
 # Google test library
 ADD_DEFINITIONS( -DGTEST_HAS_TR1_TUPLE=0 )
 
-# Enable support for boost > 1.42 ish by forcing boost_filesystem_version 2
-ADD_DEFINITIONS(-DBOOST_FILESYSTEM_VERSION=2)
+# Enable support for boost > 1.49 ish by forcing boost_filesystem_version 3
+ADD_DEFINITIONS(-DBOOST_FILESYSTEM_VERSION=3)
+
+# Use header only Chrono
+ADD_DEFINITIONS(-DBOOST_CHRONO_HEADER_ONLY)
 
 # Boost
 IF(APPLE)
@@ -232,20 +235,10 @@ IF (WIN32)
 #  ENDIF (MSVC)
 ENDIF (WIN32)
 
-SET( Boost_ADDITIONAL_VERSIONS "1.40" )
-FIND_PACKAGE( Boost 1.40.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time serialization)
+SET( Boost_ADDITIONAL_VERSIONS "1.55" )
+FIND_PACKAGE( Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time serialization log)
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 MARK_AS_ADVANCED( Boost_LIB_DIAGNOSTIC_DEFINITIONS )
-
-# Boost-log
-ADD_DEFINITIONS( -DBOOST_LOG_NO_LIB ) # disable autolinking
-ADD_DEFINITIONS( -DBOOST_LOG_SETUP_NO_LIB ) # disable autolinking
-
-
-find_package(BoostLog REQUIRED HINTS "${OPENSTUDIO_BUILD_DIR}/BoostLog-prefix/src/BoostLog-build")
-INCLUDE_DIRECTORIES( ${BoostLog_INCLUDE_DIRS} )
-LINK_DIRECTORIES( ${BoostLog_LIBRARY_DIRS} )
-
 
 # SketchUp executable location needed for testing
 if( BUILD_SQUISH_SKETCHUP_TESTS )
