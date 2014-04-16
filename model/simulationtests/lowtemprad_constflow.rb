@@ -137,7 +137,7 @@ model.getThermalZones.each do |z|
   heat_coil = OpenStudio::Model::CoilHeatingLowTempRadiantConstFlow.new(model,heatingHighWaterTempSched,heatingLowWaterTempSched,heatingHighControlTempSched,heatingLowControlTempSched)
   cool_coil = OpenStudio::Model::CoilCoolingLowTempRadiantConstFlow.new(model,coolingHighWaterTempSched,coolingLowWaterTempSched,coolingHighControlTempSched,coolingLowControlTempSched)
 
-  lowtempradiant = OpenStudio::Model::ZoneHVACLowTempRadiantConstFlow.new(model,model.alwaysOnDiscreteSchedule,heat_coil,cool_coil)
+  lowtempradiant = OpenStudio::Model::ZoneHVACLowTempRadiantConstFlow.new(model,model.alwaysOnDiscreteSchedule,heat_coil,cool_coil,200.0)
   lowtempradiant.setRadiantSurfaceType("Floors")
   lowtempradiant.setHydronicTubingInsideDiameter(0.154)
   lowtempradiant.setHydronicTubingLength(200)
