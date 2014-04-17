@@ -584,7 +584,7 @@ TEST_F(ModelSimulationFixture, utility_bill01_rb) {
   boost::optional<double> hoursCoolingSetpointNotMet;
   for (unsigned i = 0; i < N; ++i){
 
-    openstudio::path osm_path = sqls[i].path().parent_path().parent_path().parent_path() / openstudio::toPath("out.osm");
+    openstudio::path osm_path = sqls[i].path().parent_path().parent_path().parent_path().parent_path() / openstudio::toPath("out.osm");
     boost::optional<openstudio::model::Model> model = openstudio::model::Model::load(osm_path);
     ASSERT_TRUE(model);
 
@@ -657,7 +657,7 @@ TEST_F(ModelSimulationFixture, utility_bill02_rb) {
   boost::optional<double> hoursCoolingSetpointNotMet;
   for (unsigned i = 0; i < N; ++i){
 
-    openstudio::path osm_path = sqls[i].path().parent_path().parent_path().parent_path() / openstudio::toPath("out.osm");
+    openstudio::path osm_path = sqls[i].path().parent_path().parent_path().parent_path().parent_path() / openstudio::toPath("out.osm");
     boost::optional<openstudio::model::Model> model = openstudio::model::Model::load(osm_path);
     ASSERT_TRUE(model);
 
