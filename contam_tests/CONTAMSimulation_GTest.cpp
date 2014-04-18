@@ -312,7 +312,7 @@ TEST_F(CONTAMSimulationFixture, CONTAM_Demo_2012) {
   // convert to prj file
   openstudio::path prjPath = contamOSMPath() / toPath("CONTAM_Demo_2012.prj");
   openstudio::path mapPath = contamOSMPath() / toPath("CONTAM_Demo_2012.map");
-  test = openstudio::contam::ForwardTranslator::modelToContam(model, prjPath, mapPath);
+  test = openstudio::contam::ForwardTranslator::modelToPrj(model, prjPath);
   ASSERT_TRUE(test);
 
   // run contam on prj file, use contamExePath()
