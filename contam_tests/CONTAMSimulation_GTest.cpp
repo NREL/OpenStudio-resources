@@ -112,15 +112,183 @@ openstudio::SqlFile runEnergyPlus(const openstudio::path& filePath)
   return openstudio::SqlFile(j.treeAllFiles().getLastByFilename("eplusout.sql").fullPath);
 }
 
+boost::optional<openstudio::model::Model> buildDemoModel(openstudio::model::Model model)
+{
+  // Set outdoor air specifications
+  openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
+  boost::optional<openstudio::model::SpaceType> spaceType = building.spaceType();
+  if(!spaceType)
+  {
+    return boost::optional<openstudio::model::Model>();
+  }
+  boost::optional<openstudio::model::DesignSpecificationOutdoorAir> oa = spaceType->designSpecificationOutdoorAir();
+  if(!oa)
+  {
+    return boost::optional<openstudio::model::Model>();
+  }
+
+  if(!oa->setOutdoorAirMethod("Sum"))
+  {
+    return boost::optional<openstudio::model::Model>();
+  }
+  if(!oa->setOutdoorAirFlowperPerson(0.0))
+  {
+    return boost::optional<openstudio::model::Model>();
+  }
+  if(!oa->setOutdoorAirFlowperFloorArea(0.00508)) // 1 cfm/ft^2 = 0.00508 m/s
+  {
+    return boost::optional<openstudio::model::Model>();
+  }
+  if(!oa->setOutdoorAirFlowRate(0.0))
+  {
+    return boost::optional<openstudio::model::Model>();
+  }
+  if(!oa->setOutdoorAirFlowAirChangesperHour(0.0))
+  {
+    return boost::optional<openstudio::model::Model>();
+  }
+
+  double floorHeight = 3.0;
+
+  openstudio::model::BuildingStory story1(model);
+  story1.setName("Story 1");
+  story1.setNominalZCoordinate(0.0);
+  story1.setNominalFloortoFloorHeight(floorHeight);
+
+  std::vector<openstudio::Point3d> points;
+  points.push_back(openstudio::Point3d(0,0,0));
+  points.push_back(openstudio::Point3d(0,17,0));
+  points.push_back(openstudio::Point3d(8,17,0));
+  points.push_back(openstudio::Point3d(8,10,0));
+  points.push_back(openstudio::Point3d(8,0,0));
+
+  boost::optional<openstudio::model::Space> library = openstudio::model::Space::fromFloorPrint(points, floorHeight, model);
+  if(!library)
+  {
+    return boost::optional<openstudio::model::Model>();
+  }
+  library->setName("Library");
+
+  points.clear();
+  points.push_back(openstudio::Point3d(8,10,0));
+  points.push_back(openstudio::Point3d(8,17,0));
+  points.push_back(openstudio::Point3d(18,17,0));
+  points.push_back(openstudio::Point3d(18,10,0));
+  points.push_back(openstudio::Point3d(11,10,0));
+
+  boost::optional<openstudio::model::Space> office2 = openstudio::model::Space::fromFloorPrint(points, floorHeight, model);
+  if(!office2)
+  {
+    return boost::optional<openstudio::model::Model>();
+  }
+  office2->setName("Office 2");
+
+  points.clear();
+  points.push_back(openstudio::Point3d(8,0,0));
+  points.push_back(openstudio::Point3d(8,10,0));
+  points.push_back(openstudio::Point3d(11,10,0));
+  points.push_back(openstudio::Point3d(11,0,0));
+
+  boost::optional<openstudio::model::Space> hallway = openstudio::model::Space::fromFloorPrint(points, floorHeight, model);
+  if(!hallway)
+  {
+    return boost::optional<openstudio::model::Model>();
+  }
+  hallway->setName("Hallway");
+
+  points.clear();
+  points.push_back(openstudio::Point3d(11,0,0));
+  points.push_back(openstudio::Point3d(11,10,0));
+  points.push_back(openstudio::Point3d(18,10,0));
+  points.push_back(openstudio::Point3d(18,0,0));
+
+  boost::optional<openstudio::model::Space> office1 = openstudio::model::Space::fromFloorPrint(points, floorHeight, model);
+  if(!office1)
+  {
+    return boost::optional<openstudio::model::Model>();
+  }
+  office1->setName("Office 1");
+
+  library->matchSurfaces(*office2);
+  library->matchSurfaces(*hallway);
+  hallway->matchSurfaces(*office1);
+  hallway->matchSurfaces(*office2);
+  office1->matchSurfaces(*office2);
+
+  // Find thermostat
+  boost::optional<openstudio::model::ThermostatSetpointDualSetpoint> thermostat;
+  BOOST_FOREACH(openstudio::model::ThermostatSetpointDualSetpoint t,
+    model.getModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>())
+  {
+    thermostat = t;
+    break;
+  }
+  if(!thermostat)
+  {
+    return boost::optional<openstudio::model::Model>();
+  }
+  
+  // Create  thermal zones
+  openstudio::model::ThermalZone libraryZone(model);
+  openstudio::model::SizingZone librarySizing(model, libraryZone);
+  libraryZone.setName("Library Zone");
+  libraryZone.setThermostatSetpointDualSetpoint(*thermostat);
+  library->setThermalZone(libraryZone);
+  library->setBuildingStory(story1);
+
+  openstudio::model::ThermalZone hallwayZone(model);
+  //model::SizingZone hallwaySizing(model, hallwayZone);
+  hallwayZone.setName("Hallway Zone");
+  //hallwayZone.setThermostatSetpointDualSetpoint(*thermostat);
+  hallway->setThermalZone(hallwayZone);
+  hallway->setBuildingStory(story1);
+
+  openstudio::model::ThermalZone office1Zone(model);
+  openstudio::model::SizingZone office1Sizing(model, office1Zone);
+  office1Zone.setName("Office 1 Zone");
+  office1Zone.setThermostatSetpointDualSetpoint(*thermostat);
+  office1->setThermalZone(office1Zone);
+  office1->setBuildingStory(story1);
+
+  openstudio::model::ThermalZone office2Zone(model);
+  openstudio::model::SizingZone office2Sizing(model, office2Zone);
+  office2Zone.setName("Office 2 Zone");
+  office2Zone.setThermostatSetpointDualSetpoint(*thermostat);
+  office2->setThermalZone(office2Zone);
+  office2->setBuildingStory(story1);
+
+  // Add the air system
+  openstudio::model::Loop loop = openstudio::model::addSystemType3(model);
+  openstudio::model::AirLoopHVAC airLoop = loop.cast<openstudio::model::AirLoopHVAC>();
+  airLoop.addBranchForZone(libraryZone);
+  airLoop.addBranchForZone(office1Zone);
+  airLoop.addBranchForZone(office2Zone);
+
+  boost::optional<openstudio::model::SetpointManagerSingleZoneReheat> setpointManager;
+  BOOST_FOREACH(openstudio::model::SetpointManagerSingleZoneReheat t, 
+    model.getModelObjects<openstudio::model::SetpointManagerSingleZoneReheat>())
+  {
+    setpointManager = t;
+    break;
+  }
+  if(!setpointManager)
+  {
+    return boost::optional<openstudio::model::Model>();
+  }
+  setpointManager->setControlZone(libraryZone);
+
+  return boost::optional<openstudio::model::Model>(model);
+}
+
 TEST_F(CONTAMSimulationFixture, CONTAM_Demo_2012) {
 
-  // load model from template
+  // Load model from template
   osversion::VersionTranslator vt;
   boost::optional<model::Model> optionalModel = vt.loadModel(contamTemplatePath());
   ASSERT_TRUE(optionalModel);
   model::Model model = optionalModel.get();
 
-  // add design days
+  // Add design days
   openstudio::path ddyPath = (resourcesPath() / openstudio::toPath("weatherdata") / openstudio::toPath("USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.ddy"));
   boost::optional<Workspace> ddyWorkspace = Workspace::load(ddyPath);
   ASSERT_TRUE(ddyWorkspace);
@@ -132,140 +300,26 @@ TEST_F(CONTAMSimulationFixture, CONTAM_Demo_2012) {
     model.addObject(designDay);
   }
 
-  // set outdoor air specifications
-  model::Building building = model.getUniqueModelObject<model::Building>();
-  boost::optional<model::SpaceType> spaceType = building.spaceType();
-  ASSERT_TRUE(spaceType);
-  boost::optional<model::DesignSpecificationOutdoorAir> oa = spaceType->designSpecificationOutdoorAir();
-  ASSERT_TRUE(oa);
+  // Use the new function to build the model. This loses some asserts and in the event of a failure
+  // it will be harder to tell what has happened unless we put some logging in the function
+  optionalModel = buildDemoModel(model);
+  ASSERT_TRUE(optionalModel);
+  model = optionalModel.get();
 
-  EXPECT_TRUE(oa->setOutdoorAirMethod("Sum"));
-  EXPECT_TRUE(oa->setOutdoorAirFlowperPerson(0.0));
-  EXPECT_TRUE(oa->setOutdoorAirFlowperFloorArea(0.00508)); // 1 cfm/ft^2 = 0.00508 m/s
-  EXPECT_TRUE(oa->setOutdoorAirFlowRate(0.0));
-  EXPECT_TRUE(oa->setOutdoorAirFlowAirChangesperHour(0.0));
-
-  // create geometry
-  double floorHeight = 3.0;
-
-  model::BuildingStory story1(model);
-  story1.setName("Story 1");
-  story1.setNominalZCoordinate(0.0);
-  story1.setNominalFloortoFloorHeight(floorHeight);
-
-  std::vector<Point3d> points;
-  points.push_back(Point3d(0,0,0));
-  points.push_back(Point3d(0,17,0));
-  points.push_back(Point3d(8,17,0));
-  points.push_back(Point3d(8,10,0));
-  points.push_back(Point3d(8,0,0));
-
-  boost::optional<model::Space> library = model::Space::fromFloorPrint(points, floorHeight, model);
-  ASSERT_TRUE(library);
-  library->setName("Library");
-
-  points.clear();
-  points.push_back(Point3d(8,10,0));
-  points.push_back(Point3d(8,17,0));
-  points.push_back(Point3d(18,17,0));
-  points.push_back(Point3d(18,10,0));
-  points.push_back(Point3d(11,10,0));
-
-  boost::optional<model::Space> office2 = model::Space::fromFloorPrint(points, floorHeight, model);
-  ASSERT_TRUE(office2);
-  office2->setName("Office 2");
-
-  points.clear();
-  points.push_back(Point3d(8,0,0));
-  points.push_back(Point3d(8,10,0));
-  points.push_back(Point3d(11,10,0));
-  points.push_back(Point3d(11,0,0));
-
-  boost::optional<model::Space> hallway = model::Space::fromFloorPrint(points, floorHeight, model);
-  ASSERT_TRUE(hallway);
-  hallway->setName("Hallway");
-
-  points.clear();
-  points.push_back(Point3d(11,0,0));
-  points.push_back(Point3d(11,10,0));
-  points.push_back(Point3d(18,10,0));
-  points.push_back(Point3d(18,0,0));
-
-  boost::optional<model::Space> office1 = model::Space::fromFloorPrint(points, floorHeight, model);
-  ASSERT_TRUE(office1);
-  office1->setName("Office 1");
-
-  library->matchSurfaces(*office2);
-  library->matchSurfaces(*hallway);
-  hallway->matchSurfaces(*office1);
-  hallway->matchSurfaces(*office2);
-  office1->matchSurfaces(*office2);
-
-  // find thermostat
-  boost::optional<model::ThermostatSetpointDualSetpoint> thermostat;
-  BOOST_FOREACH(model::ThermostatSetpointDualSetpoint t, model.getModelObjects<model::ThermostatSetpointDualSetpoint>()){
-    thermostat = t;
-    break;
-  }
-  ASSERT_TRUE(thermostat);
-  
-  // create  thermal zones
-  model::ThermalZone libraryZone(model);
-  model::SizingZone librarySizing(model, libraryZone);
-  libraryZone.setName("Library Zone");
-  libraryZone.setThermostatSetpointDualSetpoint(*thermostat);
-  library->setThermalZone(libraryZone);
-  library->setBuildingStory(story1);
-
-  model::ThermalZone hallwayZone(model);
-  //model::SizingZone hallwaySizing(model, hallwayZone);
-  hallwayZone.setName("Hallway Zone");
-  //hallwayZone.setThermostatSetpointDualSetpoint(*thermostat);
-  hallway->setThermalZone(hallwayZone);
-  hallway->setBuildingStory(story1);
-
-  model::ThermalZone office1Zone(model);
-  model::SizingZone office1Sizing(model, office1Zone);
-  office1Zone.setName("Office 1 Zone");
-  office1Zone.setThermostatSetpointDualSetpoint(*thermostat);
-  office1->setThermalZone(office1Zone);
-  office1->setBuildingStory(story1);
-
-  model::ThermalZone office2Zone(model);
-  model::SizingZone office2Sizing(model, office2Zone);
-  office2Zone.setName("Office 2 Zone");
-  office2Zone.setThermostatSetpointDualSetpoint(*thermostat);
-  office2->setThermalZone(office2Zone);
-  office2->setBuildingStory(story1);
-
-  // add the air system
-  model::Loop loop = addSystemType3(model);
-  model::AirLoopHVAC airLoop = loop.cast<model::AirLoopHVAC>();
-  airLoop.addBranchForZone(libraryZone);
-  airLoop.addBranchForZone(office1Zone);
-  airLoop.addBranchForZone(office2Zone);
-
-  boost::optional<model::SetpointManagerSingleZoneReheat> setpointManager;
-  BOOST_FOREACH(model::SetpointManagerSingleZoneReheat t, model.getModelObjects<model::SetpointManagerSingleZoneReheat>()){
-    setpointManager = t;
-    break;
-  }
-  ASSERT_TRUE(setpointManager);
-  setpointManager->setControlZone(libraryZone);
-
-  // request report variables we will need
+  // Request report variables we will need
   model::OutputVariable("System Node MassFlowRate", model);
   model::OutputVariable("System Node Volume Flow Rate Standard Density", model);
   model::OutputVariable("System Node Volume Flow Rate Current Density", model);
   model::OutputVariable("AirLoopHVAC Actual Outdoor Air Fraction", model);
+  model::OutputVariable("Zone Mean Air Temperature", model);
   
-  // save the openstudio model
+  // Save the openstudio model
   openstudio::path modelPath = contamOSMPath() / toPath("CONTAM_Demo_2012.osm");
 
   bool test = model.save(modelPath, true);
   ASSERT_TRUE(test);
 
-  // run energyplus
+  // Run EnergyPlus
   openstudio::SqlFile sqlFile = runEnergyPlus(modelPath);
   model.setSqlFile(sqlFile);
 
