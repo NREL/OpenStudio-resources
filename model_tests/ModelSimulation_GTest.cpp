@@ -585,7 +585,19 @@ TEST_F(ModelSimulationFixture, dsn_oa_w_ideal_loads_osm) {
     EXPECT_GT(avgMechVent, 0); 
   }
   
-}  
+}
+
+TEST_F(ModelSimulationFixture, unitary_system_rb) {
+  openstudio::SqlFile sql = runSimulation("unitary_system.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
 
 TEST_F(ModelSimulationFixture, refrigeration_system_rb) {
   openstudio::SqlFile sql = runSimulation("refrigeration_system.rb");
