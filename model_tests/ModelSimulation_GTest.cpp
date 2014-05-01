@@ -585,7 +585,93 @@ TEST_F(ModelSimulationFixture, dsn_oa_w_ideal_loads_osm) {
     EXPECT_GT(avgMechVent, 0); 
   }
   
-}  
+}
+
+TEST_F(ModelSimulationFixture, unitary_system_rb) {
+  openstudio::SqlFile sql = runSimulation("unitary_system.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
+
+TEST_F(ModelSimulationFixture, refrigeration_system_rb) {
+  openstudio::SqlFile sql = runSimulation("refrigeration_system.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
+
+TEST_F(ModelSimulationFixture, refrigeration_system_osm) {
+  openstudio::SqlFile sql = runSimulation("refrigeration_system.osm");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
+
+TEST_F(ModelSimulationFixture, air_chillers_rb) {
+  openstudio::SqlFile sql = runSimulation("air_chillers.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  // this uses a lot of energy, make it 1000000000 instead of 1000000
+  EXPECT_LT(*totalSiteEnergy, 1000000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
+
+TEST_F(ModelSimulationFixture, air_chillers_osm) {
+  openstudio::SqlFile sql = runSimulation("air_chillers.osm");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  // this uses a lot of energy, make it 1000000000 instead of 1000000
+  EXPECT_LT(*totalSiteEnergy, 1000000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
+
+TEST_F(ModelSimulationFixture, fan_on_off_rb) {
+  openstudio::SqlFile sql = runSimulation("fan_on_off.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
+
+TEST_F(ModelSimulationFixture, fan_on_off_osm) {
+  openstudio::SqlFile sql = runSimulation("fan_on_off.osm");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
 
 TEST_F(ModelSimulationFixture, airterminal_cooledbeam_rb) {
   openstudio::SqlFile sql = runSimulation("airterminal_cooledbeam.rb");
