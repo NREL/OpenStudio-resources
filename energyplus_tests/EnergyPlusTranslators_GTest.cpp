@@ -203,7 +203,7 @@ TEST_P(EnergyPlusTestFixture, PostProcessComparison)
   if (!j.treeErrors().succeeded())
   {
 //    openstudio::path loggingoutdir = outdir / openstudio::toPath(boost::filesystem::stem(GetParam()));
-    openstudio::path loggingoutdir = outdir / openstudio::toPath(GetParam().stem());
+    openstudio::path loggingoutdir = outdir / GetParam().stem();
     boost::filesystem::create_directories(loggingoutdir);
 
     std::ofstream ofs(openstudio::toString(loggingoutdir / openstudio::toPath("JobLogs.txt")).c_str(), std::ios_base::trunc);

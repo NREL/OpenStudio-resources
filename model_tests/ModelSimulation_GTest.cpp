@@ -20,6 +20,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+
 #include <gtest/gtest.h>
 #include "ModelSimulationFixture.hpp"
 #include <model_tests/ModelBin.hxx> 
@@ -557,7 +558,7 @@ TEST_F(ModelSimulationFixture, dsn_oa_w_ideal_loads_rb) {
                         Units = 'ach'";
     boost::optional<std::vector<double> >  avgMechVents = sqls[i].execAndReturnVectorOfDouble(query);
     ASSERT_TRUE(avgMechVents);
-    BOOST_FOREACH(const double& avgMechVent,*avgMechVents) {
+    for(const double& avgMechVent : *avgMechVents) {
       EXPECT_GT(avgMechVent, 0); 
     }
 
@@ -592,10 +593,10 @@ TEST_F(ModelSimulationFixture, utility_bill01_rb) {
 
     std::vector<openstudio::model::UtilityBill> utilityBills = model->getModelObjects<openstudio::model::UtilityBill>();
     EXPECT_EQ(2u, utilityBills.size());
-    BOOST_FOREACH(const openstudio::model::UtilityBill& utilityBill, utilityBills){
+    for(const openstudio::model::UtilityBill& utilityBill : utilityBills){
       std::vector<openstudio::model::BillingPeriod> billingPeriods = utilityBill.billingPeriods();
       EXPECT_EQ(6, billingPeriods.size());
-      BOOST_FOREACH(const openstudio::model::BillingPeriod& billingPeriod, billingPeriods){
+	  for(const openstudio::model::BillingPeriod& billingPeriod : billingPeriods){
         boost::optional<double> modelConsumption = billingPeriod.modelConsumption();
         ASSERT_TRUE(modelConsumption);
 
@@ -665,10 +666,10 @@ TEST_F(ModelSimulationFixture, utility_bill02_rb) {
 
     std::vector<openstudio::model::UtilityBill> utilityBills = model->getModelObjects<openstudio::model::UtilityBill>();
     EXPECT_EQ(2u, utilityBills.size());
-    BOOST_FOREACH(const openstudio::model::UtilityBill& utilityBill, utilityBills){
+	for(const openstudio::model::UtilityBill& utilityBill : utilityBills){
       std::vector<openstudio::model::BillingPeriod> billingPeriods = utilityBill.billingPeriods();
       EXPECT_EQ(6, billingPeriods.size());
-      BOOST_FOREACH(const openstudio::model::BillingPeriod& billingPeriod, billingPeriods){
+	  for(const openstudio::model::BillingPeriod& billingPeriod : billingPeriods){
         boost::optional<double> modelConsumption = billingPeriod.modelConsumption();
         ASSERT_TRUE(modelConsumption);
 
@@ -1156,7 +1157,7 @@ TEST_F(ModelSimulationFixture, dsn_oa_w_ideal_loads_osm) {
                         Units = 'ach'";
     boost::optional<std::vector<double> >  avgMechVents = sqls[i].execAndReturnVectorOfDouble(query);
     ASSERT_TRUE(avgMechVents);
-    BOOST_FOREACH(const double& avgMechVent,*avgMechVents) {
+	for(const double& avgMechVent : *avgMechVents) {
       EXPECT_GT(avgMechVent, 0); 
     }
 
