@@ -287,83 +287,85 @@ class BaselineModel < OpenStudio::Model::Model
     zones = self.getThermalZones
 
     #Add HVAC system type
-      case sys_num
-        #1: PTAC, Residential
-        when '01': hvac = OpenStudio::Model::addSystemType1(self, zones)
-        #2: PTHP, Residential
-        when '02': 
-          hvac = OpenStudio::Model::addSystemType2(self, zones)
-        #3: PSZ-AC
-        when '03': 
-          zones.each do|zone|
-            hvac = OpenStudio::Model::addSystemType3(self)
-            hvac = hvac.to_AirLoopHVAC.get
-            hvac.addBranchForZone(zone)      
-            outlet_node = hvac.supplyOutletNode
-            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
-            setpoint_manager.setControlZone(zone)
-          end
-        #4: PSZ-HP
-        when '04': 
-         zones.each do|zone|
-            hvac = OpenStudio::Model::addSystemType4(self)
-            hvac = hvac.to_AirLoopHVAC.get
-            hvac.addBranchForZone(zone)
-            outlet_node = hvac.supplyOutletNode
-            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
-            setpoint_manager.setControlZone(zone)
-          end
-        #5: Packaged VAV w/ Reheat
-        when '05': 
-          hvac = OpenStudio::Model::addSystemType5(self)
-          hvac = hvac.to_AirLoopHVAC.get      
-          zones.each do|zone|
-            hvac.addBranchForZone(zone)      
-          end
-        #6: Packaged VAV w/ PFP Boxes
-        when '06': 
-          hvac = OpenStudio::Model::addSystemType6(self)
-          hvac = hvac.to_AirLoopHVAC.get      
-          zones.each do|zone|
-            hvac.addBranchForZone(zone)      
-          end
-        #7: VAV w/ Reheat
-        when '07': 
-          hvac = OpenStudio::Model::addSystemType7(self)
-          hvac = hvac.to_AirLoopHVAC.get      
-          zones.each do|zone|
-            hvac.addBranchForZone(zone)      
-          end
-        #8: VAV w/ PFP Boxes
-        when '08': 
-          hvac = OpenStudio::Model::addSystemType8(self)
-          hvac = hvac.to_AirLoopHVAC.get      
-          zones.each do|zone|
-            hvac.addBranchForZone(zone)      
-          end
-        #9: Warm air furnace, gas fired
-        when '09': 
-          zones.each do|zone|
-            hvac = OpenStudio::Model::addSystemType9(self)  
-            hvac = hvac.to_AirLoopHVAC.get
-            hvac.addBranchForZone(zone)      
-            outlet_node = hvac.supplyOutletNode
-            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
-            setpoint_manager.setControlZone(zone)
-          end
-        #10: Warm air furnace, electric
-        when '10': 
-          zones.each do|zone|
-            hvac = OpenStudio::Model::addSystemType10(self)  
-            hvac = hvac.to_AirLoopHVAC.get
-            hvac.addBranchForZone(zone)      
-            outlet_node = hvac.supplyOutletNode
-            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
-            setpoint_manager.setControlZone(zone)
-          end
-        #if system number is not recognized  
-        else puts 'cannot find system number ' + sys_num
-      end    
+    case sys_num
+      #1: PTAC, Residential
+      when '01' 
+        hvac = OpenStudio::Model::addSystemType1(self, zones)
+      #2: PTHP, Residential
+      when '02'
+        hvac = OpenStudio::Model::addSystemType2(self, zones)
+      #3: PSZ-AC
+      when '03'
+        zones.each do|zone|
+          hvac = OpenStudio::Model::addSystemType3(self)
+          hvac = hvac.to_AirLoopHVAC.get
+          hvac.addBranchForZone(zone)      
+          outlet_node = hvac.supplyOutletNode
+          setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
+          setpoint_manager.setControlZone(zone)
+        end
+      #4: PSZ-HP
+      when '04'
+       zones.each do|zone|
+          hvac = OpenStudio::Model::addSystemType4(self)
+          hvac = hvac.to_AirLoopHVAC.get
+          hvac.addBranchForZone(zone)
+          outlet_node = hvac.supplyOutletNode
+          setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
+          setpoint_manager.setControlZone(zone)
+        end
+      #5: Packaged VAV w/ Reheat
+      when '05'
+        hvac = OpenStudio::Model::addSystemType5(self)
+        hvac = hvac.to_AirLoopHVAC.get      
+        zones.each do|zone|
+          hvac.addBranchForZone(zone)      
+        end
+      #6: Packaged VAV w/ PFP Boxes
+      when '06'
+        hvac = OpenStudio::Model::addSystemType6(self)
+        hvac = hvac.to_AirLoopHVAC.get      
+        zones.each do|zone|
+          hvac.addBranchForZone(zone)      
+        end
+      #7: VAV w/ Reheat
+      when '07'
+        hvac = OpenStudio::Model::addSystemType7(self)
+        hvac = hvac.to_AirLoopHVAC.get      
+        zones.each do|zone|
+          hvac.addBranchForZone(zone)      
+        end
+      #8: VAV w/ PFP Boxes
+      when '08'
+        hvac = OpenStudio::Model::addSystemType8(self)
+        hvac = hvac.to_AirLoopHVAC.get      
+        zones.each do|zone|
+          hvac.addBranchForZone(zone)      
+        end
+      #9: Warm air furnace, gas fired
+      when '09'
+        zones.each do|zone|
+          hvac = OpenStudio::Model::addSystemType9(self)  
+          hvac = hvac.to_AirLoopHVAC.get
+          hvac.addBranchForZone(zone)      
+          outlet_node = hvac.supplyOutletNode
+          setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
+          setpoint_manager.setControlZone(zone)
+        end
+      #10: Warm air furnace, electric
+      when '10'
+        zones.each do|zone|
+          hvac = OpenStudio::Model::addSystemType10(self)  
+          hvac = hvac.to_AirLoopHVAC.get
+          hvac.addBranchForZone(zone)      
+          outlet_node = hvac.supplyOutletNode
+          setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
+          setpoint_manager.setControlZone(zone)
+        end
+      #if system number is not recognized  
+      else 
+        puts 'cannot find system number ' + sys_num
+    end    
     
   end
 
