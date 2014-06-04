@@ -2,6 +2,7 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
  
 PROJECT(OpenStudioRegression)
 
+cmake_policy(SET CMP0020 NEW)
 ###############################################################################
 # Add to include path
 
@@ -207,7 +208,7 @@ MARK_AS_ADVANCED(
 
 # Ruby
 FIND_PROGRAM( RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} "${OPENSTUDIO_BUILD_DIR}/Ruby-prefix/src/Ruby/bin/" NO_SYSTEM_ENVIRONMENT_PATH )
-FIND_PACKAGE( Ruby REQUIRED )
+#FIND_PACKAGE( Ruby REQUIRED )
 
 # Google test library
 ADD_DEFINITIONS( -DGTEST_HAS_TR1_TUPLE=0 )
@@ -247,55 +248,66 @@ endif( BUILD_SQUISH_SKETCHUP_TESTS )
 
 #--------------------------------------------------------------------------------
 # Qt
-FIND_PACKAGE (Qt4 4.6.0 COMPONENTS QtCore QtGui QtNetwork QtXml REQUIRED)
-INCLUDE_DIRECTORIES( ${QT_INCLUDE_DIR} )
-#LIST( APPEND CMAKE_PROGRAM_PATH ${QT_LIBRARY_DIR})
-#LIST( APPEND CMAKE_LIBRARY_PATH ${QT_LIBRARY_DIR})
-#--------------------------------------------------------------------------------
-# QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that contains a path to
-# a CMake script that sets up this directory for building with Qt4
-INCLUDE( ${QT_USE_FILE} )
-MARK_AS_ADVANCED( QT_QMAKE_EXECUTABLE QT_QTMOTIF_INCLUDE_DIR QT_QTMOTIF_LIBRARY_DEBUG QT_QTMOTIF_LIBRARY_RELEASE )
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Sql REQUIRED)
+find_package(Qt5Network REQUIRED)
+find_package(Qt5Xml REQUIRED)
+find_package(Qt5WebKit REQUIRED)
+find_package(Qt5WebKitWidgets REQUIRED)
+#find_package(Qt5WinExtras)
+find_package(Qt5Concurrent REQUIRED)
+mark_as_advanced(
+  Qt5Concurrent_DIR
+  Qt5Core_DIR
+  Qt5Gui_DIR
+  Qt5Gui_EGL_LIBRARY
+  Qt5Location_DIR
+  Qt5Multimedia_DIR
+  Qt5MultimediaWidgets_DIR
+  Qt5Network_DIR
+  Qt5OpenGL_DIR
+  Qt5Positioning_DIR
+  Qt5PrintSupport_DIR
+  Qt5Qml_DIR
+  Qt5Quick_DIR
+  Qt5Sensors_DIR
+  Qt5Sql_DIR
+  Qt5WebKit_DIR
+  Qt5WebKitWidgets_DIR
+  Qt5Widgets_DIR
+  #Qt5WinExtras_DIR
+  Qt5Xml_DIR
+)
 
-# This sets the windows build that will need the special winmain@16 call. Qt provides
-#  this for us in the qtmain.lib file. Using this cmake code will ensure we have it
-#  linked into our build. Not needed on Unix/OS X/Linux which is why we have the 
-#  IF(WIN32) conditional.
-IF (WIN32)
-    SET (QT_USE_QTMAIN TRUE)
-ENDIF (WIN32)
+set(CMAKE_AUTOMOC OFF)
 
-#--------------------------------------------------------------------------------
-# QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that contains a path to
-# a CMake script that sets up this directory for building with Qt4
-INCLUDE( ${QT_USE_FILE} )
+#Adding libraries to the list of includes
+include_directories(${Qt5Widgets_INCLUDE_DIRS})
+include_directories(${Qt5Sql_INCLUDE_DIRS})
+include_directories(${Qt5Network_INCLUDE_DIRS})
+include_directories(${Qt5Xml_INCLUDE_DIRS})
+include_directories(${Qt5WebKit_INCLUDE_DIRS})
+include_directories(${Qt5WebKitWidgets_INCLUDE_DIRS})
+#include_directories(${Qt5WinExtras_INCLUDE_DIRS})
+include_directories(${Qt5Concurrent_INCLUDE_DIRS})
 
-#Adding the qtnetwork library to the includes
-INCLUDE_DIRECTORIES( ${QT_QTSQL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${QT_QTNETWORK_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${QT_QTXML_INCLUDE_DIR} )
+#include_directories is supposed to be a set, however there are tons of Qt duplicate includes
+get_directory_property(dupdirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} INCLUDE_DIRECTORIES)
+list(REMOVE_DUPLICATES dupdirs)
+set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${dupdirs}")
 
 # list of all Qt libs and dependencies we are using
-LIST( APPEND QT_LIBS ${QT_QTSQL_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTGUI_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTGUI_LIB_DEPENDENCIES})
-LIST( APPEND QT_LIBS ${QT_QTCORE_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTCORE_LIB_DEPENDENCIES})
-LIST( APPEND QT_LIBS ${QT_QTMAIN_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTNETWORK_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTNETWORK_LIB_DEPENDENCIES})
-LIST( APPEND QT_LIBS ${QT_QTXML_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTXML_LIB_DEPENDENCIES})
+list(APPEND QT_LIBS ${Qt5Widgets_LIBRARIES})
+list(APPEND QT_LIBS ${Qt5Sql_LIBRARIES})
+list(APPEND QT_LIBS ${Qt5Network_LIBRARIES})
+list(APPEND QT_LIBS ${Qt5Xml_LIBRARIES})
+list(APPEND QT_LIBS ${Qt5WebKit_LIBRARIES})
+list(APPEND QT_LIBS ${Qt5WebKitWidgets_LIBRARIES})
+#list(APPEND QT_LIBS ${Qt5WinExtras_LIBRARIES})
+list(APPEND QT_LIBS ${Qt5Concurrent_LIBRARIES})
+
 ###############################################################################
-
-# QJSON
-
-find_package(QJSON REQUIRED HINTS "${OPENSTUDIO_BUILD_DIR}/QJSON-prefix/src/QJSON-build")
-INCLUDE_DIRECTORIES( SYSTEM ${QJSON_INCLUDE_DIR} )
-LINK_DIRECTORIES( ${QJSON_LIBRARY_DIRS} )
-
 # openstudio-server
-
 IF (EXISTS "${OSSERVER_PATH}")
   SET (OSSERVER_FOUND TRUE)
   CONFIGURE_FILE("Vagrant.hxx.in" "${CMAKE_CURRENT_BINARY_DIR}/Vagrant.hxx")
