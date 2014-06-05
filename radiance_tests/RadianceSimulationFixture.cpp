@@ -39,9 +39,13 @@ void RadianceSimulationFixture::SetUpTestCase() {
   logFile = openstudio::FileLogSink(openstudio::toPath("./RadianceTestFixture.log"));
   logFile->setLogLevel(Debug);
 
+  std::string libDir = rubyLibDir();
+  openstudio::path scriptsPath = openstudio::getOpenStudioRubyScriptsPath();
+
   // have to copy ruby libs to where getOpenStudioRubyScriptsPath thinks they are
-  QString src = QDir(openstudio::toQString(rubyLibDir())).canonicalPath();
-  QString dest = QDir(openstudio::toQString(openstudio::getOpenStudioRubyScriptsPath())).canonicalPath();
+  QString src = QDir(openstudio::toQString(libDir)).absolutePath();
+  QString dest = QDir(openstudio::toQString(scriptsPath)).absolutePath();
+
   if (src != dest){
     bool test = openstudio::copyDir(src, dest);
     ASSERT_TRUE(test);
