@@ -1003,3 +1003,11 @@ TEST_F(ModelSimulationFixture,water_economizer_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture,evaporative_cooling_rb) {
+  openstudio::SqlFile sql = runSimulation("evaporative_cooling.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
