@@ -141,6 +141,8 @@ TEST_F(ModelSimulationFixture, baseline_sys01_rb) {
 
 TEST_F(ModelSimulationFixture, baseline_sys02_rb) {
 
+  openstudio::SqlFile sql = runSimulation("baseline_sys02.rb");
+
   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
   ASSERT_TRUE(totalSiteEnergy);
   EXPECT_LT(*totalSiteEnergy, 1000000);
