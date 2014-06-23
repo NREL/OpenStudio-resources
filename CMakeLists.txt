@@ -26,6 +26,7 @@ option( BUILD_RUBY_TESTS "Build the ruby tests" ON )
 option( BUILD_RUNMANAGER_TESTS "Build the runmanager tests" ON )
 option( BUILD_SDD_TESTS "Build the sdd tests" OFF )
 option( BUILD_CONTAM_TESTS "Build the CONTAM tests" OFF )
+option( BUILD_RADIANCE_TESTS "Build the Radiance tests" OFF )
 option( BUILD_SQUISH_SKETCHUP_TESTS "Build the SketchUp plugin tests" OFF )
 option( BUILD_SQUISH_QT_TESTS "Build the OpenStudio QT application Squish tests" OFF )
 option( BUILD_UTILITIES_TESTS "Build the utilities tests" ON )
@@ -190,6 +191,7 @@ SET(OPENSTUDIO_LIBS
   openstudio_analysisdriver
   openstudio_sdd
   openstudio_ruleset
+  openstudio_lib
 )
 
 if( BUILD_RULESENGINE_TESTS )
@@ -199,6 +201,10 @@ endif( BUILD_RULESENGINE_TESTS )
 if( BUILD_CONTAM_TESTS )
   LIST( APPEND OPENSTUDIO_LIBS openstudio_contam )
 endif( BUILD_CONTAM_TESTS )
+
+if( BUILD_RADIANCE_TESTS )
+  LIST( APPEND OPENSTUDIO_LIBS openstudio_radiance )
+endif( BUILD_RADIANCE_TESTS )
 
 # EnergyPlus
 FIND_PACKAGE(EnergyPlus "8.1" REQUIRED)
@@ -339,6 +345,13 @@ if( BUILD_CONTAM_TESTS )
   FIND_PROGRAM( SIMREAD_EXECUTABLE NAMES simread3 )
   add_subdirectory( contam_tests )
 endif( BUILD_CONTAM_TESTS )
+
+if( BUILD_RADIANCE_TESTS )
+  FIND_PROGRAM( RADIANCE_EXECUTABLE NAMES rad )
+  add_subdirectory( radiance_tests )
+  
+  # copy radiance ruby files?
+endif( BUILD_RADIANCE_TESTS )
 
 if( BUILD_RUBY_TESTS )
   add_subdirectory( ruby )
