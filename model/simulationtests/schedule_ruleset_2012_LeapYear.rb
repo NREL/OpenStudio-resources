@@ -60,13 +60,13 @@ weekdayRule.setApplySaturday(false)
 weekdayRule.daySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0.9)
 
 weekendRule = OpenStudio::Model::ScheduleRule.new(schedule)
-weekendRule.setApplySunday(false)
-weekendRule.setApplyMonday(true)
-weekendRule.setApplyTuesday(true)
-weekendRule.setApplyWednesday(true)
-weekendRule.setApplyThursday(true)
-weekendRule.setApplyFriday(true)
-weekendRule.setApplySaturday(false)
+weekendRule.setApplySunday(true)
+weekendRule.setApplyMonday(false)
+weekendRule.setApplyTuesday(false)
+weekendRule.setApplyWednesday(false)
+weekendRule.setApplyThursday(false)
+weekendRule.setApplyFriday(false)
+weekendRule.setApplySaturday(true)
 weekendRule.daySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0.3)
 
 summerRule = OpenStudio::Model::ScheduleRule.new(schedule)
@@ -89,6 +89,8 @@ end
 # request hourly output
 var = OpenStudio::Model::OutputVariable.new("Schedule Value", model)
 var.setKeyValue("Test Schedule")
+
+var = OpenStudio::Model::OutputVariable.new("Site Day Type Index", model)
 
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
