@@ -224,5 +224,379 @@ openstudio::SqlFile runSimulation(const std::string t_filename, const bool maste
  //  EXPECT_LT(*totalSiteEnergy, 1000000);
  //}
 
+TEST_F(SDDSimulationFixture, 050812_RetlMed_DirectEvap_140617_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("050812-RetlMed-DirectEvap 140617 - ap.xml");
 
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 050912_RetlMed_IndirectEvap_140617_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("050912-RetlMed-IndirectEvap 140617 - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 051012_RetlMed_IndirectDirectEvap_140617_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("051012-RetlMed-IndirectDirectEvap 140617 - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040212_OffLrg_ExhTest_ForIssue602_xml) {
+  openstudio::SqlFile sql = runSimulation("040212-OffLrg-ExhTest_ForIssue602.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010012_SchSml_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("010012-SchSml-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010012_SchSml_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("010012-SchSml-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010012_SchSml_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("010012-SchSml-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010112_SchSml_PSZ_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("010112-SchSml-PSZ - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010112_SchSml_PSZ_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("010112-SchSml-PSZ - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010112_SchSml_PSZ_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("010112-SchSml-PSZ - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010212_SchSml_PVAVAirZnSys_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("010212-SchSml-PVAVAirZnSys - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010212_SchSml_PVAVAirZnSys_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("010212-SchSml-PVAVAirZnSys - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010212_SchSml_PVAVAirZnSys_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("010212-SchSml-PVAVAirZnSys - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010312_SchSml_VAVFluidZnSys_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("010312-SchSml-VAVFluidZnSys - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010312_SchSml_VAVFluidZnSys_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("010312-SchSml-VAVFluidZnSys - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010312_SchSml_VAVFluidZnSys_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("010312-SchSml-VAVFluidZnSys - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 020012_OffSml_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("020012-OffSml-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 020012_OffSml_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("020012-OffSml-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 020012_OffSml_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("020012-OffSml-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 020212_OffSml_SimpleGeometry_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("020212-OffSml-SimpleGeometry - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 020212_OffSml_SimpleGeometry_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("020212-OffSml-SimpleGeometry - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 020212_OffSml_SimpleGeometry_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("020212-OffSml-SimpleGeometry - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 030012_OffMed_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("030012-OffMed-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 030012_OffMed_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("030012-OffMed-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 030012_OffMed_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("030012-OffMed-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 030212_OffMed_SimpleGeometry_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("030212-OffMed-SimpleGeometry - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 030212_OffMed_SimpleGeometry_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("030212-OffMed-SimpleGeometry - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 030212_OffMed_SimpleGeometry_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("030212-OffMed-SimpleGeometry - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040012_OffLrg_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("040012-OffLrg-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040012_OffLrg_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("040012-OffLrg-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040012_OffLrg_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("040012-OffLrg-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040112_OffLrg_VAVPriSec_ab) {
+  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - ab");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040112_OffLrg_VAVPriSec_ap) {
+  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - ap");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040112_OffLrg_VAVPriSec_zb) {
+  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - zb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040112_OffLrg_VAVPriSec_zp) {
+  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - zp");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 050012_RetlMed_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("050012-RetlMed-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 050012_RetlMed_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("050012-RetlMed-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 050012_RetlMed_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("050012-RetlMed-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 070012_HotSml_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("070012-HotSml-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 070012_HotSml_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("070012-HotSml-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 070012_HotSml_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("070012-HotSml-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 080012_Whse_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("080012-Whse-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 080012_Whse_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("080012-Whse-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 080012_Whse_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("080012-Whse-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 090012_RetlLrg_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("090012-RetlLrg-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 090012_RetlLrg_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("090012-RetlLrg-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 090012_RetlLrg_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("090012-RetlLrg-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
 
