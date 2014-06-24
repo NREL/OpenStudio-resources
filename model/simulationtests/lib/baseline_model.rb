@@ -208,6 +208,70 @@ class BaselineModel < OpenStudio::Model::Model
     end
   
   end
+  
+  def add_daylighting(params)
+    shades = params["shades"]
+    
+    shading_control_hash = Hash.new
+    
+    self.getThermalZones.each do |zone|
+      biggestWindow = nil
+      zone.spaces.each do |space|
+        space.surfaces.each do |surface|
+          if surface.surfaceType == "Wall" and surface.outsideBoundaryCondition == "Outdoors" 
+            surface.subSurfaces.each do |subSurface|
+              if subSurface.subSurfaceType == "FixedWindow" or subSurface.subSurfaceType == "OperableWindow"
+                if biggestWindow.nil? or subSurface.netArea > biggestWindow.netArea
+                  biggestWindow = subSurface
+                end 
+                
+                if shades
+                  construction = subSurface.construction.get
+                  shading_control = shading_control_hash[construction.handle.to_s]
+                  if not shading_control
+                    material = OpenStudio::Model::Blind.new(self)
+                    shading_control = OpenStudio::Model::ShadingControl.new(material)
+                    shading_control_hash[construction.handle.to_s] = shading_control
+                  end
+                  subSurface.setShadingControl(shading_control)
+                  
+                end
+              end
+            end
+          end
+        end
+      end
+      
+      if biggestWindow
+        vertices = biggestWindow.vertices
+        centroid = OpenStudio::getCentroid(vertices).get
+        outwardNormal = biggestWindow.outwardNormal
+        outwardNormal.setLength(-2.0)
+        position = centroid + outwardNormal
+        offsetX = 0.0
+        offsetY = 0.0
+        offsetZ = -1.0
+        
+        dc = OpenStudio::Model::DaylightingControl.new(self)
+        dc.setSpace(biggestWindow.surface.get.space.get)
+        dc.setPositionXCoordinate(position.x + offsetX)
+        dc.setPositionYCoordinate(position.y + offsetY)
+        dc.setPositionZCoordinate(position.z + offsetZ)
+        zone.setPrimaryDaylightingControl(dc)
+        
+        ill = OpenStudio::Model::IlluminanceMap.new(self)
+        ill.setSpace(biggestWindow.surface.get.space.get)
+        ill.setOriginXCoordinate(position.x + offsetX - 0.5)
+        ill.setOriginYCoordinate(position.y + offsetY - 0.5)
+        ill.setOriginZCoordinate(position.z + offsetZ)
+        ill.setXLength(1)
+        ill.setYLength(1)
+        zone.setIlluminanceMap(ill)
+  
+      end
+    end
+    
+  end
 
   def add_hvac(params)
     sys_num = params["ashrae_sys_num"]

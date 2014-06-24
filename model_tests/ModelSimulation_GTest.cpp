@@ -51,9 +51,8 @@
 #include <Windows.h>
 #endif
 
-openstudio::SqlFile runSimulation(const std::string t_filename)
+std::vector<openstudio::SqlFile> runSimulationNTimes(const std::string t_filename, unsigned N, const std::string& epwName = "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
 { 
-
   openstudio::path filePath = Paths::testsPath() / openstudio::toPath(t_filename);
   openstudio::path outdir = Paths::testRunPath(); 
 
@@ -67,42 +66,62 @@ openstudio::SqlFile runSimulation(const std::string t_filename)
   openstudio::runmanager::RunManager kit(db, true);
   kit.setPaused(true);
 
-  openstudio::runmanager::Workflow wf;
-
   openstudio::runmanager::Tools tools 
     = openstudio::runmanager::ConfigOptions::makeTools(
         energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path(),
         openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
 
+  openstudio::path epw = (resourcesPath() / openstudio::toPath("weatherdata") / openstudio::toPath(epwName));
 
-  openstudio::path epw = (resourcesPath() / openstudio::toPath("weatherdata") / openstudio::toPath("USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"));
+  std::vector<openstudio::runmanager::Job> jobs;
+  for (unsigned i = 0; i < N; ++i){
 
-  if (filePath.extension() == openstudio::toPath(".rb"))
-  {
-    openstudio::runmanager::RubyJobBuilder rubyJobBuilder;
+    openstudio::runmanager::Workflow wf;
 
-    rubyJobBuilder.setScriptFile(filePath);
-    rubyJobBuilder.addToolArgument("-I" + rubyOpenStudioDir()) ;
-    rubyJobBuilder.addToolArgument("-I" + openstudio::toString(sourcePath()) + "/model/simulationtests/") ;
-    rubyJobBuilder.copyRequiredFiles("rb", "osm", "in.epw");
-    rubyJobBuilder.addToWorkflow(wf);
+    std::string numString = boost::lexical_cast<std::string>(i);
+
+    openstudio::path outdir2 = outdir / openstudio::toPath(numString); 
+
+    boost::filesystem::create_directories(outdir2);
+
+    if (filePath.extension() == openstudio::toPath(".rb"))
+    {
+      openstudio::runmanager::RubyJobBuilder rubyJobBuilder;
+
+      rubyJobBuilder.setScriptFile(filePath);
+      rubyJobBuilder.addToolArgument("-I" + rubyOpenStudioDir()) ;
+      rubyJobBuilder.addToolArgument("-I" + openstudio::toString(sourcePath()) + "/model/simulationtests/") ;
+      rubyJobBuilder.copyRequiredFiles("rb", "osm", "in.epw");
+      rubyJobBuilder.addToWorkflow(wf);
+    }
+
+    wf.addWorkflow(openstudio::runmanager::Workflow("ModelToIdf->EnergyPlusPreProcess->EnergyPlus"));
+
+    wf.add(tools);
+    openstudio::runmanager::Job j = wf.create(outdir2, filePath, epw);
+
+    jobs.push_back(j);
+
+    kit.enqueue(j, false);
   }
-
-  wf.addWorkflow(openstudio::runmanager::Workflow("ModelToIdf->EnergyPlus"));
-
-  wf.add(tools);
-  openstudio::runmanager::Job j = wf.create(outdir, filePath, epw);
-
-  kit.enqueue(j, false);
 
   kit.setPaused(false);
 
   kit.waitForFinished();
 
-  return openstudio::SqlFile(j.treeAllFiles().getLastByFilename("eplusout.sql").fullPath);
+  std::vector<openstudio::SqlFile> result;
+  for (unsigned i = 0; i < N; ++i){
+    result.push_back(openstudio::SqlFile(jobs[i].treeAllFiles().getLastByFilename("eplusout.sql").fullPath));
+  }
+
+  return result;
 }
 
-
+openstudio::SqlFile runSimulation(const std::string t_filename)
+{
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes(t_filename, 1);
+  return sqls.front();
+}
 
 TEST_F(ModelSimulationFixture, baseline_sys01_rb) {
   openstudio::SqlFile sql = runSimulation("baseline_sys01.rb");
@@ -121,6 +140,7 @@ TEST_F(ModelSimulationFixture, baseline_sys01_rb) {
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys02_rb) {
+
   openstudio::SqlFile sql = runSimulation("baseline_sys02.rb");
 
   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
@@ -955,6 +975,445 @@ TEST_F(ModelSimulationFixture, vrf_osm) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture, interior_partitions_rb) {
+  unsigned N = 4;
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("interior_partitions.rb", N);
+  ASSERT_EQ(N, sqls.size());
+
+  boost::optional<double> totalSiteEnergy;
+  boost::optional<double> hoursHeatingSetpointNotMet;
+  boost::optional<double> hoursCoolingSetpointNotMet;
+  for (unsigned i = 0; i < N; ++i){
+    if (!totalSiteEnergy){
+      totalSiteEnergy = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      EXPECT_LT(*totalSiteEnergy, 1000000);
+
+      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+    }else{
+      boost::optional<double> test = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+
+      test = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
+
+      test = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
+    }
+  }
+}
+
+
+
+TEST_F(ModelSimulationFixture, schedule_ruleset_2012_NonLeapYear_rb) {
+  unsigned N = 1;
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("schedule_ruleset_2012_NonLeapYear.rb", N, "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_NonLeapYear.epw");
+  ASSERT_EQ(N, sqls.size());
+
+  // DLM: this simulation is bogus, 2012 was a leap year starting on Sunday but running with non-leap year weather file
+  // 2006 is non-leap year starting on Sunday 
+
+  // from test, schedule name "Test Schedule"
+  // winter design day, 0
+  // summer design day, 1
+  // weekdays, 0.9
+  // weekends, 0.3
+  // 5/28-8/28, 0.1
+
+  boost::optional<double> totalSiteEnergy;
+  boost::optional<double> hoursHeatingSetpointNotMet;
+  boost::optional<double> hoursCoolingSetpointNotMet;
+  for (unsigned i = 0; i < N; ++i){
+
+    // check timeseries data
+    boost::optional<openstudio::TimeSeries> timeSeries;
+// TODO: DLM, Fix this later
+// would like this to work with different casing
+//    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "Test Schedule"); // DLM: should we handle this internal to SqlFile?
+//    EXPECT_TRUE(timeSeries);
+    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "TEST SCHEDULE");
+    ASSERT_TRUE(timeSeries);
+    ASSERT_EQ(24*365, timeSeries->values().size());
+    ASSERT_TRUE(timeSeries->intervalLength());
+    EXPECT_EQ(60, timeSeries->intervalLength()->totalMinutes());
+// TODO: DLM, Fix this later
+//    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), timeSeries->firstReportDateTime());
+
+    boost::optional<openstudio::TimeSeries> dayTypeTimeSeries;
+    dayTypeTimeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Site Day Type Index", "Environment");
+    ASSERT_TRUE(dayTypeTimeSeries);
+    ASSERT_EQ(24*365, dayTypeTimeSeries->values().size());
+    ASSERT_TRUE(dayTypeTimeSeries->intervalLength());
+    EXPECT_EQ(60, dayTypeTimeSeries->intervalLength()->totalMinutes());
+// TODO: DLM, Fix this later
+//    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), dayTypeTimeSeries->firstReportDateTime());
+
+    openstudio::DateTime dateTime(openstudio::Date(1, 1, 2006), openstudio::Time(0,1,0,0));
+    openstudio::Vector values = timeSeries->values();
+    openstudio::Vector dayTypeValues = dayTypeTimeSeries->values();
+    ASSERT_EQ(8760, values.size());
+    ASSERT_EQ(values.size(), dayTypeValues.size());
+    bool foundSpecialPeriod = false;
+    for (unsigned j = 0; j < values.size(); ++j){
+
+      if (dateTime.time().hours() > 0){
+
+        EXPECT_EQ(dateTime.date().dayOfWeek().value(), dayTypeValues[j] - 1);
+
+        double expectedValue = 0;
+        if (dateTime.date() >= openstudio::Date(5,28,2006) && dateTime.date() <= openstudio::Date(8,28,2006)){
+          expectedValue = 0.1;
+          foundSpecialPeriod = true;
+        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Saturday){
+          expectedValue = 0.3;
+        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Sunday){
+          expectedValue = 0.3;
+        }else{
+          expectedValue = 0.9;
+        }
+
+        EXPECT_EQ(expectedValue, values[j]) << dateTime << " " << values[j];
+
+      }
+
+      dateTime += openstudio::Time(0,1,0,0);
+    }
+    EXPECT_TRUE(foundSpecialPeriod);
+
+    if (!totalSiteEnergy){
+      totalSiteEnergy = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      EXPECT_LT(*totalSiteEnergy, 1000000);
+
+      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+    }else{
+      boost::optional<double> test = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+
+
+      test = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
+
+      test = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
+    }
+  }
+}
+
+
+TEST_F(ModelSimulationFixture, schedule_ruleset_2012_LeapYear_rb) {
+  unsigned N = 1;
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("schedule_ruleset_2012_LeapYear.rb", N, "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_LeapYear.epw");
+  ASSERT_EQ(N, sqls.size());
+
+    // from test, schedule name "Test Schedule"
+  // winter design day, 0
+  // summer design day, 1
+  // weekdays, 0.9
+  // weekends, 0.3
+  // 5/28-8/28, 0.1
+
+  boost::optional<double> totalSiteEnergy;
+  boost::optional<double> hoursHeatingSetpointNotMet;
+  boost::optional<double> hoursCoolingSetpointNotMet;
+  for (unsigned i = 0; i < N; ++i){
+
+    // check timeseries data
+    boost::optional<openstudio::TimeSeries> timeSeries;
+// TODO: DLM, Fix this later
+// would like this to work with different casing
+//    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "Test Schedule"); // DLM: should we handle this internal to SqlFile?
+//    EXPECT_TRUE(timeSeries);
+    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "TEST SCHEDULE");
+    ASSERT_TRUE(timeSeries);
+    ASSERT_EQ(24*366, timeSeries->values().size());
+    ASSERT_TRUE(timeSeries->intervalLength());
+    EXPECT_EQ(60, timeSeries->intervalLength()->totalMinutes());
+// TODO: DLM, Fix this later
+//    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), timeSeries->firstReportDateTime());
+
+    boost::optional<openstudio::TimeSeries> dayTypeTimeSeries;
+    dayTypeTimeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Site Day Type Index", "Environment");
+    ASSERT_TRUE(dayTypeTimeSeries);
+    ASSERT_EQ(24*366, dayTypeTimeSeries->values().size());
+    ASSERT_TRUE(dayTypeTimeSeries->intervalLength());
+    EXPECT_EQ(60, dayTypeTimeSeries->intervalLength()->totalMinutes());
+// TODO: DLM, Fix this later
+//    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), dayTypeTimeSeries->firstReportDateTime());
+
+    openstudio::DateTime dateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0));
+    openstudio::Vector values = timeSeries->values();
+    openstudio::Vector dayTypeValues = dayTypeTimeSeries->values();
+    ASSERT_EQ(8784, values.size());
+    ASSERT_EQ(values.size(), dayTypeValues.size());
+    bool foundSpecialPeriod = false;
+    for (unsigned j = 0; j < values.size(); ++j){
+
+      if (dateTime.time().hours() > 0){
+
+        EXPECT_EQ(dateTime.date().dayOfWeek().value(), dayTypeValues[j] - 1);
+
+        double expectedValue = 0;
+        if (dateTime.date() >= openstudio::Date(5,28,2012) && dateTime.date() <= openstudio::Date(8,28,2012)){
+          expectedValue = 0.1;
+          foundSpecialPeriod = true;
+        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Saturday){
+          expectedValue = 0.3;
+        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Sunday){
+          expectedValue = 0.3;
+        }else{
+          expectedValue = 0.9;
+        }
+
+        EXPECT_EQ(expectedValue, values[j]) << dateTime << " " << values[j];
+
+      }
+
+      dateTime += openstudio::Time(0,1,0,0);
+    }
+    EXPECT_TRUE(foundSpecialPeriod);
+
+    if (!totalSiteEnergy){
+      totalSiteEnergy = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      EXPECT_LT(*totalSiteEnergy, 1000000);
+
+      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+    }else{
+      boost::optional<double> test = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+
+
+      test = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
+
+      test = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
+    }
+  }
+}
+
+TEST_F(ModelSimulationFixture, schedule_ruleset_2013_rb) {
+  unsigned N = 1;
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("schedule_ruleset_2013.rb", N, "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2013.epw");
+  ASSERT_EQ(N, sqls.size());
+
+  // from test, schedule name "Test Schedule"
+  // winter design day, 0
+  // summer design day, 1
+  // weekdays, 0.9
+  // weekends, 0.3
+  // 5/28-8/28, 0.1
+
+  boost::optional<double> totalSiteEnergy;
+  boost::optional<double> hoursHeatingSetpointNotMet;
+  boost::optional<double> hoursCoolingSetpointNotMet;
+  for (unsigned i = 0; i < N; ++i){
+
+    // check timeseries data
+    boost::optional<openstudio::TimeSeries> timeSeries;
+// TODO: DLM, Fix this later
+// would like this to work with different casing
+//    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "Test Schedule"); // DLM: should we handle this internal to SqlFile?
+//    EXPECT_TRUE(timeSeries);
+    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "TEST SCHEDULE");
+    ASSERT_TRUE(timeSeries);
+    ASSERT_EQ(24*365, timeSeries->values().size());
+    ASSERT_TRUE(timeSeries->intervalLength());
+    EXPECT_EQ(60, timeSeries->intervalLength()->totalMinutes());
+// TODO: DLM, Fix this later
+//    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), timeSeries->firstReportDateTime());
+
+    boost::optional<openstudio::TimeSeries> dayTypeTimeSeries;
+    dayTypeTimeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Site Day Type Index", "Environment");
+    ASSERT_TRUE(dayTypeTimeSeries);
+    ASSERT_EQ(24*365, dayTypeTimeSeries->values().size());
+    ASSERT_TRUE(dayTypeTimeSeries->intervalLength());
+    EXPECT_EQ(60, dayTypeTimeSeries->intervalLength()->totalMinutes());
+// TODO: DLM, Fix this later
+//    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), dayTypeTimeSeries->firstReportDateTime());
+
+    openstudio::DateTime dateTime(openstudio::Date(1, 1, 2013), openstudio::Time(0,1,0,0));
+    openstudio::Vector values = timeSeries->values();
+    openstudio::Vector dayTypeValues = dayTypeTimeSeries->values();
+    ASSERT_EQ(8760, values.size());
+    ASSERT_EQ(values.size(), dayTypeValues.size());
+    bool foundSpecialPeriod = false;
+    for (unsigned j = 0; j < values.size(); ++j){
+
+      if (dateTime.time().hours() > 0){
+
+        EXPECT_EQ(dateTime.date().dayOfWeek().value(), dayTypeValues[j] - 1);
+
+        double expectedValue = 0;
+        if (dateTime.date() >= openstudio::Date(5,28,2013) && dateTime.date() <= openstudio::Date(8,28,2013)){
+          expectedValue = 0.1;
+          foundSpecialPeriod = true;
+        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Saturday){
+          expectedValue = 0.3;
+        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Sunday){
+          expectedValue = 0.3;
+        }else{
+          expectedValue = 0.9;
+        }
+
+        EXPECT_EQ(expectedValue, values[j]) << dateTime << " " << values[j];
+
+      }
+
+      dateTime += openstudio::Time(0,1,0,0);
+    }
+    EXPECT_TRUE(foundSpecialPeriod);
+
+    if (!totalSiteEnergy){
+      totalSiteEnergy = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      EXPECT_LT(*totalSiteEnergy, 1000000);
+
+      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+    }else{
+      boost::optional<double> test = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+
+
+      test = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
+
+      test = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
+    }
+  }
+}
+
+TEST_F(ModelSimulationFixture, daylighting_no_shades_rb) {
+  unsigned N = 1;
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("daylighting_no_shades.rb", N);
+  ASSERT_EQ(N, sqls.size());
+
+  boost::optional<double> totalSiteEnergy;
+  boost::optional<double> hoursHeatingSetpointNotMet;
+  boost::optional<double> hoursCoolingSetpointNotMet;
+  for (unsigned i = 0; i < N; ++i){
+    if (!totalSiteEnergy){
+      totalSiteEnergy = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      EXPECT_LT(*totalSiteEnergy, 1000000);
+
+      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+    }else{
+      boost::optional<double> test = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+
+      test = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
+
+      test = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
+    }
+  }
+}
+
+
+TEST_F(ModelSimulationFixture, daylighting_shades_rb) {
+  unsigned N = 1;
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("daylighting_shades.rb", N);
+  ASSERT_EQ(N, sqls.size());
+
+  boost::optional<double> totalSiteEnergy;
+  boost::optional<double> hoursHeatingSetpointNotMet;
+  boost::optional<double> hoursCoolingSetpointNotMet;
+  for (unsigned i = 0; i < N; ++i){
+    if (!totalSiteEnergy){
+      totalSiteEnergy = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      EXPECT_LT(*totalSiteEnergy, 1000000);
+
+      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+    }else{
+      boost::optional<double> test = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+
+      test = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
+
+      test = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
+    }
+  }
+}
+
 TEST_F(ModelSimulationFixture,coolingtowers_rb) {
   openstudio::SqlFile sql = runSimulation("coolingtowers.rb");
 
@@ -1011,3 +1470,44 @@ TEST_F(ModelSimulationFixture,evaporative_cooling_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+
+TEST_F(ModelSimulationFixture, asymmetric_interior_constructions_osm) {
+  unsigned N = 8;
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("asymmetric_interior_constructions.osm", N);
+  ASSERT_EQ(N, sqls.size());
+
+  boost::optional<double> totalSiteEnergy;
+  boost::optional<double> hoursHeatingSetpointNotMet;
+  boost::optional<double> hoursCoolingSetpointNotMet;
+  for (unsigned i = 0; i < N; ++i){
+    if (!totalSiteEnergy){
+      totalSiteEnergy = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      EXPECT_LT(*totalSiteEnergy, 1000000);
+
+      // DLM: this is a messed up model, do not expect good results, just consistent onse
+      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+    }else{
+      boost::optional<double> test = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+
+      test = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
+
+      test = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
+    }
+  }
+}
