@@ -216,55 +216,13 @@ openstudio::SqlFile runSimulation(const std::string t_filename, const bool maste
  //}
  //
 
- TEST_F(SDDSimulationFixture, 010012_SchSml_CECStd_ab_xml) {
-   openstudio::SqlFile sql = runSimulation("010012-SchSml-CECStd - ab.xml");
- 
-   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-   ASSERT_TRUE(totalSiteEnergy);
-   EXPECT_LT(*totalSiteEnergy, 1000000);
- }
+ //TEST_F(SDDSimulationFixture, 010012_SchSml_CECStd_ab_xml) {
+ //  openstudio::SqlFile sql = runSimulation("010012-SchSml-CECStd - ab.xml");
+ //
+ //  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+ //  ASSERT_TRUE(totalSiteEnergy);
+ //  EXPECT_LT(*totalSiteEnergy, 1000000);
+ //}
 
 
-010012-SchSml-CECStd - ap.xml
-010012-SchSml-CECStd - zb.xml
-010112-SchSml-PSZ - ab.xml
-010112-SchSml-PSZ - ap.xml
-010112-SchSml-PSZ - zb.xml
-010212-SchSml-PVAVAirZnSys - ab.xml
-010212-SchSml-PVAVAirZnSys - ap.xml
-010212-SchSml-PVAVAirZnSys - zb.xml
-010312-SchSml-VAVFluidZnSys - ab.xml
-010312-SchSml-VAVFluidZnSys - ap.xml
-010312-SchSml-VAVFluidZnSys - zb.xml
-020012-OffSml-CECStd - ab.xml
-020012-OffSml-CECStd - ap.xml
-020012-OffSml-CECStd - zb.xml
-020212-OffSml-SimpleGeometry - ab.xml
-020212-OffSml-SimpleGeometry - ap.xml
-020212-OffSml-SimpleGeometry - zb.xml
-030012-OffMed-CECStd - ab.xml
-030012-OffMed-CECStd - ap.xml
-030012-OffMed-CECStd - zb.xml
-030212-OffMed-SimpleGeometry - ab.xml
-030212-OffMed-SimpleGeometry - ap.xml
-030212-OffMed-SimpleGeometry - zb.xml
-040012-OffLrg-CECStd - ab.xml
-040012-OffLrg-CECStd - ap.xml
-040012-OffLrg-CECStd - zb.xml
-040112-OffLrg-VAVPriSec - ab.xml
-040112-OffLrg-VAVPriSec - ap.xml
-040112-OffLrg-VAVPriSec - zb.xml
-040112-OffLrg-VAVPriSec - zp.xml
-050012-RetlMed-CECStd - ab.xml
-050012-RetlMed-CECStd - ap.xml
-050012-RetlMed-CECStd - zb.xml
-070012-HotSml-CECStd - ab.xml
-070012-HotSml-CECStd - ap.xml
-070012-HotSml-CECStd - zb.xml
-080012-Whse-CECStd - ab.xml
-080012-Whse-CECStd - ap.xml
-080012-Whse-CECStd - zb.xml
-090012-RetlLrg-CECStd - ab.xml
-090012-RetlLrg-CECStd - ap.xml
-090012-RetlLrg-CECStd - zb.xml
 
