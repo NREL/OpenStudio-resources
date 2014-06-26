@@ -600,3 +600,19 @@ TEST_F(SDDSimulationFixture, 090012_RetlLrg_CECStd_zb_xml) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(SDDSimulationFixture, 020712_OffSml_WLHP_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("020712-OffSml-WLHP - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010212_SchSml_PVAVAirZnSys_ForIssue611_xml) {
+  openstudio::SqlFile sql = runSimulation("010212-SchSml-PVAVAirZnSys_ForIssue611.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
