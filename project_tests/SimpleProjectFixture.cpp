@@ -29,6 +29,7 @@
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/ConfigOptions.hpp>
 
+#include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/bcl/BCLMeasure.hpp>
@@ -37,6 +38,9 @@
 #include <project_tests/ProjectTests.hxx>
 
 #include <QCoreApplication>
+#include <QtGlobal>
+#include <QByteArray>
+#include <QString>
 
 void SimpleProjectFixture::SetUp() 
 {
@@ -44,11 +48,40 @@ void SimpleProjectFixture::SetUp()
   QCoreApplication::setOrganizationName("OpenStudioResources");
   QCoreApplication::setApplicationName("SimpleProjectFixture");
 
-  // have to copy these to where OpenStudio will expect them
+  QString pathAddition;
+#if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+  pathAddition = ":";
+  pathAddition += openstudio::toQString(openstudio::getApplicationRunDirectory());
+#else
+  pathAddition = ";";
+  pathAddition += openstudio::toQString(openstudio::getApplicationRunDirectory());
+#endif
+
+  QByteArray env = qgetenv("PATH");
+  env.append(pathAddition);
+  qputenv("PATH", env);
+
+  env = qgetenv("RUBYLIB");
+  env.append(pathAddition);
+  qputenv("RUBYLIB", env);
+
+  env = qgetenv("DLN_LIBRARY_PATH");
+  env.append(pathAddition);
+  qputenv("DLN_LIBRARY_PATH", env);
+
+  // DLM: the code below is a hack and should not be required, we should be able to set these paths somehow
+
+  // have to copy measure to where OpenStudio will expect them (it thinks we are running from OpenStudio installer)
   if (boost::filesystem::exists(openstudio::BCLMeasure::patApplicationMeasuresDir())){
     ASSERT_TRUE(openstudio::removeDirectory(openstudio::BCLMeasure::patApplicationMeasuresDir()));
   }
   ASSERT_TRUE(openstudio::copyDirectory(patApplicationMeasureSourceDir(), openstudio::BCLMeasure::patApplicationMeasuresDir()));
+
+  // have to copy measure to where OpenStudio will expect them (it thinks we are running from OpenStudio
+  if (boost::filesystem::exists(openstudio::getOpenStudioRubyScriptsPath())){
+    ASSERT_TRUE(openstudio::removeDirectory(openstudio::getOpenStudioRubyScriptsPath()));
+  }
+  ASSERT_TRUE(openstudio::copyDirectory(getOpenStudioRubyScriptsSourcePath(), openstudio::getOpenStudioRubyScriptsPath()));
 }
 
 void SimpleProjectFixture::TearDown() {}
