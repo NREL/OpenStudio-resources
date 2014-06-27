@@ -26,32 +26,97 @@
 #include <analysisdriver/CurrentAnalysis.hpp>
 
 #include <analysis/Analysis.hpp>
+#include <analysis/DataPoint.hpp>
 
 #include <utilities/core/PathHelpers.hpp>
 
 #include <resources.hxx>
 
+#include <boost/foreach.hpp>
+
 TEST_F(SimpleProjectFixture, RelocateTest) {
 
-  openstudio::path path1 = openstudio::toPath("./SimpleProject1");
-  openstudio::path path2 = openstudio::toPath("./SimpleProject2");
+  openstudio::path path1 = openstudio::toPath("./RelocateTest/SimpleProject1");
+  openstudio::path path2 = openstudio::toPath("./RelocateTest/SimpleProject2");
+  openstudio::path path3 = openstudio::toPath("./RelocateTest/SimpleProject1-Save");
 
-  boost::optional<openstudio::analysisdriver::SimpleProject> project = makeSimpleProject(path1);
-  ASSERT_TRUE(project);
+  if (boost::filesystem::exists(path1)) {
+    openstudio::removeDirectory(path1);
+  }
+  if (boost::filesystem::exists(path2)) {
+    openstudio::removeDirectory(path2);
+  }
+  if (boost::filesystem::exists(path3)) {
+    openstudio::removeDirectory(path3);
+  }
 
-  openstudio::analysisdriver::AnalysisDriver analysisDriver = project->analysisDriver();
-  openstudio::analysisdriver::AnalysisRunOptions runOptions = openstudio::analysisdriver::standardRunOptions(*project);
-  openstudio::analysis::Analysis analysis = project->analysis();
-  analysisDriver.run(analysis, runOptions);
+  unsigned numDataPoints = 0;
+  {
+    boost::optional<openstudio::analysisdriver::SimpleProject> project = makePATProject(path1);
+    ASSERT_TRUE(project);
+    project->clearAllResults();
 
-  EXPECT_TRUE(analysisDriver.waitForFinished());
-  project->save();
+    openstudio::analysisdriver::AnalysisDriver analysisDriver = project->analysisDriver();
+    openstudio::analysisdriver::AnalysisRunOptions runOptions = openstudio::analysisdriver::standardRunOptions(*project);
+    openstudio::analysis::Analysis analysis = project->analysis();
 
-  project.reset();
+    std::vector<openstudio::analysis::DataPoint> dataPoints = analysis.dataPoints();
+    numDataPoints = dataPoints.size();
+
+    // DLM: todo, eventually add some alternatives
+    EXPECT_EQ(1u, numDataPoints);
+    BOOST_FOREACH(const openstudio::analysis::DataPoint& dataPoint, dataPoints){
+      EXPECT_FALSE(dataPoint.complete());
+    }
+
+    analysisDriver.run(analysis, runOptions);
+    analysisDriver.unpauseQueue();
+    EXPECT_TRUE(analysisDriver.waitForFinished());
+
+    dataPoints = analysis.dataPoints();
+    EXPECT_EQ(numDataPoints, dataPoints.size());
+    BOOST_FOREACH(const openstudio::analysis::DataPoint& dataPoint, dataPoints){
+      EXPECT_TRUE(dataPoint.complete());
+      EXPECT_FALSE(dataPoint.failed());
+    }
+    
+    project->stop();
+    project->save();
+    project.reset();
+  }
 
   ASSERT_TRUE(openstudio::copyDirectory(path1, path2));
+  ASSERT_TRUE(openstudio::copyDirectory(path1, path3));
   ASSERT_TRUE(openstudio::removeDirectory(path1));
 
-  project = openstudio::analysisdriver::SimpleProject::open(path2);
-  ASSERT_TRUE(project);
+  {
+    boost::optional<openstudio::analysisdriver::SimpleProject> project = openstudio::analysisdriver::openPATProject(path2);
+    ASSERT_TRUE(project);
+    project->clearAllResults();
+
+    openstudio::analysisdriver::AnalysisDriver analysisDriver = project->analysisDriver();
+    openstudio::analysisdriver::AnalysisRunOptions runOptions = openstudio::analysisdriver::standardRunOptions(*project);
+    openstudio::analysis::Analysis analysis = project->analysis();
+
+    std::vector<openstudio::analysis::DataPoint> dataPoints = analysis.dataPoints();
+    EXPECT_EQ(numDataPoints, dataPoints.size());
+    BOOST_FOREACH(const openstudio::analysis::DataPoint& dataPoint, dataPoints){
+      EXPECT_FALSE(dataPoint.complete());
+    }
+    
+    analysisDriver.run(analysis, runOptions);
+    analysisDriver.unpauseQueue();
+    EXPECT_TRUE(analysisDriver.waitForFinished());
+
+    dataPoints = analysis.dataPoints();
+    EXPECT_EQ(numDataPoints, dataPoints.size());
+    BOOST_FOREACH(const openstudio::analysis::DataPoint& dataPoint, dataPoints){
+      EXPECT_TRUE(dataPoint.complete());
+      EXPECT_FALSE(dataPoint.failed());
+    }
+    
+    project->stop();
+    project->save();
+    project.reset();
+  }
 }

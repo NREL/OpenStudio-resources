@@ -54,7 +54,7 @@ class SimpleProjectFixture : public ::testing::Test {
 
   static boost::optional<openstudio::FileLogSink> logFile;
 
-  static boost::optional<openstudio::analysisdriver::SimpleProject> makeSimpleProject(openstudio::path projectDir);
+  static boost::optional<openstudio::analysisdriver::SimpleProject> makePATProject(openstudio::path projectDir);
 
 };
 
