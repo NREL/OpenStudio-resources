@@ -38,7 +38,9 @@ TEST_F(SimpleProjectFixture, RelocateTest) {
 
   openstudio::path path1 = openstudio::toPath("./RelocateTest/SimpleProject1");
   openstudio::path path2 = openstudio::toPath("./RelocateTest/SimpleProject2");
-  openstudio::path path3 = openstudio::toPath("./RelocateTest/SimpleProject1-Save");
+  openstudio::path path3 = openstudio::toPath("./RelocateTest/SimpleProject3");
+  openstudio::path save1 = openstudio::toPath("./RelocateTest/SimpleProject1-Save");
+  openstudio::path save2 = openstudio::toPath("./RelocateTest/SimpleProject2-Save");
 
   if (boost::filesystem::exists(path1)) {
     openstudio::removeDirectory(path1);
@@ -49,8 +51,16 @@ TEST_F(SimpleProjectFixture, RelocateTest) {
   if (boost::filesystem::exists(path3)) {
     openstudio::removeDirectory(path3);
   }
+  if (boost::filesystem::exists(save1)) {
+    openstudio::removeDirectory(save1);
+  }
+  if (boost::filesystem::exists(save2)) {
+    openstudio::removeDirectory(save2);
+  }
 
   unsigned numDataPoints = 0;
+
+  // First run succeeds
   {
     boost::optional<openstudio::analysisdriver::SimpleProject> project = makePATProject(path1);
     ASSERT_TRUE(project);
@@ -85,12 +95,49 @@ TEST_F(SimpleProjectFixture, RelocateTest) {
     project.reset();
   }
 
+  ASSERT_TRUE(openstudio::copyDirectory(path1, save1));
   ASSERT_TRUE(openstudio::copyDirectory(path1, path2));
-  ASSERT_TRUE(openstudio::copyDirectory(path1, path3));
   ASSERT_TRUE(openstudio::removeDirectory(path1));
 
+  // Second run succeeds, paths are fixed up in memory only
   {
     boost::optional<openstudio::analysisdriver::SimpleProject> project = openstudio::analysisdriver::openPATProject(path2);
+    ASSERT_TRUE(project);
+    project->clearAllResults();
+
+    openstudio::analysisdriver::AnalysisDriver analysisDriver = project->analysisDriver();
+    openstudio::analysisdriver::AnalysisRunOptions runOptions = openstudio::analysisdriver::standardRunOptions(*project);
+    openstudio::analysis::Analysis analysis = project->analysis();
+
+    std::vector<openstudio::analysis::DataPoint> dataPoints = analysis.dataPoints();
+    EXPECT_EQ(numDataPoints, dataPoints.size());
+    BOOST_FOREACH(const openstudio::analysis::DataPoint& dataPoint, dataPoints){
+      EXPECT_FALSE(dataPoint.complete());
+    }
+    
+    analysisDriver.run(analysis, runOptions);
+    analysisDriver.unpauseQueue();
+    EXPECT_TRUE(analysisDriver.waitForFinished());
+
+    dataPoints = analysis.dataPoints();
+    EXPECT_EQ(numDataPoints, dataPoints.size());
+    BOOST_FOREACH(const openstudio::analysis::DataPoint& dataPoint, dataPoints){
+      EXPECT_TRUE(dataPoint.complete());
+      EXPECT_FALSE(dataPoint.failed());
+    }
+    
+    project->stop();
+    project->save();
+    project.reset();
+  }
+
+  ASSERT_TRUE(openstudio::copyDirectory(path2, save2));
+  ASSERT_TRUE(openstudio::copyDirectory(path2, path3));
+  ASSERT_TRUE(openstudio::removeDirectory(path2));
+
+  // Third run fails
+  {
+    boost::optional<openstudio::analysisdriver::SimpleProject> project = openstudio::analysisdriver::openPATProject(path3);
     ASSERT_TRUE(project);
     project->clearAllResults();
 
