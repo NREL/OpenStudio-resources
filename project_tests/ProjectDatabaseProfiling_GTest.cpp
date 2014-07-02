@@ -128,7 +128,6 @@ TEST_F(ProjectFixture,Profile_UpdateAnalysis) {
                               FileReference(runDir / toPath("ModelToIdf/in.osm")),
                               FileReference(runDir / toPath("ModelToIdf/out.idf")),
                               FileReference(runDir / toPath("EnergyPlus/eplusout.sql")),
-                              FileReferenceVector(1u,FileReference(runDir / toPath("Ruby/report.xml"))),
                               boost::optional<runmanager::Job>(),
                               std::vector<openstudio::path>(),
                               TagVector(),
