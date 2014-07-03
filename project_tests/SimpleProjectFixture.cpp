@@ -91,7 +91,7 @@ void SimpleProjectFixture::TearDown() {}
 void SimpleProjectFixture::SetUpTestCase() {
   // set up logging
   logFile = openstudio::FileLogSink(openstudio::toPath("./SimpleProjectFixture.log"));
-  logFile->setLogLevel(Warn);
+  logFile->setLogLevel(Trace);
   openstudio::Logger::instance().standardOutLogger().disable();
 }
 
