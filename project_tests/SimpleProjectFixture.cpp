@@ -70,18 +70,20 @@ void SimpleProjectFixture::SetUp()
   qputenv("DLN_LIBRARY_PATH", env);
 
   // DLM: the code below is a hack and should not be required, we should be able to set these paths somehow
-
+  // JMT: I have no idea why you thought this was necessary, but it deletes the files in your source directory and
+  //      makes it impossible to run the tests. Worse then a hack, by far.
+  //
   // have to copy measure to where OpenStudio will expect them (it thinks we are running from OpenStudio installer)
-  if (boost::filesystem::exists(openstudio::BCLMeasure::patApplicationMeasuresDir())){
-    ASSERT_TRUE(openstudio::removeDirectory(openstudio::BCLMeasure::patApplicationMeasuresDir()));
-  }
-  ASSERT_TRUE(openstudio::copyDirectory(patApplicationMeasureSourceDir(), openstudio::BCLMeasure::patApplicationMeasuresDir()));
+//  if (boost::filesystem::exists(openstudio::BCLMeasure::patApplicationMeasuresDir())){
+//    ASSERT_TRUE(openstudio::removeDirectory(openstudio::BCLMeasure::patApplicationMeasuresDir()));
+//  }
+//  ASSERT_TRUE(openstudio::copyDirectory(patApplicationMeasureSourceDir(), openstudio::BCLMeasure::patApplicationMeasuresDir()));
 
   // have to copy measure to where OpenStudio will expect them (it thinks we are running from OpenStudio
-  if (boost::filesystem::exists(openstudio::getOpenStudioRubyScriptsPath())){
-    ASSERT_TRUE(openstudio::removeDirectory(openstudio::getOpenStudioRubyScriptsPath()));
-  }
-  ASSERT_TRUE(openstudio::copyDirectory(getOpenStudioRubyScriptsSourcePath(), openstudio::getOpenStudioRubyScriptsPath()));
+//  if (boost::filesystem::exists(openstudio::getOpenStudioRubyScriptsPath())){
+//    ASSERT_TRUE(openstudio::removeDirectory(openstudio::getOpenStudioRubyScriptsPath()));
+//  }
+//  ASSERT_TRUE(openstudio::copyDirectory(getOpenStudioRubyScriptsSourcePath(), openstudio::getOpenStudioRubyScriptsPath()));
 }
 
 void SimpleProjectFixture::TearDown() {}
