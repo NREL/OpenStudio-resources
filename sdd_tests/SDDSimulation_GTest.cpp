@@ -72,7 +72,7 @@
 #include <Windows.h>
 #endif
 
-openstudio::SqlFile runSimulation(const std::string t_filename, const bool masterAutosize = false)
+std::vector<openstudio::SqlFile> runSimulationNTimes(const std::string t_filename, unsigned N, const bool masterAutosize = false)
 { 
   openstudio::path filePath = Paths::testsPath() / openstudio::toPath(t_filename);
   openstudio::path outdir = Paths::testRunPath(); 
@@ -95,50 +95,70 @@ openstudio::SqlFile runSimulation(const std::string t_filename, const bool maste
   openstudio::runmanager::RunManager kit(db, true);
   kit.setPaused(true);
 
-  openstudio::runmanager::Workflow wf;
+  std::vector<openstudio::runmanager::Job> jobs;
+  for (unsigned i = 0; i < N; ++i){
 
-  openstudio::runmanager::Tools tools 
-    = openstudio::runmanager::ConfigOptions::makeTools(
-        energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path(),
-        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+    openstudio::runmanager::Workflow wf;
+
+    std::string numString = boost::lexical_cast<std::string>(i);
+
+    openstudio::path outdir2 = outdir / openstudio::toPath(numString); 
+
+    openstudio::runmanager::Tools tools 
+      = openstudio::runmanager::ConfigOptions::makeTools(
+          energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path(),
+          openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
 
 
-  openstudio::path epw = (resourcesPath() / openstudio::toPath("weatherdata") / openstudio::toPath("SACRAMENTO-EXECUTIVE_724830_CZ2010.epw"));
+    openstudio::path epw = (resourcesPath() / openstudio::toPath("weatherdata") / openstudio::toPath("SACRAMENTO-EXECUTIVE_724830_CZ2010.epw"));
 
-  openstudio::runmanager::RubyJobBuilder rubyJobBuilder;
+    openstudio::runmanager::RubyJobBuilder rubyJobBuilder;
 
-  rubyJobBuilder.setScriptFile(scriptPath);
-  rubyJobBuilder.addToolArgument("-I" + rubyOpenStudioDir()) ;
-  rubyJobBuilder.copyRequiredFiles("rb", "osm", "in.epw");
-  rubyJobBuilder.addScriptParameter("sdd_path",openstudio::toString(filePath));
-  if( masterAutosize )
-  {
-    rubyJobBuilder.addScriptParameter("master_autosize","true");
+    rubyJobBuilder.setScriptFile(scriptPath);
+    rubyJobBuilder.addToolArgument("-I" + rubyOpenStudioDir()) ;
+    rubyJobBuilder.copyRequiredFiles("rb", "osm", "in.epw");
+    rubyJobBuilder.addScriptParameter("sdd_path",openstudio::toString(filePath));
+    if( masterAutosize )
+    {
+      rubyJobBuilder.addScriptParameter("master_autosize","true");
+    }
+    else
+    {
+      rubyJobBuilder.addScriptParameter("master_autosize","false");
+    }
+
+    rubyJobBuilder.addToWorkflow(wf);
+
+    // temp code
+    wf.addParam(openstudio::runmanager::JobParam("keepRunControlSpecialDays"));
+
+    wf.addWorkflow(openstudio::runmanager::Workflow("ModelToIdf->EnergyPlus"));
+
+    wf.add(tools);
+    openstudio::runmanager::Job j = wf.create(outdir2, filePath, epw);
+
+    jobs.push_back(j);
+
+    kit.enqueue(j, false);
   }
-  else
-  {
-    rubyJobBuilder.addScriptParameter("master_autosize","false");
-  }
-
-  rubyJobBuilder.addToWorkflow(wf);
-
-  // temp code
-  wf.addParam(openstudio::runmanager::JobParam("keepRunControlSpecialDays"));
-
-  wf.addWorkflow(openstudio::runmanager::Workflow("ModelToIdf->EnergyPlus"));
-
-  wf.add(tools);
-  openstudio::runmanager::Job j = wf.create(outdir, filePath, epw);
-
-  kit.enqueue(j, false);
 
   kit.setPaused(false);
 
   kit.waitForFinished();
 
-  return openstudio::SqlFile(j.treeAllFiles().getLastByFilename("eplusout.sql").fullPath);
+  std::vector<openstudio::SqlFile> result;
+  for (unsigned i = 0; i < N; ++i){
+    result.push_back(openstudio::SqlFile(jobs[i].treeAllFiles().getLastByFilename("eplusout.sql").fullPath));
+  }
+
+  return result;
 }
 
+openstudio::SqlFile runSimulation(const std::string t_filename, const bool masterAutosize = false)
+{ 
+  std::vector<openstudio::SqlFile>  sqls = runSimulationNTimes(t_filename, 1, masterAutosize);
+  return sqls.front();
+}
 // TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_p_xml) {
 // 
 //   openstudio::path inputPath = Paths::testsPath() / openstudio::toPath("00100-SchoolPrimary-CustomStd - p.xml");
