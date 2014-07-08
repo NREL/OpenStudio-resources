@@ -473,7 +473,7 @@ TEST_F(SDDSimulationFixture, 040012_OffLrg_CECStd_zb_xml) {
 }
 
 TEST_F(SDDSimulationFixture, 040112_OffLrg_VAVPriSec_ab) {
-  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - ab");
+  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - ab.xml");
 
   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
   ASSERT_TRUE(totalSiteEnergy);
@@ -481,7 +481,7 @@ TEST_F(SDDSimulationFixture, 040112_OffLrg_VAVPriSec_ab) {
 }
 
 TEST_F(SDDSimulationFixture, 040112_OffLrg_VAVPriSec_ap) {
-  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - ap");
+  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - ap.xml");
 
   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
   ASSERT_TRUE(totalSiteEnergy);
@@ -489,7 +489,7 @@ TEST_F(SDDSimulationFixture, 040112_OffLrg_VAVPriSec_ap) {
 }
 
 TEST_F(SDDSimulationFixture, 040112_OffLrg_VAVPriSec_zb) {
-  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - zb");
+  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - zb.xml");
 
   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
   ASSERT_TRUE(totalSiteEnergy);
@@ -497,7 +497,7 @@ TEST_F(SDDSimulationFixture, 040112_OffLrg_VAVPriSec_zb) {
 }
 
 TEST_F(SDDSimulationFixture, 040112_OffLrg_VAVPriSec_zp) {
-  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - zp");
+  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - zp.xml");
 
   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
   ASSERT_TRUE(totalSiteEnergy);
