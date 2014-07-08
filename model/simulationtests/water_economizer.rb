@@ -43,10 +43,36 @@ tower = OpenStudio::Model::CoolingTowerVariableSpeed.new(model)
 plant.addSupplyBranchForComponent(tower)
 
 hx = OpenStudio::Model::HeatExchangerFluidToFluid.new(model)
+hx.setControlType("HeatingSetpointModulated")
 plant.addDemandBranchForComponent(hx)
 
 chiller = model.getChillerElectricEIRs.first
 hx.addToNode(chiller.supplyInletModelObject.get.to_Node.get)
+
+hx_outlet_node = hx.supplyOutletModelObject.get.to_Node.get
+# hotWaterOutletNode = plant.supplyOutletNode()
+osTime = OpenStudio::Time.new(0,24,0,0)
+hotWaterTempSchedule = OpenStudio::Model::ScheduleRuleset.new(model)
+hotWaterTempSchedule.setName('Hot Water Temperature')
+
+### Winter Design Day
+hotWaterTempScheduleWinter = OpenStudio::Model::ScheduleDay.new(model)
+hotWaterTempSchedule.setWinterDesignDaySchedule(hotWaterTempScheduleWinter)
+hotWaterTempSchedule.winterDesignDaySchedule().setName('Hot Water Temperature Winter Design Day')
+hotWaterTempSchedule.winterDesignDaySchedule().addValue(osTime,67)
+
+### Summer Design Day
+hotWaterTempScheduleSummer = OpenStudio::Model::ScheduleDay.new(model)
+hotWaterTempSchedule.setSummerDesignDaySchedule(hotWaterTempScheduleSummer)
+hotWaterTempSchedule.summerDesignDaySchedule().setName("Hot Water Temperature Summer Design Day")
+hotWaterTempSchedule.summerDesignDaySchedule().addValue(osTime,67)
+
+### All other days
+hotWaterTempSchedule.defaultDaySchedule().setName("Hot Water Temperature Default")
+hotWaterTempSchedule.defaultDaySchedule().addValue(osTime,67)
+
+hotWaterSPM = OpenStudio::Model::SetpointManagerScheduled.new(model,hotWaterTempSchedule)
+hotWaterSPM.addToNode(hx_outlet_node)  
 
 
 #add thermostats
