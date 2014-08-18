@@ -106,8 +106,7 @@ std::vector<openstudio::SqlFile> runSimulationNTimes(const std::string t_filenam
 
     openstudio::runmanager::Tools tools 
       = openstudio::runmanager::ConfigOptions::makeTools(
-          energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path(),
-          openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+          energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path());
 
 
     openstudio::path epw = (resourcesPath() / openstudio::toPath("weatherdata") / openstudio::toPath("SACRAMENTO-EXECUTIVE_724830_CZ2010.epw"));
@@ -159,2080 +158,468 @@ openstudio::SqlFile runSimulation(const std::string t_filename, const bool maste
   std::vector<openstudio::SqlFile>  sqls = runSimulationNTimes(t_filename, 1, masterAutosize);
   return sqls.front();
 }
-
-TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_p_xml) {
-
-  openstudio::path inputPath = Paths::testsPath() / openstudio::toPath("00100-SchoolPrimary-CustomStd - p.xml");
-
-  openstudio::sdd::ReverseTranslator reverseTranslator;
-  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
-  ASSERT_TRUE(model);
-
-  openstudio::model::Building building = model->getUniqueModelObject<openstudio::model::Building>();
-  EXPECT_EQ(0.0, building.northAxis());
-  EXPECT_FALSE(building.isNorthAxisDefaulted());
-
-  boost::optional<openstudio::model::RunPeriod> runPeriod = model->getOptionalUniqueModelObject<openstudio::model::RunPeriod>();
-  ASSERT_TRUE(runPeriod);
-  EXPECT_EQ(1, runPeriod->getBeginMonth());
-  EXPECT_EQ(1, runPeriod->getBeginDayOfMonth());
-  EXPECT_EQ(12, runPeriod->getEndMonth());
-  EXPECT_EQ(31, runPeriod->getEndDayOfMonth());
-  EXPECT_FALSE(runPeriod->getUseWeatherFileHolidays());
-  EXPECT_FALSE(runPeriod->getUseWeatherFileDaylightSavings());
-  EXPECT_TRUE(runPeriod->getApplyWeekendHolidayRule());
-
-  boost::optional<openstudio::model::YearDescription> yearDescription = model->getOptionalUniqueModelObject<openstudio::model::YearDescription>();
-  ASSERT_TRUE(yearDescription);
-  EXPECT_EQ(2009, yearDescription->calendarYear());
-
-  boost::optional<openstudio::model::SimulationControl> simulationControl = model->getOptionalUniqueModelObject<openstudio::model::SimulationControl>();
-  ASSERT_TRUE(simulationControl);
-  EXPECT_TRUE(simulationControl->runSimulationforWeatherFileRunPeriods());
-
-  std::vector<openstudio::model::RunPeriodControlSpecialDays> runPeriodControlSpecialDays = model->getModelObjects<openstudio::model::RunPeriodControlSpecialDays>();
-  EXPECT_EQ(10u, runPeriodControlSpecialDays.size());
-
-  openstudio::SqlFile sql = runSimulation("00100-SchoolPrimary-CustomStd - p.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
-  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
-  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-}
-
-TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_p_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00100-SchoolPrimary-CustomStd - p.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_b_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00100-SchoolPrimary-CustomStd - b.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_b_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00100-SchoolPrimary-CustomStd - b.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_bz_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00100-SchoolPrimary-CustomStd - bz.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00101_SchoolPrimary_CustomProp_p_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00101-SchoolPrimary-CustomProp - p.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00101_SchoolPrimary_CustomProp_p_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00101-SchoolPrimary-CustomProp - p.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00101_SchoolPrimary_CustomProp_b_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00101-SchoolPrimary-CustomProp - b.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00101_SchoolPrimary_CustomProp_b_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00101-SchoolPrimary-CustomProp - b.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00101_SchoolPrimary_CustomProp_bz_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00101-SchoolPrimary-CustomProp - bz.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00102-SchoolPrimary-CustomProp - p.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00102-SchoolPrimary-CustomProp - p.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_b_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00102-SchoolPrimary-CustomProp - b.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_b_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00102-SchoolPrimary-CustomProp - b.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_bz_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00102-SchoolPrimary-CustomProp - bz.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00103_SchoolPrimary_CustomProp_p_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00103-SchoolPrimary-CustomProp - p.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00103_SchoolPrimary_CustomProp_p_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00103-SchoolPrimary-CustomProp - p.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00103_SchoolPrimary_CustomProp_b_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00103-SchoolPrimary-CustomProp - b.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00103_SchoolPrimary_CustomProp_b_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00103-SchoolPrimary-CustomProp - b.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00103_SchoolPrimary_CustomProp_bz_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00103-SchoolPrimary-CustomProp - bz.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00200_OfficeSmall_CECRefProp_p_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00200-OfficeSmall-CECRefProp - p.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00200_OfficeSmall_CECRefProp_p_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00200-OfficeSmall-CECRefProp - p.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00200_OfficeSmall_CECRefProp_b_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00200-OfficeSmall-CECRefProp - b.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00200_OfficeSmall_CECRefProp_b_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00200-OfficeSmall-CECRefProp - b.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00200_OfficeSmall_CECRefProp_bz_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00200-OfficeSmall-CECRefProp - bz.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00300_OfficeMedium_CECRefProp_p_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00300-OfficeMedium-CECRefProp - p.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00300_OfficeMedium_CECRefProp_p_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00300-OfficeMedium-CECRefProp - p.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00300_OfficeMedium_CECRefProp_b_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00300-OfficeMedium-CECRefProp - b.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00300_OfficeMedium_CECRefProp_b_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00300-OfficeMedium-CECRefProp - b.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00300_OfficeMedium_CECRefProp_bz_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00300-OfficeMedium-CECRefProp - bz.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00400_OfficeLarge_CECRefProp_p_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00400-OfficeLarge-CECRefProp - p.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00400_OfficeLarge_CECRefProp_p_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00400-OfficeLarge-CECRefProp - p.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00400_OfficeLarge_CECRefProp_b_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00400-OfficeLarge-CECRefProp - b.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00400_OfficeLarge_CECRefProp_b_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00400-OfficeLarge-CECRefProp - b.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00400_OfficeLarge_CECRefProp_bz_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00400-OfficeLarge-CECRefProp - bz.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00401_OfficeLarge_BlrsChlrsProp_p_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00401-OfficeLarge-BlrsChlrsProp - p.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00401_OfficeLarge_BlrsChlrsProp_p_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00401-OfficeLarge-BlrsChlrsProp - p.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00401_OfficeLarge_BlrsChlrsProp_b_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00401-OfficeLarge-BlrsChlrsProp - b.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00401_OfficeLarge_BlrsChlrsProp_b_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00401-OfficeLarge-BlrsChlrsProp - b.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00401_OfficeLarge_BlrsChlrsProp_bz_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00401-OfficeLarge-BlrsChlrsProp - bz.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00500_RetailStandAlone_CECRefProp_p_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00500-RetailStandAlone-CECRefProp - p.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00500_RetailStandAlone_CECRefProp_p_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00500-RetailStandAlone-CECRefProp - p.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00500_RetailStandAlone_CECRefProp_b_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00500-RetailStandAlone-CECRefProp - b.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00500_RetailStandAlone_CECRefProp_b_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00500-RetailStandAlone-CECRefProp - b.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00500_RetailStandAlone_CECRefProp_bz_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00500-RetailStandAlone-CECRefProp - bz.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00700_HotelSmall_CECRef_b_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00700-HotelSmall-CECRef - b.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00700_HotelSmall_CECRef_b_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00700-HotelSmall-CECRef - b.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00700_HotelSmall_CECRef_p_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00700-HotelSmall-CECRef - p.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00700_HotelSmall_CECRef_p_xml_autosize) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00700-HotelSmall-CECRef - p.xml", N, true);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00700_HotelSmall_CECRef_bz_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("00700-HotelSmall-CECRef - bz.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 2d_PrimOnly_MultChlr_VarSpdPumps_p_xml) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("2d-PrimOnly_MultChlr_VarSpdPumps - p.xml", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_ForIssue359_xml) {
-  openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - p_ForIssue359.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-}
-
-TEST_F(SDDSimulationFixture, 00102_SchoolPrimary_CustomProp_p_ForIssue359_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00102-SchoolPrimary-CustomProp - p_ForIssue359.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-}
-
-TEST_F(SDDSimulationFixture, 00800_Warehouse_CECRef_p_ForIssue366_xml) {
-  openstudio::SqlFile sql = runSimulation("00800-Warehouse-CECRef - p_ForIssue366.xml");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-}
-
-TEST_F(SDDSimulationFixture, 00800_Warehouse_CECRef_p_ForIssue366_xml_autosize) {
-  openstudio::SqlFile sql = runSimulation("00800-Warehouse-CECRef - p_ForIssue366.xml",true);
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-}
+// TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_p_xml) {
+// 
+//   openstudio::path inputPath = Paths::testsPath() / openstudio::toPath("00100-SchoolPrimary-CustomStd - p.xml");
+// 
+//   openstudio::sdd::ReverseTranslator reverseTranslator;
+//   boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+//   ASSERT_TRUE(model);
+// 
+//   openstudio::model::Building building = model->getUniqueModelObject<openstudio::model::Building>();
+//   EXPECT_EQ(0.0, building.northAxis());
+//   EXPECT_FALSE(building.isNorthAxisDefaulted());
+// 
+//   boost::optional<openstudio::model::RunPeriod> runPeriod = model->getOptionalUniqueModelObject<openstudio::model::RunPeriod>();
+//   ASSERT_TRUE(runPeriod);
+//   EXPECT_EQ(1, runPeriod->getBeginMonth());
+//   EXPECT_EQ(1, runPeriod->getBeginDayOfMonth());
+//   EXPECT_EQ(12, runPeriod->getEndMonth());
+//   EXPECT_EQ(31, runPeriod->getEndDayOfMonth());
+//   EXPECT_FALSE(runPeriod->getUseWeatherFileHolidays());
+//   EXPECT_FALSE(runPeriod->getUseWeatherFileDaylightSavings());
+//   EXPECT_TRUE(runPeriod->getApplyWeekendHolidayRule());
+// 
+//   boost::optional<openstudio::model::YearDescription> yearDescription = model->getOptionalUniqueModelObject<openstudio::model::YearDescription>();
+//   ASSERT_TRUE(yearDescription);
+//   EXPECT_EQ(2009, yearDescription->calendarYear());
+// 
+//   boost::optional<openstudio::model::SimulationControl> simulationControl = model->getOptionalUniqueModelObject<openstudio::model::SimulationControl>();
+//   ASSERT_TRUE(simulationControl);
+//   EXPECT_TRUE(simulationControl->runSimulationforWeatherFileRunPeriods());
+// 
+//   std::vector<openstudio::model::RunPeriodControlSpecialDays> runPeriodControlSpecialDays = model->getModelObjects<openstudio::model::RunPeriodControlSpecialDays>();
+//   EXPECT_EQ(10u, runPeriodControlSpecialDays.size());
+// 
+//   openstudio::SqlFile sql = runSimulation("00100-SchoolPrimary-CustomStd - p.xml");
+// 
+//   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//   ASSERT_TRUE(totalSiteEnergy);
+//   EXPECT_LT(*totalSiteEnergy, 1000000);
+// 
+//   //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+//   //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+//   //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+// }
  
+ //TEST_F(SDDSimulationFixture, 00100_SchoolPrimary_CustomStd_p_xml_autosize) {
+ //  openstudio::SqlFile sql = runSimulation("00100-SchoolPrimary-CustomStd - p.xml",true);
+ //
+ //  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+ //  ASSERT_TRUE(totalSiteEnergy);
+ //  EXPECT_LT(*totalSiteEnergy, 1000000);
+ //
+ //  //boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+ //  //ASSERT_TRUE(hoursCoolingSetpointNotMet);
+ //  //EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+ //}
+ //
+
+ //TEST_F(SDDSimulationFixture, 010012_SchSml_CECStd_ab_xml) {
+ //  openstudio::SqlFile sql = runSimulation("010012-SchSml-CECStd - ab.xml");
+ //
+ //  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+ //  ASSERT_TRUE(totalSiteEnergy);
+ //  EXPECT_LT(*totalSiteEnergy, 1000000);
+ //}
+
+TEST_F(SDDSimulationFixture, 050812_RetlMed_DirectEvap_140617_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("050812-RetlMed-DirectEvap 140617 - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 050912_RetlMed_IndirectEvap_140617_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("050912-RetlMed-IndirectEvap 140617 - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 051012_RetlMed_IndirectDirectEvap_140617_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("051012-RetlMed-IndirectDirectEvap 140617 - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040212_OffLrg_ExhTest_ForIssue602_xml) {
+  openstudio::SqlFile sql = runSimulation("040212-OffLrg-ExhTest_ForIssue602.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010012_SchSml_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("010012-SchSml-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010012_SchSml_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("010012-SchSml-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010012_SchSml_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("010012-SchSml-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010112_SchSml_PSZ_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("010112-SchSml-PSZ - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010112_SchSml_PSZ_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("010112-SchSml-PSZ - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010112_SchSml_PSZ_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("010112-SchSml-PSZ - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010212_SchSml_PVAVAirZnSys_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("010212-SchSml-PVAVAirZnSys - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010212_SchSml_PVAVAirZnSys_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("010212-SchSml-PVAVAirZnSys - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010212_SchSml_PVAVAirZnSys_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("010212-SchSml-PVAVAirZnSys - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010312_SchSml_VAVFluidZnSys_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("010312-SchSml-VAVFluidZnSys - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010312_SchSml_VAVFluidZnSys_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("010312-SchSml-VAVFluidZnSys - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010312_SchSml_VAVFluidZnSys_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("010312-SchSml-VAVFluidZnSys - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 020012_OffSml_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("020012-OffSml-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 020012_OffSml_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("020012-OffSml-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 020012_OffSml_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("020012-OffSml-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 020212_OffSml_SimpleGeometry_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("020212-OffSml-SimpleGeometry - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 020212_OffSml_SimpleGeometry_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("020212-OffSml-SimpleGeometry - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 020212_OffSml_SimpleGeometry_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("020212-OffSml-SimpleGeometry - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 030012_OffMed_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("030012-OffMed-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 030012_OffMed_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("030012-OffMed-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 030012_OffMed_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("030012-OffMed-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 030212_OffMed_SimpleGeometry_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("030212-OffMed-SimpleGeometry - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 030212_OffMed_SimpleGeometry_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("030212-OffMed-SimpleGeometry - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 030212_OffMed_SimpleGeometry_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("030212-OffMed-SimpleGeometry - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040012_OffLrg_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("040012-OffLrg-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040012_OffLrg_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("040012-OffLrg-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040012_OffLrg_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("040012-OffLrg-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040112_OffLrg_VAVPriSec_ab) {
+  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040112_OffLrg_VAVPriSec_ap) {
+  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040112_OffLrg_VAVPriSec_zb) {
+  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040112_OffLrg_VAVPriSec_zp) {
+  openstudio::SqlFile sql = runSimulation("040112-OffLrg-VAVPriSec - zp.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 050012_RetlMed_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("050012-RetlMed-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 050012_RetlMed_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("050012-RetlMed-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 050012_RetlMed_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("050012-RetlMed-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 070012_HotSml_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("070012-HotSml-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 070012_HotSml_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("070012-HotSml-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 070012_HotSml_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("070012-HotSml-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 080012_Whse_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("080012-Whse-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 080012_Whse_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("080012-Whse-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 080012_Whse_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("080012-Whse-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 090012_RetlLrg_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("090012-RetlLrg-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 090012_RetlLrg_CECStd_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("090012-RetlLrg-CECStd - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 090012_RetlLrg_CECStd_zb_xml) {
+  openstudio::SqlFile sql = runSimulation("090012-RetlLrg-CECStd - zb.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 020712_OffSml_WLHP_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("020712-OffSml-WLHP - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 040712_OffLrg_WLHP_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("040712-OffLrg-WLHP - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, 010212_SchSml_PVAVAirZnSys_ForIssue611_xml) {
+  openstudio::SqlFile sql = runSimulation("010212-SchSml-PVAVAirZnSys_ForIssue611.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+

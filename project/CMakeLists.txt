@@ -7,6 +7,7 @@
 SET(ENERGYPLUS_OUTPUTS "")
 
 SET(project_resources_src
+  USA_CO_Golden-NREL.724666_TMY3.epw
   MS-BESX-2_Heating_DDACE-Random_1000.osp
   MS-BESX-2_Heating_DDACE-Random_1000.db
 )

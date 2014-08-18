@@ -62,6 +62,34 @@ zones.each do |z|
     coil = OpenStudio::Model::CoilHeatingGas.new(model,schedule)
     new_terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeReheat.new(model,schedule,coil)
     air_loop.addBranchForZone(z,new_terminal.to_StraightComponent)
+  elsif i == 4
+    air_loop = z.airLoopHVAC.get
+    air_loop.removeBranchForZone(z)
+
+    schedule = model.alwaysOnDiscreteSchedule()
+    coil = OpenStudio::Model::CoilHeatingWater.new(model,schedule)
+    fan = OpenStudio::Model::FanConstantVolume.new(model,schedule)
+    new_terminal = OpenStudio::Model::AirTerminalSingleDuctParallelPIUReheat.new(model,schedule,fan,coil)
+    air_loop.addBranchForZone(z,new_terminal.to_StraightComponent)
+
+    boiler = model.getBoilerHotWaters.first
+    plant = boiler.plantLoop.get
+
+    plant.addDemandBranchForComponent(coil)
+  elsif i == 5
+    air_loop = z.airLoopHVAC.get
+    air_loop.removeBranchForZone(z)
+
+    schedule = model.alwaysOnDiscreteSchedule()
+    coil = OpenStudio::Model::CoilHeatingWater.new(model,schedule)
+    fan = OpenStudio::Model::FanConstantVolume.new(model,schedule)
+    new_terminal = OpenStudio::Model::AirTerminalSingleDuctSeriesPIUReheat.new(model,fan,coil)
+    air_loop.addBranchForZone(z,new_terminal.to_StraightComponent)
+
+    boiler = model.getBoilerHotWaters.first
+    plant = boiler.plantLoop.get
+
+    plant.addDemandBranchForComponent(coil)
   end
 
   i = i + 1

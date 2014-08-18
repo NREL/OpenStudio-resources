@@ -1,0 +1,19 @@
+#ifndef PROJECTTESTS_HXX
+#define PROJECTTESTS_HXX
+
+#include <utilities/core/Path.hpp>
+
+inline openstudio::path patApplicationMeasureSourceDir()
+{
+  return openstudio::toPath("${OpenStudioCore_CMAKE_DIR}/src/pat_app/Measures/");
+}
+
+inline openstudio::path getOpenStudioRubyScriptsSourcePath()
+{
+  return openstudio::toPath("${OpenStudioCore_CMAKE_DIR}/ruby/");
+}
+
+#endif // PROJECTTESTS_HXX
+
+
+

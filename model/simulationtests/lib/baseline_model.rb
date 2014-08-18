@@ -171,6 +171,7 @@ class BaselineModel < OpenStudio::Model::Model
       if space.thermalZone.empty?
         new_thermal_zone = OpenStudio::Model::ThermalZone.new(self)
         space.setThermalZone(new_thermal_zone)
+        new_thermal_zone.setName(space.name.get.sub('Space','Thermal Zone'))
       end
     end
     
@@ -207,6 +208,70 @@ class BaselineModel < OpenStudio::Model::Model
     end
   
   end
+  
+  def add_daylighting(params)
+    shades = params["shades"]
+    
+    shading_control_hash = Hash.new
+    
+    self.getThermalZones.each do |zone|
+      biggestWindow = nil
+      zone.spaces.each do |space|
+        space.surfaces.each do |surface|
+          if surface.surfaceType == "Wall" and surface.outsideBoundaryCondition == "Outdoors" 
+            surface.subSurfaces.each do |subSurface|
+              if subSurface.subSurfaceType == "FixedWindow" or subSurface.subSurfaceType == "OperableWindow"
+                if biggestWindow.nil? or subSurface.netArea > biggestWindow.netArea
+                  biggestWindow = subSurface
+                end 
+                
+                if shades
+                  construction = subSurface.construction.get
+                  shading_control = shading_control_hash[construction.handle.to_s]
+                  if not shading_control
+                    material = OpenStudio::Model::Blind.new(self)
+                    shading_control = OpenStudio::Model::ShadingControl.new(material)
+                    shading_control_hash[construction.handle.to_s] = shading_control
+                  end
+                  subSurface.setShadingControl(shading_control)
+                  
+                end
+              end
+            end
+          end
+        end
+      end
+      
+      if biggestWindow
+        vertices = biggestWindow.vertices
+        centroid = OpenStudio::getCentroid(vertices).get
+        outwardNormal = biggestWindow.outwardNormal
+        outwardNormal.setLength(-2.0)
+        position = centroid + outwardNormal
+        offsetX = 0.0
+        offsetY = 0.0
+        offsetZ = -1.0
+        
+        dc = OpenStudio::Model::DaylightingControl.new(self)
+        dc.setSpace(biggestWindow.surface.get.space.get)
+        dc.setPositionXCoordinate(position.x + offsetX)
+        dc.setPositionYCoordinate(position.y + offsetY)
+        dc.setPositionZCoordinate(position.z + offsetZ)
+        zone.setPrimaryDaylightingControl(dc)
+        
+        ill = OpenStudio::Model::IlluminanceMap.new(self)
+        ill.setSpace(biggestWindow.surface.get.space.get)
+        ill.setOriginXCoordinate(position.x + offsetX - 0.5)
+        ill.setOriginYCoordinate(position.y + offsetY - 0.5)
+        ill.setOriginZCoordinate(position.z + offsetZ)
+        ill.setXLength(1)
+        ill.setYLength(1)
+        zone.setIlluminanceMap(ill)
+  
+      end
+    end
+    
+  end
 
   def add_hvac(params)
     sys_num = params["ashrae_sys_num"]
@@ -223,85 +288,83 @@ class BaselineModel < OpenStudio::Model::Model
     zones = self.getThermalZones
 
     #Add HVAC system type
-    case sys_num
-      #1: PTAC, Residential
-      when '01' 
-        hvac = OpenStudio::Model::addSystemType1(self, zones)
-      #2: PTHP, Residential
-      when '02'
-        hvac = OpenStudio::Model::addSystemType2(self, zones)
-      #3: PSZ-AC
-      when '03'
-        zones.each do|zone|
-          hvac = OpenStudio::Model::addSystemType3(self)
-          hvac = hvac.to_AirLoopHVAC.get
-          hvac.addBranchForZone(zone)      
-          outlet_node = hvac.supplyOutletNode
-          setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
-          setpoint_manager.setControlZone(zone)
-        end
-      #4: PSZ-HP
-      when '04'
-       zones.each do|zone|
-          hvac = OpenStudio::Model::addSystemType4(self)
-          hvac = hvac.to_AirLoopHVAC.get
-          hvac.addBranchForZone(zone)
-          outlet_node = hvac.supplyOutletNode
-          setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
-          setpoint_manager.setControlZone(zone)
-        end
-      #5: Packaged VAV w/ Reheat
-      when '05'
-        hvac = OpenStudio::Model::addSystemType5(self)
-        hvac = hvac.to_AirLoopHVAC.get      
-        zones.each do|zone|
-          hvac.addBranchForZone(zone)      
-        end
-      #6: Packaged VAV w/ PFP Boxes
-      when '06'
-        hvac = OpenStudio::Model::addSystemType6(self)
-        hvac = hvac.to_AirLoopHVAC.get      
-        zones.each do|zone|
-          hvac.addBranchForZone(zone)      
-        end
-      #7: VAV w/ Reheat
-      when '07'
-        hvac = OpenStudio::Model::addSystemType7(self)
-        hvac = hvac.to_AirLoopHVAC.get      
-        zones.each do|zone|
-          hvac.addBranchForZone(zone)      
-        end
-      #8: VAV w/ PFP Boxes
-      when '08'
-        hvac = OpenStudio::Model::addSystemType8(self)
-        hvac = hvac.to_AirLoopHVAC.get      
-        zones.each do|zone|
-          hvac.addBranchForZone(zone)      
-        end
-      #9: Warm air furnace, gas fired
-      when '09'
-        zones.each do|zone|
-          hvac = OpenStudio::Model::addSystemType9(self)  
-          hvac = hvac.to_AirLoopHVAC.get
-          hvac.addBranchForZone(zone)      
-          outlet_node = hvac.supplyOutletNode
-          setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
-          setpoint_manager.setControlZone(zone)
-        end
-      #10: Warm air furnace, electric
-      when '10'
-        zones.each do|zone|
-          hvac = OpenStudio::Model::addSystemType10(self)  
-          hvac = hvac.to_AirLoopHVAC.get
-          hvac.addBranchForZone(zone)      
-          outlet_node = hvac.supplyOutletNode
-          setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
-          setpoint_manager.setControlZone(zone)
-        end
-      #if system number is not recognized  
-      else 
-        puts 'cannot find system number ' + sys_num
-    end    
+      case sys_num
+        #1: PTAC, Residential
+        when '01' then hvac = OpenStudio::Model::addSystemType1(self, zones)
+        #2: PTHP, Residential
+        when '02' then 
+          hvac = OpenStudio::Model::addSystemType2(self, zones)
+        #3: PSZ-AC
+        when '03' then
+          zones.each do|zone|
+            hvac = OpenStudio::Model::addSystemType3(self)
+            hvac = hvac.to_AirLoopHVAC.get
+            hvac.addBranchForZone(zone)      
+            outlet_node = hvac.supplyOutletNode
+            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
+            setpoint_manager.setControlZone(zone)
+          end
+        #4: PSZ-HP
+        when '04' then
+         zones.each do|zone|
+            hvac = OpenStudio::Model::addSystemType4(self)
+            hvac = hvac.to_AirLoopHVAC.get
+            hvac.addBranchForZone(zone)
+            outlet_node = hvac.supplyOutletNode
+            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
+            setpoint_manager.setControlZone(zone)
+          end
+        #5: Packaged VAV w/ Reheat
+        when '05' then
+          hvac = OpenStudio::Model::addSystemType5(self)
+          hvac = hvac.to_AirLoopHVAC.get      
+          zones.each do|zone|
+            hvac.addBranchForZone(zone)      
+          end
+        #6: Packaged VAV w/ PFP Boxes
+        when '06' then
+          hvac = OpenStudio::Model::addSystemType6(self)
+          hvac = hvac.to_AirLoopHVAC.get      
+          zones.each do|zone|
+            hvac.addBranchForZone(zone)      
+          end
+        #7: VAV w/ Reheat
+        when '07' then
+          hvac = OpenStudio::Model::addSystemType7(self)
+          hvac = hvac.to_AirLoopHVAC.get      
+          zones.each do|zone|
+            hvac.addBranchForZone(zone)      
+          end
+        #8: VAV w/ PFP Boxes
+        when '08' then
+          hvac = OpenStudio::Model::addSystemType8(self)
+          hvac = hvac.to_AirLoopHVAC.get      
+          zones.each do|zone|
+            hvac.addBranchForZone(zone)      
+          end
+        #9: Warm air furnace, gas fired
+        when '09' then
+          zones.each do|zone|
+            hvac = OpenStudio::Model::addSystemType9(self)  
+            hvac = hvac.to_AirLoopHVAC.get
+            hvac.addBranchForZone(zone)      
+            outlet_node = hvac.supplyOutletNode
+            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
+            setpoint_manager.setControlZone(zone)
+          end
+        #10: Warm air furnace, electric
+        when '10' then
+          zones.each do|zone|
+            hvac = OpenStudio::Model::addSystemType10(self)  
+            hvac = hvac.to_AirLoopHVAC.get
+            hvac.addBranchForZone(zone)      
+            outlet_node = hvac.supplyOutletNode
+            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
+            setpoint_manager.setControlZone(zone)
+          end
+        #if system number is not recognized  
+        else puts 'cannot find system number ' + sys_num
+      end    
     
   end
 
@@ -495,13 +558,13 @@ class BaselineModel < OpenStudio::Model::Model
     heating_sch.setName("Heating Sch")
     heating_sch.defaultDaySchedule.setName("Heating Sch Default")
     heating_sch.defaultDaySchedule.addValue(time_24hrs,heating_setpoint)      
-
-    new_thermostat = OpenStudio::Model::ThermostatSetpointDualSetpoint.new(self)
-    
-    new_thermostat.setHeatingSchedule(heating_sch)
-    new_thermostat.setCoolingSchedule(cooling_sch)
     
     self.getThermalZones.each do |zone|
+      new_thermostat = OpenStudio::Model::ThermostatSetpointDualSetpoint.new(self)
+      
+      new_thermostat.setHeatingSchedule(heating_sch)
+      new_thermostat.setCoolingSchedule(cooling_sch)
+
       zone.setThermostatSetpointDualSetpoint(new_thermostat)
     end
 
@@ -522,7 +585,7 @@ class BaselineModel < OpenStudio::Model::Model
     require 'openstudio/energyplus/find_energyplus'
      
     # find energyplus
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
+    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
     weather_path = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s)
       
     #load the design days for Chicago
@@ -550,7 +613,7 @@ class BaselineModel < OpenStudio::Model::Model
     idf_name = params["idf_name"]
      
     # find energyplus
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
+    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
     ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
     idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
     weather_path = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s)

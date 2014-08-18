@@ -27,6 +27,7 @@ option( BUILD_RUBY_TESTS "Build the ruby tests" ON )
 option( BUILD_RUNMANAGER_TESTS "Build the runmanager tests" ON )
 option( BUILD_SDD_TESTS "Build the sdd tests" OFF )
 option( BUILD_CONTAM_TESTS "Build the CONTAM tests" OFF )
+option( BUILD_RADIANCE_TESTS "Build the Radiance tests" OFF )
 option( BUILD_SQUISH_SKETCHUP_TESTS "Build the SketchUp plugin tests" OFF )
 option( BUILD_SQUISH_QT_TESTS "Build the OpenStudio QT application Squish tests" OFF )
 option( BUILD_UTILITIES_TESTS "Build the utilities tests" ON )
@@ -79,49 +80,62 @@ INCLUDE(CTest)
 
 ###############################################################################
 # Compiler and system specific options
-IF(UNIX)
+if(UNIX)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing")
+
   # all warnings
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing")
-  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing")
-  # effective c++
-  #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
-  # treat warnings as errors
-  #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-ENDIF(UNIX)
-IF(MINGW)
-  # all warnings
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-  # effective c++
-  #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
-  # treat warnings as errors
-  #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch -Wnon-virtual-dtor")
+  if(APPLE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual -ftemplate-depth=1024")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual")
+  endif()
   
-  # wchar not supported for MinGW
-  ADD_DEFINITIONS(-DBOOST_LOG_USE_CHAR)
-  ADD_DEFINITIONS(-DBOOST_LOG_NO_COMPILER_TLS)
-ENDIF(MINGW)
-IF(MSVC)
-  # warning level 3
-  SET(CMAKE_CXX_WARNING_LEVEL 3)
+  if(APPLE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  endif()
+endif()
+if(MINGW)
   # all warnings
-  #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+
+  # wchar not supported for MinGW
+  add_definitions(-DBOOST_LOG_USE_CHAR)
+  add_definitions(-DBOOST_LOG_NO_COMPILER_TLS)
+endif()
+if(MSVC)
+  # warning level 3
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
+  
   # create compiler processes on all effective processors
-  IF(BUILD_WITH_MULTIPLE_PROCESSES)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
-  ENDIF(BUILD_WITH_MULTIPLE_PROCESSES)
-  # ignore first seen as struct now using class
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4099")
+  if(BUILD_WITH_MULTIPLE_PROCESSES)
+    add_definitions(/MP)
+  endif()
+  
+  #Enable warning on thread un-safe static member initialization - DLM: we have been bit by this many times
+  add_definitions(/w44640)
+  
   # ignore decorated name length exceeded
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4503")
+  add_definitions(/wd4503)
+  
   # ignore needs to have dll-interface to be used by clients of class
-  # we will not rely on exporting templates instead all libraries must 
+  # we will not rely on exporting templates instead all libraries must
   # be linked against the same runtime
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251")
-  # treat warnings as errors
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+  add_definitions(/wd4251)
+  
+  if(NOT CMAKE_CL_64)
+    # treat warnings as errors
+    add_definitions(/WX)
+  else()
+    add_definitions(/bigobj)
+  endif()
+
   # ignore warnings about the stl being insecure
-  ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
-ENDIF(MSVC)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
+
+endif()
 ###############################################################################
 
 ###############################################################################
@@ -158,15 +172,32 @@ IF(MSVC)
   file(GLOB DEBUG_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/*.dll")
   file(GLOB RELEASE_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Release/*.dll")
   file(GLOB RELDBG_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/RelWithDebInfo/*.dll")
-
-  list( APPEND ALL_DLLS ${DEBUG_DLLS} )
-  list( APPEND ALL_DLLS ${RELEASE_DLLS} )
-  list( APPEND ALL_DLLS ${RELDBG_DLLS} )
+  list( APPEND ALL_DEBUG_DLLS ${DEBUG_DLLS} )
+  list( APPEND ALL_RELEASE_DLLS ${RELEASE_DLLS} )
+  list( APPEND ALL_RELDBG_DLLS ${RELDBG_DLLS} )
+  
+  file(GLOB DEBUG_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/ruby/Debug/*.dll")
+  file(GLOB RELEASE_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/ruby/Release/*.dll")
+  file(GLOB RELDBG_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/ruby/RelWithDebInfo/*.dll")
+  list( APPEND ALL_DEBUG_DLLS ${DEBUG_DLLS} )
+  list( APPEND ALL_RELEASE_DLLS ${RELEASE_DLLS} )
+  list( APPEND ALL_RELDBG_DLLS ${RELDBG_DLLS} )  
+  
+  file(GLOB DEBUG_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/ruby/Debug/*.so")
+  file(GLOB RELEASE_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/ruby/Release/*.so")
+  file(GLOB RELDBG_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/ruby/RelWithDebInfo/*.so")
+  list( APPEND ALL_DEBUG_DLLS ${DEBUG_DLLS} )
+  list( APPEND ALL_RELEASE_DLLS ${RELEASE_DLLS} )
+  list( APPEND ALL_RELDBG_DLLS ${RELDBG_DLLS} )  
+  
+  list( APPEND ALL_DLLS ${ALL_DEBUG_DLLS} )
+  list( APPEND ALL_DLLS ${ALL_RELEASE_DLLS} )
+  list( APPEND ALL_DLLS ${ALL_RELDBG_DLLS} )
   list( LENGTH ALL_DLLS NUM_DLLS )
   message("Copying ${NUM_DLLS} DLLs under ${OPENSTUDIO_BUILD_DIR} to ${CMAKE_BINARY_DIR}")
-  file(COPY ${DEBUG_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/Products/Debug/")
-  file(COPY ${RELEASE_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/Products/Release/")
-  file(COPY ${RELDBG_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/Products/RelWithDebInfo/")
+  file(COPY ${ALL_DEBUG_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/Products/Debug/")
+  file(COPY ${ALL_RELEASE_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/Products/Release/")
+  file(COPY ${ALL_RELDBG_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/Products/RelWithDebInfo/")
 ENDIF()
 
 link_directories(${OpenStudioCore_LIBRARY_DIRS})
@@ -187,6 +218,7 @@ SET(OPENSTUDIO_LIBS
   openstudio_analysisdriver
   openstudio_sdd
   openstudio_ruleset
+  openstudio_lib
 )
 
 if( BUILD_RULESENGINE_TESTS )
@@ -197,8 +229,12 @@ if( BUILD_CONTAM_TESTS )
   LIST( APPEND OPENSTUDIO_LIBS openstudio_contam )
 endif( BUILD_CONTAM_TESTS )
 
+if( BUILD_RADIANCE_TESTS )
+  LIST( APPEND OPENSTUDIO_LIBS openstudio_radiance )
+endif( BUILD_RADIANCE_TESTS )
+
 # EnergyPlus
-FIND_PACKAGE(EnergyPlus "8.0" REQUIRED)
+FIND_PACKAGE(EnergyPlus "8.1" REQUIRED)
 MARK_AS_ADVANCED(
   ENERGYPLUS_EXE
   ENERGYPLUS_IDD
@@ -349,6 +385,13 @@ if( BUILD_CONTAM_TESTS )
   FIND_PROGRAM( SIMREAD_EXECUTABLE NAMES simread3 )
   add_subdirectory( contam_tests )
 endif( BUILD_CONTAM_TESTS )
+
+if( BUILD_RADIANCE_TESTS )
+  FIND_PROGRAM( RADIANCE_EXECUTABLE NAMES rad )
+  add_subdirectory( radiance_tests )
+  
+  # copy radiance ruby files?
+endif( BUILD_RADIANCE_TESTS )
 
 if( BUILD_RUBY_TESTS )
   add_subdirectory( ruby )

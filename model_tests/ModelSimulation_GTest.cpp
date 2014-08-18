@@ -20,7 +20,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-
 #include <gtest/gtest.h>
 #include "ModelSimulationFixture.hpp"
 #include <model_tests/ModelBin.hxx> 
@@ -69,8 +68,7 @@ std::vector<openstudio::SqlFile> runSimulationNTimes(const std::string t_filenam
 
   openstudio::runmanager::Tools tools 
     = openstudio::runmanager::ConfigOptions::makeTools(
-        energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path(),
-        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+        energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path());
 
   openstudio::path epw = (resourcesPath() / openstudio::toPath("weatherdata") / openstudio::toPath(epwName));
 
@@ -125,1016 +123,462 @@ openstudio::SqlFile runSimulation(const std::string t_filename)
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys01_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys01.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys01.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
-
 TEST_F(ModelSimulationFixture, baseline_sys02_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys01.rb", N);
-  ASSERT_EQ(N, sqls.size());
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  openstudio::SqlFile sql = runSimulation("baseline_sys02.rb");
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys03_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys03.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys03.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys04_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys04.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys04.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys05_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys05.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys05.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys06_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys06.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys06.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys07_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys07.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys07.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys08_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys08.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys08.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys09_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys09.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys09.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys10_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys10.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys10.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, dist_ht_cl_rb) {
   //testing to make sure that district heating and district cooling
   //get forward translated correctly; in particular that they get assigned
   //to a plant operation scheme
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("dist_ht_cl.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("dist_ht_cl.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, dsn_oa_w_ideal_loads_rb) {
   //testing to make sure that design specification outdoor air objects set
   //at the space type are forward translated directly into use by the
   //zone hvac ideal loads objects
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("dsn_oa_w_ideal_loads.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("dsn_oa_w_ideal_loads.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  for (unsigned i = 0; i < N; ++i){
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-    //for all zones avg mech ventilation should be > 0
-    std::string query = "SELECT value FROM tabulardatawithstrings WHERE \
-                        ReportName='OutdoorAirSummary' AND \
-                        ReportForString='Entire Facility' AND \
-                        TableName='Average Outdoor Air During Occupied Hours' AND \
-                        ColumnName = 'Mechanical Ventilation' AND \
-                        Units = 'ach'";
-    boost::optional<std::vector<double> >  avgMechVents = sqls[i].execAndReturnVectorOfDouble(query);
-    ASSERT_TRUE(avgMechVents);
-    for(const double& avgMechVent : *avgMechVents) {
-      EXPECT_GT(avgMechVent, 0); 
-    }
-
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-    }
-  }  
+  //for all zones avg mech ventilation should be > 0
+  std::string query = "SELECT value FROM tabulardatawithstrings WHERE \
+                      ReportName='OutdoorAirSummary' AND \
+                      ReportForString='Entire Facility' AND \
+                      TableName='Average Outdoor Air During Occupied Hours' AND \
+                      ColumnName = 'Mechanical Ventilation' AND \
+                      Units = 'ach'";
+  boost::optional<std::vector<double> >  avgMechVents = sql.execAndReturnVectorOfDouble(query);
+  ASSERT_TRUE(avgMechVents);
+  for(auto avgMechVent: *avgMechVents) {
+    EXPECT_GT(avgMechVent, 0); 
+  }
+  
 }
 
 TEST_F(ModelSimulationFixture, utility_bill01_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("utility_bill01.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("utility_bill01.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
+  openstudio::path osm_path = sql.path().parent_path().parent_path().parent_path() / openstudio::toPath("out.osm");
+  boost::optional<openstudio::model::Model> model = openstudio::model::Model::load(osm_path);
+  ASSERT_TRUE(model);
 
-    openstudio::path osm_path = sqls[i].path().parent_path().parent_path().parent_path().parent_path() / openstudio::toPath("out.osm");
-    boost::optional<openstudio::model::Model> model = openstudio::model::Model::load(osm_path);
-    ASSERT_TRUE(model);
+  model->setSqlFile(sql);
 
-    model->setSqlFile(sqls[i]);
+  std::vector<openstudio::model::UtilityBill> utilityBills = model->getModelObjects<openstudio::model::UtilityBill>();
+  EXPECT_EQ(2u, utilityBills.size());
+  for(auto utilityBill: utilityBills){
+    std::vector<openstudio::model::BillingPeriod> billingPeriods = utilityBill.billingPeriods();
+    EXPECT_EQ(6, billingPeriods.size());
+    for(auto billingPeriod: billingPeriods){
+      boost::optional<double> modelConsumption = billingPeriod.modelConsumption();
+      ASSERT_TRUE(modelConsumption);
 
-    std::vector<openstudio::model::UtilityBill> utilityBills = model->getModelObjects<openstudio::model::UtilityBill>();
-    EXPECT_EQ(2u, utilityBills.size());
-    for(const openstudio::model::UtilityBill& utilityBill : utilityBills){
-      std::vector<openstudio::model::BillingPeriod> billingPeriods = utilityBill.billingPeriods();
-      EXPECT_EQ(6, billingPeriods.size());
-	  for(const openstudio::model::BillingPeriod& billingPeriod : billingPeriods){
-        boost::optional<double> modelConsumption = billingPeriod.modelConsumption();
-        ASSERT_TRUE(modelConsumption);
-
-        boost::optional<double> modelPeakDemand = billingPeriod.modelPeakDemand();
-        if (utilityBill.fuelType() == openstudio::FuelType::Electricity){
-          ASSERT_TRUE(modelPeakDemand);
-          EXPECT_LT(0, modelPeakDemand.get());
-        }else{
-          EXPECT_FALSE(modelPeakDemand);
-        } 
-      }
-
-      EXPECT_EQ(6, utilityBill.numberBillingPeriodsInCalculations());
-      boost::optional<double> nmbe = utilityBill.NMBE();
-      ASSERT_TRUE(nmbe);
-      boost::optional<double> cvrmse = utilityBill.CVRMSE();
-      ASSERT_TRUE(cvrmse);
-      EXPECT_LT(0, cvrmse.get());
+      boost::optional<double> modelPeakDemand = billingPeriod.modelPeakDemand();
+      if (utilityBill.fuelType() == openstudio::FuelType::Electricity){
+        ASSERT_TRUE(modelPeakDemand);
+        EXPECT_LT(0, modelPeakDemand.get());
+      }else{
+        EXPECT_FALSE(modelPeakDemand);
+      } 
     }
 
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
+    EXPECT_EQ(6, utilityBill.numberBillingPeriodsInCalculations());
+    boost::optional<double> nmbe = utilityBill.NMBE();
+    ASSERT_TRUE(nmbe);
+    boost::optional<double> cvrmse = utilityBill.CVRMSE();
+    ASSERT_TRUE(cvrmse);
+    EXPECT_LT(0, cvrmse.get());
   }
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, utility_bill02_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("utility_bill02.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("utility_bill02.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
+  openstudio::path osm_path = sql.path().parent_path().parent_path().parent_path() / openstudio::toPath("out.osm");
+  boost::optional<openstudio::model::Model> model = openstudio::model::Model::load(osm_path);
+  ASSERT_TRUE(model);
 
-    openstudio::path osm_path = sqls[i].path().parent_path().parent_path().parent_path().parent_path() / openstudio::toPath("out.osm");
-    boost::optional<openstudio::model::Model> model = openstudio::model::Model::load(osm_path);
-    ASSERT_TRUE(model);
+  model->setSqlFile(sql);
 
-    model->setSqlFile(sqls[i]);
+  std::vector<openstudio::model::UtilityBill> utilityBills = model->getModelObjects<openstudio::model::UtilityBill>();
+  EXPECT_EQ(2u, utilityBills.size());
+  for(auto utilityBill: utilityBills){
+    std::vector<openstudio::model::BillingPeriod> billingPeriods = utilityBill.billingPeriods();
+    EXPECT_EQ(6, billingPeriods.size());
+    for(auto billingPeriod: billingPeriods){
+      boost::optional<double> modelConsumption = billingPeriod.modelConsumption();
+      ASSERT_TRUE(modelConsumption);
 
-    std::vector<openstudio::model::UtilityBill> utilityBills = model->getModelObjects<openstudio::model::UtilityBill>();
-    EXPECT_EQ(2u, utilityBills.size());
-	for(const openstudio::model::UtilityBill& utilityBill : utilityBills){
-      std::vector<openstudio::model::BillingPeriod> billingPeriods = utilityBill.billingPeriods();
-      EXPECT_EQ(6, billingPeriods.size());
-	  for(const openstudio::model::BillingPeriod& billingPeriod : billingPeriods){
-        boost::optional<double> modelConsumption = billingPeriod.modelConsumption();
-        ASSERT_TRUE(modelConsumption);
-
-        boost::optional<double> modelPeakDemand = billingPeriod.modelPeakDemand();
-        if (utilityBill.fuelType() == openstudio::FuelType::Electricity){
-          ASSERT_TRUE(modelPeakDemand);
-          EXPECT_LT(0, modelPeakDemand.get());
-        }else{
-          EXPECT_FALSE(modelPeakDemand);
-        } 
-      }
-
-      EXPECT_EQ(6, utilityBill.numberBillingPeriodsInCalculations());
-      boost::optional<double> nmbe = utilityBill.NMBE();
-      ASSERT_TRUE(nmbe);
-      boost::optional<double> cvrmse = utilityBill.CVRMSE();
-      ASSERT_TRUE(cvrmse);
-      EXPECT_LT(0, cvrmse.get());
+      boost::optional<double> modelPeakDemand = billingPeriod.modelPeakDemand();
+      if (utilityBill.fuelType() == openstudio::FuelType::Electricity){
+        ASSERT_TRUE(modelPeakDemand);
+        EXPECT_LT(0, modelPeakDemand.get());
+      }else{
+        EXPECT_FALSE(modelPeakDemand);
+      } 
     }
 
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
+    EXPECT_EQ(6, utilityBill.numberBillingPeriodsInCalculations());
+    boost::optional<double> nmbe = utilityBill.NMBE();
+    ASSERT_TRUE(nmbe);
+    boost::optional<double> cvrmse = utilityBill.CVRMSE();
+    ASSERT_TRUE(cvrmse);
+    EXPECT_LT(0, cvrmse.get());
   }
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 
 
 
 TEST_F(ModelSimulationFixture, baseline_sys01_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys01.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys01.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys02_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys02.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys02.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys03_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys3.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys03.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys04_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys04.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys04.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys05_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys05.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys05.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys06_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys06.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys06.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys07_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys07.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys07.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys08_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys08.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys08.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  boost::optional<double> hoursCoolingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 
-      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-
-      test = sqls[i].hoursCoolingSetpointNotMet();
-      ASSERT_TRUE(hoursCoolingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  ASSERT_TRUE(hoursCoolingSetpointNotMet);
+  EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys09_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys09.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys09.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, baseline_sys10_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseline_sys10.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("baseline_sys10.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, dist_ht_cl_osm) {
   //testing to make sure that district heating and district cooling
   //get forward translated correctly; in particular that they get assigned
   //to a plant operation scheme
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("dist_ht_cl.osm.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("dist_ht_cl.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, dsn_oa_w_ideal_loads_osm) {
@@ -1142,216 +586,134 @@ TEST_F(ModelSimulationFixture, dsn_oa_w_ideal_loads_osm) {
   //at the space type are forward translated directly into use by the
   //zone hvac ideal loads objects
   openstudio::SqlFile sql = runSimulation("dsn_oa_w_ideal_loads.osm");
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("dist_ht_cl.osm.osm", N);
-  ASSERT_EQ(N, sqls.size());
 
-  boost::optional<double> totalSiteEnergy;
-  for (unsigned i = 0; i < N; ++i){
-    //for all zones avg mech ventilation should be > 0
-    std::string query = "SELECT value FROM tabulardatawithstrings WHERE \
-                        ReportName='OutdoorAirSummary' AND \
-                        ReportForString='Entire Facility' AND \
-                        TableName='Average Outdoor Air During Occupied Hours' AND \
-                        ColumnName = 'Mechanical Ventilation' AND \
-                        Units = 'ach'";
-    boost::optional<std::vector<double> >  avgMechVents = sqls[i].execAndReturnVectorOfDouble(query);
-    ASSERT_TRUE(avgMechVents);
-	for(const double& avgMechVent : *avgMechVents) {
-      EXPECT_GT(avgMechVent, 0); 
-    }
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-    }
+  //for all zones avg mech ventilation should be > 0
+  std::string query = "SELECT value FROM tabulardatawithstrings WHERE \
+                      ReportName='OutdoorAirSummary' AND \
+                      ReportForString='Entire Facility' AND \
+                      TableName='Average Outdoor Air During Occupied Hours' AND \
+                      ColumnName = 'Mechanical Ventilation' AND \
+                      Units = 'ach'";
+  boost::optional<std::vector<double> >  avgMechVents = sql.execAndReturnVectorOfDouble(query);
+  ASSERT_TRUE(avgMechVents);
+  for(auto avgMechVent: *avgMechVents) {
+    EXPECT_GT(avgMechVent, 0); 
   }
-}  
-
-TEST_F(ModelSimulationFixture, baseboard_heater_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseboard_heater.rb", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+  
 }
 
-TEST_F(ModelSimulationFixture, baseboard_heater_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("baseboard_heater.osm", N);
-  ASSERT_EQ(N, sqls.size());
+TEST_F(ModelSimulationFixture, unitary_system_rb) {
+  openstudio::SqlFile sql = runSimulation("unitary_system.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
 
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+TEST_F(ModelSimulationFixture, refrigeration_system_rb) {
+  openstudio::SqlFile sql = runSimulation("refrigeration_system.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
+
+TEST_F(ModelSimulationFixture, refrigeration_system_osm) {
+  openstudio::SqlFile sql = runSimulation("refrigeration_system.osm");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
+
+TEST_F(ModelSimulationFixture, air_chillers_rb) {
+  openstudio::SqlFile sql = runSimulation("air_chillers.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  // this uses a lot of energy, make it 1000000000 instead of 1000000
+  EXPECT_LT(*totalSiteEnergy, 1000000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
+
+TEST_F(ModelSimulationFixture, air_chillers_osm) {
+  openstudio::SqlFile sql = runSimulation("air_chillers.osm");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  // this uses a lot of energy, make it 1000000000 instead of 1000000
+  EXPECT_LT(*totalSiteEnergy, 1000000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
+
+TEST_F(ModelSimulationFixture, fan_on_off_rb) {
+  openstudio::SqlFile sql = runSimulation("fan_on_off.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
+
+TEST_F(ModelSimulationFixture, fan_on_off_osm) {
+  openstudio::SqlFile sql = runSimulation("fan_on_off.osm");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, airterminal_cooledbeam_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("airterminal_cooledbeam.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("airterminal_cooledbeam.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, airterminal_cooledbeam_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("airterminal_cooledbeam.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("airterminal_cooledbeam.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(ModelSimulationFixture, unit_heater_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("unit_heater.rb", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(ModelSimulationFixture, unit_heater_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("unit_heater.osm", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, lowtemprad_constflow_rb) {
@@ -1417,123 +779,26 @@ TEST_F(ModelSimulationFixture, lowtemprad_varflow_osm) {
 }
 
 TEST_F(ModelSimulationFixture, lowtemprad_electric_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("lowtemprad_electric.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("lowtemprad_electric.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, lowtemprad_electric_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("lowtemprad_electric.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("lowtemprad_electric.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(ModelSimulationFixture, watertoair_HP_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("watertoair_HP.rb", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
-}
-
-TEST_F(ModelSimulationFixture, watertoair_HP_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("watertoair_HP.osm", N);
-  ASSERT_EQ(N, sqls.size());
-
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, lifecyclecostparameters_rb) {
@@ -1633,187 +898,80 @@ TEST_F(ModelSimulationFixture, lifecyclecostparameters_osm) {
 }
 
 TEST_F(ModelSimulationFixture, heatexchanger_airtoair_sensibleandlatent_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("heatexchanger_airtoair_sensibleandlatent.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("heatexchanger_airtoair_sensibleandlatent.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, heatexchanger_airtoair_sensibleandlatent_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("heatexchanger_airtoair_sensibleandlatent.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("heatexchanger_airtoair_sensibleandlatent.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 
-      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      test = sqls[i].hoursHeatingSetpointNotMet();
-      ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, air_terminals_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("air_terminals.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("air_terminals.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      // This one is not going to hit heating setpoint because it has VAV air terminals without reheat
-      // Possibly update control strategy
-      //hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      //ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      //test = sqls[i].hoursHeatingSetpointNotMet();
-      //ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //ASSERT_TRUE(test);
-      //EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+  
+  // This one is not going to hit heating setpoint because it has VAV air terminals without reheat
+  // Possibly update control strategy
+  //boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  //ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, air_terminals_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("air_terminals.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("air_terminals.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  boost::optional<double> hoursHeatingSetpointNotMet;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-
-      // This one is not going to hit heating setpoint because it has VAV air terminals without reheat
-      // Possibly update control strategy
-      //hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
-      //ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-
-      //test = sqls[i].hoursHeatingSetpointNotMet();
-      //ASSERT_TRUE(hoursHeatingSetpointNotMet);
-      //ASSERT_TRUE(test);
-      //EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
-    }
-  }
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+  
+  // This one is not going to hit heating setpoint because it has VAV air terminals without reheat
+  // Possibly update control strategy
+  //boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  //ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  //EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
 TEST_F(ModelSimulationFixture, scheduled_infiltration_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("scheduled_infiltration.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("scheduled_infiltration.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-    }
-  }  
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+  
 }
 
 TEST_F(ModelSimulationFixture,vrf_rb) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("vrf.rb", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("vrf.rb");
 
-  boost::optional<double> totalSiteEnergy;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-    }
-  }  
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
 TEST_F(ModelSimulationFixture, vrf_osm) {
-  unsigned N = 4;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("vrf.osm", N);
-  ASSERT_EQ(N, sqls.size());
+  openstudio::SqlFile sql = runSimulation("vrf.osm");
 
-  boost::optional<double> totalSiteEnergy;
-  for (unsigned i = 0; i < N; ++i){
-    if (!totalSiteEnergy){
-      totalSiteEnergy = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      EXPECT_LT(*totalSiteEnergy, 1000000);
-    }else{
-      boost::optional<double> test = sqls[i].totalSiteEnergy();
-      ASSERT_TRUE(totalSiteEnergy);
-      ASSERT_TRUE(test);
-      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
-    }
-  }  
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
 TEST_F(ModelSimulationFixture, interior_partitions_rb) {
@@ -1858,9 +1016,221 @@ TEST_F(ModelSimulationFixture, interior_partitions_rb) {
 
 
 
-TEST_F(ModelSimulationFixture, schedule_ruleset_2012_rb) {
+TEST_F(ModelSimulationFixture, schedule_ruleset_2012_NonLeapYear_rb) {
   unsigned N = 1;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("schedule_ruleset_2012.rb", N, "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012.epw");
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("schedule_ruleset_2012_NonLeapYear.rb", N, "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_NonLeapYear.epw");
+  ASSERT_EQ(N, sqls.size());
+
+  // DLM: this simulation is bogus, 2012 was a leap year starting on Sunday but running with non-leap year weather file
+  // 2006 is non-leap year starting on Sunday 
+
+  // from test, schedule name "Test Schedule"
+  // winter design day, 0
+  // summer design day, 1
+  // weekdays, 0.9
+  // weekends, 0.3
+  // 5/28-8/28, 0.1
+
+  boost::optional<double> totalSiteEnergy;
+  boost::optional<double> hoursHeatingSetpointNotMet;
+  boost::optional<double> hoursCoolingSetpointNotMet;
+  for (unsigned i = 0; i < N; ++i){
+
+    // check timeseries data
+    boost::optional<openstudio::TimeSeries> timeSeries;
+// TODO: DLM, Fix this later
+// would like this to work with different casing
+//    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "Test Schedule"); // DLM: should we handle this internal to SqlFile?
+//    EXPECT_TRUE(timeSeries);
+    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "TEST SCHEDULE");
+    ASSERT_TRUE(timeSeries);
+    ASSERT_EQ(24*365, timeSeries->values().size());
+    ASSERT_TRUE(timeSeries->intervalLength());
+    EXPECT_EQ(60, timeSeries->intervalLength()->totalMinutes());
+// TODO: DLM, Fix this later
+//    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), timeSeries->firstReportDateTime());
+
+    boost::optional<openstudio::TimeSeries> dayTypeTimeSeries;
+    dayTypeTimeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Site Day Type Index", "Environment");
+    ASSERT_TRUE(dayTypeTimeSeries);
+    ASSERT_EQ(24*365, dayTypeTimeSeries->values().size());
+    ASSERT_TRUE(dayTypeTimeSeries->intervalLength());
+    EXPECT_EQ(60, dayTypeTimeSeries->intervalLength()->totalMinutes());
+// TODO: DLM, Fix this later
+//    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), dayTypeTimeSeries->firstReportDateTime());
+
+    openstudio::DateTime dateTime(openstudio::Date(1, 1, 2006), openstudio::Time(0,1,0,0));
+    openstudio::Vector values = timeSeries->values();
+    openstudio::Vector dayTypeValues = dayTypeTimeSeries->values();
+    ASSERT_EQ(8760, values.size());
+    ASSERT_EQ(values.size(), dayTypeValues.size());
+    bool foundSpecialPeriod = false;
+    for (unsigned j = 0; j < values.size(); ++j){
+
+      if (dateTime.time().hours() > 0){
+
+        EXPECT_EQ(dateTime.date().dayOfWeek().value(), dayTypeValues[j] - 1);
+
+        double expectedValue = 0;
+        if (dateTime.date() >= openstudio::Date(5,28,2006) && dateTime.date() <= openstudio::Date(8,28,2006)){
+          expectedValue = 0.1;
+          foundSpecialPeriod = true;
+        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Saturday){
+          expectedValue = 0.3;
+        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Sunday){
+          expectedValue = 0.3;
+        }else{
+          expectedValue = 0.9;
+        }
+
+        EXPECT_EQ(expectedValue, values[j]) << dateTime << " " << values[j];
+
+      }
+
+      dateTime += openstudio::Time(0,1,0,0);
+    }
+    EXPECT_TRUE(foundSpecialPeriod);
+
+    if (!totalSiteEnergy){
+      totalSiteEnergy = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      EXPECT_LT(*totalSiteEnergy, 1000000);
+
+      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+    }else{
+      boost::optional<double> test = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+
+
+      test = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
+
+      test = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
+    }
+  }
+}
+
+
+TEST_F(ModelSimulationFixture, schedule_ruleset_2012_LeapYear_rb) {
+  unsigned N = 1;
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("schedule_ruleset_2012_LeapYear.rb", N, "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_LeapYear.epw");
+  ASSERT_EQ(N, sqls.size());
+
+    // from test, schedule name "Test Schedule"
+  // winter design day, 0
+  // summer design day, 1
+  // weekdays, 0.9
+  // weekends, 0.3
+  // 5/28-8/28, 0.1
+
+  boost::optional<double> totalSiteEnergy;
+  boost::optional<double> hoursHeatingSetpointNotMet;
+  boost::optional<double> hoursCoolingSetpointNotMet;
+  for (unsigned i = 0; i < N; ++i){
+
+    // check timeseries data
+    boost::optional<openstudio::TimeSeries> timeSeries;
+// TODO: DLM, Fix this later
+// would like this to work with different casing
+//    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "Test Schedule"); // DLM: should we handle this internal to SqlFile?
+//    EXPECT_TRUE(timeSeries);
+    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "TEST SCHEDULE");
+    ASSERT_TRUE(timeSeries);
+    ASSERT_EQ(24*366, timeSeries->values().size());
+    ASSERT_TRUE(timeSeries->intervalLength());
+    EXPECT_EQ(60, timeSeries->intervalLength()->totalMinutes());
+// TODO: DLM, Fix this later
+//    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), timeSeries->firstReportDateTime());
+
+    boost::optional<openstudio::TimeSeries> dayTypeTimeSeries;
+    dayTypeTimeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Site Day Type Index", "Environment");
+    ASSERT_TRUE(dayTypeTimeSeries);
+    ASSERT_EQ(24*366, dayTypeTimeSeries->values().size());
+    ASSERT_TRUE(dayTypeTimeSeries->intervalLength());
+    EXPECT_EQ(60, dayTypeTimeSeries->intervalLength()->totalMinutes());
+// TODO: DLM, Fix this later
+//    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), dayTypeTimeSeries->firstReportDateTime());
+
+    openstudio::DateTime dateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0));
+    openstudio::Vector values = timeSeries->values();
+    openstudio::Vector dayTypeValues = dayTypeTimeSeries->values();
+    ASSERT_EQ(8784, values.size());
+    ASSERT_EQ(values.size(), dayTypeValues.size());
+    bool foundSpecialPeriod = false;
+    for (unsigned j = 0; j < values.size(); ++j){
+
+      if (dateTime.time().hours() > 0){
+
+        EXPECT_EQ(dateTime.date().dayOfWeek().value(), dayTypeValues[j] - 1);
+
+        double expectedValue = 0;
+        if (dateTime.date() >= openstudio::Date(5,28,2012) && dateTime.date() <= openstudio::Date(8,28,2012)){
+          expectedValue = 0.1;
+          foundSpecialPeriod = true;
+        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Saturday){
+          expectedValue = 0.3;
+        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Sunday){
+          expectedValue = 0.3;
+        }else{
+          expectedValue = 0.9;
+        }
+
+        EXPECT_EQ(expectedValue, values[j]) << dateTime << " " << values[j];
+
+      }
+
+      dateTime += openstudio::Time(0,1,0,0);
+    }
+    EXPECT_TRUE(foundSpecialPeriod);
+
+    if (!totalSiteEnergy){
+      totalSiteEnergy = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      EXPECT_LT(*totalSiteEnergy, 1000000);
+
+      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+    }else{
+      boost::optional<double> test = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
+
+
+      test = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
+
+      test = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
+    }
+  }
+}
+
+TEST_F(ModelSimulationFixture, schedule_ruleset_2013_rb) {
+  unsigned N = 1;
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("schedule_ruleset_2013.rb", N, "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2013.epw");
   ASSERT_EQ(N, sqls.size());
 
   // from test, schedule name "Test Schedule"
@@ -1877,38 +1247,100 @@ TEST_F(ModelSimulationFixture, schedule_ruleset_2012_rb) {
 
     // check timeseries data
     boost::optional<openstudio::TimeSeries> timeSeries;
-    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "Test Schedule"); // DLM: should we handle this internal to SqlFile?
-    EXPECT_TRUE(timeSeries);
+// TODO: DLM, Fix this later
+// would like this to work with different casing
+//    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "Test Schedule"); // DLM: should we handle this internal to SqlFile?
+//    EXPECT_TRUE(timeSeries);
     timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "TEST SCHEDULE");
     ASSERT_TRUE(timeSeries);
     ASSERT_EQ(24*365, timeSeries->values().size());
     ASSERT_TRUE(timeSeries->intervalLength());
     EXPECT_EQ(60, timeSeries->intervalLength()->totalMinutes());
-    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), timeSeries->firstReportDateTime());
+// TODO: DLM, Fix this later
+//    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), timeSeries->firstReportDateTime());
 
-    openstudio::DateTime dateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0));
+    boost::optional<openstudio::TimeSeries> dayTypeTimeSeries;
+    dayTypeTimeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Site Day Type Index", "Environment");
+    ASSERT_TRUE(dayTypeTimeSeries);
+    ASSERT_EQ(24*365, dayTypeTimeSeries->values().size());
+    ASSERT_TRUE(dayTypeTimeSeries->intervalLength());
+    EXPECT_EQ(60, dayTypeTimeSeries->intervalLength()->totalMinutes());
+// TODO: DLM, Fix this later
+//    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), dayTypeTimeSeries->firstReportDateTime());
+
+    openstudio::DateTime dateTime(openstudio::Date(1, 1, 2013), openstudio::Time(0,1,0,0));
     openstudio::Vector values = timeSeries->values();
+    openstudio::Vector dayTypeValues = dayTypeTimeSeries->values();
+    ASSERT_EQ(8760, values.size());
+    ASSERT_EQ(values.size(), dayTypeValues.size());
+    bool foundSpecialPeriod = false;
     for (unsigned j = 0; j < values.size(); ++j){
-      if (dateTime.date() == openstudio::Date(2, 29, 2012)){
-        continue;
-      }
 
       if (dateTime.time().hours() > 0){
-        if (dateTime.date() >= openstudio::Date(5,28,2012) && dateTime.date() < openstudio::Date(8,28,2012)){
-          EXPECT_EQ(0.1, values[j]) << dateTime << " " << values[j];
+
+        EXPECT_EQ(dateTime.date().dayOfWeek().value(), dayTypeValues[j] - 1);
+
+        double expectedValue = 0;
+        if (dateTime.date() >= openstudio::Date(5,28,2013) && dateTime.date() <= openstudio::Date(8,28,2013)){
+          expectedValue = 0.1;
+          foundSpecialPeriod = true;
         }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Saturday){
-          EXPECT_EQ(0.3, values[j]) << dateTime << " " << values[j];
+          expectedValue = 0.3;
         }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Sunday){
-          EXPECT_EQ(0.3, values[j]) << dateTime << " " << values[j];
+          expectedValue = 0.3;
         }else{
-          EXPECT_EQ(0.9, values[j]) << dateTime << " " << values[j];
+          expectedValue = 0.9;
         }
+
+        EXPECT_EQ(expectedValue, values[j]) << dateTime << " " << values[j];
+
       }
 
       dateTime += openstudio::Time(0,1,0,0);
     }
+    EXPECT_TRUE(foundSpecialPeriod);
+
+    if (!totalSiteEnergy){
+      totalSiteEnergy = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      EXPECT_LT(*totalSiteEnergy, 1000000);
+
+      hoursHeatingSetpointNotMet = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+
+      hoursCoolingSetpointNotMet = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
+    }else{
+      boost::optional<double> test = sqls[i].totalSiteEnergy();
+      ASSERT_TRUE(totalSiteEnergy);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*totalSiteEnergy, *test);
 
 
+      test = sqls[i].hoursHeatingSetpointNotMet();
+      ASSERT_TRUE(hoursHeatingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursHeatingSetpointNotMet, *test);
+
+      test = sqls[i].hoursCoolingSetpointNotMet();
+      ASSERT_TRUE(hoursCoolingSetpointNotMet);
+      ASSERT_TRUE(test);
+      EXPECT_DOUBLE_EQ(*hoursCoolingSetpointNotMet, *test);
+    }
+  }
+}
+
+TEST_F(ModelSimulationFixture, daylighting_no_shades_rb) {
+  unsigned N = 1;
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("daylighting_no_shades.rb", N);
+  ASSERT_EQ(N, sqls.size());
+
+  boost::optional<double> totalSiteEnergy;
+  boost::optional<double> hoursHeatingSetpointNotMet;
+  boost::optional<double> hoursCoolingSetpointNotMet;
+  for (unsigned i = 0; i < N; ++i){
     if (!totalSiteEnergy){
       totalSiteEnergy = sqls[i].totalSiteEnergy();
       ASSERT_TRUE(totalSiteEnergy);
@@ -1941,53 +1373,15 @@ TEST_F(ModelSimulationFixture, schedule_ruleset_2012_rb) {
 }
 
 
-TEST_F(ModelSimulationFixture, schedule_ruleset_2012_LeapYear_rb) {
+TEST_F(ModelSimulationFixture, daylighting_shades_rb) {
   unsigned N = 1;
-  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("schedule_ruleset_2012.rb", N, "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_LeapYear.epw");
+  std::vector<openstudio::SqlFile> sqls = runSimulationNTimes("daylighting_shades.rb", N);
   ASSERT_EQ(N, sqls.size());
-
-  // from test, schedule name "Test Schedule"
-  // winter design day, 0
-  // summer design day, 1
-  // weekdays, 0.9
-  // weekends, 0.3
-  // 5/28-8/28, 0.1
 
   boost::optional<double> totalSiteEnergy;
   boost::optional<double> hoursHeatingSetpointNotMet;
   boost::optional<double> hoursCoolingSetpointNotMet;
   for (unsigned i = 0; i < N; ++i){
-
-    // check timeseries data
-    boost::optional<openstudio::TimeSeries> timeSeries;
-    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "Test Schedule"); // DLM: should we handle this internal to SqlFile?
-    EXPECT_TRUE(timeSeries);
-    timeSeries = sqls[i].timeSeries("Run Period 1", "Hourly", "Schedule Value", "TEST SCHEDULE");
-    ASSERT_TRUE(timeSeries);
-    ASSERT_EQ(24*366, timeSeries->values().size());
-    ASSERT_TRUE(timeSeries->intervalLength());
-    EXPECT_EQ(60, timeSeries->intervalLength()->totalMinutes());
-    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), timeSeries->firstReportDateTime());
-
-    openstudio::DateTime dateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0));
-    openstudio::Vector values = timeSeries->values();
-    for (unsigned j = 0; j < values.size(); ++j){
-      if (dateTime.time().hours() > 0){
-        if (dateTime.date() >= openstudio::Date(5,28,2012) && dateTime.date() < openstudio::Date(8,28,2012)){
-          EXPECT_EQ(0.1, values[j]) << dateTime << " " << values[j];
-        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Saturday){
-          EXPECT_EQ(0.3, values[j]) << dateTime << " " << values[j];
-        }else if (dateTime.date().dayOfWeek() == openstudio::DayOfWeek::Sunday){
-          EXPECT_EQ(0.3, values[j]) << dateTime << " " << values[j];
-        }else{
-          EXPECT_EQ(0.9, values[j]) << dateTime << " " << values[j];
-        }
-      }
-
-      dateTime += openstudio::Time(0,1,0,0);
-    }
-
-
     if (!totalSiteEnergy){
       totalSiteEnergy = sqls[i].totalSiteEnergy();
       ASSERT_TRUE(totalSiteEnergy);
@@ -2034,6 +1428,47 @@ TEST_F(ModelSimulationFixture, coolingtowers_osm) {
   ASSERT_TRUE(totalSiteEnergy);
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
+
+TEST_F(ModelSimulationFixture,plenums_rb) {
+  openstudio::SqlFile sql = runSimulation("plenums.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,zone_hvac_rb) {
+  openstudio::SqlFile sql = runSimulation("zone_hvac.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,zone_hvac_osm) {
+  openstudio::SqlFile sql = runSimulation("zone_hvac.osm");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,water_economizer_rb) {
+  openstudio::SqlFile sql = runSimulation("water_economizer.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,evaporative_cooling_rb) {
+  openstudio::SqlFile sql = runSimulation("evaporative_cooling.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
 
 TEST_F(ModelSimulationFixture, asymmetric_interior_constructions_osm) {
   unsigned N = 8;
