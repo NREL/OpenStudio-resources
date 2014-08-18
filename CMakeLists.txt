@@ -220,26 +220,35 @@ ADD_DEFINITIONS(-DBOOST_FILESYSTEM_VERSION=3)
 ADD_DEFINITIONS(-DBOOST_CHRONO_HEADER_ONLY)
 
 # Boost
-IF(APPLE)
-  set(Boost_USE_STATIC_LIBS ON)  
-ENDIF()
-IF (WIN32)
-  set(Boost_USE_STATIC_LIBS ON)  
+mark_as_advanced(
+  Boost_DIR
+  BOOST_THREAD_LIBRARY
+)
 
-  #uncomment all of this if we want to force dynamic libs on windows
-#  set(Boost_USE_STATIC_LIBS OFF)  
-#  ADD_DEFINITIONS( -DBOOST_THREAD_USE_DLL -DBOOST_THREAD_DYN_LINK -DBOOST_PROGRAM_OPTIONS_DYN_LINK  -DBOOST_REGEX_DYN_LINK  -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -DBOOST_DATE_TIME_DYN_LINK)
-#  LINK_DIRECTORIES( ${Boost_LIBRARY_DIRS} )
-#  IF (MSVC)
-#    #Ignore dll specific warnings that are out of our hands to control, coming from external projects
-#    ADD_DEFINITIONS( "/wd4251 /wd4275" )
-#  ENDIF (MSVC)
-ENDIF (WIN32)
+find_package(Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time log)
+include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 
-SET( Boost_ADDITIONAL_VERSIONS "1.55" )
-FIND_PACKAGE( Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time serialization log)
-INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
-MARK_AS_ADVANCED( Boost_LIB_DIAGNOSTIC_DEFINITIONS )
+# require these run time checks
+add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
+add_definitions(-DBOOST_UBLAS_TYPE_CHECK)
+add_definitions(-DBOOST_UBLAS_NO_STD_CERR)
+
+if(UNIX AND NOT APPLE)
+  add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
+endif()
+
+# use chrono as a header only library
+add_definitions(-DBOOST_CHRONO_HEADER_ONLY)
+
+# do not autolink with serialization
+add_definitions(-DBOOST_SERIALIZATION_NO_LIB)
+
+# check if boost is being linked dynamically
+# DLM: should we allow this on Unix or should we force static for all platforms?
+string(REGEX MATCH "^.*libboost_log.so$" BOOST_IS_DYN_LIBS "${Boost_LOG_LIBRARY_RELEASE}")
+if(BOOST_IS_DYN_LIBS)
+  add_definitions(-DBOOST_ALL_DYN_LINK)
+endif()
 
 # SketchUp executable location needed for testing
 if( BUILD_SQUISH_SKETCHUP_TESTS )
