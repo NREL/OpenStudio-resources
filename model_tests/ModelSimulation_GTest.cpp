@@ -1510,3 +1510,12 @@ TEST_F(ModelSimulationFixture, asymmetric_interior_constructions_osm) {
     }
   }
 }
+
+TEST_F(ModelSimulationFixture,hightemprad_rb) {
+  openstudio::SqlFile sql = runSimulation("hightemprad.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
