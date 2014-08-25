@@ -256,6 +256,43 @@ fourPipeFanCoil = OpenStudio::Model::ZoneHVACFourPipeFanCoil.new(model,model.alw
                                                                  fourPipeFan,fourPipeCool,fourPipeHeat)
 fourPipeFanCoil.addToThermalZone(story_1_west_thermal_zone)
 
+# Add a four pipe fan coil via connected through a DOAS AirLoopHVAC system
+
+fourPipeFan2 = OpenStudio::Model::FanOnOff.new(model,model.alwaysOnDiscreteSchedule())
+fourPipeHeat2 = OpenStudio::Model::CoilHeatingWater.new(model,model.alwaysOnDiscreteSchedule())
+hotWaterPlant.addDemandBranchForComponent(fourPipeHeat2)
+fourPipeCool2 = OpenStudio::Model::CoilCoolingWater.new(model,model.alwaysOnDiscreteSchedule())
+chilledWaterPlant.addDemandBranchForComponent(fourPipeCool2)
+fourPipeFanCoil2 = OpenStudio::Model::ZoneHVACFourPipeFanCoil.new(model,model.alwaysOnDiscreteSchedule(),
+                                                                 fourPipeFan2,fourPipeCool2,fourPipeHeat2)
+
+controllerOutdoorAir = OpenStudio::Model::ControllerOutdoorAir.new(model)
+outdoorAirSystem = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model,controllerOutdoorAir)
+doasFan = OpenStudio::Model::FanVariableVolume.new(model, model.alwaysOnDiscreteSchedule())
+doasCool = OpenStudio::Model::CoilCoolingWater.new(model,model.alwaysOnDiscreteSchedule())
+chilledWaterPlant.addDemandBranchForComponent(doasCool)
+doasHeat = OpenStudio::Model::CoilHeatingWater.new(model,model.alwaysOnDiscreteSchedule())
+hotWaterPlant.addDemandBranchForComponent(doasHeat)
+air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
+air_loop_supply_node = air_loop.supplyOutletNode()
+outdoorAirSystem.addToNode(air_loop_supply_node)
+doasCool.addToNode(air_loop_supply_node)
+doasHeat.addToNode(air_loop_supply_node)
+doasFan.addToNode(air_loop_supply_node)
+
+os_time = OpenStudio::Time.new(0,24,0,0)
+deck_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model)
+deck_temp_sch.setName("Deck_Temperature")
+deck_temp_sch.defaultDaySchedule().setName("Deck_Temperature_Default")
+deck_temp_sch.defaultDaySchedule().addValue(os_time,22.0)
+deck_spm = OpenStudio::Model::SetpointManagerScheduled.new(model,deck_temp_sch)
+deck_spm.addToNode(air_loop_supply_node)
+
+terminal = OpenStudio::Model::AirTerminalSingleDuctInletSideMixer.new(model)
+air_loop.addBranchForZone(story_2_core_thermal_zone,terminal)
+fourPipeFanCoil2.addToNode(terminal.outletModelObject().get().to_Node().get())
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "out.osm"})
+
