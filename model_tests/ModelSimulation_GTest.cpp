@@ -1527,3 +1527,11 @@ TEST_F(ModelSimulationFixture,unitary_vav_bypass_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture,multi_stage_rb) {
+  openstudio::SqlFile sql = runSimulation("multi_stage.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
