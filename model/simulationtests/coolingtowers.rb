@@ -31,6 +31,10 @@ newTower = OpenStudio::Model::CoolingTowerVariableSpeed.new(model)
 newTower.setSizingFactor(0.33)
 plant.addSupplyBranchForComponent(newTower)
 
+# Two speed tower
+twoSpeedTower = OpenStudio::Model::CoolingTowerTwoSpeed.new(model)
+plant.addSupplyBranchForComponent(twoSpeedTower)
+
 # CoolTools tower
 newTower2 = OpenStudio::Model::CoolingTowerVariableSpeed.new(model)
 newTower2.setSizingFactor(0.33)
