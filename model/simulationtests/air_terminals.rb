@@ -90,6 +90,24 @@ zones.each do |z|
     plant = boiler.plantLoop.get
 
     plant.addDemandBranchForComponent(coil)
+  elsif i == 6
+    air_loop = z.airLoopHVAC.get
+    air_loop.removeBranchForZone(z)
+
+    schedule = model.alwaysOnDiscreteSchedule()
+    heat_coil = OpenStudio::Model::CoilHeatingWater.new(model,schedule)
+    cool_coil = OpenStudio::Model::CoilCoolingWater.new(model,schedule)
+    new_terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeFourPipeInduction.new(model,heat_coil)
+    new_terminal.setCoolingCoil(cool_coil)
+    air_loop.addBranchForZone(z,new_terminal.to_StraightComponent)
+
+    boiler = model.getBoilerHotWaters.first
+    plant = boiler.plantLoop.get
+    plant.addDemandBranchForComponent(heat_coil)
+
+    chiller = model.getChillerElectricEIRs.first
+    plant = chiller.plantLoop.get
+    plant.addDemandBranchForComponent(cool_coil)
   end
 
   i = i + 1
