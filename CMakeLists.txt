@@ -194,7 +194,7 @@ IF(MSVC)
   list( APPEND ALL_DLLS ${ALL_RELEASE_DLLS} )
   list( APPEND ALL_DLLS ${ALL_RELDBG_DLLS} )
   list( LENGTH ALL_DLLS NUM_DLLS )
-  message("Copying ${NUM_DLLS} DLLs under ${OPENSTUDIO_BUILD_DIR} to ${CMAKE_BINARY_DIR}")
+  message( STATUS "Copying ${NUM_DLLS} DLLs under ${OPENSTUDIO_BUILD_DIR} to ${CMAKE_BINARY_DIR}")
   file(COPY ${ALL_DEBUG_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/Products/Debug/")
   file(COPY ${ALL_RELEASE_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/Products/Release/")
   file(COPY ${ALL_RELDBG_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/Products/RelWithDebInfo/")
@@ -265,6 +265,29 @@ mark_as_advanced(
   Boost_DIR
   BOOST_THREAD_LIBRARY
 )
+
+# Check default Boost install location for Windows if Boost has not been found, and display missing components
+if(MSVC AND NOT Boost_FOUND AND EXISTS "C:/local/boost_1_55_0/")
+  if(CMAKE_CL_64)
+    set(BOOST_ARCH 64)
+  else()
+    set(BOOST_ARCH 32)
+  endif()
+  if(MSVC12)
+    set(BOOST_MSVC 12.0)
+  endif()
+  
+  if(EXISTS "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
+    set(BOOST_ROOT "C:/local/boost_1_55_0")
+    set(BOOST_LIBRARYDIR "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
+    find_package(Boost 1.55.0 COMPONENTS filesystem regex program_options system thread date_time log QUIET)
+    if(NOT Boost_FOUND)
+      message(STATUS "Could NOT find Boost\n${Boost_ERROR_REASON}")
+    endif()
+  endif()
+elseif(NOT Boost_FOUND)
+  message(STATUS "Could NOT find Boost\n${Boost_ERROR_REASON}")
+endif()
 
 find_package(Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time log)
 include_directories(SYSTEM ${Boost_INCLUDE_DIR})
