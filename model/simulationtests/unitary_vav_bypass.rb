@@ -110,7 +110,22 @@ zones.each do |zone|
   terminal = OpenStudio::Model::AirTerminalSingleDuctVAVNoReheat.new(model, schedule)
   airLoop_1.addBranchForZone(zone, terminal)
 end
-        
+   
+# Request timeseries data for debugging
+=begin
+reporting_frequency = "hourly"
+var_names << "Zone Thermostat Air Temperature"
+var_names << "Zone Thermostat Heating Setpoint Temperature"
+var_names << "Zone Air Terminal VAV Damper Position"
+var_names << "System Node Temperature"
+var_names << "System Node Mass Flow Rate"
+var_names.each do |var_name|
+  outputVariable = OpenStudio::Model::OutputVariable.new(var_name,model)
+  outputVariable.setReportingFrequency(reporting_frequency)
+end          
+=end
+
+   
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
