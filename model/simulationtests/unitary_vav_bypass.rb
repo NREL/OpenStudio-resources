@@ -106,9 +106,23 @@ unitary_1 = OpenStudio::Model::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.new
 
 unitary_1.addToNode(airLoop_1_supplyNode)
 
+# Unitary System test 2
+airLoop_2 = OpenStudio::Model::AirLoopHVAC.new(model)
+airLoop_2_supplyNode = airLoop_2.supplyOutletNode()
+unitary_2 = unitary_1.clone(model).to_AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.get
+unitary_2.addToNode(airLoop_2_supplyNode)
+
+i = 1
 zones.each do |zone|
-  terminal = OpenStudio::Model::AirTerminalSingleDuctVAVNoReheat.new(model, schedule)
-  airLoop_1.addBranchForZone(zone, terminal)
+  if i < 3 
+    reheat_coil = OpenStudio::Model::CoilHeatingGas.new(model, schedule)
+    terminal = OpenStudio::Model::AirTerminalSingleDuctVAVHeatAndCoolReheat.new(model, reheat_coil)
+    airLoop_1.addBranchForZone(zone, terminal)
+  else
+    terminal = OpenStudio::Model::AirTerminalSingleDuctVAVHeatAndCoolNoReheat.new(model)
+    airLoop_2.addBranchForZone(zone, terminal)
+  end
+  i = i + 1
 end
         
 #add thermostats
