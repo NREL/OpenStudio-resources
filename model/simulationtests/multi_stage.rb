@@ -22,8 +22,8 @@ always_on = model.alwaysOnDiscreteSchedule()
 zones = model.getThermalZones()
         
 #add thermostats
-model.add_thermostats({"heating_setpoint" => 24,
-                      "cooling_setpoint" => 28})
+model.add_thermostats({"heating_setpoint" => 20,
+                      "cooling_setpoint" => 30})
 
 # get the heating and cooling setpoint schedule to use later 
 thermostat = model.getThermostatSetpointDualSetpoints[0]
@@ -31,7 +31,7 @@ heating_schedule = thermostat.heatingSetpointTemperatureSchedule().get
 cooling_schedule = thermostat.coolingSetpointTemperatureSchedule().get
 
 # Unitary System test
-zone = zones[0]
+zone = zones.sort[0]
 
 staged_thermostat = OpenStudio::Model::ZoneControlThermostatStagedDualSetpoint.new(model)
 staged_thermostat.setHeatingTemperatureSetpointSchedule(heating_schedule)
@@ -106,17 +106,23 @@ cooling_curve_6_alt = cooling_curve_6.clone().to_CurveBiquadratic.get
 air_system = OpenStudio::Model::AirLoopHVAC.new(model)
 supply_outlet_node = air_system.supplyOutletNode()
 
+# Modify the sizing parameters for the air system
+air_loop_sizing = air_system.sizingSystem
+air_loop_sizing.setCentralHeatingDesignSupplyAirTemperature(OpenStudio.convert(104, "F", "C").get)
+
 controllerOutdoorAir = OpenStudio::Model::ControllerOutdoorAir.new(model)
 outdoorAirSystem = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model,controllerOutdoorAir)
 outdoorAirSystem.addToNode(supply_outlet_node)
 
 fan = OpenStudio::Model::FanConstantVolume.new(model,always_on)
 heat = OpenStudio::Model::CoilHeatingGasMultiStage.new(model)
+heat.setName("Multi Stage Gas Htg Coil")
 heat_stage_1 = OpenStudio::Model::CoilHeatingGasMultiStageStageData.new(model)
 heat_stage_2 = OpenStudio::Model::CoilHeatingGasMultiStageStageData.new(model)
 heat.addStage(heat_stage_1)
 heat.addStage(heat_stage_2)
 cool = OpenStudio::Model::CoilCoolingDXMultiSpeed.new(model)
+cool.setName("Multi Stage DX Clg Coil")
 cool_stage_1 = OpenStudio::Model::CoilCoolingDXMultiSpeedStageData.new(model,
   cooling_curve_1,
   cooling_curve_2,
@@ -134,8 +140,10 @@ cool_stage_2 = OpenStudio::Model::CoilCoolingDXMultiSpeedStageData.new(model,
 cool.addStage(cool_stage_1)
 cool.addStage(cool_stage_2)
 supp_heat = OpenStudio::Model::CoilHeatingElectric.new(model,always_on)
+supp_heat.setName("Sup Elec Htg Coil")
 unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.new(model,fan,heat,cool,supp_heat)
 unitary.addToNode(supply_outlet_node)
+unitary.setControllingZoneorThermostatLocation(zone)
 
 terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,always_on)
 air_system.addBranchForZone(zone,terminal)
