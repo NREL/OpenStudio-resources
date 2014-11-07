@@ -66,7 +66,6 @@
 #include <runmanager/Test/ToolBin.hxx>
 
 #include <utilities/economics/Economics.hpp>
-#include <utilities/document/Table.hpp>
 #include <utilities/data/Attribute.hpp>
 #include <utilities/core/Optional.hpp>
 #include <utilities/core/Path.hpp>
@@ -224,10 +223,6 @@ TEST_F(AnalysisDriverFixture, DesignOfExperiments_IdfOnly_WithSimulation) {
   }
 
   // CREATE CSV REPORT
-  Table table;
-  TableLoadOptions options;
-  options.lookForInts = false;
-  options.lookForBools = false;
   StringVector row;
 
   row.push_back("Id");             // data point record id
@@ -248,7 +243,6 @@ TEST_F(AnalysisDriverFixture, DesignOfExperiments_IdfOnly_WithSimulation) {
   row.push_back("Percent Savings");
 //  row.push_back("Simple Payback");
 //  row.push_back("5 Year TLCC");
-  table.appendRow(row,options);
 
   row.clear();
   row.push_back("");
@@ -268,7 +262,6 @@ TEST_F(AnalysisDriverFixture, DesignOfExperiments_IdfOnly_WithSimulation) {
   row.push_back("(%)");
 //  row.push_back("(y)");
 //  row.push_back("($)");
-  table.appendRow(row,options);
 
   // Get baseline information.
   std::vector<QVariant> baselineValues(7u,QVariant(0));
@@ -290,46 +283,12 @@ TEST_F(AnalysisDriverFixture, DesignOfExperiments_IdfOnly_WithSimulation) {
   // double baselineTotalSourceEnergy = it->attributeValueAsDouble();
 
   dataPointRecords = analysisRecord.successfulDataPointRecords();
-  TableElementVector teRow;
-  BOOST_FOREACH(const DataPointRecord& dataPointRecord,dataPointRecords) {
-    teRow.clear();
-    teRow.push_back(TableElement(dataPointRecord.id()));
-    // TODO: Avoid constructing dataPoint by providing variableValues() method in
-    // DataPointRecord.
-    DataPoint dataPoint = dataPointRecord.dataPoint();
-    std::vector<QVariant> variableValues = dataPoint.variableValues();
-    BOOST_FOREACH(const QVariant& value,variableValues) {
-      int i = value.toInt();
-      if (i == 0) {
-        teRow.push_back(TableElement(""));
-      }
-      else {
-        teRow.push_back(TableElement("x"));
-      }
-    }
-    attributeRecords = dataPointRecord.attributeRecords();
-    it = std::find_if(attributeRecords.begin(),attributeRecords.end(),siteFinder);
-    ASSERT_FALSE(it == attributeRecords.end());
-    double totalSiteEnergy = it->attributeValueAsDouble();
-    it = std::find_if(attributeRecords.begin(),attributeRecords.end(),sourceFinder);
-    ASSERT_FALSE(it == attributeRecords.end());
-    double totalSourceEnergy = it->attributeValueAsDouble();
-    teRow.push_back(TableElement(totalSiteEnergy));
-    teRow.push_back(TableElement(totalSourceEnergy));
-    teRow.push_back(TableElement(100.0 * (baselineTotalSiteEnergy - totalSiteEnergy) / baselineTotalSiteEnergy));
-    Economics economics;
-    /*double upvFactor =*/ economics.getUPVFactor(0.06/12.0,60.0);
-
-    table.appendRow(teRow);
-  }
-
   std::stringstream fileName;
   fileName << analysis.name() << "_Report.csv";
 //  openstudio::path reportPath = defaultWorkingDirectory(analysisDriver.database()) /
 //      toPath(fileName.str());
   openstudio::path reportPath = analysisDriver.database().path().parent_path() /
       toPath(fileName.str());
-  table.save(reportPath,true);
 }
 
 TEST_F(AnalysisDriverFixture, SequentialSearch_IdfOnly) {
@@ -393,9 +352,6 @@ TEST_F(AnalysisDriverFixture, SequentialSearch_IdfOnly) {
   QFileInfo xmlFileInfo(toQString(xmlFileRef.path()));
   QDateTime xmlFileModifiedTestTime = xmlFileInfo.lastModified();
 
-  Table table = sequentialSearch.getSummaryTable(analysis);
-  table.save(analysisDriver.database().path().parent_path() /
-      toPath("SequentialSearchIdfOnly_Iter0.csv"),true);
   project.save();
   analysisRecord = project.analysisRecord();
 
@@ -425,9 +381,6 @@ TEST_F(AnalysisDriverFixture, SequentialSearch_IdfOnly) {
   // RunManager should not re-run the first (or any other) point
   EXPECT_EQ(xmlFileModifiedTestTime,xmlFileInfo.lastModified());
 
-  table = sequentialSearch.getSummaryTable(analysis);
-  table.save(analysisDriver.database().path().parent_path() /
-      toPath("SequentialSearchIdfOnly_Iters0-2.csv"),true);
   project.save();
   analysisRecord = project.analysisRecord();
 
@@ -453,8 +406,5 @@ TEST_F(AnalysisDriverFixture, SequentialSearch_IdfOnly) {
   // RunManager should not re-run the first (or any other) point
   EXPECT_EQ(xmlFileModifiedTestTime,xmlFileInfo.lastModified());
 
-  table = sequentialSearch.getSummaryTable(analysis);
-  table.save(analysisDriver.database().path().parent_path() / toPath("SequentialSearchIdfOnly.csv"),true);
-  project.save();
   analysisRecord = project.analysisRecord();
 }
