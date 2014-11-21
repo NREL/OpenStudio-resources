@@ -329,6 +329,7 @@ find_package(Qt5WebKit REQUIRED)
 find_package(Qt5WebKitWidgets REQUIRED)
 #find_package(Qt5WinExtras)
 find_package(Qt5Concurrent REQUIRED)
+find_package(Qt5PrintSupport REQUIRED)
 mark_as_advanced(
   Qt5Concurrent_DIR
   Qt5Core_DIR
