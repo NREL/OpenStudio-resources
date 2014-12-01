@@ -72,8 +72,8 @@ TEST_F(RunManagerTestFixture, BasementAndSlabJobs)
 
   // Build list of tools
   openstudio::runmanager::Tools tools 
-    = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(),
-        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+    = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+
   workflowslab.add(tools);
   workflowbasement.add(tools);
 

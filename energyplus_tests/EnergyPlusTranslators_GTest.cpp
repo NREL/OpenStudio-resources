@@ -111,8 +111,7 @@ openstudio::runmanager::Job createPostProcessComparisonJob(const openstudio::pat
 
   openstudio::runmanager::Tools tools 
     = openstudio::runmanager::ConfigOptions::makeTools(
-        energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path(),
-        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+        energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path());
 
   wf.add(tools);
 
@@ -315,8 +314,7 @@ TEST_P(EnergyPlusTestFixture, ConversionFileComparison)
 
   openstudio::runmanager::Tools tools 
     = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), 
-        openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path(),
-        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+        openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path());
 
   wf.add(tools);
 

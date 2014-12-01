@@ -156,11 +156,6 @@ void RunManagerTestFixture::run_profiling_test(int t_numRubyVars,
         openstudio::path(),
         openstudio::path(),
         rubyExePath().parent_path(),
-        openstudio::path(),
-        openstudio::path(),
-        openstudio::path(),
-        openstudio::path(),
-        openstudio::path(),
         openstudio::path());
     wf.add(tools);
 
