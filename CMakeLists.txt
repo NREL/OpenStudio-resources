@@ -35,8 +35,8 @@ option( REQUIRE_OSSERVER OFF )
 
 # Point to OpenStudio
 SET( OPENSTUDIO_BUILD_DIR "" CACHE PATH "Build or install directory for OpenStudio build to link against")
-SET( OPENSTUDIOCORE_BUILD_DIR "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build")
-INCLUDE ( "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/OpenStudioCoreConfig.cmake" )
+SET( OPENSTUDIOCORE_BUILD_DIR "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build")
+INCLUDE ( "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/OpenStudioCoreConfig.cmake" )
 
 # Point to openstudio-server
 SET( OSSERVER_PATH "" CACHE PATH "Path to your openstudio-server repository." )
@@ -329,6 +329,7 @@ find_package(Qt5WebKit REQUIRED)
 find_package(Qt5WebKitWidgets REQUIRED)
 #find_package(Qt5WinExtras)
 find_package(Qt5Concurrent REQUIRED)
+find_package(Qt5PrintSupport) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
 mark_as_advanced(
   Qt5Concurrent_DIR
   Qt5Core_DIR
@@ -363,6 +364,7 @@ include_directories(${Qt5WebKit_INCLUDE_DIRS})
 include_directories(${Qt5WebKitWidgets_INCLUDE_DIRS})
 #include_directories(${Qt5WinExtras_INCLUDE_DIRS})
 include_directories(${Qt5Concurrent_INCLUDE_DIRS})
+include_directories(${Qt5PrintSupport_INCLUDE_DIRS})
 
 #include_directories is supposed to be a set, however there are tons of Qt duplicate includes
 get_directory_property(dupdirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} INCLUDE_DIRECTORIES)
