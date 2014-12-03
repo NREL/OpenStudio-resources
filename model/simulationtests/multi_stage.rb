@@ -19,7 +19,7 @@ model.add_windows({"wwr" => 0.4,
 
 always_on = model.alwaysOnDiscreteSchedule()
 
-zones = model.getThermalZones()
+zones = model.getThermalZones().sort
         
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 20,
