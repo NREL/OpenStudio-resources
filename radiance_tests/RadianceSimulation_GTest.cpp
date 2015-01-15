@@ -67,8 +67,7 @@ std::vector<openstudio::SqlFile> runSimulationNTimes(const std::string t_filenam
 
   openstudio::runmanager::Tools tools 
     = openstudio::runmanager::ConfigOptions::makeTools(
-        energyPlusExePath().parent_path(), openstudio::path(), Paths::radPath().parent_path(), rubyExePath().parent_path(), openstudio::path(),
-        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+        energyPlusExePath().parent_path(), openstudio::path(), Paths::radPath().parent_path(), rubyExePath().parent_path(), openstudio::path());
 
   openstudio::path epw = (resourcesPath() / openstudio::toPath("weatherdata") / openstudio::toPath(epwName));
 
