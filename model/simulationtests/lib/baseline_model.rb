@@ -272,6 +272,8 @@ class BaselineModel < OpenStudio::Model::Model
         ill.setOriginZCoordinate(position.z + offsetZ)
         ill.setXLength(1)
         ill.setYLength(1)
+        ill.setNumberofXGridPoints(5)
+        ill.setNumberofYGridPoints(5)
         zone.setIlluminanceMap(ill)
  
       end
