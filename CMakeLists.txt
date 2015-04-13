@@ -205,7 +205,6 @@ link_directories(${OpenStudioCore_LIBRARY_DIRS})
 SET(OPENSTUDIO_LIBS
   gtest
   gtest_main
-  zkqwt
   litesql
   litesql-util
   openstudio_utilities
