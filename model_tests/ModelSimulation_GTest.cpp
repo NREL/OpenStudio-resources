@@ -1559,3 +1559,11 @@ TEST_F(ModelSimulationFixture,headered_pumps_osm) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture,hot_water_rb) {
+  openstudio::SqlFile sql = runSimulation("hot_water.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
