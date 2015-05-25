@@ -21,17 +21,36 @@ model.add_windows({"wwr" => 0.4,
 model.add_hvac({"ashrae_sys_num" => '07'})
 
 zones = model.getThermalZones
-zone = zones.first
-zone.airLoopHVAC.get.removeBranchForZone(zone)
 
+# CoilCoolingDXTwoStageWithHumidityControlMode
+zone = zones[0]
+zone.airLoopHVAC.get.removeBranchForZone(zone)
 airloop = OpenStudio::Model::addSystemType3(model).to_AirLoopHVAC.get
 airloop.addBranchForZone(zone)
-
 coil = airloop.supplyComponents(OpenStudio::Model::CoilCoolingDXSingleSpeed::iddObjectType()).first.to_StraightComponent.get
 node = coil.outletModelObject.get.to_Node.get
 new_coil = OpenStudio::Model::CoilCoolingDXTwoStageWithHumidityControlMode.new(model)
 new_coil.addToNode(node)
 coil.remove()
+
+# CoilSystemCoolingDXHeatExchangerAssisted
+zone = zones[1]
+zone.airLoopHVAC.get.removeBranchForZone(zone)
+airloop = OpenStudio::Model::AirLoopHVAC.new(model)
+terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,model.alwaysOnDiscreteSchedule())
+airloop.addBranchForZone(zone,terminal)
+unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
+unitary.setFanPlacement("BlowThrough")
+fan = OpenStudio::Model::FanOnOff.new(model)
+unitary.setSupplyFan(fan)
+heating_coil = OpenStudio::Model::CoilHeatingElectric.new(model)
+unitary.setHeatingCoil(heating_coil)
+cooling_coil = OpenStudio::Model::CoilSystemCoolingDXHeatExchangerAssisted.new(model)
+cooling_coil.heatExchanger.to_HeatExchangerAirToAirSensibleAndLatent.get.setSupplyAirOutletTemperatureControl(false)
+unitary.setCoolingCoil(cooling_coil)
+unitary.addToNode(airloop.supplyOutletNode())
+unitary.setControllingZoneorThermostatLocation(zone)
+
 
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
