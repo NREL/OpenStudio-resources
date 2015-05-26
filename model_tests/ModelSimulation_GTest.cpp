@@ -1583,3 +1583,11 @@ TEST_F(ModelSimulationFixture,thermal_storage_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture,absorption_chillers_rb) {
+  openstudio::SqlFile sql = runSimulation("absorption_chillers.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
