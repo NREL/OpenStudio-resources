@@ -20,12 +20,17 @@ model.add_windows({"wwr" => 0.4,
 #add ASHRAE System type 07, VAV w/ Reheat
 model.add_hvac({"ashrae_sys_num" => '07'})
 
+condenser_plant = model.getCoolingTowerSingleSpeeds.first.plantLoop.get
 chilled_plant = model.getChillerElectricEIRs.first.plantLoop.get
+
 chiller = OpenStudio::Model::ChillerAbsorptionIndirect.new(model)
 chilled_plant.addSupplyBranchForComponent(chiller)
-
-condenser_plant = model.getCoolingTowerSingleSpeeds.first.plantLoop.get
 condenser_plant.addDemandBranchForComponent(chiller)
+
+chiller = OpenStudio::Model::ChillerAbsorption.new(model)
+chilled_plant.addSupplyBranchForComponent(chiller)
+condenser_plant.addDemandBranchForComponent(chiller)
+
 
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
