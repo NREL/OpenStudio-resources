@@ -98,6 +98,9 @@ condenserWaterPlant.addSupplyBranchForComponent(fluidCooler)
 groundHX = OpenStudio::Model::GroundHeatExchangerVertical.new(model)
 condenserWaterPlant.addSupplyBranchForComponent(groundHX)
 
+#hGroundHX = OpenStudio::Model::GroundHeatExchangerHorizontalTrench.new(model)
+#condenserWaterPlant.addSupplyBranchForComponent(hGroundHX)
+
 pipe = OpenStudio::Model::PipeAdiabatic.new(model)
 condenserWaterPlant.addSupplyBranchForComponent(pipe)
 
