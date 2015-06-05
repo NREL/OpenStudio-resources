@@ -1575,6 +1575,14 @@ TEST_F(ModelSimulationFixture,hot_water_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture,heatpump_hot_water_rb) {
+  openstudio::SqlFile sql = runSimulation("heatpump_hot_water.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
 TEST_F(ModelSimulationFixture,cooling_coils_rb) {
   openstudio::SqlFile sql = runSimulation("cooling_coils.rb");
 
