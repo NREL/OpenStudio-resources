@@ -11,7 +11,7 @@
     <Elevation>13</Elevation>
     <WtrMnTempSchRef>WaterMainCZ12</WtrMnTempSchRef>
     <DDWeatherFile>../weatherdata/SACRAMENTO-EXECUTIVE_724830_CZ2010.ddy</DDWeatherFile>
-    <AnnualWeatherFile>../weatherdata/SACRAMENTO-EXECUTIVE_724830_CZ2010.epw</AnnualWeatherFile> 
+    <AnnualWeatherFile>../weatherdata/SACRAMENTO-EXECUTIVE_724830_CZ2010.epw</AnnualWeatherFile>
     <HVACAutoSizing>1</HVACAutoSizing>
     <SimDsgnDays>1</SimDsgnDays>
     <SimFlag>1</SimFlag>
@@ -23,9 +23,11 @@
     <SimVarsInterval>Hourly</SimVarsInterval>
     <SimVarsSite>0</SimVarsSite>
     <SimVarsThrmlZn>0</SimVarsThrmlZn>
+    <SimVarsDayltg>0</SimVarsDayltg>
     <SimVarsHVACSec>0</SimVarsHVACSec>
     <SimVarsHVACPri>0</SimVarsHVACPri>
     <SimVarsHVACZn>0</SimVarsHVACZn>
+    <WtrHtrCnt>1</WtrHtrCnt>
     <SchDay>
       <Name>School Occup WD</Name>
       <Type>Fraction</Type>
@@ -277,90 +279,6 @@
       <Hr index="21">0.05</Hr>
       <Hr index="22">0.05</Hr>
       <Hr index="23">0.05</Hr>
-    </SchDay>
-    <SchDay>
-      <Name>School HVAC WD</Name>
-      <Type>OnOff</Type>
-      <Hr index="0">0</Hr>
-      <Hr index="1">0</Hr>
-      <Hr index="2">0</Hr>
-      <Hr index="3">0</Hr>
-      <Hr index="4">0</Hr>
-      <Hr index="5">0</Hr>
-      <Hr index="6">0</Hr>
-      <Hr index="7">1</Hr>
-      <Hr index="8">1</Hr>
-      <Hr index="9">1</Hr>
-      <Hr index="10">1</Hr>
-      <Hr index="11">1</Hr>
-      <Hr index="12">1</Hr>
-      <Hr index="13">1</Hr>
-      <Hr index="14">1</Hr>
-      <Hr index="15">1</Hr>
-      <Hr index="16">1</Hr>
-      <Hr index="17">1</Hr>
-      <Hr index="18">1</Hr>
-      <Hr index="19">1</Hr>
-      <Hr index="20">1</Hr>
-      <Hr index="21">1</Hr>
-      <Hr index="22">0</Hr>
-      <Hr index="23">0</Hr>
-    </SchDay>
-    <SchDay>
-      <Name>School HVAC Sat</Name>
-      <Type>OnOff</Type>
-      <Hr index="0">0</Hr>
-      <Hr index="1">0</Hr>
-      <Hr index="2">0</Hr>
-      <Hr index="3">0</Hr>
-      <Hr index="4">0</Hr>
-      <Hr index="5">0</Hr>
-      <Hr index="6">0</Hr>
-      <Hr index="7">0</Hr>
-      <Hr index="8">1</Hr>
-      <Hr index="9">1</Hr>
-      <Hr index="10">1</Hr>
-      <Hr index="11">1</Hr>
-      <Hr index="12">1</Hr>
-      <Hr index="13">0</Hr>
-      <Hr index="14">0</Hr>
-      <Hr index="15">0</Hr>
-      <Hr index="16">0</Hr>
-      <Hr index="17">0</Hr>
-      <Hr index="18">0</Hr>
-      <Hr index="19">0</Hr>
-      <Hr index="20">0</Hr>
-      <Hr index="21">0</Hr>
-      <Hr index="22">0</Hr>
-      <Hr index="23">0</Hr>
-    </SchDay>
-    <SchDay>
-      <Name>School HVAC Sun</Name>
-      <Type>OnOff</Type>
-      <Hr index="0">0</Hr>
-      <Hr index="1">0</Hr>
-      <Hr index="2">0</Hr>
-      <Hr index="3">0</Hr>
-      <Hr index="4">0</Hr>
-      <Hr index="5">0</Hr>
-      <Hr index="6">0</Hr>
-      <Hr index="7">0</Hr>
-      <Hr index="8">0</Hr>
-      <Hr index="9">0</Hr>
-      <Hr index="10">0</Hr>
-      <Hr index="11">0</Hr>
-      <Hr index="12">0</Hr>
-      <Hr index="13">0</Hr>
-      <Hr index="14">0</Hr>
-      <Hr index="15">0</Hr>
-      <Hr index="16">0</Hr>
-      <Hr index="17">0</Hr>
-      <Hr index="18">0</Hr>
-      <Hr index="19">0</Hr>
-      <Hr index="20">0</Hr>
-      <Hr index="21">0</Hr>
-      <Hr index="22">0</Hr>
-      <Hr index="23">0</Hr>
     </SchDay>
     <SchDay>
       <Name>School HotWtr WD</Name>
@@ -951,6 +869,230 @@
       <Hr index="23">0</Hr>
     </SchDay>
     <SchDay>
+      <Name>School Inf WD</Name>
+      <Type>Fraction</Type>
+      <Hr index="0">1</Hr>
+      <Hr index="1">1</Hr>
+      <Hr index="2">1</Hr>
+      <Hr index="3">1</Hr>
+      <Hr index="4">1</Hr>
+      <Hr index="5">1</Hr>
+      <Hr index="6">1</Hr>
+      <Hr index="7">0.25</Hr>
+      <Hr index="8">0.25</Hr>
+      <Hr index="9">0.25</Hr>
+      <Hr index="10">0.25</Hr>
+      <Hr index="11">0.25</Hr>
+      <Hr index="12">0.25</Hr>
+      <Hr index="13">0.25</Hr>
+      <Hr index="14">0.25</Hr>
+      <Hr index="15">0.25</Hr>
+      <Hr index="16">0.25</Hr>
+      <Hr index="17">0.25</Hr>
+      <Hr index="18">0.25</Hr>
+      <Hr index="19">0.25</Hr>
+      <Hr index="20">0.25</Hr>
+      <Hr index="21">0.25</Hr>
+      <Hr index="22">1</Hr>
+      <Hr index="23">1</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>School Inf Sat</Name>
+      <Type>Fraction</Type>
+      <Hr index="0">1</Hr>
+      <Hr index="1">1</Hr>
+      <Hr index="2">1</Hr>
+      <Hr index="3">1</Hr>
+      <Hr index="4">1</Hr>
+      <Hr index="5">1</Hr>
+      <Hr index="6">1</Hr>
+      <Hr index="7">1</Hr>
+      <Hr index="8">0.25</Hr>
+      <Hr index="9">0.25</Hr>
+      <Hr index="10">0.25</Hr>
+      <Hr index="11">0.25</Hr>
+      <Hr index="12">0.25</Hr>
+      <Hr index="13">1</Hr>
+      <Hr index="14">1</Hr>
+      <Hr index="15">1</Hr>
+      <Hr index="16">1</Hr>
+      <Hr index="17">1</Hr>
+      <Hr index="18">1</Hr>
+      <Hr index="19">1</Hr>
+      <Hr index="20">1</Hr>
+      <Hr index="21">1</Hr>
+      <Hr index="22">1</Hr>
+      <Hr index="23">0</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>School Inf Sun</Name>
+      <Type>Fraction</Type>
+      <Hr index="0">1</Hr>
+      <Hr index="1">1</Hr>
+      <Hr index="2">1</Hr>
+      <Hr index="3">1</Hr>
+      <Hr index="4">1</Hr>
+      <Hr index="5">1</Hr>
+      <Hr index="6">1</Hr>
+      <Hr index="7">1</Hr>
+      <Hr index="8">1</Hr>
+      <Hr index="9">1</Hr>
+      <Hr index="10">1</Hr>
+      <Hr index="11">1</Hr>
+      <Hr index="12">1</Hr>
+      <Hr index="13">1</Hr>
+      <Hr index="14">1</Hr>
+      <Hr index="15">1</Hr>
+      <Hr index="16">1</Hr>
+      <Hr index="17">1</Hr>
+      <Hr index="18">1</Hr>
+      <Hr index="19">1</Hr>
+      <Hr index="20">1</Hr>
+      <Hr index="21">1</Hr>
+      <Hr index="22">1</Hr>
+      <Hr index="23">0</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>SchoolLightsSun</Name>
+      <Type>Fraction</Type>
+      <Hr index="0">0.05</Hr>
+      <Hr index="1">0.05</Hr>
+      <Hr index="2">0.05</Hr>
+      <Hr index="3">0.05</Hr>
+      <Hr index="4">0.05</Hr>
+      <Hr index="5">0.05</Hr>
+      <Hr index="6">0.05</Hr>
+      <Hr index="7">0.05</Hr>
+      <Hr index="8">0.05</Hr>
+      <Hr index="9">0.05</Hr>
+      <Hr index="10">0.05</Hr>
+      <Hr index="11">0.05</Hr>
+      <Hr index="12">0.05</Hr>
+      <Hr index="13">0.05</Hr>
+      <Hr index="14">0.05</Hr>
+      <Hr index="15">0.05</Hr>
+      <Hr index="16">0.05</Hr>
+      <Hr index="17">0.05</Hr>
+      <Hr index="18">0.05</Hr>
+      <Hr index="19">0.05</Hr>
+      <Hr index="20">0.05</Hr>
+      <Hr index="21">0.05</Hr>
+      <Hr index="22">0.05</Hr>
+      <Hr index="23">0.05</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>SchoolLightsWD</Name>
+      <Type>Fraction</Type>
+      <Hr index="0">0.05</Hr>
+      <Hr index="1">0.05</Hr>
+      <Hr index="2">0.05</Hr>
+      <Hr index="3">0.05</Hr>
+      <Hr index="4">0.05</Hr>
+      <Hr index="5">0.05</Hr>
+      <Hr index="6">0.05</Hr>
+      <Hr index="7">0.3</Hr>
+      <Hr index="8">0.6</Hr>
+      <Hr index="9">0.65</Hr>
+      <Hr index="10">0.65</Hr>
+      <Hr index="11">0.65</Hr>
+      <Hr index="12">0.55</Hr>
+      <Hr index="13">0.55</Hr>
+      <Hr index="14">0.55</Hr>
+      <Hr index="15">0.5</Hr>
+      <Hr index="16">0.35</Hr>
+      <Hr index="17">0.35</Hr>
+      <Hr index="18">0.35</Hr>
+      <Hr index="19">0.35</Hr>
+      <Hr index="20">0.35</Hr>
+      <Hr index="21">0.3</Hr>
+      <Hr index="22">0.05</Hr>
+      <Hr index="23">0.05</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>SchoolLightsSat</Name>
+      <Type>Fraction</Type>
+      <Hr index="0">0.05</Hr>
+      <Hr index="1">0.05</Hr>
+      <Hr index="2">0.05</Hr>
+      <Hr index="3">0.05</Hr>
+      <Hr index="4">0.05</Hr>
+      <Hr index="5">0.05</Hr>
+      <Hr index="6">0.05</Hr>
+      <Hr index="7">0.05</Hr>
+      <Hr index="8">0.15</Hr>
+      <Hr index="9">0.15</Hr>
+      <Hr index="10">0.15</Hr>
+      <Hr index="11">0.15</Hr>
+      <Hr index="12">0.15</Hr>
+      <Hr index="13">0.05</Hr>
+      <Hr index="14">0.05</Hr>
+      <Hr index="15">0.05</Hr>
+      <Hr index="16">0.05</Hr>
+      <Hr index="17">0.05</Hr>
+      <Hr index="18">0.05</Hr>
+      <Hr index="19">0.05</Hr>
+      <Hr index="20">0.05</Hr>
+      <Hr index="21">0.05</Hr>
+      <Hr index="22">0.05</Hr>
+      <Hr index="23">0.05</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>OnDay</Name>
+      <Type>Fraction</Type>
+      <Hr index="0">1</Hr>
+      <Hr index="1">1</Hr>
+      <Hr index="2">1</Hr>
+      <Hr index="3">1</Hr>
+      <Hr index="4">1</Hr>
+      <Hr index="5">1</Hr>
+      <Hr index="6">1</Hr>
+      <Hr index="7">1</Hr>
+      <Hr index="8">1</Hr>
+      <Hr index="9">1</Hr>
+      <Hr index="10">1</Hr>
+      <Hr index="11">1</Hr>
+      <Hr index="12">1</Hr>
+      <Hr index="13">1</Hr>
+      <Hr index="14">1</Hr>
+      <Hr index="15">1</Hr>
+      <Hr index="16">1</Hr>
+      <Hr index="17">1</Hr>
+      <Hr index="18">1</Hr>
+      <Hr index="19">1</Hr>
+      <Hr index="20">1</Hr>
+      <Hr index="21">1</Hr>
+      <Hr index="22">1</Hr>
+      <Hr index="23">1</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>OffDay</Name>
+      <Type>Fraction</Type>
+      <Hr index="0">0</Hr>
+      <Hr index="1">0</Hr>
+      <Hr index="2">0</Hr>
+      <Hr index="3">0</Hr>
+      <Hr index="4">0</Hr>
+      <Hr index="5">0</Hr>
+      <Hr index="6">0</Hr>
+      <Hr index="7">0</Hr>
+      <Hr index="8">0</Hr>
+      <Hr index="9">0</Hr>
+      <Hr index="10">0</Hr>
+      <Hr index="11">0</Hr>
+      <Hr index="12">0</Hr>
+      <Hr index="13">0</Hr>
+      <Hr index="14">0</Hr>
+      <Hr index="15">0</Hr>
+      <Hr index="16">0</Hr>
+      <Hr index="17">0</Hr>
+      <Hr index="18">0</Hr>
+      <Hr index="19">0</Hr>
+      <Hr index="20">0</Hr>
+      <Hr index="21">0</Hr>
+      <Hr index="22">0</Hr>
+      <Hr index="23">0</Hr>
+    </SchDay>
+    <SchDay>
       <Name>Assembly Occup WD</Name>
       <Type>Fraction</Type>
       <Hr index="0">0</Hr>
@@ -1511,71 +1653,15 @@
       <Hr index="23">0</Hr>
     </SchDay>
     <SchDay>
-      <Name>School Inf WD</Name>
-      <Type>Fraction</Type>
-      <Hr index="0">1</Hr>
-      <Hr index="1">1</Hr>
-      <Hr index="2">1</Hr>
-      <Hr index="3">1</Hr>
-      <Hr index="4">1</Hr>
-      <Hr index="5">1</Hr>
-      <Hr index="6">1</Hr>
-      <Hr index="7">0.25</Hr>
-      <Hr index="8">0.25</Hr>
-      <Hr index="9">0.25</Hr>
-      <Hr index="10">0.25</Hr>
-      <Hr index="11">0.25</Hr>
-      <Hr index="12">0.25</Hr>
-      <Hr index="13">0.25</Hr>
-      <Hr index="14">0.25</Hr>
-      <Hr index="15">0.25</Hr>
-      <Hr index="16">0.25</Hr>
-      <Hr index="17">0.25</Hr>
-      <Hr index="18">0.25</Hr>
-      <Hr index="19">0.25</Hr>
-      <Hr index="20">0.25</Hr>
-      <Hr index="21">0.25</Hr>
-      <Hr index="22">1</Hr>
-      <Hr index="23">1</Hr>
-    </SchDay>
-    <SchDay>
-      <Name>School Inf Sat</Name>
-      <Type>Fraction</Type>
-      <Hr index="0">1</Hr>
-      <Hr index="1">1</Hr>
-      <Hr index="2">1</Hr>
-      <Hr index="3">1</Hr>
-      <Hr index="4">1</Hr>
-      <Hr index="5">1</Hr>
-      <Hr index="6">1</Hr>
-      <Hr index="7">1</Hr>
-      <Hr index="8">0.25</Hr>
-      <Hr index="9">0.25</Hr>
-      <Hr index="10">0.25</Hr>
-      <Hr index="11">0.25</Hr>
-      <Hr index="12">0.25</Hr>
-      <Hr index="13">1</Hr>
-      <Hr index="14">1</Hr>
-      <Hr index="15">1</Hr>
-      <Hr index="16">1</Hr>
-      <Hr index="17">1</Hr>
-      <Hr index="18">1</Hr>
-      <Hr index="19">1</Hr>
-      <Hr index="20">1</Hr>
-      <Hr index="21">1</Hr>
-      <Hr index="22">1</Hr>
-      <Hr index="23">0</Hr>
-    </SchDay>
-    <SchDay>
-      <Name>School Inf Sun</Name>
-      <Type>Fraction</Type>
-      <Hr index="0">1</Hr>
-      <Hr index="1">1</Hr>
-      <Hr index="2">1</Hr>
-      <Hr index="3">1</Hr>
-      <Hr index="4">1</Hr>
-      <Hr index="5">1</Hr>
-      <Hr index="6">1</Hr>
+      <Name>School HVAC WD</Name>
+      <Type>OnOff</Type>
+      <Hr index="0">0</Hr>
+      <Hr index="1">0</Hr>
+      <Hr index="2">0</Hr>
+      <Hr index="3">0</Hr>
+      <Hr index="4">0</Hr>
+      <Hr index="5">0</Hr>
+      <Hr index="6">0</Hr>
       <Hr index="7">1</Hr>
       <Hr index="8">1</Hr>
       <Hr index="9">1</Hr>
@@ -1591,124 +1677,40 @@
       <Hr index="19">1</Hr>
       <Hr index="20">1</Hr>
       <Hr index="21">1</Hr>
-      <Hr index="22">1</Hr>
+      <Hr index="22">0</Hr>
       <Hr index="23">0</Hr>
     </SchDay>
     <SchDay>
-      <Name>SchoolLightsSun</Name>
-      <Type>Fraction</Type>
-      <Hr index="0">0.05</Hr>
-      <Hr index="1">0.05</Hr>
-      <Hr index="2">0.05</Hr>
-      <Hr index="3">0.05</Hr>
-      <Hr index="4">0.05</Hr>
-      <Hr index="5">0.05</Hr>
-      <Hr index="6">0.05</Hr>
-      <Hr index="7">0.05</Hr>
-      <Hr index="8">0.05</Hr>
-      <Hr index="9">0.05</Hr>
-      <Hr index="10">0.05</Hr>
-      <Hr index="11">0.05</Hr>
-      <Hr index="12">0.05</Hr>
-      <Hr index="13">0.05</Hr>
-      <Hr index="14">0.05</Hr>
-      <Hr index="15">0.05</Hr>
-      <Hr index="16">0.05</Hr>
-      <Hr index="17">0.05</Hr>
-      <Hr index="18">0.05</Hr>
-      <Hr index="19">0.05</Hr>
-      <Hr index="20">0.05</Hr>
-      <Hr index="21">0.05</Hr>
-      <Hr index="22">0.05</Hr>
-      <Hr index="23">0.05</Hr>
-    </SchDay>
-    <SchDay>
-      <Name>SchoolLightsWD</Name>
-      <Type>Fraction</Type>
-      <Hr index="0">0.05</Hr>
-      <Hr index="1">0.05</Hr>
-      <Hr index="2">0.05</Hr>
-      <Hr index="3">0.05</Hr>
-      <Hr index="4">0.05</Hr>
-      <Hr index="5">0.05</Hr>
-      <Hr index="6">0.05</Hr>
-      <Hr index="7">0.3</Hr>
-      <Hr index="8">0.6</Hr>
-      <Hr index="9">0.65</Hr>
-      <Hr index="10">0.65</Hr>
-      <Hr index="11">0.65</Hr>
-      <Hr index="12">0.55</Hr>
-      <Hr index="13">0.55</Hr>
-      <Hr index="14">0.55</Hr>
-      <Hr index="15">0.5</Hr>
-      <Hr index="16">0.35</Hr>
-      <Hr index="17">0.35</Hr>
-      <Hr index="18">0.35</Hr>
-      <Hr index="19">0.35</Hr>
-      <Hr index="20">0.35</Hr>
-      <Hr index="21">0.3</Hr>
-      <Hr index="22">0.05</Hr>
-      <Hr index="23">0.05</Hr>
-    </SchDay>
-    <SchDay>
-      <Name>SchoolLightsSat</Name>
-      <Type>Fraction</Type>
-      <Hr index="0">0.05</Hr>
-      <Hr index="1">0.05</Hr>
-      <Hr index="2">0.05</Hr>
-      <Hr index="3">0.05</Hr>
-      <Hr index="4">0.05</Hr>
-      <Hr index="5">0.05</Hr>
-      <Hr index="6">0.05</Hr>
-      <Hr index="7">0.05</Hr>
-      <Hr index="8">0.15</Hr>
-      <Hr index="9">0.15</Hr>
-      <Hr index="10">0.15</Hr>
-      <Hr index="11">0.15</Hr>
-      <Hr index="12">0.15</Hr>
-      <Hr index="13">0.05</Hr>
-      <Hr index="14">0.05</Hr>
-      <Hr index="15">0.05</Hr>
-      <Hr index="16">0.05</Hr>
-      <Hr index="17">0.05</Hr>
-      <Hr index="18">0.05</Hr>
-      <Hr index="19">0.05</Hr>
-      <Hr index="20">0.05</Hr>
-      <Hr index="21">0.05</Hr>
-      <Hr index="22">0.05</Hr>
-      <Hr index="23">0.05</Hr>
-    </SchDay>
-    <SchDay>
-      <Name>OnDay</Name>
-      <Type>Fraction</Type>
-      <Hr index="0">1</Hr>
-      <Hr index="1">1</Hr>
-      <Hr index="2">1</Hr>
-      <Hr index="3">1</Hr>
-      <Hr index="4">1</Hr>
-      <Hr index="5">1</Hr>
-      <Hr index="6">1</Hr>
-      <Hr index="7">1</Hr>
+      <Name>School HVAC Sat</Name>
+      <Type>OnOff</Type>
+      <Hr index="0">0</Hr>
+      <Hr index="1">0</Hr>
+      <Hr index="2">0</Hr>
+      <Hr index="3">0</Hr>
+      <Hr index="4">0</Hr>
+      <Hr index="5">0</Hr>
+      <Hr index="6">0</Hr>
+      <Hr index="7">0</Hr>
       <Hr index="8">1</Hr>
       <Hr index="9">1</Hr>
       <Hr index="10">1</Hr>
       <Hr index="11">1</Hr>
       <Hr index="12">1</Hr>
-      <Hr index="13">1</Hr>
-      <Hr index="14">1</Hr>
-      <Hr index="15">1</Hr>
-      <Hr index="16">1</Hr>
-      <Hr index="17">1</Hr>
-      <Hr index="18">1</Hr>
-      <Hr index="19">1</Hr>
-      <Hr index="20">1</Hr>
-      <Hr index="21">1</Hr>
-      <Hr index="22">1</Hr>
-      <Hr index="23">1</Hr>
+      <Hr index="13">0</Hr>
+      <Hr index="14">0</Hr>
+      <Hr index="15">0</Hr>
+      <Hr index="16">0</Hr>
+      <Hr index="17">0</Hr>
+      <Hr index="18">0</Hr>
+      <Hr index="19">0</Hr>
+      <Hr index="20">0</Hr>
+      <Hr index="21">0</Hr>
+      <Hr index="22">0</Hr>
+      <Hr index="23">0</Hr>
     </SchDay>
     <SchDay>
-      <Name>OffDay</Name>
-      <Type>Fraction</Type>
+      <Name>School HVAC Sun</Name>
+      <Type>OnOff</Type>
       <Hr index="0">0</Hr>
       <Hr index="1">0</Hr>
       <Hr index="2">0</Hr>
@@ -2911,6 +2913,90 @@
       <Hr index="23">1</Hr>
     </SchDay>
     <SchDay>
+      <Name>SchoolHVACAvailSun</Name>
+      <Type>OnOff</Type>
+      <Hr index="0">0</Hr>
+      <Hr index="1">0</Hr>
+      <Hr index="2">0</Hr>
+      <Hr index="3">0</Hr>
+      <Hr index="4">0</Hr>
+      <Hr index="5">0</Hr>
+      <Hr index="6">0</Hr>
+      <Hr index="7">0</Hr>
+      <Hr index="8">0</Hr>
+      <Hr index="9">0</Hr>
+      <Hr index="10">0</Hr>
+      <Hr index="11">0</Hr>
+      <Hr index="12">0</Hr>
+      <Hr index="13">0</Hr>
+      <Hr index="14">0</Hr>
+      <Hr index="15">0</Hr>
+      <Hr index="16">0</Hr>
+      <Hr index="17">0</Hr>
+      <Hr index="18">0</Hr>
+      <Hr index="19">0</Hr>
+      <Hr index="20">0</Hr>
+      <Hr index="21">0</Hr>
+      <Hr index="22">0</Hr>
+      <Hr index="23">0</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>SchoolHVACAvailWD</Name>
+      <Type>OnOff</Type>
+      <Hr index="0">0</Hr>
+      <Hr index="1">0</Hr>
+      <Hr index="2">0</Hr>
+      <Hr index="3">0</Hr>
+      <Hr index="4">0</Hr>
+      <Hr index="5">0</Hr>
+      <Hr index="6">1</Hr>
+      <Hr index="7">1</Hr>
+      <Hr index="8">1</Hr>
+      <Hr index="9">1</Hr>
+      <Hr index="10">1</Hr>
+      <Hr index="11">1</Hr>
+      <Hr index="12">1</Hr>
+      <Hr index="13">1</Hr>
+      <Hr index="14">1</Hr>
+      <Hr index="15">1</Hr>
+      <Hr index="16">1</Hr>
+      <Hr index="17">1</Hr>
+      <Hr index="18">1</Hr>
+      <Hr index="19">1</Hr>
+      <Hr index="20">1</Hr>
+      <Hr index="21">1</Hr>
+      <Hr index="22">0</Hr>
+      <Hr index="23">0</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>SchoolHVACAvailSat</Name>
+      <Type>OnOff</Type>
+      <Hr index="0">0</Hr>
+      <Hr index="1">0</Hr>
+      <Hr index="2">0</Hr>
+      <Hr index="3">0</Hr>
+      <Hr index="4">0</Hr>
+      <Hr index="5">0</Hr>
+      <Hr index="6">0</Hr>
+      <Hr index="7">1</Hr>
+      <Hr index="8">1</Hr>
+      <Hr index="9">1</Hr>
+      <Hr index="10">1</Hr>
+      <Hr index="11">1</Hr>
+      <Hr index="12">1</Hr>
+      <Hr index="13">0</Hr>
+      <Hr index="14">0</Hr>
+      <Hr index="15">0</Hr>
+      <Hr index="16">0</Hr>
+      <Hr index="17">0</Hr>
+      <Hr index="18">0</Hr>
+      <Hr index="19">0</Hr>
+      <Hr index="20">0</Hr>
+      <Hr index="21">0</Hr>
+      <Hr index="22">0</Hr>
+      <Hr index="23">0</Hr>
+    </SchDay>
+    <SchDay>
       <Name>SchoolClgSetptSun</Name>
       <Type>Temperature</Type>
       <Hr index="0">85</Hr>
@@ -3077,90 +3163,6 @@
       <Hr index="21">60</Hr>
       <Hr index="22">60</Hr>
       <Hr index="23">60</Hr>
-    </SchDay>
-    <SchDay>
-      <Name>SchoolHVACAvailSun</Name>
-      <Type>OnOff</Type>
-      <Hr index="0">0</Hr>
-      <Hr index="1">0</Hr>
-      <Hr index="2">0</Hr>
-      <Hr index="3">0</Hr>
-      <Hr index="4">0</Hr>
-      <Hr index="5">0</Hr>
-      <Hr index="6">0</Hr>
-      <Hr index="7">0</Hr>
-      <Hr index="8">0</Hr>
-      <Hr index="9">0</Hr>
-      <Hr index="10">0</Hr>
-      <Hr index="11">0</Hr>
-      <Hr index="12">0</Hr>
-      <Hr index="13">0</Hr>
-      <Hr index="14">0</Hr>
-      <Hr index="15">0</Hr>
-      <Hr index="16">0</Hr>
-      <Hr index="17">0</Hr>
-      <Hr index="18">0</Hr>
-      <Hr index="19">0</Hr>
-      <Hr index="20">0</Hr>
-      <Hr index="21">0</Hr>
-      <Hr index="22">0</Hr>
-      <Hr index="23">0</Hr>
-    </SchDay>
-    <SchDay>
-      <Name>SchoolHVACAvailWD</Name>
-      <Type>OnOff</Type>
-      <Hr index="0">0</Hr>
-      <Hr index="1">0</Hr>
-      <Hr index="2">0</Hr>
-      <Hr index="3">0</Hr>
-      <Hr index="4">0</Hr>
-      <Hr index="5">0</Hr>
-      <Hr index="6">1</Hr>
-      <Hr index="7">1</Hr>
-      <Hr index="8">1</Hr>
-      <Hr index="9">1</Hr>
-      <Hr index="10">1</Hr>
-      <Hr index="11">1</Hr>
-      <Hr index="12">1</Hr>
-      <Hr index="13">1</Hr>
-      <Hr index="14">1</Hr>
-      <Hr index="15">1</Hr>
-      <Hr index="16">1</Hr>
-      <Hr index="17">1</Hr>
-      <Hr index="18">1</Hr>
-      <Hr index="19">1</Hr>
-      <Hr index="20">1</Hr>
-      <Hr index="21">1</Hr>
-      <Hr index="22">0</Hr>
-      <Hr index="23">0</Hr>
-    </SchDay>
-    <SchDay>
-      <Name>SchoolHVACAvailSat</Name>
-      <Type>OnOff</Type>
-      <Hr index="0">0</Hr>
-      <Hr index="1">0</Hr>
-      <Hr index="2">0</Hr>
-      <Hr index="3">0</Hr>
-      <Hr index="4">0</Hr>
-      <Hr index="5">0</Hr>
-      <Hr index="6">0</Hr>
-      <Hr index="7">1</Hr>
-      <Hr index="8">1</Hr>
-      <Hr index="9">1</Hr>
-      <Hr index="10">1</Hr>
-      <Hr index="11">1</Hr>
-      <Hr index="12">1</Hr>
-      <Hr index="13">0</Hr>
-      <Hr index="14">0</Hr>
-      <Hr index="15">0</Hr>
-      <Hr index="16">0</Hr>
-      <Hr index="17">0</Hr>
-      <Hr index="18">0</Hr>
-      <Hr index="19">0</Hr>
-      <Hr index="20">0</Hr>
-      <Hr index="21">0</Hr>
-      <Hr index="22">0</Hr>
-      <Hr index="23">0</Hr>
     </SchDay>
     <SchDay>
       <Name>OfficeWtrHtrSetptSun</Name>
@@ -3737,6 +3739,20 @@
       <SchDayHtgDDRef>SchoolInfiltrationWD</SchDayHtgDDRef>
     </SchWeek>
     <SchWeek>
+      <Name>SchoolHVACAvailWk</Name>
+      <Type>OnOff</Type>
+      <SchDaySunRef>SchoolHVACAvailSun</SchDaySunRef>
+      <SchDayMonRef>SchoolHVACAvailWD</SchDayMonRef>
+      <SchDayTueRef>SchoolHVACAvailWD</SchDayTueRef>
+      <SchDayWedRef>SchoolHVACAvailWD</SchDayWedRef>
+      <SchDayThuRef>SchoolHVACAvailWD</SchDayThuRef>
+      <SchDayFriRef>SchoolHVACAvailWD</SchDayFriRef>
+      <SchDaySatRef>SchoolHVACAvailSat</SchDaySatRef>
+      <SchDayHolRef>SchoolHVACAvailSun</SchDayHolRef>
+      <SchDayClgDDRef>OnDay</SchDayClgDDRef>
+      <SchDayHtgDDRef>OnDay</SchDayHtgDDRef>
+    </SchWeek>
+    <SchWeek>
       <Name>SchoolClgSetptWk</Name>
       <Type>Temperature</Type>
       <SchDaySunRef>SchoolClgSetptSun</SchDaySunRef>
@@ -3763,20 +3779,6 @@
       <SchDayHolRef>SchoolHtgSetptSun</SchDayHolRef>
       <SchDayClgDDRef>SchoolHtgSetptWD</SchDayClgDDRef>
       <SchDayHtgDDRef>SchoolHtgSetptWD</SchDayHtgDDRef>
-    </SchWeek>
-    <SchWeek>
-      <Name>SchoolHVACAvailWk</Name>
-      <Type>OnOff</Type>
-      <SchDaySunRef>SchoolHVACAvailSun</SchDaySunRef>
-      <SchDayMonRef>SchoolHVACAvailWD</SchDayMonRef>
-      <SchDayTueRef>SchoolHVACAvailWD</SchDayTueRef>
-      <SchDayWedRef>SchoolHVACAvailWD</SchDayWedRef>
-      <SchDayThuRef>SchoolHVACAvailWD</SchDayThuRef>
-      <SchDayFriRef>SchoolHVACAvailWD</SchDayFriRef>
-      <SchDaySatRef>SchoolHVACAvailSat</SchDaySatRef>
-      <SchDayHolRef>SchoolHVACAvailSun</SchDayHolRef>
-      <SchDayClgDDRef>OnDay</SchDayClgDDRef>
-      <SchDayHtgDDRef>OnDay</SchDayHtgDDRef>
     </SchWeek>
     <SchWeek>
       <Name>OfficeWtrHtrSetptWk</Name>
@@ -3966,6 +3968,13 @@
       <SchWeekRef index="0">SchoolInfiltrationWk</SchWeekRef>
     </Sch>
     <Sch>
+      <Name>SchoolHVACAvail</Name>
+      <Type>OnOff</Type>
+      <EndMonth index="0">12</EndMonth>
+      <EndDay index="0">31</EndDay>
+      <SchWeekRef index="0">SchoolHVACAvailWk</SchWeekRef>
+    </Sch>
+    <Sch>
       <Name>SchoolClgSetpt</Name>
       <Type>Temperature</Type>
       <EndMonth index="0">12</EndMonth>
@@ -3978,13 +3987,6 @@
       <EndMonth index="0">12</EndMonth>
       <EndDay index="0">31</EndDay>
       <SchWeekRef index="0">SchoolHtgSetptWk</SchWeekRef>
-    </Sch>
-    <Sch>
-      <Name>SchoolHVACAvail</Name>
-      <Type>OnOff</Type>
-      <EndMonth index="0">12</EndMonth>
-      <EndDay index="0">31</EndDay>
-      <SchWeekRef index="0">SchoolHVACAvailWk</SchWeekRef>
     </Sch>
     <Sch>
       <Name>OfficeWtrHtrSetpt</Name>
@@ -4000,19 +4002,14 @@
       <EndDay index="0">31</EndDay>
       <SchWeekRef index="0">SchoolServiceHotWaterWk</SchWeekRef>
     </Sch>
-    <ConsAssm>
-      <Name>NACM_Interior Wall</Name>
-      <SpecMthd>Layers</SpecMthd>
-      <ExtRoughness>MediumRough</ExtRoughness>
-      <ExtSolAbs>0.7</ExtSolAbs>
-      <ExtThrmlAbs>0.9</ExtThrmlAbs>
-      <ExtVisAbs>0.8</ExtVisAbs>
-      <IntSolAbs>0.7</IntSolAbs>
-      <IntThrmlAbs>0.9</IntThrmlAbs>
-      <IntVisAbs>0.8</IntVisAbs>
-      <MatRef index="0">NACM_Gypsum Board 5/8in</MatRef>
-      <MatRef index="1">NACM_Gypsum Board 5/8in</MatRef>
-    </ConsAssm>
+    <Mat>
+      <Name>Concrete - 140 lb/ft3 - 6 in.</Name>
+      <RVal>0.44</RVal>
+      <ThrmlCndct>1.1275</ThrmlCndct>
+      <SpecHt>0.22</SpecHt>
+      <Dens>139.78</Dens>
+      <Thkns>6</Thkns>
+    </Mat>
     <Mat>
       <Name>Stucco - 7/8 in.</Name>
       <RVal>0.18</RVal>
@@ -4046,6 +4043,14 @@
       <Thkns>0.5</Thkns>
     </Mat>
     <Mat>
+      <Name>Gypsum Board - 5/8 in.</Name>
+      <RVal>0.56</RVal>
+      <ThrmlCndct>0.09167</ThrmlCndct>
+      <SpecHt>0.27</SpecHt>
+      <Dens>40</Dens>
+      <Thkns>0.63</Thkns>
+    </Mat>
+    <Mat>
       <Name>Metal Standing Seam - 1/16 in.</Name>
       <RVal>0</RVal>
       <ThrmlCndct>0.3333</ThrmlCndct>
@@ -4061,22 +4066,6 @@
       <Dens>1</Dens>
       <Thkns>3.9776</Thkns>
     </Mat>
-    <Mat>
-      <Name>Concrete - 140 lb/ft3 - 6 in.</Name>
-      <RVal>0.44</RVal>
-      <ThrmlCndct>1.1275</ThrmlCndct>
-      <SpecHt>0.22</SpecHt>
-      <Dens>139.78</Dens>
-      <Thkns>6</Thkns>
-    </Mat>
-    <Mat>
-      <Name>NACM_Gypsum Board 5/8in</Name>
-      <RVal>0.56</RVal>
-      <ThrmlCndct>0.09167</ThrmlCndct>
-      <SpecHt>0.27</SpecHt>
-      <Dens>40</Dens>
-      <Thkns>0.63</Thkns>
-    </Mat>
     <FenCons>
       <Name>Base_AllCZ_FixedWindowU36</Name>
       <SHGC>0.25</SHGC>
@@ -4091,12 +4080,6 @@
       <MinOut>0.8</MinOut>
     </CrvQuad>
     <CrvQuad>
-      <Name>CoilClgDXSnglEIRRatio_fCFMRatio</Name>
-      <Coef1>1.156</Coef1>
-      <Coef2>-0.1816</Coef2>
-      <Coef3>0.0256</Coef3>
-    </CrvQuad>
-    <CrvQuad>
       <Name>BlrHWBlrFIRRatio_fQRatioSI</Name>
       <Coef1>0.6267</Coef1>
       <Coef2>0.674</Coef2>
@@ -4104,15 +4087,15 @@
       <MinOut>0.75</MinOut>
     </CrvQuad>
     <CrvCubic>
-      <Name>FanVSDSpResetPwrRatio_fCFMRatio</Name>
-      <Coef1>0.027828</Coef1>
-      <Coef2>0.026583</Coef2>
-      <Coef3>-0.087069</Coef3>
-      <Coef4>1.03092</Coef4>
+      <Name>FanVSDGoodSpResetPwrRatio_fCFMRatio</Name>
+      <Coef1>0.04076</Coef1>
+      <Coef2>0.088045</Coef2>
+      <Coef3>-0.072926</Coef3>
+      <Coef4>0.94374</Coef4>
       <MaxOut>1</MaxOut>
       <MaxVar1>1</MaxVar1>
       <MinOut>0.1</MinOut>
-      <MinVar1>0.42</MinVar1>
+      <MinVar1>0.342</MinVar1>
     </CrvCubic>
     <CrvCubic>
       <Name>CoilClgDXEIRRatio_fQFrac</Name>
@@ -4178,27 +4161,28 @@
           <IntLPDReg>1.1</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>0.5</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
-          <GasEqpPwrDens>17.5377</GasEqpPwrDens>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
           <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.578</HotWtrHtgRt>
           <HotWtrHtgRtSim>110.746</HotWtrHtgRtSim>
           <HotWtrHtgTot>110.746</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>59.0551</Coord><Coord>150.919</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>59.0551</Coord><Coord>92.7023</Coord><Coord>0</Coord></CartesianPt>
@@ -4250,7 +4234,7 @@
           <IntWall>
             <Name>OS:Surface 165</Name>
             <AdjacentSpcRef>Restroom_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>16.4042</Coord><Coord>92.7023</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>16.4042</Coord><Coord>92.7023</Coord><Coord>0</Coord></CartesianPt>
@@ -4261,7 +4245,7 @@
           <IntWall>
             <Name>OS:Surface 166</Name>
             <AdjacentSpcRef>Main_Corridor_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>16.4042</Coord><Coord>127.953</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>16.4042</Coord><Coord>127.953</Coord><Coord>0</Coord></CartesianPt>
@@ -4272,7 +4256,7 @@
           <IntWall>
             <Name>OS:Surface 167</Name>
             <AdjacentSpcRef>Main_Corridor_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>0</Coord><Coord>127.953</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>127.953</Coord><Coord>0</Coord></CartesianPt>
@@ -4283,7 +4267,7 @@
           <IntWall>
             <Name>OS:Surface 168</Name>
             <AdjacentSpcRef>Wing2_Side2_Class1_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>0</Coord><Coord>144.357</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>144.357</Coord><Coord>0</Coord></CartesianPt>
@@ -4294,7 +4278,7 @@
           <IntWall>
             <Name>OS:Surface 169</Name>
             <AdjacentSpcRef>Wing2_Side2_Class1_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>3.26365e-013</Coord><Coord>150.919</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>3.26365e-013</Coord><Coord>150.919</Coord><Coord>0</Coord></CartesianPt>
@@ -4305,7 +4289,7 @@
           <IntWall>
             <Name>OS:Surface 172</Name>
             <AdjacentSpcRef>Mech/Elec_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>45.9318</Coord><Coord>92.7023</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>45.9318</Coord><Coord>92.7023</Coord><Coord>0</Coord></CartesianPt>
@@ -4357,21 +4341,23 @@
           <IntLPDReg>0.6</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>0.2</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
-          <HotWtrHtgRt>0</HotWtrHtgRt>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <HotWtrHtgRtSim>0</HotWtrHtgRtSim>
           <HotWtrHtgTot>0</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
@@ -4404,7 +4390,7 @@
           <IntWall>
             <Name>OS:Surface 2</Name>
             <AdjacentSpcRef>Main_Corridor_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>16.4042</Coord><Coord>22.9659</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>16.4042</Coord><Coord>22.9659</Coord><Coord>0</Coord></CartesianPt>
@@ -4415,7 +4401,7 @@
           <IntWall>
             <Name>OS:Surface 3</Name>
             <AdjacentSpcRef>Office_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>29.5276</Coord><Coord>22.9659</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>29.5276</Coord><Coord>22.9659</Coord><Coord>0</Coord></CartesianPt>
@@ -4426,7 +4412,7 @@
           <IntWall>
             <Name>OS:Surface 4</Name>
             <AdjacentSpcRef>Office_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>29.5276</Coord><Coord>0</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>29.5276</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
@@ -4437,7 +4423,7 @@
           <IntWall>
             <Name>OS:Surface 6</Name>
             <AdjacentSpcRef>Wing1_Side1_Class1_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>0</Coord><Coord>22.9659</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>22.9659</Coord><Coord>0</Coord></CartesianPt>
@@ -4485,21 +4471,23 @@
           <IntLPDReg>0.6</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>0.2</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
-          <HotWtrHtgRt>0</HotWtrHtgRt>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <HotWtrHtgRtSim>0</HotWtrHtgRtSim>
           <HotWtrHtgTot>0</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
@@ -4532,7 +4520,7 @@
           <IntWall>
             <Name>OS:Surface 18</Name>
             <AdjacentSpcRef>Wing2_Corridor_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>1.13687e-013</Coord><Coord>127.953</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>1.13687e-013</Coord><Coord>127.953</Coord><Coord>0</Coord></CartesianPt>
@@ -4543,7 +4531,7 @@
           <IntWall>
             <Name>OS:Surface 21</Name>
             <AdjacentSpcRef>Restroom_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>16.4042</Coord><Coord>58.6799</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>16.4042</Coord><Coord>58.6799</Coord><Coord>0</Coord></CartesianPt>
@@ -4554,7 +4542,7 @@
           <IntWall>
             <Name>OS:Surface 22</Name>
             <AdjacentSpcRef>Office_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>16.4042</Coord><Coord>22.9659</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>16.4042</Coord><Coord>22.9659</Coord><Coord>0</Coord></CartesianPt>
@@ -4565,7 +4553,7 @@
           <IntWall>
             <Name>OS:Surface 24</Name>
             <AdjacentSpcRef>Wing1_Corridor_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>1.89478e-014</Coord><Coord>36.0892</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>1.89478e-014</Coord><Coord>36.0892</Coord><Coord>0</Coord></CartesianPt>
@@ -4576,7 +4564,7 @@
           <IntWall>
             <Name>OS:Surface 25</Name>
             <AdjacentSpcRef>Wing1_Side2_Class1_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>7.57912e-014</Coord><Coord>59.0551</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>7.57912e-014</Coord><Coord>59.0551</Coord><Coord>0</Coord></CartesianPt>
@@ -4587,7 +4575,7 @@
           <IntWall>
             <Name>OS:Surface 27</Name>
             <AdjacentSpcRef>Wing2_Side1_Class1_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-3.78956e-014</Coord><Coord>111.549</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-3.78956e-014</Coord><Coord>111.549</Coord><Coord>0</Coord></CartesianPt>
@@ -4598,7 +4586,7 @@
           <IntWall>
             <Name>OS:Surface 28</Name>
             <AdjacentSpcRef>Wing2_Side1_Class1_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>9.4739e-014</Coord><Coord>114.829</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>9.4739e-014</Coord><Coord>114.829</Coord><Coord>0</Coord></CartesianPt>
@@ -4646,24 +4634,28 @@
           <IntLPDReg>0.7</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>3</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>Office Plugs Sch</ProcGasSchRef>
-          <HotWtrHtgRt>0</HotWtrHtgRt>
-          <HotWtrHtgRtSim>0</HotWtrHtgRtSim>
-          <HotWtrHtgTot>0</HotWtrHtgTot>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
+          <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
+          <HotWtrHtgRtSim>0.241103</HotWtrHtgRtSim>
+          <HotWtrHtgTot>0.241103</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>59.0551</Coord><Coord>92.7023</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>59.0551</Coord><Coord>58.6799</Coord><Coord>0</Coord></CartesianPt>
@@ -4683,7 +4675,7 @@
           <IntWall>
             <Name>OS:Surface 38</Name>
             <AdjacentSpcRef>Office_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>45.9318</Coord><Coord>58.6799</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>45.9318</Coord><Coord>58.6799</Coord><Coord>0</Coord></CartesianPt>
@@ -4694,7 +4686,7 @@
           <IntWall>
             <Name>OS:Surface 39</Name>
             <AdjacentSpcRef>Restroom_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>45.9318</Coord><Coord>92.7023</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>45.9318</Coord><Coord>92.7023</Coord><Coord>0</Coord></CartesianPt>
@@ -4742,25 +4734,28 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>Office Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>3.96245</HotWtrHtgRtSim>
           <HotWtrHtgTot>3.96245</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>59.0551</Coord><Coord>58.6799</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>59.0551</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
@@ -4812,7 +4807,7 @@
           <IntWall>
             <Name>OS:Surface 9</Name>
             <AdjacentSpcRef>Restroom_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>45.9318</Coord><Coord>58.6799</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>45.9318</Coord><Coord>58.6799</Coord><Coord>0</Coord></CartesianPt>
@@ -4864,21 +4859,23 @@
           <IntLPDReg>0.6</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>0.2</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
-          <HotWtrHtgRt>0</HotWtrHtgRt>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <HotWtrHtgRtSim>0</HotWtrHtgRtSim>
           <HotWtrHtgTot>0</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
@@ -4928,21 +4925,23 @@
           <IntLPDReg>0.6</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>0.2</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
-          <HotWtrHtgRt>0</HotWtrHtgRt>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <HotWtrHtgRtSim>0</HotWtrHtgRtSim>
           <HotWtrHtgTot>0</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
@@ -4965,7 +4964,7 @@
           <IntWall>
             <Name>OS:Surface 86</Name>
             <AdjacentSpcRef>Wing1_Side2_Class4_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-98.4252</Coord><Coord>36.0892</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-98.4252</Coord><Coord>36.0892</Coord><Coord>0</Coord></CartesianPt>
@@ -4976,7 +4975,7 @@
           <IntWall>
             <Name>OS:Surface 87</Name>
             <AdjacentSpcRef>Wing1_Side2_Class3_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-65.6168</Coord><Coord>36.0892</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-65.6168</Coord><Coord>36.0892</Coord><Coord>0</Coord></CartesianPt>
@@ -4987,7 +4986,7 @@
           <IntWall>
             <Name>OS:Surface 88</Name>
             <AdjacentSpcRef>Wing1_Side2_Class2_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-32.8084</Coord><Coord>36.0892</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-32.8084</Coord><Coord>36.0892</Coord><Coord>0</Coord></CartesianPt>
@@ -4998,7 +4997,7 @@
           <IntWall>
             <Name>OS:Surface 89</Name>
             <AdjacentSpcRef>Wing1_Side2_Class1_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>0</Coord><Coord>36.0892</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>36.0892</Coord><Coord>0</Coord></CartesianPt>
@@ -5009,7 +5008,7 @@
           <IntWall>
             <Name>OS:Surface 91</Name>
             <AdjacentSpcRef>Wing1_Side1_Class1_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-32.8084</Coord><Coord>22.9659</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-32.8084</Coord><Coord>22.9659</Coord><Coord>0</Coord></CartesianPt>
@@ -5020,7 +5019,7 @@
           <IntWall>
             <Name>OS:Surface 92</Name>
             <AdjacentSpcRef>Wing1_Side1_Class2_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-65.6168</Coord><Coord>22.9659</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-65.6168</Coord><Coord>22.9659</Coord><Coord>0</Coord></CartesianPt>
@@ -5031,7 +5030,7 @@
           <IntWall>
             <Name>OS:Surface 93</Name>
             <AdjacentSpcRef>Wing1_Side1_Class3_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-98.4252</Coord><Coord>22.9659</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-98.4252</Coord><Coord>22.9659</Coord><Coord>0</Coord></CartesianPt>
@@ -5042,7 +5041,7 @@
           <IntWall>
             <Name>OS:Surface 94</Name>
             <AdjacentSpcRef>Wing1_Side1_Class4_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-131.234</Coord><Coord>22.9659</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-131.234</Coord><Coord>22.9659</Coord><Coord>0</Coord></CartesianPt>
@@ -5090,25 +5089,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.78127</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.78127</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>0</Coord><Coord>22.9659</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
@@ -5138,7 +5140,7 @@
           <IntWall>
             <Name>OS:Surface 99</Name>
             <AdjacentSpcRef>Wing1_Side1_Class2_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-32.8084</Coord><Coord>22.9659</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-32.8084</Coord><Coord>22.9659</Coord><Coord>0</Coord></CartesianPt>
@@ -5186,25 +5188,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.78127</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.78127</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>-32.8084</Coord><Coord>22.9659</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>-32.8084</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
@@ -5234,7 +5239,7 @@
           <IntWall>
             <Name>OS:Surface 69</Name>
             <AdjacentSpcRef>Wing1_Side1_Class3_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-65.6168</Coord><Coord>22.9659</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-65.6168</Coord><Coord>22.9659</Coord><Coord>0</Coord></CartesianPt>
@@ -5282,25 +5287,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.78127</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.78127</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>-65.6168</Coord><Coord>22.9659</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>-65.6168</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
@@ -5330,7 +5338,7 @@
           <IntWall>
             <Name>OS:Surface 81</Name>
             <AdjacentSpcRef>Wing1_Side1_Class4_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-98.4252</Coord><Coord>22.9659</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-98.4252</Coord><Coord>22.9659</Coord><Coord>0</Coord></CartesianPt>
@@ -5378,25 +5386,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.78135</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.78135</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>-98.4252</Coord><Coord>22.9659</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>-98.4252</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
@@ -5473,25 +5484,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.78127</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.78127</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>7.57912e-014</Coord><Coord>59.0551</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>1.89478e-014</Coord><Coord>36.0892</Coord><Coord>0</Coord></CartesianPt>
@@ -5521,7 +5535,7 @@
           <IntWall>
             <Name>OS:Surface 63</Name>
             <AdjacentSpcRef>Wing1_Side2_Class2_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-32.8084</Coord><Coord>59.0551</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-32.8084</Coord><Coord>59.0551</Coord><Coord>0</Coord></CartesianPt>
@@ -5569,25 +5583,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.78127</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.78127</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>-32.8084</Coord><Coord>59.0551</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>-32.8084</Coord><Coord>36.0892</Coord><Coord>0</Coord></CartesianPt>
@@ -5617,7 +5634,7 @@
           <IntWall>
             <Name>OS:Surface 45</Name>
             <AdjacentSpcRef>Wing1_Side2_Class3_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-65.6168</Coord><Coord>59.0551</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-65.6168</Coord><Coord>59.0551</Coord><Coord>0</Coord></CartesianPt>
@@ -5665,25 +5682,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.78127</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.78127</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>-65.6168</Coord><Coord>59.0551</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>-65.6168</Coord><Coord>36.0892</Coord><Coord>0</Coord></CartesianPt>
@@ -5713,7 +5733,7 @@
           <IntWall>
             <Name>OS:Surface 51</Name>
             <AdjacentSpcRef>Wing1_Side2_Class4_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-98.4252</Coord><Coord>59.0551</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-98.4252</Coord><Coord>59.0551</Coord><Coord>0</Coord></CartesianPt>
@@ -5761,25 +5781,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.78135</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.78135</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>-98.4252</Coord><Coord>59.0551</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>-98.4252</Coord><Coord>36.0892</Coord><Coord>0</Coord></CartesianPt>
@@ -5856,21 +5879,23 @@
           <IntLPDReg>0.6</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>0.2</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
-          <HotWtrHtgRt>0</HotWtrHtgRt>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <HotWtrHtgRtSim>0</HotWtrHtgRtSim>
           <HotWtrHtgTot>0</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
@@ -5893,7 +5918,7 @@
           <IntWall>
             <Name>OS:Surface 111</Name>
             <AdjacentSpcRef>Wing2_Side2_Class4_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-98.4252</Coord><Coord>127.953</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-98.4252</Coord><Coord>127.953</Coord><Coord>0</Coord></CartesianPt>
@@ -5904,7 +5929,7 @@
           <IntWall>
             <Name>OS:Surface 112</Name>
             <AdjacentSpcRef>Wing2_Side2_Class3_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-65.6168</Coord><Coord>127.953</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-65.6168</Coord><Coord>127.953</Coord><Coord>0</Coord></CartesianPt>
@@ -5915,7 +5940,7 @@
           <IntWall>
             <Name>OS:Surface 113</Name>
             <AdjacentSpcRef>Wing2_Side2_Class2_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-32.8084</Coord><Coord>127.953</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-32.8084</Coord><Coord>127.953</Coord><Coord>0</Coord></CartesianPt>
@@ -5926,7 +5951,7 @@
           <IntWall>
             <Name>OS:Surface 114</Name>
             <AdjacentSpcRef>Wing2_Side2_Class1_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>0</Coord><Coord>127.953</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>127.953</Coord><Coord>0</Coord></CartesianPt>
@@ -5937,7 +5962,7 @@
           <IntWall>
             <Name>OS:Surface 116</Name>
             <AdjacentSpcRef>Wing2_Side1_Class1_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-32.8084</Coord><Coord>114.829</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-32.8084</Coord><Coord>114.829</Coord><Coord>0</Coord></CartesianPt>
@@ -5948,7 +5973,7 @@
           <IntWall>
             <Name>OS:Surface 117</Name>
             <AdjacentSpcRef>Wing2_Side1_Class2_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-65.6168</Coord><Coord>114.829</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-65.6168</Coord><Coord>114.829</Coord><Coord>0</Coord></CartesianPt>
@@ -5959,7 +5984,7 @@
           <IntWall>
             <Name>OS:Surface 118</Name>
             <AdjacentSpcRef>Wing2_Side1_Class3_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-98.4252</Coord><Coord>114.829</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-98.4252</Coord><Coord>114.829</Coord><Coord>0</Coord></CartesianPt>
@@ -5970,7 +5995,7 @@
           <IntWall>
             <Name>OS:Surface 119</Name>
             <AdjacentSpcRef>Wing2_Side1_Class4_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-131.234</Coord><Coord>114.829</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-131.234</Coord><Coord>114.829</Coord><Coord>0</Coord></CartesianPt>
@@ -6018,25 +6043,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.78115</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.78115</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>9.4739e-014</Coord><Coord>114.829</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>7.57912e-014</Coord><Coord>91.8635</Coord><Coord>0</Coord></CartesianPt>
@@ -6066,7 +6094,7 @@
           <IntWall>
             <Name>OS:Surface 106</Name>
             <AdjacentSpcRef>Wing2_Side1_Class2_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-32.8084</Coord><Coord>114.829</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-32.8084</Coord><Coord>114.829</Coord><Coord>0</Coord></CartesianPt>
@@ -6114,25 +6142,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.78115</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.78115</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>-32.8084</Coord><Coord>114.829</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>-32.8084</Coord><Coord>91.8635</Coord><Coord>0</Coord></CartesianPt>
@@ -6162,7 +6193,7 @@
           <IntWall>
             <Name>OS:Surface 136</Name>
             <AdjacentSpcRef>Wing2_Side1_Class3_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-65.6168</Coord><Coord>114.829</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-65.6168</Coord><Coord>114.829</Coord><Coord>0</Coord></CartesianPt>
@@ -6210,25 +6241,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.78115</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.78115</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>-65.6168</Coord><Coord>114.829</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>-65.6168</Coord><Coord>91.8635</Coord><Coord>0</Coord></CartesianPt>
@@ -6258,7 +6292,7 @@
           <IntWall>
             <Name>OS:Surface 124</Name>
             <AdjacentSpcRef>Wing2_Side1_Class4_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-98.4252</Coord><Coord>114.829</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-98.4252</Coord><Coord>114.829</Coord><Coord>0</Coord></CartesianPt>
@@ -6306,25 +6340,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.78123</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.78123</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>-98.4252</Coord><Coord>114.829</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>-98.4252</Coord><Coord>91.8635</Coord><Coord>0</Coord></CartesianPt>
@@ -6401,25 +6438,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.7813</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.7813</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>1.7053e-013</Coord><Coord>150.919</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>1.13687e-013</Coord><Coord>127.953</Coord><Coord>0</Coord></CartesianPt>
@@ -6449,7 +6489,7 @@
           <IntWall>
             <Name>OS:Surface 143</Name>
             <AdjacentSpcRef>Wing2_Side2_Class2_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-32.8084</Coord><Coord>150.919</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-32.8084</Coord><Coord>150.919</Coord><Coord>0</Coord></CartesianPt>
@@ -6497,25 +6537,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.7813</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.7813</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>-32.8084</Coord><Coord>150.919</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>-32.8084</Coord><Coord>127.953</Coord><Coord>0</Coord></CartesianPt>
@@ -6545,7 +6588,7 @@
           <IntWall>
             <Name>OS:Surface 161</Name>
             <AdjacentSpcRef>Wing2_Side2_Class3_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-65.6168</Coord><Coord>150.919</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-65.6168</Coord><Coord>150.919</Coord><Coord>0</Coord></CartesianPt>
@@ -6593,25 +6636,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.7813</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.7813</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>-65.6168</Coord><Coord>150.919</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>-65.6168</Coord><Coord>127.953</Coord><Coord>0</Coord></CartesianPt>
@@ -6641,7 +6687,7 @@
           <IntWall>
             <Name>OS:Surface 155</Name>
             <AdjacentSpcRef>Wing2_Side2_Class4_Spc</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>-98.4252</Coord><Coord>150.919</Coord><Coord>14.7638</Coord></CartesianPt>
               <CartesianPt><Coord>-98.4252</Coord><Coord>150.919</Coord><Coord>0</Coord></CartesianPt>
@@ -6689,25 +6735,28 @@
           <IntLPDReg>1.2</IntLPDReg>
           <IntLtgRegSchRef>SchoolLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>SchoolLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1</RecptPwrDens>
           <RecptSchRef>SchoolReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>SchoolGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>School Plugs Sch</ProcElecSchRef>
-          <ProcGasSchRef>School Plugs Sch</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>6.78138</HotWtrHtgRtSim>
           <HotWtrHtgTot>6.78138</HotWtrHtgTot>
           <HotWtrHtgSchRef>SchoolServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>-98.4252</Coord><Coord>150.919</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>-98.4252</Coord><Coord>127.953</Coord><Coord>0</Coord></CartesianPt>
@@ -6771,7 +6820,6 @@
         <Name>Wing1_Corridor_Zn</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>SchoolClgSetpt</ClgTstatSchRef>
@@ -6792,7 +6840,6 @@
         <Name>Wing1_Side2_Zn</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>SchoolClgSetpt</ClgTstatSchRef>
@@ -6802,10 +6849,10 @@
         <HtgDsgnSupAirTemp>95</HtgDsgnSupAirTemp>
         <HtgDsgnSizingFac>1</HtgDsgnSizingFac>
         <HtgDsgnMaxFlowFrac>0.5</HtgDsgnMaxFlowFrac>
-        <VentCtrlMthd>CO2Sensors</VentCtrlMthd>
+        <VentCtrlMthd>Fixed</VentCtrlMthd>
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
-        <VentPerPersonSim>15</VentPerPersonSim>
-        <VentPerAreaSim>0.38</VentPerAreaSim>
+        <VentPerPersonSim>7.5</VentPerPersonSim>
+        <VentPerAreaSim>0.15</VentPerAreaSim>
         <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
         <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
@@ -6813,7 +6860,6 @@
         <Name>Wing1_Side1_Zn</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>SchoolClgSetpt</ClgTstatSchRef>
@@ -6823,10 +6869,10 @@
         <HtgDsgnSupAirTemp>95</HtgDsgnSupAirTemp>
         <HtgDsgnSizingFac>1</HtgDsgnSizingFac>
         <HtgDsgnMaxFlowFrac>0.5</HtgDsgnMaxFlowFrac>
-        <VentCtrlMthd>CO2Sensors</VentCtrlMthd>
+        <VentCtrlMthd>Fixed</VentCtrlMthd>
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
-        <VentPerPersonSim>15</VentPerPersonSim>
-        <VentPerAreaSim>0.38</VentPerAreaSim>
+        <VentPerPersonSim>7.5</VentPerPersonSim>
+        <VentPerAreaSim>0.15</VentPerAreaSim>
         <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
         <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
@@ -6834,7 +6880,6 @@
         <Name>Wing2_Corridor_Zn</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>SchoolClgSetpt</ClgTstatSchRef>
@@ -6855,7 +6900,6 @@
         <Name>Wing2_Side2_Zn</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>SchoolClgSetpt</ClgTstatSchRef>
@@ -6865,10 +6909,10 @@
         <HtgDsgnSupAirTemp>95</HtgDsgnSupAirTemp>
         <HtgDsgnSizingFac>1</HtgDsgnSizingFac>
         <HtgDsgnMaxFlowFrac>0.5</HtgDsgnMaxFlowFrac>
-        <VentCtrlMthd>CO2Sensors</VentCtrlMthd>
+        <VentCtrlMthd>Fixed</VentCtrlMthd>
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
-        <VentPerPersonSim>15</VentPerPersonSim>
-        <VentPerAreaSim>0.38</VentPerAreaSim>
+        <VentPerPersonSim>7.5</VentPerPersonSim>
+        <VentPerAreaSim>0.15</VentPerAreaSim>
         <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
         <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
@@ -6876,7 +6920,6 @@
         <Name>Wing2_Side1_Zn</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>SchoolClgSetpt</ClgTstatSchRef>
@@ -6886,10 +6929,10 @@
         <HtgDsgnSupAirTemp>95</HtgDsgnSupAirTemp>
         <HtgDsgnSizingFac>1</HtgDsgnSizingFac>
         <HtgDsgnMaxFlowFrac>0.5</HtgDsgnMaxFlowFrac>
-        <VentCtrlMthd>CO2Sensors</VentCtrlMthd>
+        <VentCtrlMthd>Fixed</VentCtrlMthd>
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
-        <VentPerPersonSim>15</VentPerPersonSim>
-        <VentPerAreaSim>0.38</VentPerAreaSim>
+        <VentPerPersonSim>7.5</VentPerPersonSim>
+        <VentPerAreaSim>0.15</VentPerAreaSim>
         <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
         <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
@@ -6897,7 +6940,6 @@
         <Name>Common_Lobby_Zn</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>SchoolClgSetpt</ClgTstatSchRef>
@@ -6918,7 +6960,6 @@
         <Name>Common_Corridor_Zn</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>SchoolClgSetpt</ClgTstatSchRef>
@@ -6939,7 +6980,6 @@
         <Name>Common_Office_Zn</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>SchoolClgSetpt</ClgTstatSchRef>
@@ -6960,7 +7000,6 @@
         <Name>Common_Cafeteria_Zn</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>SchoolClgSetpt</ClgTstatSchRef>
@@ -6970,10 +7009,10 @@
         <HtgDsgnSupAirTemp>95</HtgDsgnSupAirTemp>
         <HtgDsgnSizingFac>1</HtgDsgnSizingFac>
         <HtgDsgnMaxFlowFrac>0.5</HtgDsgnMaxFlowFrac>
-        <VentCtrlMthd>CO2Sensors</VentCtrlMthd>
+        <VentCtrlMthd>Fixed</VentCtrlMthd>
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
-        <VentPerPersonSim>15</VentPerPersonSim>
-        <VentPerAreaSim>0.5</VentPerAreaSim>
+        <VentPerPersonSim>7.5</VentPerPersonSim>
+        <VentPerAreaSim>0.15</VentPerAreaSim>
         <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
         <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
@@ -6981,7 +7020,6 @@
         <Name>Common_Restroom_Zn</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>SchoolClgSetpt</ClgTstatSchRef>
@@ -7002,7 +7040,6 @@
         <Name>Common_Mech/Elec_Zn</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>SchoolClgSetpt</ClgTstatSchRef>
@@ -7037,7 +7074,7 @@
         <HtgAllOutsdAir>No</HtgAllOutsdAir>
         <ClgDsgnHumidityRat>0.0085</ClgDsgnHumidityRat>
         <HtgDsgnHumidityRat>0.008</HtgDsgnHumidityRat>
-        <ClgCtrl>WarmestResetFlowFirst</ClgCtrl>
+        <ClgCtrl>WarmestReset</ClgCtrl>
         <ClRstSupHi>60</ClRstSupHi>
         <ClRstSupLow>55</ClRstSupLow>
         <AirSeg>
@@ -7066,10 +7103,10 @@
           </CoilHtg>
           <Fan>
             <Name>BaseSys5 Fan</Name>
-            <CtrlMthd>VariableSpeedDrive</CtrlMthd>
+            <CtrlMthdSim>VariableSpeedDrive</CtrlMthdSim>
             <TotEff>1</TotEff>
             <TotStaticPress>1e-005</TotStaticPress>
-            <Pwr_fPLRCrvRef>FanVSDSpResetPwrRatio_fCFMRatio</Pwr_fPLRCrvRef>
+            <Pwr_fPLRCrvRef>FanVSDGoodSpResetPwrRatio_fCFMRatio</Pwr_fPLRCrvRef>
             <MtrEff>1</MtrEff>
             <MtrPos>InAirStream</MtrPos>
           </Fan>
@@ -7088,14 +7125,14 @@
           <AirSegRetRef>BaseSys5 RetAirSeg</AirSegRetRef>
         </OACtrl>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit</Name>
+          <Name>BaseVAVBox TrmlUnit</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Wing1_Corridor_Zn</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
           <PriAirFlowMinSim>258.333</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil</Name>
+            <Name>BaseVAVBox CoilHtg</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -7103,14 +7140,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-2</Name>
+          <Name>BaseVAVBox TrmlUnit-2</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Wing1_Side2_Zn</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
-          <PriAirFlowMinSim>2260.43</PriAirFlowMinSim>
+          <PriAirFlowMinSim>1130.22</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-2</Name>
+            <Name>BaseVAVBox CoilHtg-2</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -7118,14 +7155,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-3</Name>
+          <Name>BaseVAVBox TrmlUnit-3</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Wing1_Side1_Zn</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
-          <PriAirFlowMinSim>2260.43</PriAirFlowMinSim>
+          <PriAirFlowMinSim>1130.22</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-3</Name>
+            <Name>BaseVAVBox CoilHtg-3</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -7133,14 +7170,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-4</Name>
+          <Name>BaseVAVBox TrmlUnit-4</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Wing2_Corridor_Zn</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
           <PriAirFlowMinSim>258.347</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-4</Name>
+            <Name>BaseVAVBox CoilHtg-4</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -7148,14 +7185,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-5</Name>
+          <Name>BaseVAVBox TrmlUnit-5</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Wing2_Side2_Zn</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
-          <PriAirFlowMinSim>2260.44</PriAirFlowMinSim>
+          <PriAirFlowMinSim>1130.22</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-5</Name>
+            <Name>BaseVAVBox CoilHtg-5</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -7163,14 +7200,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-6</Name>
+          <Name>BaseVAVBox TrmlUnit-6</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Wing2_Side1_Zn</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
-          <PriAirFlowMinSim>2260.39</PriAirFlowMinSim>
+          <PriAirFlowMinSim>1130.2</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-6</Name>
+            <Name>BaseVAVBox CoilHtg-6</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -7178,14 +7215,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-7</Name>
+          <Name>BaseVAVBox TrmlUnit-7</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Common_Lobby_Zn</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
           <PriAirFlowMinSim>101.719</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-7</Name>
+            <Name>BaseVAVBox CoilHtg-7</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -7193,14 +7230,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-8</Name>
+          <Name>BaseVAVBox TrmlUnit-8</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Common_Corridor_Zn</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
           <PriAirFlowMinSim>258.334</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-8</Name>
+            <Name>BaseVAVBox CoilHtg-8</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -7208,14 +7245,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-9</Name>
+          <Name>BaseVAVBox TrmlUnit-9</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Common_Office_Zn</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
           <PriAirFlowMinSim>330.204</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-9</Name>
+            <Name>BaseVAVBox CoilHtg-9</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -7223,14 +7260,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-10</Name>
+          <Name>BaseVAVBox TrmlUnit-10</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Common_Cafeteria_Zn</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
-          <PriAirFlowMinSim>2874.03</PriAirFlowMinSim>
+          <PriAirFlowMinSim>1437.02</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-10</Name>
+            <Name>BaseVAVBox CoilHtg-10</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -7238,14 +7275,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-11</Name>
+          <Name>BaseVAVBox TrmlUnit-11</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Common_Restroom_Zn</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
           <PriAirFlowMinSim>150.69</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-11</Name>
+            <Name>BaseVAVBox CoilHtg-11</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -7253,14 +7290,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-12</Name>
+          <Name>BaseVAVBox TrmlUnit-12</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Common_Mech/Elec_Zn</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
           <PriAirFlowMinSim>66.9729</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-12</Name>
+            <Name>BaseVAVBox CoilHtg-12</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -7298,6 +7335,20 @@
       <MatRef index="3">Gypsum Board - 1/2 in.</MatRef>
     </ConsAssm>
     <ConsAssm>
+      <Name>MetalFrameWallInterior</Name>
+      <SpecMthd>Layers</SpecMthd>
+      <ExtRoughness>MediumRough</ExtRoughness>
+      <ExtSolAbs>0.7</ExtSolAbs>
+      <ExtThrmlAbs>0.9</ExtThrmlAbs>
+      <ExtVisAbs>0.8</ExtVisAbs>
+      <IntSolAbs>0.7</IntSolAbs>
+      <IntThrmlAbs>0.9</IntThrmlAbs>
+      <IntVisAbs>0.8</IntVisAbs>
+      <MatRef index="0">Gypsum Board - 5/8 in.</MatRef>
+      <MatRef index="1">Air - Metal Wall Framing - 16 or 24 in. OC</MatRef>
+      <MatRef index="2">Gypsum Board - 5/8 in.</MatRef>
+    </ConsAssm>
+    <ConsAssm>
       <Name>FlatNonresWoodFramingAndOtherRoofU039</Name>
       <SpecMthd>Layers</SpecMthd>
       <ExtRoughness>MediumRough</ExtRoughness>
@@ -7322,7 +7373,6 @@
         <Name>Base Blr</Name>
         <Type>HotWater</Type>
         <FuelSrc>Gas</FuelSrc>
-        <DraftType>MechanicalNoncondensing</DraftType>
         <FluidSegInRef>BaseHWPrimRetSeg</FluidSegInRef>
         <FluidSegOutRef>BaseHWPrimSupSeg</FluidSegOutRef>
         <EntTempDsgn>140</EntTempDsgn>
@@ -7350,30 +7400,37 @@
         <Type>PrimaryReturn</Type>
       </FluidSeg>
     </FluidSys>
+    <CrvQuad>
+      <Name>CoilClgDXSnglEIRRatio_fCFMRatio</Name>
+      <Coef1>1.156</Coef1>
+      <Coef2>-0.1816</Coef2>
+      <Coef3>0.0256</Coef3>
+    </CrvQuad>
     <FluidSys>
       <Name>BaseSHWSystem</Name>
       <Type>ServiceHotWater</Type>
       <AvailSchRef>On</AvailSchRef>
-      <DsgnSupWtrTemp>120</DsgnSupWtrTemp>
+      <DsgnSupWtrTemp>135</DsgnSupWtrTemp>
       <DsgnSupWtrDelT>70</DsgnSupWtrDelT>
+      <CommonPipeSim>None</CommonPipeSim>
       <TempCtrl>Fixed</TempCtrl>
-      <FixedSupTemp>120</FixedSupTemp>
+      <FixedSupTemp>135</FixedSupTemp>
       <WtrHtr>
         <Name>BaseWaterHeater</Name>
         <Type>Storage</Type>
         <FluidSegOutRef>BaseSHWPrimSupSeg</FluidSegOutRef>
         <FluidSegMakeupRef>BaseSHWMuniInlet</FluidSegMakeupRef>
-        <StorCap>318</StorCap>
-        <ThrmlEff>0.8</ThrmlEff>
+        <StorCap>116</StorCap>
+        <ThrmlEff>0.78</ThrmlEff>
         <WtrHtrTempSetptSchRef>OfficeWtrHtrSetpt</WtrHtrTempSetptSchRef>
         <FuelSrc>NaturalGas</FuelSrc>
         <OffCycleFuelSrc>NaturalGas</OffCycleFuelSrc>
-        <OffCyclePrstcLoss>205</OffCyclePrstcLoss>
+        <OffCyclePrstcLoss>219</OffCyclePrstcLoss>
         <OnCycleFuelSrc>NaturalGas</OnCycleFuelSrc>
-        <OnCyclePrstcLoss>205</OnCyclePrstcLoss>
+        <OnCyclePrstcLoss>219</OnCyclePrstcLoss>
         <TankOffCycleLossCoef>10</TankOffCycleLossCoef>
         <TankOnCycleLossCoef>10</TankOnCycleLossCoef>
-        <CapRtd>149996</CapRtd>
+        <CapRtd>90095</CapRtd>
         <MaxTempLimit>180</MaxTempLimit>
         <CtrlType>Cycle</CtrlType>
       </WtrHtr>

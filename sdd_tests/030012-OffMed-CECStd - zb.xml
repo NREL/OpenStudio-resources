@@ -11,7 +11,7 @@
     <Elevation>13</Elevation>
     <WtrMnTempSchRef>WaterMainCZ12</WtrMnTempSchRef>
     <DDWeatherFile>../weatherdata/SACRAMENTO-EXECUTIVE_724830_CZ2010.ddy</DDWeatherFile>
-    <AnnualWeatherFile>../weatherdata/SACRAMENTO-EXECUTIVE_724830_CZ2010.epw</AnnualWeatherFile> 
+    <AnnualWeatherFile>../weatherdata/SACRAMENTO-EXECUTIVE_724830_CZ2010.epw</AnnualWeatherFile>
     <HVACAutoSizing>1</HVACAutoSizing>
     <SimDsgnDays>1</SimDsgnDays>
     <SimFlag>1</SimFlag>
@@ -23,9 +23,11 @@
     <SimVarsInterval>Hourly</SimVarsInterval>
     <SimVarsSite>0</SimVarsSite>
     <SimVarsThrmlZn>0</SimVarsThrmlZn>
+    <SimVarsDayltg>0</SimVarsDayltg>
     <SimVarsHVACSec>0</SimVarsHVACSec>
     <SimVarsHVACPri>0</SimVarsHVACPri>
     <SimVarsHVACZn>0</SimVarsHVACZn>
+    <WtrHtrCnt>1</WtrHtrCnt>
     <SchDay>
       <Name>OfficeOccupancySun</Name>
       <Type>Fraction</Type>
@@ -587,7 +589,7 @@
       <Hr index="23">0.05</Hr>
     </SchDay>
     <SchDay>
-      <Name>OfficeClgSetPtSun</Name>
+      <Name>OfficeClgSetPtSun-user</Name>
       <Type>Temperature</Type>
       <Hr index="0">85</Hr>
       <Hr index="1">85</Hr>
@@ -615,7 +617,7 @@
       <Hr index="23">85</Hr>
     </SchDay>
     <SchDay>
-      <Name>OfficeClgSetPtWD</Name>
+      <Name>OfficeClgSetPtWD-user</Name>
       <Type>Temperature</Type>
       <Hr index="0">85</Hr>
       <Hr index="1">85</Hr>
@@ -643,7 +645,7 @@
       <Hr index="23">75</Hr>
     </SchDay>
     <SchDay>
-      <Name>OfficeClgSetPtSat</Name>
+      <Name>OfficeClgSetPtSat-user</Name>
       <Type>Temperature</Type>
       <Hr index="0">85</Hr>
       <Hr index="1">85</Hr>
@@ -671,7 +673,7 @@
       <Hr index="23">85</Hr>
     </SchDay>
     <SchDay>
-      <Name>OfficeHtgSetPtSun</Name>
+      <Name>OfficeHtgSetPtSun-user</Name>
       <Type>Temperature</Type>
       <Hr index="0">60</Hr>
       <Hr index="1">60</Hr>
@@ -699,7 +701,7 @@
       <Hr index="23">60</Hr>
     </SchDay>
     <SchDay>
-      <Name>OfficeHtgSetPtWD</Name>
+      <Name>OfficeHtgSetPtWD-user</Name>
       <Type>Temperature</Type>
       <Hr index="0">60</Hr>
       <Hr index="1">60</Hr>
@@ -727,7 +729,7 @@
       <Hr index="23">70</Hr>
     </SchDay>
     <SchDay>
-      <Name>OfficeHtgSetPtSat</Name>
+      <Name>OfficeHtgSetPtSat-user</Name>
       <Type>Temperature</Type>
       <Hr index="0">60</Hr>
       <Hr index="1">60</Hr>
@@ -1427,6 +1429,90 @@
       <Hr index="23">53.1</Hr>
     </SchDay>
     <SchDay>
+      <Name>OfficeGasEquipSun</Name>
+      <Type>Fraction</Type>
+      <Hr index="0">0</Hr>
+      <Hr index="1">0</Hr>
+      <Hr index="2">0</Hr>
+      <Hr index="3">0</Hr>
+      <Hr index="4">0</Hr>
+      <Hr index="5">0</Hr>
+      <Hr index="6">0</Hr>
+      <Hr index="7">0</Hr>
+      <Hr index="8">0</Hr>
+      <Hr index="9">0</Hr>
+      <Hr index="10">0</Hr>
+      <Hr index="11">0</Hr>
+      <Hr index="12">0</Hr>
+      <Hr index="13">0</Hr>
+      <Hr index="14">0</Hr>
+      <Hr index="15">0</Hr>
+      <Hr index="16">0</Hr>
+      <Hr index="17">0</Hr>
+      <Hr index="18">0</Hr>
+      <Hr index="19">0</Hr>
+      <Hr index="20">0</Hr>
+      <Hr index="21">0</Hr>
+      <Hr index="22">0</Hr>
+      <Hr index="23">0</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>OfficeGasEquipWD</Name>
+      <Type>Fraction</Type>
+      <Hr index="0">0</Hr>
+      <Hr index="1">0</Hr>
+      <Hr index="2">0</Hr>
+      <Hr index="3">0</Hr>
+      <Hr index="4">0</Hr>
+      <Hr index="5">0</Hr>
+      <Hr index="6">0</Hr>
+      <Hr index="7">0.5</Hr>
+      <Hr index="8">0.5</Hr>
+      <Hr index="9">0.5</Hr>
+      <Hr index="10">0.9</Hr>
+      <Hr index="11">0.9</Hr>
+      <Hr index="12">0.9</Hr>
+      <Hr index="13">0.9</Hr>
+      <Hr index="14">0.75</Hr>
+      <Hr index="15">0.75</Hr>
+      <Hr index="16">0.75</Hr>
+      <Hr index="17">0.75</Hr>
+      <Hr index="18">0</Hr>
+      <Hr index="19">0</Hr>
+      <Hr index="20">0</Hr>
+      <Hr index="21">0</Hr>
+      <Hr index="22">0</Hr>
+      <Hr index="23">0</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>OfficeGasEquipSat</Name>
+      <Type>Fraction</Type>
+      <Hr index="0">0</Hr>
+      <Hr index="1">0</Hr>
+      <Hr index="2">0</Hr>
+      <Hr index="3">0</Hr>
+      <Hr index="4">0</Hr>
+      <Hr index="5">0</Hr>
+      <Hr index="6">0</Hr>
+      <Hr index="7">0</Hr>
+      <Hr index="8">0.5</Hr>
+      <Hr index="9">0.5</Hr>
+      <Hr index="10">0.9</Hr>
+      <Hr index="11">0.9</Hr>
+      <Hr index="12">0.9</Hr>
+      <Hr index="13">0.9</Hr>
+      <Hr index="14">0.75</Hr>
+      <Hr index="15">0.75</Hr>
+      <Hr index="16">0.75</Hr>
+      <Hr index="17">0</Hr>
+      <Hr index="18">0</Hr>
+      <Hr index="19">0</Hr>
+      <Hr index="20">0</Hr>
+      <Hr index="21">0</Hr>
+      <Hr index="22">0</Hr>
+      <Hr index="23">0</Hr>
+    </SchDay>
+    <SchDay>
       <Name>OfficeInfiltrationSun</Name>
       <Type>Fraction</Type>
       <Hr index="0">1</Hr>
@@ -1509,6 +1595,90 @@
       <Hr index="21">1</Hr>
       <Hr index="22">1</Hr>
       <Hr index="23">1</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>OfficeHVACAvailSun</Name>
+      <Type>OnOff</Type>
+      <Hr index="0">0</Hr>
+      <Hr index="1">0</Hr>
+      <Hr index="2">0</Hr>
+      <Hr index="3">0</Hr>
+      <Hr index="4">0</Hr>
+      <Hr index="5">1</Hr>
+      <Hr index="6">1</Hr>
+      <Hr index="7">1</Hr>
+      <Hr index="8">1</Hr>
+      <Hr index="9">1</Hr>
+      <Hr index="10">1</Hr>
+      <Hr index="11">1</Hr>
+      <Hr index="12">1</Hr>
+      <Hr index="13">1</Hr>
+      <Hr index="14">1</Hr>
+      <Hr index="15">1</Hr>
+      <Hr index="16">1</Hr>
+      <Hr index="17">1</Hr>
+      <Hr index="18">0</Hr>
+      <Hr index="19">0</Hr>
+      <Hr index="20">0</Hr>
+      <Hr index="21">0</Hr>
+      <Hr index="22">0</Hr>
+      <Hr index="23">0</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>OfficeHVACAvailWD</Name>
+      <Type>OnOff</Type>
+      <Hr index="0">0</Hr>
+      <Hr index="1">0</Hr>
+      <Hr index="2">0</Hr>
+      <Hr index="3">0</Hr>
+      <Hr index="4">0</Hr>
+      <Hr index="5">1</Hr>
+      <Hr index="6">1</Hr>
+      <Hr index="7">1</Hr>
+      <Hr index="8">1</Hr>
+      <Hr index="9">1</Hr>
+      <Hr index="10">1</Hr>
+      <Hr index="11">1</Hr>
+      <Hr index="12">1</Hr>
+      <Hr index="13">1</Hr>
+      <Hr index="14">1</Hr>
+      <Hr index="15">1</Hr>
+      <Hr index="16">1</Hr>
+      <Hr index="17">1</Hr>
+      <Hr index="18">1</Hr>
+      <Hr index="19">1</Hr>
+      <Hr index="20">1</Hr>
+      <Hr index="21">1</Hr>
+      <Hr index="22">1</Hr>
+      <Hr index="23">1</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>OfficeHVACAvailSat</Name>
+      <Type>OnOff</Type>
+      <Hr index="0">0</Hr>
+      <Hr index="1">0</Hr>
+      <Hr index="2">0</Hr>
+      <Hr index="3">0</Hr>
+      <Hr index="4">0</Hr>
+      <Hr index="5">1</Hr>
+      <Hr index="6">1</Hr>
+      <Hr index="7">1</Hr>
+      <Hr index="8">1</Hr>
+      <Hr index="9">1</Hr>
+      <Hr index="10">1</Hr>
+      <Hr index="11">1</Hr>
+      <Hr index="12">1</Hr>
+      <Hr index="13">1</Hr>
+      <Hr index="14">1</Hr>
+      <Hr index="15">1</Hr>
+      <Hr index="16">1</Hr>
+      <Hr index="17">1</Hr>
+      <Hr index="18">1</Hr>
+      <Hr index="19">0</Hr>
+      <Hr index="20">0</Hr>
+      <Hr index="21">0</Hr>
+      <Hr index="22">0</Hr>
+      <Hr index="23">0</Hr>
     </SchDay>
     <SchDay>
       <Name>OfficeClgSetptSun</Name>
@@ -1677,90 +1847,6 @@
       <Hr index="21">60</Hr>
       <Hr index="22">60</Hr>
       <Hr index="23">60</Hr>
-    </SchDay>
-    <SchDay>
-      <Name>OfficeHVACAvailSun</Name>
-      <Type>OnOff</Type>
-      <Hr index="0">0</Hr>
-      <Hr index="1">0</Hr>
-      <Hr index="2">0</Hr>
-      <Hr index="3">0</Hr>
-      <Hr index="4">0</Hr>
-      <Hr index="5">1</Hr>
-      <Hr index="6">1</Hr>
-      <Hr index="7">1</Hr>
-      <Hr index="8">1</Hr>
-      <Hr index="9">1</Hr>
-      <Hr index="10">1</Hr>
-      <Hr index="11">1</Hr>
-      <Hr index="12">1</Hr>
-      <Hr index="13">1</Hr>
-      <Hr index="14">1</Hr>
-      <Hr index="15">1</Hr>
-      <Hr index="16">1</Hr>
-      <Hr index="17">1</Hr>
-      <Hr index="18">0</Hr>
-      <Hr index="19">0</Hr>
-      <Hr index="20">0</Hr>
-      <Hr index="21">0</Hr>
-      <Hr index="22">0</Hr>
-      <Hr index="23">0</Hr>
-    </SchDay>
-    <SchDay>
-      <Name>OfficeHVACAvailWD</Name>
-      <Type>OnOff</Type>
-      <Hr index="0">0</Hr>
-      <Hr index="1">0</Hr>
-      <Hr index="2">0</Hr>
-      <Hr index="3">0</Hr>
-      <Hr index="4">0</Hr>
-      <Hr index="5">1</Hr>
-      <Hr index="6">1</Hr>
-      <Hr index="7">1</Hr>
-      <Hr index="8">1</Hr>
-      <Hr index="9">1</Hr>
-      <Hr index="10">1</Hr>
-      <Hr index="11">1</Hr>
-      <Hr index="12">1</Hr>
-      <Hr index="13">1</Hr>
-      <Hr index="14">1</Hr>
-      <Hr index="15">1</Hr>
-      <Hr index="16">1</Hr>
-      <Hr index="17">1</Hr>
-      <Hr index="18">1</Hr>
-      <Hr index="19">1</Hr>
-      <Hr index="20">1</Hr>
-      <Hr index="21">1</Hr>
-      <Hr index="22">1</Hr>
-      <Hr index="23">1</Hr>
-    </SchDay>
-    <SchDay>
-      <Name>OfficeHVACAvailSat</Name>
-      <Type>OnOff</Type>
-      <Hr index="0">0</Hr>
-      <Hr index="1">0</Hr>
-      <Hr index="2">0</Hr>
-      <Hr index="3">0</Hr>
-      <Hr index="4">0</Hr>
-      <Hr index="5">1</Hr>
-      <Hr index="6">1</Hr>
-      <Hr index="7">1</Hr>
-      <Hr index="8">1</Hr>
-      <Hr index="9">1</Hr>
-      <Hr index="10">1</Hr>
-      <Hr index="11">1</Hr>
-      <Hr index="12">1</Hr>
-      <Hr index="13">1</Hr>
-      <Hr index="14">1</Hr>
-      <Hr index="15">1</Hr>
-      <Hr index="16">1</Hr>
-      <Hr index="17">1</Hr>
-      <Hr index="18">1</Hr>
-      <Hr index="19">0</Hr>
-      <Hr index="20">0</Hr>
-      <Hr index="21">0</Hr>
-      <Hr index="22">0</Hr>
-      <Hr index="23">0</Hr>
     </SchDay>
     <SchDay>
       <Name>OfficeWtrHtrSetptSun</Name>
@@ -2113,6 +2199,20 @@
       <SchDayHtgDDRef>WaterMainCZ12Dec</SchDayHtgDDRef>
     </SchWeek>
     <SchWeek>
+      <Name>OfficeGasEquipWk</Name>
+      <Type>Fraction</Type>
+      <SchDaySunRef>OfficeGasEquipSun</SchDaySunRef>
+      <SchDayMonRef>OfficeGasEquipWD</SchDayMonRef>
+      <SchDayTueRef>OfficeGasEquipWD</SchDayTueRef>
+      <SchDayWedRef>OfficeGasEquipWD</SchDayWedRef>
+      <SchDayThuRef>OfficeGasEquipWD</SchDayThuRef>
+      <SchDayFriRef>OfficeGasEquipWD</SchDayFriRef>
+      <SchDaySatRef>OfficeGasEquipSat</SchDaySatRef>
+      <SchDayHolRef>OfficeGasEquipSun</SchDayHolRef>
+      <SchDayClgDDRef>OnDay</SchDayClgDDRef>
+      <SchDayHtgDDRef>OffDay</SchDayHtgDDRef>
+    </SchWeek>
+    <SchWeek>
       <Name>OfficeInfiltrationWk</Name>
       <Type>Fraction</Type>
       <SchDaySunRef>OfficeInfiltrationSun</SchDaySunRef>
@@ -2137,6 +2237,20 @@
       <SchDayFriRef>OnDay</SchDayFriRef>
       <SchDaySatRef>OnDay</SchDaySatRef>
       <SchDayHolRef>OnDay</SchDayHolRef>
+      <SchDayClgDDRef>OnDay</SchDayClgDDRef>
+      <SchDayHtgDDRef>OnDay</SchDayHtgDDRef>
+    </SchWeek>
+    <SchWeek>
+      <Name>OfficeHVACAvailWk</Name>
+      <Type>OnOff</Type>
+      <SchDaySunRef>OfficeHVACAvailSun</SchDaySunRef>
+      <SchDayMonRef>OfficeHVACAvailWD</SchDayMonRef>
+      <SchDayTueRef>OfficeHVACAvailWD</SchDayTueRef>
+      <SchDayWedRef>OfficeHVACAvailWD</SchDayWedRef>
+      <SchDayThuRef>OfficeHVACAvailWD</SchDayThuRef>
+      <SchDayFriRef>OfficeHVACAvailWD</SchDayFriRef>
+      <SchDaySatRef>OfficeHVACAvailSat</SchDaySatRef>
+      <SchDayHolRef>OfficeHVACAvailSun</SchDayHolRef>
       <SchDayClgDDRef>OnDay</SchDayClgDDRef>
       <SchDayHtgDDRef>OnDay</SchDayHtgDDRef>
     </SchWeek>
@@ -2167,20 +2281,6 @@
       <SchDayHolRef>OfficeHtgSetptSun</SchDayHolRef>
       <SchDayClgDDRef>OfficeHtgSetptWD</SchDayClgDDRef>
       <SchDayHtgDDRef>OfficeHtgSetptWD</SchDayHtgDDRef>
-    </SchWeek>
-    <SchWeek>
-      <Name>OfficeHVACAvailWk</Name>
-      <Type>OnOff</Type>
-      <SchDaySunRef>OfficeHVACAvailSun</SchDaySunRef>
-      <SchDayMonRef>OfficeHVACAvailWD</SchDayMonRef>
-      <SchDayTueRef>OfficeHVACAvailWD</SchDayTueRef>
-      <SchDayWedRef>OfficeHVACAvailWD</SchDayWedRef>
-      <SchDayThuRef>OfficeHVACAvailWD</SchDayThuRef>
-      <SchDayFriRef>OfficeHVACAvailWD</SchDayFriRef>
-      <SchDaySatRef>OfficeHVACAvailSat</SchDaySatRef>
-      <SchDayHolRef>OfficeHVACAvailSun</SchDayHolRef>
-      <SchDayClgDDRef>OnDay</SchDayClgDDRef>
-      <SchDayHtgDDRef>OnDay</SchDayHtgDDRef>
     </SchWeek>
     <SchWeek>
       <Name>OfficeWtrHtrSetptWk</Name>
@@ -2300,6 +2400,13 @@
       <SchWeekRef index="0">OfficeReceptacleWk</SchWeekRef>
     </Sch>
     <Sch>
+      <Name>OfficeGasEquip</Name>
+      <Type>Fraction</Type>
+      <EndMonth index="0">12</EndMonth>
+      <EndDay index="0">31</EndDay>
+      <SchWeekRef index="0">OfficeGasEquipWk</SchWeekRef>
+    </Sch>
+    <Sch>
       <Name>OfficeInfiltration</Name>
       <Type>Fraction</Type>
       <EndMonth index="0">12</EndMonth>
@@ -2321,6 +2428,13 @@
       <SchWeekRef index="0">OfficeLightsWk</SchWeekRef>
     </Sch>
     <Sch>
+      <Name>OfficeHVACAvail</Name>
+      <Type>OnOff</Type>
+      <EndMonth index="0">12</EndMonth>
+      <EndDay index="0">31</EndDay>
+      <SchWeekRef index="0">OfficeHVACAvailWk</SchWeekRef>
+    </Sch>
+    <Sch>
       <Name>OfficeClgSetpt</Name>
       <Type>Temperature</Type>
       <EndMonth index="0">12</EndMonth>
@@ -2333,13 +2447,6 @@
       <EndMonth index="0">12</EndMonth>
       <EndDay index="0">31</EndDay>
       <SchWeekRef index="0">OfficeHtgSetptWk</SchWeekRef>
-    </Sch>
-    <Sch>
-      <Name>OfficeHVACAvail</Name>
-      <Type>OnOff</Type>
-      <EndMonth index="0">12</EndMonth>
-      <EndDay index="0">31</EndDay>
-      <SchWeekRef index="0">OfficeHVACAvailWk</SchWeekRef>
     </Sch>
     <Sch>
       <Name>OfficeWtrHtrSetpt</Name>
@@ -2355,44 +2462,14 @@
       <EndDay index="0">31</EndDay>
       <SchWeekRef index="0">OfficeServiceHotWaterWk</SchWeekRef>
     </Sch>
-    <ConsAssm>
-      <Name>NACM_Interior Wall</Name>
-      <SpecMthd>Layers</SpecMthd>
-      <ExtRoughness>MediumRough</ExtRoughness>
-      <ExtSolAbs>0.7</ExtSolAbs>
-      <ExtThrmlAbs>0.9</ExtThrmlAbs>
-      <ExtVisAbs>0.8</ExtVisAbs>
-      <IntSolAbs>0.7</IntSolAbs>
-      <IntThrmlAbs>0.9</IntThrmlAbs>
-      <IntVisAbs>0.8</IntVisAbs>
-      <MatRef index="0">NACM_Gypsum Board 5/8in</MatRef>
-      <MatRef index="1">NACM_Gypsum Board 5/8in</MatRef>
-    </ConsAssm>
-    <ConsAssm>
-      <Name>NACM_Drop Ceiling</Name>
-      <SpecMthd>Layers</SpecMthd>
-      <ExtRoughness>MediumRough</ExtRoughness>
-      <ExtSolAbs>0.7</ExtSolAbs>
-      <ExtThrmlAbs>0.9</ExtThrmlAbs>
-      <ExtVisAbs>0.8</ExtVisAbs>
-      <IntSolAbs>0.7</IntSolAbs>
-      <IntThrmlAbs>0.9</IntThrmlAbs>
-      <IntVisAbs>0.8</IntVisAbs>
-      <MatRef index="0">NACM_Acoustic Tile 3/4in</MatRef>
-    </ConsAssm>
-    <ConsAssm>
-      <Name>NACM_Interior Floor</Name>
-      <SpecMthd>Layers</SpecMthd>
-      <ExtRoughness>MediumRough</ExtRoughness>
-      <ExtSolAbs>0.7</ExtSolAbs>
-      <ExtThrmlAbs>0.9</ExtThrmlAbs>
-      <ExtVisAbs>0.8</ExtVisAbs>
-      <IntSolAbs>0.7</IntSolAbs>
-      <IntThrmlAbs>0.9</IntThrmlAbs>
-      <IntVisAbs>0.8</IntVisAbs>
-      <MatRef index="0">NACM_Concrete 4in_140lb/ft3</MatRef>
-      <MatRef index="1">NACM_Carpet 3/4in</MatRef>
-    </ConsAssm>
+    <Mat>
+      <Name>Concrete - 140 lb/ft3 - 6 in.</Name>
+      <RVal>0.44</RVal>
+      <ThrmlCndct>1.1275</ThrmlCndct>
+      <SpecHt>0.22</SpecHt>
+      <Dens>139.78</Dens>
+      <Thkns>6</Thkns>
+    </Mat>
     <Mat>
       <Name>Stucco - 7/8 in.</Name>
       <RVal>0.18</RVal>
@@ -2426,12 +2503,12 @@
       <Thkns>0.5</Thkns>
     </Mat>
     <Mat>
-      <Name>Concrete - 140 lb/ft3 - 6 in.</Name>
-      <RVal>0.44</RVal>
-      <ThrmlCndct>1.1275</ThrmlCndct>
-      <SpecHt>0.22</SpecHt>
-      <Dens>139.78</Dens>
-      <Thkns>6</Thkns>
+      <Name>Gypsum Board - 5/8 in.</Name>
+      <RVal>0.56</RVal>
+      <ThrmlCndct>0.09167</ThrmlCndct>
+      <SpecHt>0.27</SpecHt>
+      <Dens>40</Dens>
+      <Thkns>0.63</Thkns>
     </Mat>
     <Mat>
       <Name>Metal Standing Seam - 1/16 in.</Name>
@@ -2450,15 +2527,7 @@
       <Thkns>3.9776</Thkns>
     </Mat>
     <Mat>
-      <Name>NACM_Gypsum Board 5/8in</Name>
-      <RVal>0.56</RVal>
-      <ThrmlCndct>0.09167</ThrmlCndct>
-      <SpecHt>0.27</SpecHt>
-      <Dens>40</Dens>
-      <Thkns>0.63</Thkns>
-    </Mat>
-    <Mat>
-      <Name>NACM_Acoustic Tile 3/4in</Name>
+      <Name>Acoustic Tile - 3/4 in.</Name>
       <RVal>1.89</RVal>
       <ThrmlCndct>0.0333</ThrmlCndct>
       <SpecHt>0.19</SpecHt>
@@ -2466,7 +2535,15 @@
       <Thkns>0.75</Thkns>
     </Mat>
     <Mat>
-      <Name>NACM_Concrete 4in_140lb/ft3</Name>
+      <Name>Metal Deck - 1/16 in.</Name>
+      <RVal>0</RVal>
+      <ThrmlCndct>26.2</ThrmlCndct>
+      <SpecHt>0.12</SpecHt>
+      <Dens>488.22</Dens>
+      <Thkns>0.0625</Thkns>
+    </Mat>
+    <Mat>
+      <Name>Concrete - 140 lb/ft3 - 4 in.</Name>
       <RVal>0.3</RVal>
       <ThrmlCndct>1.1275</ThrmlCndct>
       <SpecHt>0.22</SpecHt>
@@ -2474,7 +2551,7 @@
       <Thkns>4</Thkns>
     </Mat>
     <Mat>
-      <Name>NACM_Carpet 3/4in</Name>
+      <Name>Carpet - 3/4 in.</Name>
       <RVal>2.38</RVal>
       <ThrmlCndct>0.0263</ThrmlCndct>
       <SpecHt>0.33</SpecHt>
@@ -2495,12 +2572,6 @@
       <MinOut>0.8</MinOut>
     </CrvQuad>
     <CrvQuad>
-      <Name>CoilClgDXSnglEIRRatio_fCFMRatio</Name>
-      <Coef1>1.156</Coef1>
-      <Coef2>-0.1816</Coef2>
-      <Coef3>0.0256</Coef3>
-    </CrvQuad>
-    <CrvQuad>
       <Name>BlrHWBlrFIRRatio_fQRatioSI</Name>
       <Coef1>0.6267</Coef1>
       <Coef2>0.674</Coef2>
@@ -2508,15 +2579,15 @@
       <MinOut>0.75</MinOut>
     </CrvQuad>
     <CrvCubic>
-      <Name>FanVSDSpResetPwrRatio_fCFMRatio</Name>
-      <Coef1>0.027828</Coef1>
-      <Coef2>0.026583</Coef2>
-      <Coef3>-0.087069</Coef3>
-      <Coef4>1.03092</Coef4>
+      <Name>FanVSDGoodSpResetPwrRatio_fCFMRatio</Name>
+      <Coef1>0.04076</Coef1>
+      <Coef2>0.088045</Coef2>
+      <Coef3>-0.072926</Coef3>
+      <Coef4>0.94374</Coef4>
       <MaxOut>1</MaxOut>
       <MaxVar1>1</MaxVar1>
       <MinOut>0.1</MinOut>
-      <MinVar1>0.42</MinVar1>
+      <MinVar1>0.342</MinVar1>
     </CrvCubic>
     <CrvCubic>
       <Name>CoilClgDXEIRRatio_fQFrac</Name>
@@ -2582,20 +2653,23 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>OfficeLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>OfficeLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>OfficeReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>OfficeGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Receptacle</ProcElecSchRef>
-          <ProcGasSchRef>Office Receptacle</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <ElevPwr>10000</ElevPwr>
           <ElevSchRef>OfficeElevator</ElevSchRef>
           <ElevRadFrac>0</ElevRadFrac>
@@ -2607,10 +2681,10 @@
           <EscalLatFrac>0</EscalLatFrac>
           <EscalLostFrac>1</EscalLostFrac>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>19.0561</HotWtrHtgRtSim>
           <HotWtrHtgTot>19.0561</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
@@ -2620,7 +2694,7 @@
           <IntWall>
             <Name>Core_bot_ZN_5_Wall_East</Name>
             <AdjacentSpcRef>Perimeter_bot_ZN_2</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
@@ -2631,7 +2705,7 @@
           <IntWall>
             <Name>Core_bot_ZN_5_Wall_North</Name>
             <AdjacentSpcRef>Perimeter_bot_ZN_3</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
@@ -2642,7 +2716,7 @@
           <IntWall>
             <Name>Core_bot_ZN_5_Wall_South</Name>
             <AdjacentSpcRef>Perimeter_bot_ZN_1</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
@@ -2653,7 +2727,7 @@
           <IntWall>
             <Name>Core_bot_ZN_5_Wall_West</Name>
             <AdjacentSpcRef>Perimeter_bot_ZN_4</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
@@ -2691,25 +2765,28 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>OfficeLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>OfficeLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>OfficeReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>OfficeGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Receptacle</ProcElecSchRef>
-          <ProcGasSchRef>Office Receptacle</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>4.01717</HotWtrHtgRtSim>
           <HotWtrHtgTot>4.01717</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
@@ -2739,7 +2816,7 @@
           <IntWall>
             <Name>Perimeter_bot_ZN_1_Wall_East</Name>
             <AdjacentSpcRef>Perimeter_bot_ZN_2</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
@@ -2750,7 +2827,7 @@
           <IntWall>
             <Name>Perimeter_bot_ZN_4_Wall_South Reversed</Name>
             <AdjacentSpcRef>Perimeter_bot_ZN_4</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
@@ -2788,25 +2865,28 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>OfficeLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>OfficeLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>OfficeReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>OfficeGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Receptacle</ProcElecSchRef>
-          <ProcGasSchRef>Office Receptacle</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
-          <HotWtrHtgRtSim>2.54323</HotWtrHtgRtSim>
-          <HotWtrHtgTot>2.54323</HotWtrHtgTot>
+          <HotWtrHtgRtSim>2.54322</HotWtrHtgRtSim>
+          <HotWtrHtgTot>2.54322</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
@@ -2836,7 +2916,7 @@
           <IntWall>
             <Name>Perimeter_bot_ZN_2_Wall_North</Name>
             <AdjacentSpcRef>Perimeter_bot_ZN_3</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
@@ -2874,25 +2954,28 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>OfficeLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>OfficeLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>OfficeReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>OfficeGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Receptacle</ProcElecSchRef>
-          <ProcGasSchRef>Office Receptacle</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>4.01717</HotWtrHtgRtSim>
           <HotWtrHtgTot>4.01717</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
@@ -2922,7 +3005,7 @@
           <IntWall>
             <Name>Perimeter_bot_ZN_3_Wall_West</Name>
             <AdjacentSpcRef>Perimeter_bot_ZN_4</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
@@ -2960,25 +3043,28 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>OfficeLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>OfficeLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>OfficeReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>OfficeGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Receptacle</ProcElecSchRef>
-          <ProcGasSchRef>Office Receptacle</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>2.54304</HotWtrHtgRtSim>
           <HotWtrHtgTot>2.54304</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
             <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
@@ -3021,7 +3107,6 @@
           <Name>FirstFloor_Plenum</Name>
           <CondgType>Plenum</CondgType>
           <ThrmlZnRef>FirstFloor_Plenum Thermal Zone</ThrmlZnRef>
-          <OccDens>0</OccDens>
           <InfMthd index="0">FlowExteriorWallArea</InfMthd>
           <DsgnInfRt index="0">0.0448</DsgnInfRt>
           <InfSchRef index="0">On</InfSchRef>
@@ -3029,6 +3114,7 @@
           <InfModelCoefB index="0">0</InfModelCoefB>
           <InfModelCoefC index="0">0.10016</InfModelCoefC>
           <InfModelCoefD index="0">0</InfModelCoefD>
+          <HotWtrHtgTot>0</HotWtrHtgTot>
           <PolyLp>
             <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
             <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
@@ -3078,7 +3164,7 @@
           <IntFlr>
             <Name>Core_bot_ZN_5_Ceiling Reversed</Name>
             <AdjacentSpcRef>Core_bottom</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Drop Ceiling</ConsAssmRef>
+            <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
@@ -3089,7 +3175,7 @@
           <IntFlr>
             <Name>Perimeter_bot_ZN_1_Ceiling Reversed</Name>
             <AdjacentSpcRef>Perimeter_bot_ZN_1</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Drop Ceiling</ConsAssmRef>
+            <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
@@ -3100,7 +3186,7 @@
           <IntFlr>
             <Name>Perimeter_bot_ZN_2_Ceiling Reversed</Name>
             <AdjacentSpcRef>Perimeter_bot_ZN_2</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Drop Ceiling</ConsAssmRef>
+            <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
@@ -3111,7 +3197,7 @@
           <IntFlr>
             <Name>Perimeter_bot_ZN_3_Ceiling Reversed</Name>
             <AdjacentSpcRef>Perimeter_bot_ZN_3</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Drop Ceiling</ConsAssmRef>
+            <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
@@ -3122,7 +3208,7 @@
           <IntFlr>
             <Name>Perimeter_bot_ZN_4_Ceiling Reversed</Name>
             <AdjacentSpcRef>Perimeter_bot_ZN_4</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Drop Ceiling</ConsAssmRef>
+            <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
@@ -3152,25 +3238,28 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>OfficeLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>OfficeLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>OfficeReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>OfficeGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Receptacle</ProcElecSchRef>
-          <ProcGasSchRef>Office Receptacle</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>19.0561</HotWtrHtgRtSim>
           <HotWtrHtgTot>19.0561</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
             <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
@@ -3180,7 +3269,7 @@
           <IntFlr>
             <Name>Core_mid_ZN_5_Floor</Name>
             <AdjacentSpcRef>FirstFloor_Plenum</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Floor</ConsAssmRef>
+            <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
@@ -3191,7 +3280,7 @@
           <IntWall>
             <Name>Core_mid_ZN_5_Wall_East</Name>
             <AdjacentSpcRef>Perimeter_mid_ZN_2</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
@@ -3202,7 +3291,7 @@
           <IntWall>
             <Name>Core_mid_ZN_5_Wall_North</Name>
             <AdjacentSpcRef>Perimeter_mid_ZN_3</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
@@ -3213,7 +3302,7 @@
           <IntWall>
             <Name>Core_mid_ZN_5_Wall_South</Name>
             <AdjacentSpcRef>Perimeter_mid_ZN_1</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
@@ -3224,7 +3313,7 @@
           <IntWall>
             <Name>Core_mid_ZN_5_Wall_West</Name>
             <AdjacentSpcRef>Perimeter_mid_ZN_4</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
@@ -3251,25 +3340,28 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>OfficeLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>OfficeLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>OfficeReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>OfficeGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Receptacle</ProcElecSchRef>
-          <ProcGasSchRef>Office Receptacle</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>4.01717</HotWtrHtgRtSim>
           <HotWtrHtgTot>4.01717</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
             <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
@@ -3299,7 +3391,7 @@
           <IntFlr>
             <Name>Perimeter_mid_ZN_1_Floor</Name>
             <AdjacentSpcRef>FirstFloor_Plenum</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Floor</ConsAssmRef>
+            <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
@@ -3310,7 +3402,7 @@
           <IntWall>
             <Name>Perimeter_mid_ZN_1_Wall_East</Name>
             <AdjacentSpcRef>Perimeter_mid_ZN_2</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
@@ -3321,7 +3413,7 @@
           <IntWall>
             <Name>Perimeter_mid_ZN_4_Wall_South Reversed</Name>
             <AdjacentSpcRef>Perimeter_mid_ZN_4</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
@@ -3348,25 +3440,28 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>OfficeLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>OfficeLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>OfficeReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>OfficeGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Receptacle</ProcElecSchRef>
-          <ProcGasSchRef>Office Receptacle</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
-          <HotWtrHtgRtSim>2.54323</HotWtrHtgRtSim>
-          <HotWtrHtgTot>2.54323</HotWtrHtgTot>
+          <HotWtrHtgRtSim>2.54322</HotWtrHtgRtSim>
+          <HotWtrHtgTot>2.54322</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
             <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
@@ -3396,7 +3491,7 @@
           <IntFlr>
             <Name>Perimeter_mid_ZN_2_Floor</Name>
             <AdjacentSpcRef>FirstFloor_Plenum</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Floor</ConsAssmRef>
+            <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
@@ -3407,7 +3502,7 @@
           <IntWall>
             <Name>Perimeter_mid_ZN_2_Wall_North</Name>
             <AdjacentSpcRef>Perimeter_mid_ZN_3</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
@@ -3434,25 +3529,28 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>OfficeLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>OfficeLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>OfficeReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>OfficeGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Receptacle</ProcElecSchRef>
-          <ProcGasSchRef>Office Receptacle</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>4.01717</HotWtrHtgRtSim>
           <HotWtrHtgTot>4.01717</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
             <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
@@ -3482,7 +3580,7 @@
           <IntFlr>
             <Name>Perimeter_mid_ZN_3_Floor</Name>
             <AdjacentSpcRef>FirstFloor_Plenum</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Floor</ConsAssmRef>
+            <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
@@ -3493,7 +3591,7 @@
           <IntWall>
             <Name>Perimeter_mid_ZN_3_Wall_West</Name>
             <AdjacentSpcRef>Perimeter_mid_ZN_4</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
@@ -3520,25 +3618,28 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>OfficeLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>OfficeLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>OfficeReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>OfficeGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Receptacle</ProcElecSchRef>
-          <ProcGasSchRef>Office Receptacle</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>2.54304</HotWtrHtgRtSim>
           <HotWtrHtgTot>2.54304</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
             <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
@@ -3568,7 +3669,7 @@
           <IntFlr>
             <Name>Perimeter_mid_ZN_4_Floor</Name>
             <AdjacentSpcRef>FirstFloor_Plenum</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Floor</ConsAssmRef>
+            <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
               <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
@@ -3581,7 +3682,6 @@
           <Name>MidFloor_Plenum</Name>
           <CondgType>Plenum</CondgType>
           <ThrmlZnRef>MidFloor_Plenum Thermal Zone</ThrmlZnRef>
-          <OccDens>0</OccDens>
           <InfMthd index="0">FlowExteriorWallArea</InfMthd>
           <DsgnInfRt index="0">0.0448</DsgnInfRt>
           <InfSchRef index="0">On</InfSchRef>
@@ -3589,6 +3689,7 @@
           <InfModelCoefB index="0">0</InfModelCoefB>
           <InfModelCoefC index="0">0.10016</InfModelCoefC>
           <InfModelCoefD index="0">0</InfModelCoefD>
+          <HotWtrHtgTot>0</HotWtrHtgTot>
           <PolyLp>
             <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
             <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
@@ -3638,7 +3739,7 @@
           <IntFlr>
             <Name>Core_mid_ZN_5_Ceiling Reversed</Name>
             <AdjacentSpcRef>Core_mid</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Drop Ceiling</ConsAssmRef>
+            <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
@@ -3649,7 +3750,7 @@
           <IntFlr>
             <Name>Perimeter_mid_ZN_1_Ceiling Reversed</Name>
             <AdjacentSpcRef>Perimeter_mid_ZN_1</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Drop Ceiling</ConsAssmRef>
+            <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
@@ -3660,7 +3761,7 @@
           <IntFlr>
             <Name>Perimeter_mid_ZN_2_Ceiling Reversed</Name>
             <AdjacentSpcRef>Perimeter_mid_ZN_2</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Drop Ceiling</ConsAssmRef>
+            <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
@@ -3671,7 +3772,7 @@
           <IntFlr>
             <Name>Perimeter_mid_ZN_3_Ceiling Reversed</Name>
             <AdjacentSpcRef>Perimeter_mid_ZN_3</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Drop Ceiling</ConsAssmRef>
+            <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
@@ -3682,7 +3783,7 @@
           <IntFlr>
             <Name>Perimeter_mid_ZN_4_Ceiling Reversed</Name>
             <AdjacentSpcRef>Perimeter_mid_ZN_4</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Drop Ceiling</ConsAssmRef>
+            <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
@@ -3712,25 +3813,28 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>OfficeLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>OfficeLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>OfficeReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>OfficeGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Receptacle</ProcElecSchRef>
-          <ProcGasSchRef>Office Receptacle</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>19.0561</HotWtrHtgRtSim>
           <HotWtrHtgTot>19.0561</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
             <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
@@ -3740,7 +3844,7 @@
           <IntFlr>
             <Name>Core_top_ZN_5_Floor</Name>
             <AdjacentSpcRef>MidFloor_Plenum</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Floor</ConsAssmRef>
+            <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
@@ -3751,7 +3855,7 @@
           <IntWall>
             <Name>Core_top_ZN_5_Wall_East</Name>
             <AdjacentSpcRef>Perimeter_top_ZN_2</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
@@ -3762,7 +3866,7 @@
           <IntWall>
             <Name>Core_top_ZN_5_Wall_North</Name>
             <AdjacentSpcRef>Perimeter_top_ZN_3</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
@@ -3773,7 +3877,7 @@
           <IntWall>
             <Name>Core_top_ZN_5_Wall_South</Name>
             <AdjacentSpcRef>Perimeter_top_ZN_1</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
@@ -3784,7 +3888,7 @@
           <IntWall>
             <Name>Core_top_ZN_5_Wall_West</Name>
             <AdjacentSpcRef>Perimeter_top_ZN_4</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
@@ -3811,25 +3915,28 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>OfficeLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>OfficeLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>OfficeReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>OfficeGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Receptacle</ProcElecSchRef>
-          <ProcGasSchRef>Office Receptacle</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>4.01717</HotWtrHtgRtSim>
           <HotWtrHtgTot>4.01717</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
             <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
@@ -3859,7 +3966,7 @@
           <IntFlr>
             <Name>Perimeter_top_ZN_1_Floor</Name>
             <AdjacentSpcRef>MidFloor_Plenum</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Floor</ConsAssmRef>
+            <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
@@ -3870,7 +3977,7 @@
           <IntWall>
             <Name>Perimeter_top_ZN_1_Wall_East</Name>
             <AdjacentSpcRef>Perimeter_top_ZN_2</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
@@ -3881,7 +3988,7 @@
           <IntWall>
             <Name>Perimeter_top_ZN_4_Wall_South Reversed</Name>
             <AdjacentSpcRef>Perimeter_top_ZN_4</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
@@ -3908,25 +4015,28 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>OfficeLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>OfficeLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>OfficeReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>OfficeGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Receptacle</ProcElecSchRef>
-          <ProcGasSchRef>Office Receptacle</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
-          <HotWtrHtgRtSim>2.54323</HotWtrHtgRtSim>
-          <HotWtrHtgTot>2.54323</HotWtrHtgTot>
+          <HotWtrHtgRtSim>2.54322</HotWtrHtgRtSim>
+          <HotWtrHtgTot>2.54322</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
             <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
@@ -3956,7 +4066,7 @@
           <IntFlr>
             <Name>Perimeter_top_ZN_2_Floor</Name>
             <AdjacentSpcRef>MidFloor_Plenum</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Floor</ConsAssmRef>
+            <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
@@ -3967,7 +4077,7 @@
           <IntWall>
             <Name>Perimeter_top_ZN_2_Wall_North</Name>
             <AdjacentSpcRef>Perimeter_top_ZN_3</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
@@ -3994,25 +4104,28 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>OfficeLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>OfficeLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>OfficeReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>OfficeGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Receptacle</ProcElecSchRef>
-          <ProcGasSchRef>Office Receptacle</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>4.01717</HotWtrHtgRtSim>
           <HotWtrHtgTot>4.01717</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
             <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
@@ -4042,7 +4155,7 @@
           <IntFlr>
             <Name>Perimeter_top_ZN_3_Floor</Name>
             <AdjacentSpcRef>MidFloor_Plenum</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Floor</ConsAssmRef>
+            <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
@@ -4053,7 +4166,7 @@
           <IntWall>
             <Name>Perimeter_top_ZN_3_Wall_West</Name>
             <AdjacentSpcRef>Perimeter_top_ZN_4</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Wall</ConsAssmRef>
+            <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
@@ -4080,25 +4193,28 @@
           <IntLPDReg>0.75</IntLPDReg>
           <IntLtgRegSchRef>OfficeLights</IntLtgRegSchRef>
           <IntLtgRegHtGnSpcFrac>1</IntLtgRegHtGnSpcFrac>
-          <IntLtgRegHtGnRadFrac>0.67</IntLtgRegHtGnRadFrac>
+          <IntLtgRegHtGnRadFrac>0.58</IntLtgRegHtGnRadFrac>
           <IntLPDNonReg>0</IntLPDNonReg>
-          <IntLtgNonRegHtGnSpcFrac>1</IntLtgNonRegHtGnSpcFrac>
-          <IntLtgNonRegHtGnRadFrac>0.67</IntLtgNonRegHtGnRadFrac>
+          <IntLtgNonRegSchRef>OfficeLights</IntLtgNonRegSchRef>
+          <IntLtgNonRegHtGnSpcFrac>0</IntLtgNonRegHtGnSpcFrac>
+          <IntLtgNonRegHtGnRadFrac>0</IntLtgNonRegHtGnRadFrac>
           <RecptPwrDens>1.5</RecptPwrDens>
           <RecptSchRef>OfficeReceptacle</RecptSchRef>
           <RecptRadFrac>0.2</RecptRadFrac>
           <RecptLatFrac>0</RecptLatFrac>
           <RecptLostFrac>0</RecptLostFrac>
+          <GasEqpPwrDens>0</GasEqpPwrDens>
+          <GasEqpSchRef>OfficeGasEquip</GasEqpSchRef>
           <GasEqpRadFrac>0.15</GasEqpRadFrac>
-          <GasEqpLatFrac>0.2</GasEqpLatFrac>
-          <GasEqpLostFrac>0</GasEqpLostFrac>
-          <ProcElecSchRef>Office Receptacle</ProcElecSchRef>
-          <ProcGasSchRef>Office Receptacle</ProcGasSchRef>
+          <GasEqpLatFrac>0</GasEqpLatFrac>
+          <GasEqpLostFrac>0.85</GasEqpLostFrac>
+          <ProcElecPwrDens>0</ProcElecPwrDens>
+          <ProcGasPwrDens>0</ProcGasPwrDens>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
-          <HotWtrHtgRt>0.18</HotWtrHtgRt>
           <HotWtrHtgRtSim>2.54304</HotWtrHtgRtSim>
           <HotWtrHtgTot>2.54304</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
+          <HotWtrSupTemp>135</HotWtrSupTemp>
           <PolyLp>
             <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
             <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
@@ -4128,7 +4244,7 @@
           <IntFlr>
             <Name>Perimeter_top_ZN_4_Floor</Name>
             <AdjacentSpcRef>MidFloor_Plenum</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Interior Floor</ConsAssmRef>
+            <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
               <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
@@ -4141,7 +4257,6 @@
           <Name>TopFloor_Plenum</Name>
           <CondgType>Plenum</CondgType>
           <ThrmlZnRef>TopFloor_Plenum Thermal Zone</ThrmlZnRef>
-          <OccDens>0</OccDens>
           <InfMthd index="0">FlowExteriorWallArea</InfMthd>
           <DsgnInfRt index="0">0.0448</DsgnInfRt>
           <InfSchRef index="0">On</InfSchRef>
@@ -4149,6 +4264,7 @@
           <InfModelCoefB index="0">0</InfModelCoefB>
           <InfModelCoefC index="0">0.10016</InfModelCoefC>
           <InfModelCoefD index="0">0</InfModelCoefD>
+          <HotWtrHtgTot>0</HotWtrHtgTot>
           <PolyLp>
             <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
             <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
@@ -4198,7 +4314,7 @@
           <IntFlr>
             <Name>Core_top_ZN_5_Ceiling Reversed</Name>
             <AdjacentSpcRef>Core_top</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Drop Ceiling</ConsAssmRef>
+            <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
@@ -4209,7 +4325,7 @@
           <IntFlr>
             <Name>Perimeter_top_ZN_1_Ceiling Reversed</Name>
             <AdjacentSpcRef>Perimeter_top_ZN_1</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Drop Ceiling</ConsAssmRef>
+            <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
@@ -4220,7 +4336,7 @@
           <IntFlr>
             <Name>Perimeter_top_ZN_2_Ceiling Reversed</Name>
             <AdjacentSpcRef>Perimeter_top_ZN_2</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Drop Ceiling</ConsAssmRef>
+            <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
@@ -4231,7 +4347,7 @@
           <IntFlr>
             <Name>Perimeter_top_ZN_3_Ceiling Reversed</Name>
             <AdjacentSpcRef>Perimeter_top_ZN_3</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Drop Ceiling</ConsAssmRef>
+            <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
@@ -4242,7 +4358,7 @@
           <IntFlr>
             <Name>Perimeter_top_ZN_4_Ceiling Reversed</Name>
             <AdjacentSpcRef>Perimeter_top_ZN_4</AdjacentSpcRef>
-            <ConsAssmRef>NACM_Drop Ceiling</ConsAssmRef>
+            <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
               <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
@@ -4266,7 +4382,6 @@
         <Name>Core_bottom Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4287,7 +4402,6 @@
         <Name>Perimeter_bot_ZN_1 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4308,7 +4422,6 @@
         <Name>Perimeter_bot_ZN_2 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4329,7 +4442,6 @@
         <Name>Perimeter_bot_ZN_3 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4350,7 +4462,6 @@
         <Name>Perimeter_bot_ZN_4 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4372,6 +4483,8 @@
         <Type>Plenum</Type>
         <Mult>1</Mult>
         <VentSpecMthdSim>NoVentilation</VentSpecMthdSim>
+        <VentPerPersonSim>0</VentPerPersonSim>
+        <VentPerAreaSim>0</VentPerAreaSim>
         <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
         <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
@@ -4379,7 +4492,6 @@
         <Name>Core_mid Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5-2</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-2</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4400,7 +4512,6 @@
         <Name>Perimeter_mid_ZN_1 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5-2</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-2</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4421,7 +4532,6 @@
         <Name>Perimeter_mid_ZN_2 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5-2</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-2</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4442,7 +4552,6 @@
         <Name>Perimeter_mid_ZN_3 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5-2</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-2</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4463,7 +4572,6 @@
         <Name>Perimeter_mid_ZN_4 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5-2</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-2</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4485,6 +4593,8 @@
         <Type>Plenum</Type>
         <Mult>1</Mult>
         <VentSpecMthdSim>NoVentilation</VentSpecMthdSim>
+        <VentPerPersonSim>0</VentPerPersonSim>
+        <VentPerAreaSim>0</VentPerAreaSim>
         <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
         <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
@@ -4492,7 +4602,6 @@
         <Name>Core_top Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5-3</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-3</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4513,7 +4622,6 @@
         <Name>Perimeter_top_ZN_1 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5-3</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-3</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4534,7 +4642,6 @@
         <Name>Perimeter_top_ZN_2 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5-3</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-3</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4555,7 +4662,6 @@
         <Name>Perimeter_top_ZN_3 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5-3</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-3</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4576,7 +4682,6 @@
         <Name>Perimeter_top_ZN_4 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
-        <ThrtlgRng>2</ThrtlgRng>
         <PriAirCondgSysRef>BaseAirSys5-3</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-3</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4598,6 +4703,8 @@
         <Type>Plenum</Type>
         <Mult>1</Mult>
         <VentSpecMthdSim>NoVentilation</VentSpecMthdSim>
+        <VentPerPersonSim>0</VentPerPersonSim>
+        <VentPerAreaSim>0</VentPerAreaSim>
         <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
         <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
@@ -4619,7 +4726,7 @@
         <HtgAllOutsdAir>No</HtgAllOutsdAir>
         <ClgDsgnHumidityRat>0.0085</ClgDsgnHumidityRat>
         <HtgDsgnHumidityRat>0.008</HtgDsgnHumidityRat>
-        <ClgCtrl>WarmestResetFlowFirst</ClgCtrl>
+        <ClgCtrl>WarmestReset</ClgCtrl>
         <ClRstSupHi>60</ClRstSupHi>
         <ClRstSupLow>55</ClRstSupLow>
         <AirSeg>
@@ -4648,10 +4755,10 @@
           </CoilHtg>
           <Fan>
             <Name>BaseSys5 Fan</Name>
-            <CtrlMthd>VariableSpeedDrive</CtrlMthd>
+            <CtrlMthdSim>VariableSpeedDrive</CtrlMthdSim>
             <TotEff>1</TotEff>
             <TotStaticPress>1e-005</TotStaticPress>
-            <Pwr_fPLRCrvRef>FanVSDSpResetPwrRatio_fCFMRatio</Pwr_fPLRCrvRef>
+            <Pwr_fPLRCrvRef>FanVSDGoodSpResetPwrRatio_fCFMRatio</Pwr_fPLRCrvRef>
             <MtrEff>1</MtrEff>
             <MtrPos>InAirStream</MtrPos>
           </Fan>
@@ -4670,14 +4777,14 @@
           <AirSegRetRef>BaseSys5 RetAirSeg</AirSegRetRef>
         </OACtrl>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit</Name>
+          <Name>BaseVAVBox TrmlUnit</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Core_bottom Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
           <PriAirFlowMinSim>1588.01</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil</Name>
+            <Name>BaseVAVBox CoilHtg</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -4685,14 +4792,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-2</Name>
+          <Name>BaseVAVBox TrmlUnit-2</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_bot_ZN_1 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
-          <PriAirFlowMinSim>334.765</PriAirFlowMinSim>
+          <PriAirFlowMinSim>334.764</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-2</Name>
+            <Name>BaseVAVBox CoilHtg-2</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -4700,14 +4807,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-3</Name>
+          <Name>BaseVAVBox TrmlUnit-3</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_bot_ZN_2 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
           <PriAirFlowMinSim>211.935</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-3</Name>
+            <Name>BaseVAVBox CoilHtg-3</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -4715,14 +4822,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-4</Name>
+          <Name>BaseVAVBox TrmlUnit-4</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_bot_ZN_3 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
           <PriAirFlowMinSim>334.764</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-4</Name>
+            <Name>BaseVAVBox CoilHtg-4</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -4730,14 +4837,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-5</Name>
+          <Name>BaseVAVBox TrmlUnit-5</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_bot_ZN_4 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
           <PriAirFlowMinSim>211.92</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-5</Name>
+            <Name>BaseVAVBox CoilHtg-5</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -4763,7 +4870,7 @@
         <HtgAllOutsdAir>No</HtgAllOutsdAir>
         <ClgDsgnHumidityRat>0.0085</ClgDsgnHumidityRat>
         <HtgDsgnHumidityRat>0.008</HtgDsgnHumidityRat>
-        <ClgCtrl>WarmestResetFlowFirst</ClgCtrl>
+        <ClgCtrl>WarmestReset</ClgCtrl>
         <ClRstSupHi>60</ClRstSupHi>
         <ClRstSupLow>55</ClRstSupLow>
         <AirSeg>
@@ -4792,10 +4899,10 @@
           </CoilHtg>
           <Fan>
             <Name>BaseSys5 Fan-2</Name>
-            <CtrlMthd>VariableSpeedDrive</CtrlMthd>
+            <CtrlMthdSim>VariableSpeedDrive</CtrlMthdSim>
             <TotEff>1</TotEff>
             <TotStaticPress>1e-005</TotStaticPress>
-            <Pwr_fPLRCrvRef>FanVSDSpResetPwrRatio_fCFMRatio</Pwr_fPLRCrvRef>
+            <Pwr_fPLRCrvRef>FanVSDGoodSpResetPwrRatio_fCFMRatio</Pwr_fPLRCrvRef>
             <MtrEff>1</MtrEff>
             <MtrPos>InAirStream</MtrPos>
           </Fan>
@@ -4814,14 +4921,14 @@
           <AirSegRetRef>BaseSys5 RetAirSeg-2</AirSegRetRef>
         </OACtrl>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-6</Name>
+          <Name>BaseVAVBox TrmlUnit-6</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Core_mid Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-2</PriAirSegRef>
           <PriAirFlowMinSim>1588.01</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-6</Name>
+            <Name>BaseVAVBox CoilHtg-6</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -4829,14 +4936,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-7</Name>
+          <Name>BaseVAVBox TrmlUnit-7</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_mid_ZN_1 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-2</PriAirSegRef>
-          <PriAirFlowMinSim>334.765</PriAirFlowMinSim>
+          <PriAirFlowMinSim>334.764</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-7</Name>
+            <Name>BaseVAVBox CoilHtg-7</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -4844,14 +4951,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-8</Name>
+          <Name>BaseVAVBox TrmlUnit-8</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_mid_ZN_2 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-2</PriAirSegRef>
           <PriAirFlowMinSim>211.935</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-8</Name>
+            <Name>BaseVAVBox CoilHtg-8</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -4859,14 +4966,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-9</Name>
+          <Name>BaseVAVBox TrmlUnit-9</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_mid_ZN_3 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-2</PriAirSegRef>
           <PriAirFlowMinSim>334.764</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-9</Name>
+            <Name>BaseVAVBox CoilHtg-9</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -4874,14 +4981,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-10</Name>
+          <Name>BaseVAVBox TrmlUnit-10</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_mid_ZN_4 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-2</PriAirSegRef>
           <PriAirFlowMinSim>211.92</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-10</Name>
+            <Name>BaseVAVBox CoilHtg-10</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -4907,7 +5014,7 @@
         <HtgAllOutsdAir>No</HtgAllOutsdAir>
         <ClgDsgnHumidityRat>0.0085</ClgDsgnHumidityRat>
         <HtgDsgnHumidityRat>0.008</HtgDsgnHumidityRat>
-        <ClgCtrl>WarmestResetFlowFirst</ClgCtrl>
+        <ClgCtrl>WarmestReset</ClgCtrl>
         <ClRstSupHi>60</ClRstSupHi>
         <ClRstSupLow>55</ClRstSupLow>
         <AirSeg>
@@ -4936,10 +5043,10 @@
           </CoilHtg>
           <Fan>
             <Name>BaseSys5 Fan-3</Name>
-            <CtrlMthd>VariableSpeedDrive</CtrlMthd>
+            <CtrlMthdSim>VariableSpeedDrive</CtrlMthdSim>
             <TotEff>1</TotEff>
             <TotStaticPress>1e-005</TotStaticPress>
-            <Pwr_fPLRCrvRef>FanVSDSpResetPwrRatio_fCFMRatio</Pwr_fPLRCrvRef>
+            <Pwr_fPLRCrvRef>FanVSDGoodSpResetPwrRatio_fCFMRatio</Pwr_fPLRCrvRef>
             <MtrEff>1</MtrEff>
             <MtrPos>InAirStream</MtrPos>
           </Fan>
@@ -4958,14 +5065,14 @@
           <AirSegRetRef>BaseSys5 RetAirSeg-3</AirSegRetRef>
         </OACtrl>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-11</Name>
+          <Name>BaseVAVBox TrmlUnit-11</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Core_top Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-3</PriAirSegRef>
           <PriAirFlowMinSim>1588.01</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-11</Name>
+            <Name>BaseVAVBox CoilHtg-11</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -4973,14 +5080,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-12</Name>
+          <Name>BaseVAVBox TrmlUnit-12</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_top_ZN_1 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-3</PriAirSegRef>
-          <PriAirFlowMinSim>334.765</PriAirFlowMinSim>
+          <PriAirFlowMinSim>334.764</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-12</Name>
+            <Name>BaseVAVBox CoilHtg-12</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -4988,14 +5095,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-13</Name>
+          <Name>BaseVAVBox TrmlUnit-13</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_top_ZN_2 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-3</PriAirSegRef>
           <PriAirFlowMinSim>211.935</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-13</Name>
+            <Name>BaseVAVBox CoilHtg-13</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -5003,14 +5110,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-14</Name>
+          <Name>BaseVAVBox TrmlUnit-14</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_top_ZN_3 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-3</PriAirSegRef>
           <PriAirFlowMinSim>334.764</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-14</Name>
+            <Name>BaseVAVBox CoilHtg-14</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -5018,14 +5125,14 @@
           </CoilHtg>
         </TrmlUnit>
         <TrmlUnit>
-          <Name>BaseVAVTrmlUnit-15</Name>
+          <Name>BaseVAVBox TrmlUnit-15</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_top_ZN_4 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-3</PriAirSegRef>
           <PriAirFlowMinSim>211.92</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
-            <Name>BaseVAVReheatCoil-15</Name>
+            <Name>BaseVAVBox CoilHtg-15</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
@@ -5063,6 +5170,20 @@
       <MatRef index="3">Gypsum Board - 1/2 in.</MatRef>
     </ConsAssm>
     <ConsAssm>
+      <Name>MetalFrameWallInterior</Name>
+      <SpecMthd>Layers</SpecMthd>
+      <ExtRoughness>MediumRough</ExtRoughness>
+      <ExtSolAbs>0.7</ExtSolAbs>
+      <ExtThrmlAbs>0.9</ExtThrmlAbs>
+      <ExtVisAbs>0.8</ExtVisAbs>
+      <IntSolAbs>0.7</IntSolAbs>
+      <IntThrmlAbs>0.9</IntThrmlAbs>
+      <IntVisAbs>0.8</IntVisAbs>
+      <MatRef index="0">Gypsum Board - 5/8 in.</MatRef>
+      <MatRef index="1">Air - Metal Wall Framing - 16 or 24 in. OC</MatRef>
+      <MatRef index="2">Gypsum Board - 5/8 in.</MatRef>
+    </ConsAssm>
+    <ConsAssm>
       <Name>FlatNonresWoodFramingAndOtherRoofU039</Name>
       <SpecMthd>Layers</SpecMthd>
       <ExtRoughness>MediumRough</ExtRoughness>
@@ -5074,6 +5195,32 @@
       <IntVisAbs>0.8</IntVisAbs>
       <MatRef index="0">Metal Standing Seam - 1/16 in.</MatRef>
       <MatRef index="1">Compliance Insulation R24.86</MatRef>
+    </ConsAssm>
+    <ConsAssm>
+      <Name>TypicalPlenumFloorInterior</Name>
+      <SpecMthd>Layers</SpecMthd>
+      <ExtRoughness>MediumRough</ExtRoughness>
+      <ExtSolAbs>0.7</ExtSolAbs>
+      <ExtThrmlAbs>0.9</ExtThrmlAbs>
+      <ExtVisAbs>0.8</ExtVisAbs>
+      <IntSolAbs>0.7</IntSolAbs>
+      <IntThrmlAbs>0.9</IntThrmlAbs>
+      <IntVisAbs>0.8</IntVisAbs>
+      <MatRef index="0">Acoustic Tile - 3/4 in.</MatRef>
+    </ConsAssm>
+    <ConsAssm>
+      <Name>TypicalFloorInterior</Name>
+      <SpecMthd>Layers</SpecMthd>
+      <ExtRoughness>MediumRough</ExtRoughness>
+      <ExtSolAbs>0.7</ExtSolAbs>
+      <ExtThrmlAbs>0.9</ExtThrmlAbs>
+      <ExtVisAbs>0.8</ExtVisAbs>
+      <IntSolAbs>0.7</IntSolAbs>
+      <IntThrmlAbs>0.9</IntThrmlAbs>
+      <IntVisAbs>0.8</IntVisAbs>
+      <MatRef index="0">Metal Deck - 1/16 in.</MatRef>
+      <MatRef index="1">Concrete - 140 lb/ft3 - 4 in.</MatRef>
+      <MatRef index="2">Carpet - 3/4 in.</MatRef>
     </ConsAssm>
     <FluidSys>
       <Name>BaseHWSystem</Name>
@@ -5087,7 +5234,6 @@
         <Name>Base Blr</Name>
         <Type>HotWater</Type>
         <FuelSrc>Gas</FuelSrc>
-        <DraftType>MechanicalNoncondensing</DraftType>
         <FluidSegInRef>BaseHWPrimRetSeg</FluidSegInRef>
         <FluidSegOutRef>BaseHWPrimSupSeg</FluidSegOutRef>
         <EntTempDsgn>140</EntTempDsgn>
@@ -5115,30 +5261,38 @@
         <Type>PrimaryReturn</Type>
       </FluidSeg>
     </FluidSys>
+    <CrvQuad>
+      <Name>CoilClgDXSnglEIRRatio_fCFMRatio</Name>
+      <Coef1>1.156</Coef1>
+      <Coef2>-0.1816</Coef2>
+      <Coef3>0.0256</Coef3>
+    </CrvQuad>
     <FluidSys>
       <Name>BaseSHWSystem</Name>
       <Type>ServiceHotWater</Type>
       <AvailSchRef>On</AvailSchRef>
-      <DsgnSupWtrTemp>120</DsgnSupWtrTemp>
+      <DsgnSupWtrTemp>135</DsgnSupWtrTemp>
       <DsgnSupWtrDelT>70</DsgnSupWtrDelT>
+      <CommonPipeSim>None</CommonPipeSim>
       <TempCtrl>Fixed</TempCtrl>
-      <FixedSupTemp>120</FixedSupTemp>
+      <FixedSupTemp>135</FixedSupTemp>
       <WtrHtr>
         <Name>BaseWaterHeater</Name>
         <Type>Storage</Type>
         <FluidSegOutRef>BaseSHWPrimSupSeg</FluidSegOutRef>
         <FluidSegMakeupRef>BaseSHWMuniInlet</FluidSegMakeupRef>
-        <StorCap>137</StorCap>
-        <ThrmlEff>0.8</ThrmlEff>
+        <StorCap>50</StorCap>
+        <EF>0.575</EF>
+        <ThrmlEff>0.78</ThrmlEff>
         <WtrHtrTempSetptSchRef>OfficeWtrHtrSetpt</WtrHtrTempSetptSchRef>
         <FuelSrc>NaturalGas</FuelSrc>
         <OffCycleFuelSrc>NaturalGas</OffCycleFuelSrc>
-        <OffCyclePrstcLoss>205</OffCyclePrstcLoss>
+        <OffCyclePrstcLoss>219</OffCyclePrstcLoss>
         <OnCycleFuelSrc>NaturalGas</OnCycleFuelSrc>
-        <OnCyclePrstcLoss>205</OnCyclePrstcLoss>
+        <OnCyclePrstcLoss>219</OnCyclePrstcLoss>
         <TankOffCycleLossCoef>10</TankOffCycleLossCoef>
         <TankOnCycleLossCoef>10</TankOnCycleLossCoef>
-        <CapRtd>64868</CapRtd>
+        <CapRtd>38920</CapRtd>
         <MaxTempLimit>180</MaxTempLimit>
         <CtrlType>Cycle</CtrlType>
       </WtrHtr>

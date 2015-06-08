@@ -2,8 +2,8 @@
 <SDDXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <RulesetFilename file="CEC 2013 NonRes.bin"/>
   <Proj>
-    <Name>030012-OffMed-CECStd</Name>
-    <SolDistribution>FullExterior</SolDistribution>
+    <Name>030012S-OffMed-CECStd</Name>
+    <SolDistribution>MinimalShadowing</SolDistribution>
     <NumTimeStepsPerHr>4</NumTimeStepsPerHr>
     <CliZn>ClimateZone12</CliZn>
     <Lat>38.58</Lat>
@@ -12,14 +12,14 @@
     <WtrMnTempSchRef>WaterMainCZ12</WtrMnTempSchRef>
     <DDWeatherFile>../weatherdata/SACRAMENTO-EXECUTIVE_724830_CZ2010.ddy</DDWeatherFile>
     <AnnualWeatherFile>../weatherdata/SACRAMENTO-EXECUTIVE_724830_CZ2010.epw</AnnualWeatherFile>
-    <HVACAutoSizing>0</HVACAutoSizing>
-    <SimDsgnDays>0</SimDsgnDays>
+    <HVACAutoSizing>1</HVACAutoSizing>
+    <SimDsgnDays>1</SimDsgnDays>
     <SimFlag>1</SimFlag>
-    <RunPeriodBeginMonth>1</RunPeriodBeginMonth>
-    <RunPeriodBeginDay>1</RunPeriodBeginDay>
-    <RunPeriodEndMonth>12</RunPeriodEndMonth>
-    <RunPeriodEndDay>31</RunPeriodEndDay>
-    <RunPeriodYear>2009</RunPeriodYear>
+    <RunPeriodBeginMonth>0</RunPeriodBeginMonth>
+    <RunPeriodBeginDay>0</RunPeriodBeginDay>
+    <RunPeriodEndMonth>0</RunPeriodEndMonth>
+    <RunPeriodEndDay>0</RunPeriodEndDay>
+    <RunPeriodYear>0</RunPeriodYear>
     <SimVarsInterval>Hourly</SimVarsInterval>
     <SimVarsSite>0</SimVarsSite>
     <SimVarsThrmlZn>0</SimVarsThrmlZn>
@@ -505,43 +505,267 @@
       <Hr index="23">0</Hr>
     </SchDay>
     <SchDay>
-      <Name>OfficeEscalatorSun</Name>
+      <Name>AssemblyLightsSun</Name>
       <Type>Fraction</Type>
-      <Hr index="0">0</Hr>
-      <Hr index="1">0</Hr>
-      <Hr index="2">0</Hr>
-      <Hr index="3">0</Hr>
-      <Hr index="4">0</Hr>
-      <Hr index="5">1</Hr>
-      <Hr index="6">1</Hr>
-      <Hr index="7">1</Hr>
-      <Hr index="8">1</Hr>
-      <Hr index="9">1</Hr>
-      <Hr index="10">1</Hr>
-      <Hr index="11">1</Hr>
-      <Hr index="12">1</Hr>
-      <Hr index="13">1</Hr>
-      <Hr index="14">1</Hr>
-      <Hr index="15">1</Hr>
-      <Hr index="16">1</Hr>
-      <Hr index="17">1</Hr>
-      <Hr index="18">0</Hr>
-      <Hr index="19">0</Hr>
-      <Hr index="20">0</Hr>
-      <Hr index="21">0</Hr>
-      <Hr index="22">0</Hr>
-      <Hr index="23">0</Hr>
+      <Hr index="0">0.05</Hr>
+      <Hr index="1">0.05</Hr>
+      <Hr index="2">0.05</Hr>
+      <Hr index="3">0.05</Hr>
+      <Hr index="4">0.05</Hr>
+      <Hr index="5">0.05</Hr>
+      <Hr index="6">0.05</Hr>
+      <Hr index="7">0.3</Hr>
+      <Hr index="8">0.3</Hr>
+      <Hr index="9">0.3</Hr>
+      <Hr index="10">0.3</Hr>
+      <Hr index="11">0.3</Hr>
+      <Hr index="12">0.55</Hr>
+      <Hr index="13">0.55</Hr>
+      <Hr index="14">0.55</Hr>
+      <Hr index="15">0.55</Hr>
+      <Hr index="16">0.55</Hr>
+      <Hr index="17">0.55</Hr>
+      <Hr index="18">0.55</Hr>
+      <Hr index="19">0.55</Hr>
+      <Hr index="20">0.55</Hr>
+      <Hr index="21">0.55</Hr>
+      <Hr index="22">0.05</Hr>
+      <Hr index="23">0.05</Hr>
     </SchDay>
     <SchDay>
-      <Name>OfficeEscalatorWD</Name>
+      <Name>AssemblyLightsWD</Name>
       <Type>Fraction</Type>
+      <Hr index="0">0.05</Hr>
+      <Hr index="1">0.05</Hr>
+      <Hr index="2">0.05</Hr>
+      <Hr index="3">0.05</Hr>
+      <Hr index="4">0.05</Hr>
+      <Hr index="5">0.05</Hr>
+      <Hr index="6">0.35</Hr>
+      <Hr index="7">0.35</Hr>
+      <Hr index="8">0.35</Hr>
+      <Hr index="9">0.65</Hr>
+      <Hr index="10">0.65</Hr>
+      <Hr index="11">0.65</Hr>
+      <Hr index="12">0.65</Hr>
+      <Hr index="13">0.65</Hr>
+      <Hr index="14">0.65</Hr>
+      <Hr index="15">0.65</Hr>
+      <Hr index="16">0.65</Hr>
+      <Hr index="17">0.65</Hr>
+      <Hr index="18">0.65</Hr>
+      <Hr index="19">0.65</Hr>
+      <Hr index="20">0.65</Hr>
+      <Hr index="21">0.65</Hr>
+      <Hr index="22">0.25</Hr>
+      <Hr index="23">0.05</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>AssemblyLightsSat</Name>
+      <Type>Fraction</Type>
+      <Hr index="0">0.05</Hr>
+      <Hr index="1">0.05</Hr>
+      <Hr index="2">0.05</Hr>
+      <Hr index="3">0.05</Hr>
+      <Hr index="4">0.05</Hr>
+      <Hr index="5">0.05</Hr>
+      <Hr index="6">0.05</Hr>
+      <Hr index="7">0.3</Hr>
+      <Hr index="8">0.3</Hr>
+      <Hr index="9">0.4</Hr>
+      <Hr index="10">0.4</Hr>
+      <Hr index="11">0.4</Hr>
+      <Hr index="12">0.4</Hr>
+      <Hr index="13">0.4</Hr>
+      <Hr index="14">0.4</Hr>
+      <Hr index="15">0.4</Hr>
+      <Hr index="16">0.4</Hr>
+      <Hr index="17">0.4</Hr>
+      <Hr index="18">0.4</Hr>
+      <Hr index="19">0.4</Hr>
+      <Hr index="20">0.4</Hr>
+      <Hr index="21">0.4</Hr>
+      <Hr index="22">0.4</Hr>
+      <Hr index="23">0.05</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>OfficeClgSetPtSun-user</Name>
+      <Type>Temperature</Type>
+      <Hr index="0">85</Hr>
+      <Hr index="1">85</Hr>
+      <Hr index="2">85</Hr>
+      <Hr index="3">85</Hr>
+      <Hr index="4">85</Hr>
+      <Hr index="5">85</Hr>
+      <Hr index="6">85</Hr>
+      <Hr index="7">85</Hr>
+      <Hr index="8">85</Hr>
+      <Hr index="9">85</Hr>
+      <Hr index="10">85</Hr>
+      <Hr index="11">85</Hr>
+      <Hr index="12">85</Hr>
+      <Hr index="13">85</Hr>
+      <Hr index="14">85</Hr>
+      <Hr index="15">85</Hr>
+      <Hr index="16">85</Hr>
+      <Hr index="17">85</Hr>
+      <Hr index="18">85</Hr>
+      <Hr index="19">85</Hr>
+      <Hr index="20">85</Hr>
+      <Hr index="21">85</Hr>
+      <Hr index="22">85</Hr>
+      <Hr index="23">85</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>OfficeClgSetPtWD-user</Name>
+      <Type>Temperature</Type>
+      <Hr index="0">85</Hr>
+      <Hr index="1">85</Hr>
+      <Hr index="2">85</Hr>
+      <Hr index="3">85</Hr>
+      <Hr index="4">85</Hr>
+      <Hr index="5">75</Hr>
+      <Hr index="6">75</Hr>
+      <Hr index="7">75</Hr>
+      <Hr index="8">75</Hr>
+      <Hr index="9">75</Hr>
+      <Hr index="10">75</Hr>
+      <Hr index="11">75</Hr>
+      <Hr index="12">75</Hr>
+      <Hr index="13">75</Hr>
+      <Hr index="14">75</Hr>
+      <Hr index="15">75</Hr>
+      <Hr index="16">75</Hr>
+      <Hr index="17">75</Hr>
+      <Hr index="18">75</Hr>
+      <Hr index="19">75</Hr>
+      <Hr index="20">75</Hr>
+      <Hr index="21">75</Hr>
+      <Hr index="22">75</Hr>
+      <Hr index="23">75</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>OfficeClgSetPtSat-user</Name>
+      <Type>Temperature</Type>
+      <Hr index="0">85</Hr>
+      <Hr index="1">85</Hr>
+      <Hr index="2">85</Hr>
+      <Hr index="3">85</Hr>
+      <Hr index="4">85</Hr>
+      <Hr index="5">75</Hr>
+      <Hr index="6">75</Hr>
+      <Hr index="7">75</Hr>
+      <Hr index="8">75</Hr>
+      <Hr index="9">75</Hr>
+      <Hr index="10">75</Hr>
+      <Hr index="11">75</Hr>
+      <Hr index="12">75</Hr>
+      <Hr index="13">75</Hr>
+      <Hr index="14">75</Hr>
+      <Hr index="15">75</Hr>
+      <Hr index="16">75</Hr>
+      <Hr index="17">75</Hr>
+      <Hr index="18">75</Hr>
+      <Hr index="19">85</Hr>
+      <Hr index="20">85</Hr>
+      <Hr index="21">85</Hr>
+      <Hr index="22">85</Hr>
+      <Hr index="23">85</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>OfficeHtgSetPtSun-user</Name>
+      <Type>Temperature</Type>
+      <Hr index="0">60</Hr>
+      <Hr index="1">60</Hr>
+      <Hr index="2">60</Hr>
+      <Hr index="3">60</Hr>
+      <Hr index="4">60</Hr>
+      <Hr index="5">60</Hr>
+      <Hr index="6">60</Hr>
+      <Hr index="7">60</Hr>
+      <Hr index="8">60</Hr>
+      <Hr index="9">60</Hr>
+      <Hr index="10">60</Hr>
+      <Hr index="11">60</Hr>
+      <Hr index="12">60</Hr>
+      <Hr index="13">60</Hr>
+      <Hr index="14">60</Hr>
+      <Hr index="15">60</Hr>
+      <Hr index="16">60</Hr>
+      <Hr index="17">60</Hr>
+      <Hr index="18">60</Hr>
+      <Hr index="19">60</Hr>
+      <Hr index="20">60</Hr>
+      <Hr index="21">60</Hr>
+      <Hr index="22">60</Hr>
+      <Hr index="23">60</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>OfficeHtgSetPtWD-user</Name>
+      <Type>Temperature</Type>
+      <Hr index="0">60</Hr>
+      <Hr index="1">60</Hr>
+      <Hr index="2">60</Hr>
+      <Hr index="3">60</Hr>
+      <Hr index="4">60</Hr>
+      <Hr index="5">70</Hr>
+      <Hr index="6">70</Hr>
+      <Hr index="7">70</Hr>
+      <Hr index="8">70</Hr>
+      <Hr index="9">70</Hr>
+      <Hr index="10">70</Hr>
+      <Hr index="11">70</Hr>
+      <Hr index="12">70</Hr>
+      <Hr index="13">70</Hr>
+      <Hr index="14">70</Hr>
+      <Hr index="15">70</Hr>
+      <Hr index="16">70</Hr>
+      <Hr index="17">70</Hr>
+      <Hr index="18">70</Hr>
+      <Hr index="19">70</Hr>
+      <Hr index="20">70</Hr>
+      <Hr index="21">70</Hr>
+      <Hr index="22">70</Hr>
+      <Hr index="23">70</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>OfficeHtgSetPtSat-user</Name>
+      <Type>Temperature</Type>
+      <Hr index="0">60</Hr>
+      <Hr index="1">60</Hr>
+      <Hr index="2">60</Hr>
+      <Hr index="3">60</Hr>
+      <Hr index="4">60</Hr>
+      <Hr index="5">70</Hr>
+      <Hr index="6">70</Hr>
+      <Hr index="7">70</Hr>
+      <Hr index="8">70</Hr>
+      <Hr index="9">70</Hr>
+      <Hr index="10">70</Hr>
+      <Hr index="11">70</Hr>
+      <Hr index="12">70</Hr>
+      <Hr index="13">70</Hr>
+      <Hr index="14">70</Hr>
+      <Hr index="15">70</Hr>
+      <Hr index="16">70</Hr>
+      <Hr index="17">70</Hr>
+      <Hr index="18">70</Hr>
+      <Hr index="19">60</Hr>
+      <Hr index="20">60</Hr>
+      <Hr index="21">60</Hr>
+      <Hr index="22">60</Hr>
+      <Hr index="23">60</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>School HVAC WD</Name>
+      <Type>OnOff</Type>
       <Hr index="0">0</Hr>
       <Hr index="1">0</Hr>
       <Hr index="2">0</Hr>
       <Hr index="3">0</Hr>
       <Hr index="4">0</Hr>
-      <Hr index="5">1</Hr>
-      <Hr index="6">1</Hr>
+      <Hr index="5">0</Hr>
+      <Hr index="6">0</Hr>
       <Hr index="7">1</Hr>
       <Hr index="8">1</Hr>
       <Hr index="9">1</Hr>
@@ -557,36 +781,232 @@
       <Hr index="19">1</Hr>
       <Hr index="20">1</Hr>
       <Hr index="21">1</Hr>
-      <Hr index="22">1</Hr>
-      <Hr index="23">1</Hr>
+      <Hr index="22">0</Hr>
+      <Hr index="23">0</Hr>
     </SchDay>
     <SchDay>
-      <Name>OfficeEscalatorSat</Name>
-      <Type>Fraction</Type>
+      <Name>School HVAC Sun</Name>
+      <Type>OnOff</Type>
       <Hr index="0">0</Hr>
       <Hr index="1">0</Hr>
       <Hr index="2">0</Hr>
       <Hr index="3">0</Hr>
       <Hr index="4">0</Hr>
-      <Hr index="5">1</Hr>
-      <Hr index="6">1</Hr>
-      <Hr index="7">1</Hr>
-      <Hr index="8">1</Hr>
-      <Hr index="9">1</Hr>
-      <Hr index="10">1</Hr>
-      <Hr index="11">1</Hr>
-      <Hr index="12">1</Hr>
-      <Hr index="13">1</Hr>
-      <Hr index="14">1</Hr>
-      <Hr index="15">1</Hr>
-      <Hr index="16">1</Hr>
-      <Hr index="17">1</Hr>
-      <Hr index="18">1</Hr>
+      <Hr index="5">0</Hr>
+      <Hr index="6">0</Hr>
+      <Hr index="7">0</Hr>
+      <Hr index="8">0</Hr>
+      <Hr index="9">0</Hr>
+      <Hr index="10">0</Hr>
+      <Hr index="11">0</Hr>
+      <Hr index="12">0</Hr>
+      <Hr index="13">0</Hr>
+      <Hr index="14">0</Hr>
+      <Hr index="15">0</Hr>
+      <Hr index="16">0</Hr>
+      <Hr index="17">0</Hr>
+      <Hr index="18">0</Hr>
       <Hr index="19">0</Hr>
       <Hr index="20">0</Hr>
       <Hr index="21">0</Hr>
       <Hr index="22">0</Hr>
       <Hr index="23">0</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>School HVAC Sat</Name>
+      <Type>OnOff</Type>
+      <Hr index="0">0</Hr>
+      <Hr index="1">0</Hr>
+      <Hr index="2">0</Hr>
+      <Hr index="3">0</Hr>
+      <Hr index="4">0</Hr>
+      <Hr index="5">0</Hr>
+      <Hr index="6">0</Hr>
+      <Hr index="7">0</Hr>
+      <Hr index="8">1</Hr>
+      <Hr index="9">1</Hr>
+      <Hr index="10">1</Hr>
+      <Hr index="11">1</Hr>
+      <Hr index="12">1</Hr>
+      <Hr index="13">0</Hr>
+      <Hr index="14">0</Hr>
+      <Hr index="15">0</Hr>
+      <Hr index="16">0</Hr>
+      <Hr index="17">0</Hr>
+      <Hr index="18">0</Hr>
+      <Hr index="19">0</Hr>
+      <Hr index="20">0</Hr>
+      <Hr index="21">0</Hr>
+      <Hr index="22">0</Hr>
+      <Hr index="23">0</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>Cooling Tstat WD</Name>
+      <Type>Temperature</Type>
+      <Hr index="0">80</Hr>
+      <Hr index="1">80</Hr>
+      <Hr index="2">80</Hr>
+      <Hr index="3">80</Hr>
+      <Hr index="4">80</Hr>
+      <Hr index="5">80</Hr>
+      <Hr index="6">75</Hr>
+      <Hr index="7">75</Hr>
+      <Hr index="8">75</Hr>
+      <Hr index="9">75</Hr>
+      <Hr index="10">75</Hr>
+      <Hr index="11">75</Hr>
+      <Hr index="12">75</Hr>
+      <Hr index="13">75</Hr>
+      <Hr index="14">75</Hr>
+      <Hr index="15">75</Hr>
+      <Hr index="16">75</Hr>
+      <Hr index="17">75</Hr>
+      <Hr index="18">75</Hr>
+      <Hr index="19">75</Hr>
+      <Hr index="20">75</Hr>
+      <Hr index="21">75</Hr>
+      <Hr index="22">80</Hr>
+      <Hr index="23">80</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>Cooling Tstat Sun</Name>
+      <Type>Temperature</Type>
+      <Hr index="0">80</Hr>
+      <Hr index="1">80</Hr>
+      <Hr index="2">80</Hr>
+      <Hr index="3">80</Hr>
+      <Hr index="4">80</Hr>
+      <Hr index="5">80</Hr>
+      <Hr index="6">80</Hr>
+      <Hr index="7">80</Hr>
+      <Hr index="8">80</Hr>
+      <Hr index="9">80</Hr>
+      <Hr index="10">80</Hr>
+      <Hr index="11">80</Hr>
+      <Hr index="12">80</Hr>
+      <Hr index="13">80</Hr>
+      <Hr index="14">80</Hr>
+      <Hr index="15">80</Hr>
+      <Hr index="16">80</Hr>
+      <Hr index="17">80</Hr>
+      <Hr index="18">80</Hr>
+      <Hr index="19">80</Hr>
+      <Hr index="20">80</Hr>
+      <Hr index="21">80</Hr>
+      <Hr index="22">80</Hr>
+      <Hr index="23">80</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>Cooling Tstat Sat</Name>
+      <Type>Temperature</Type>
+      <Hr index="0">80</Hr>
+      <Hr index="1">80</Hr>
+      <Hr index="2">80</Hr>
+      <Hr index="3">80</Hr>
+      <Hr index="4">80</Hr>
+      <Hr index="5">80</Hr>
+      <Hr index="6">75</Hr>
+      <Hr index="7">75</Hr>
+      <Hr index="8">75</Hr>
+      <Hr index="9">75</Hr>
+      <Hr index="10">75</Hr>
+      <Hr index="11">75</Hr>
+      <Hr index="12">75</Hr>
+      <Hr index="13">75</Hr>
+      <Hr index="14">75</Hr>
+      <Hr index="15">75</Hr>
+      <Hr index="16">75</Hr>
+      <Hr index="17">75</Hr>
+      <Hr index="18">75</Hr>
+      <Hr index="19">80</Hr>
+      <Hr index="20">80</Hr>
+      <Hr index="21">80</Hr>
+      <Hr index="22">80</Hr>
+      <Hr index="23">80</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>Heating Tstat WD</Name>
+      <Type>Temperature</Type>
+      <Hr index="0">65</Hr>
+      <Hr index="1">65</Hr>
+      <Hr index="2">65</Hr>
+      <Hr index="3">65</Hr>
+      <Hr index="4">65</Hr>
+      <Hr index="5">65</Hr>
+      <Hr index="6">72</Hr>
+      <Hr index="7">72</Hr>
+      <Hr index="8">72</Hr>
+      <Hr index="9">72</Hr>
+      <Hr index="10">72</Hr>
+      <Hr index="11">72</Hr>
+      <Hr index="12">72</Hr>
+      <Hr index="13">72</Hr>
+      <Hr index="14">72</Hr>
+      <Hr index="15">72</Hr>
+      <Hr index="16">72</Hr>
+      <Hr index="17">72</Hr>
+      <Hr index="18">72</Hr>
+      <Hr index="19">72</Hr>
+      <Hr index="20">72</Hr>
+      <Hr index="21">72</Hr>
+      <Hr index="22">65</Hr>
+      <Hr index="23">65</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>Heating Tstat Sun</Name>
+      <Type>Temperature</Type>
+      <Hr index="0">65</Hr>
+      <Hr index="1">65</Hr>
+      <Hr index="2">65</Hr>
+      <Hr index="3">65</Hr>
+      <Hr index="4">65</Hr>
+      <Hr index="5">65</Hr>
+      <Hr index="6">65</Hr>
+      <Hr index="7">65</Hr>
+      <Hr index="8">65</Hr>
+      <Hr index="9">65</Hr>
+      <Hr index="10">65</Hr>
+      <Hr index="11">65</Hr>
+      <Hr index="12">65</Hr>
+      <Hr index="13">65</Hr>
+      <Hr index="14">65</Hr>
+      <Hr index="15">65</Hr>
+      <Hr index="16">65</Hr>
+      <Hr index="17">65</Hr>
+      <Hr index="18">65</Hr>
+      <Hr index="19">65</Hr>
+      <Hr index="20">65</Hr>
+      <Hr index="21">65</Hr>
+      <Hr index="22">65</Hr>
+      <Hr index="23">65</Hr>
+    </SchDay>
+    <SchDay>
+      <Name>Heating Tstat Sat</Name>
+      <Type>Temperature</Type>
+      <Hr index="0">65</Hr>
+      <Hr index="1">65</Hr>
+      <Hr index="2">65</Hr>
+      <Hr index="3">65</Hr>
+      <Hr index="4">65</Hr>
+      <Hr index="5">65</Hr>
+      <Hr index="6">72</Hr>
+      <Hr index="7">72</Hr>
+      <Hr index="8">72</Hr>
+      <Hr index="9">72</Hr>
+      <Hr index="10">72</Hr>
+      <Hr index="11">72</Hr>
+      <Hr index="12">72</Hr>
+      <Hr index="13">72</Hr>
+      <Hr index="14">72</Hr>
+      <Hr index="15">72</Hr>
+      <Hr index="16">72</Hr>
+      <Hr index="17">72</Hr>
+      <Hr index="18">72</Hr>
+      <Hr index="19">65</Hr>
+      <Hr index="20">65</Hr>
+      <Hr index="21">65</Hr>
+      <Hr index="22">65</Hr>
+      <Hr index="23">65</Hr>
     </SchDay>
     <SchDay>
       <Name>WaterMainCZ12Jan</Name>
@@ -1499,34 +1919,6 @@
       <SchDayHtgDDRef>OffDay</SchDayHtgDDRef>
     </SchWeek>
     <SchWeek>
-      <Name>OfficeElevatorWk-2</Name>
-      <Type>Fraction</Type>
-      <SchDaySunRef>OfficeElevatorSun</SchDaySunRef>
-      <SchDayMonRef>OfficeElevatorWD</SchDayMonRef>
-      <SchDayTueRef>OfficeElevatorWD</SchDayTueRef>
-      <SchDayWedRef>OfficeElevatorWD</SchDayWedRef>
-      <SchDayThuRef>OfficeElevatorWD</SchDayThuRef>
-      <SchDayFriRef>OfficeElevatorWD</SchDayFriRef>
-      <SchDaySatRef>OfficeElevatorSat</SchDaySatRef>
-      <SchDayHolRef>OfficeElevatorSun</SchDayHolRef>
-      <SchDayClgDDRef>OnDay</SchDayClgDDRef>
-      <SchDayHtgDDRef>OffDay</SchDayHtgDDRef>
-    </SchWeek>
-    <SchWeek>
-      <Name>OfficeEscalatorWk</Name>
-      <Type>Fraction</Type>
-      <SchDaySunRef>OfficeEscalatorSun</SchDaySunRef>
-      <SchDayMonRef>OfficeEscalatorWD</SchDayMonRef>
-      <SchDayTueRef>OfficeEscalatorWD</SchDayTueRef>
-      <SchDayWedRef>OfficeEscalatorWD</SchDayWedRef>
-      <SchDayThuRef>OfficeEscalatorWD</SchDayThuRef>
-      <SchDayFriRef>OfficeEscalatorWD</SchDayFriRef>
-      <SchDaySatRef>OfficeEscalatorSat</SchDaySatRef>
-      <SchDayHolRef>OfficeEscalatorSun</SchDayHolRef>
-      <SchDayClgDDRef>OnDay</SchDayClgDDRef>
-      <SchDayHtgDDRef>OffDay</SchDayHtgDDRef>
-    </SchWeek>
-    <SchWeek>
       <Name>WaterMainCZ12JanWk</Name>
       <Type>Temperature</Type>
       <SchDaySunRef>WaterMainCZ12Jan</SchDaySunRef>
@@ -1828,20 +2220,6 @@
       <SchWeekRef index="0">OfficeLightsWk</SchWeekRef>
     </Sch>
     <Sch>
-      <Name>OfficeElevator</Name>
-      <Type>Fraction</Type>
-      <EndMonth index="0">12</EndMonth>
-      <EndDay index="0">31</EndDay>
-      <SchWeekRef index="0">OfficeElevatorWk-2</SchWeekRef>
-    </Sch>
-    <Sch>
-      <Name>OfficeEscalator</Name>
-      <Type>Fraction</Type>
-      <EndMonth index="0">12</EndMonth>
-      <EndDay index="0">31</EndDay>
-      <SchWeekRef index="0">OfficeEscalatorWk</SchWeekRef>
-    </Sch>
-    <Sch>
       <Name>WaterMainCZ12</Name>
       <Type>Temperature</Type>
       <EndMonth index="0">1</EndMonth>
@@ -1958,87 +2336,6 @@
       <EndDay index="0">31</EndDay>
       <SchWeekRef index="0">OfficeServiceHotWaterWk</SchWeekRef>
     </Sch>
-    <ConsAssm>
-      <Name>SlabOnOrBelowGradeF073</Name>
-      <SpecMthd>FFactor</SpecMthd>
-      <FFactor>0.73</FFactor>
-      <ExtRoughness>MediumRough</ExtRoughness>
-      <ExtSolAbs>0.7</ExtSolAbs>
-      <ExtThrmlAbs>0.9</ExtThrmlAbs>
-      <ExtVisAbs>0.8</ExtVisAbs>
-      <IntSolAbs>0.7</IntSolAbs>
-      <IntThrmlAbs>0.9</IntThrmlAbs>
-      <IntVisAbs>0.8</IntVisAbs>
-      <MatRef index="0">Concrete - 140 lb/ft3 - 6 in.</MatRef>
-    </ConsAssm>
-    <ConsAssm>
-      <Name>MetalFrameWallU062</Name>
-      <SpecMthd>Layers</SpecMthd>
-      <ExtRoughness>MediumRough</ExtRoughness>
-      <ExtSolAbs>0.7</ExtSolAbs>
-      <ExtThrmlAbs>0.9</ExtThrmlAbs>
-      <ExtVisAbs>0.8</ExtVisAbs>
-      <IntSolAbs>0.7</IntSolAbs>
-      <IntThrmlAbs>0.9</IntThrmlAbs>
-      <IntVisAbs>0.8</IntVisAbs>
-      <MatRef index="0">Stucco - 7/8 in.</MatRef>
-      <MatRef index="1">Compliance Insulation R13.99</MatRef>
-      <MatRef index="2">Air - Metal Wall Framing - 16 or 24 in. OC</MatRef>
-      <MatRef index="3">Gypsum Board - 1/2 in.</MatRef>
-    </ConsAssm>
-    <ConsAssm>
-      <Name>MetalFrameWallInterior</Name>
-      <SpecMthd>Layers</SpecMthd>
-      <ExtRoughness>MediumRough</ExtRoughness>
-      <ExtSolAbs>0.7</ExtSolAbs>
-      <ExtThrmlAbs>0.9</ExtThrmlAbs>
-      <ExtVisAbs>0.8</ExtVisAbs>
-      <IntSolAbs>0.7</IntSolAbs>
-      <IntThrmlAbs>0.9</IntThrmlAbs>
-      <IntVisAbs>0.8</IntVisAbs>
-      <MatRef index="0">Gypsum Board - 5/8 in.</MatRef>
-      <MatRef index="1">Air - Metal Wall Framing - 16 or 24 in. OC</MatRef>
-      <MatRef index="2">Gypsum Board - 5/8 in.</MatRef>
-    </ConsAssm>
-    <ConsAssm>
-      <Name>FlatNonresWoodFramingAndOtherRoofU039</Name>
-      <SpecMthd>Layers</SpecMthd>
-      <ExtRoughness>MediumRough</ExtRoughness>
-      <ExtSolAbs>0.37</ExtSolAbs>
-      <ExtThrmlAbs>0.85</ExtThrmlAbs>
-      <ExtVisAbs>0.85</ExtVisAbs>
-      <IntSolAbs>0.7</IntSolAbs>
-      <IntThrmlAbs>0.9</IntThrmlAbs>
-      <IntVisAbs>0.8</IntVisAbs>
-      <MatRef index="0">Metal Standing Seam - 1/16 in.</MatRef>
-      <MatRef index="1">Compliance Insulation R24.86</MatRef>
-    </ConsAssm>
-    <ConsAssm>
-      <Name>TypicalPlenumFloorInterior</Name>
-      <SpecMthd>Layers</SpecMthd>
-      <ExtRoughness>MediumRough</ExtRoughness>
-      <ExtSolAbs>0.7</ExtSolAbs>
-      <ExtThrmlAbs>0.9</ExtThrmlAbs>
-      <ExtVisAbs>0.8</ExtVisAbs>
-      <IntSolAbs>0.7</IntSolAbs>
-      <IntThrmlAbs>0.9</IntThrmlAbs>
-      <IntVisAbs>0.8</IntVisAbs>
-      <MatRef index="0">Acoustic Tile - 3/4 in.</MatRef>
-    </ConsAssm>
-    <ConsAssm>
-      <Name>TypicalFloorInterior</Name>
-      <SpecMthd>Layers</SpecMthd>
-      <ExtRoughness>MediumRough</ExtRoughness>
-      <ExtSolAbs>0.7</ExtSolAbs>
-      <ExtThrmlAbs>0.9</ExtThrmlAbs>
-      <ExtVisAbs>0.8</ExtVisAbs>
-      <IntSolAbs>0.7</IntSolAbs>
-      <IntThrmlAbs>0.9</IntThrmlAbs>
-      <IntVisAbs>0.8</IntVisAbs>
-      <MatRef index="0">Metal Deck - 1/16 in.</MatRef>
-      <MatRef index="1">Concrete - 140 lb/ft3 - 4 in.</MatRef>
-      <MatRef index="2">Carpet - 3/4 in.</MatRef>
-    </ConsAssm>
     <Mat>
       <Name>Concrete - 140 lb/ft3 - 6 in.</Name>
       <RVal>0.44</RVal>
@@ -2142,6 +2439,13 @@
       <VT>0.42</VT>
     </FenCons>
     <CrvQuad>
+      <Name>CoilClgDXSnglQRatio_fCFMRatio</Name>
+      <Coef1>0.8</Coef1>
+      <Coef2>0.2</Coef2>
+      <Coef3>0</Coef3>
+      <MinOut>0.8</MinOut>
+    </CrvQuad>
+    <CrvQuad>
       <Name>BlrHWBlrFIRRatio_fQRatioSI</Name>
       <Coef1>0.6267</Coef1>
       <Coef2>0.674</Coef2>
@@ -2240,36 +2544,20 @@
           <GasEqpLostFrac>0.85</GasEqpLostFrac>
           <ProcElecPwrDens>0</ProcElecPwrDens>
           <ProcGasPwrDens>0</ProcGasPwrDens>
-          <ElevPwr>10000</ElevPwr>
-          <ElevSchRef>OfficeElevator</ElevSchRef>
-          <ElevRadFrac>0</ElevRadFrac>
-          <ElevLatFrac>0</ElevLatFrac>
-          <ElevLostFrac>1</ElevLostFrac>
-          <EscalPwr>3930</EscalPwr>
-          <EscalSchRef>OfficeEscalator</EscalSchRef>
-          <EscalRadFrac>0</EscalRadFrac>
-          <EscalLatFrac>0</EscalLatFrac>
-          <EscalLostFrac>1</EscalLostFrac>
           <SHWFluidSegRef>BaseSHWPrimSupSeg</SHWFluidSegRef>
           <HotWtrHtgRtSim>19.0561</HotWtrHtgRtSim>
           <HotWtrHtgTot>19.0561</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
           <HotWtrSupTemp>135</HotWtrSupTemp>
-          <PolyLp>
-            <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-            <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-          </PolyLp>
           <IntWall>
             <Name>Core_bot_ZN_5_Wall_East</Name>
             <AdjacentSpcRef>Perimeter_bot_ZN_2</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-78.857</Coord><Coord>-6.899</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-78.857</Coord><Coord>-6.899</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <IntWall>
@@ -2277,10 +2565,10 @@
             <AdjacentSpcRef>Perimeter_bot_ZN_3</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-129.184</Coord><Coord>-34.615</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-129.184</Coord><Coord>-34.615</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <IntWall>
@@ -2288,10 +2576,10 @@
             <AdjacentSpcRef>Perimeter_bot_ZN_1</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-121.211</Coord><Coord>-56.521</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-121.211</Coord><Coord>-56.521</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <IntWall>
@@ -2299,10 +2587,10 @@
             <AdjacentSpcRef>Perimeter_bot_ZN_4</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-64.843</Coord><Coord>-45.403</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-64.843</Coord><Coord>-45.403</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <UndgrFlr>
@@ -2310,10 +2598,10 @@
             <ConsAssmRef>SlabOnOrBelowGradeF073</ConsAssmRef>
             <PerimExposed>0</PerimExposed>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>102.892</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>102.892</Coord><Coord>-102.892</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-102.892</Coord><Coord>0</Coord></CartesianPt>
             </PolyLp>
           </UndgrFlr>
         </Spc>
@@ -2357,29 +2645,23 @@
           <HotWtrHtgTot>4.01717</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
           <HotWtrSupTemp>135</HotWtrSupTemp>
-          <PolyLp>
-            <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
-            <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
-            <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
-          </PolyLp>
           <ExtWall>
             <Name>Perimeter_bot_ZN_1_Wall_South</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
             <Win>
               <Name>Perimeter_bot_ZN_1_Wall_South_Window</Name>
               <FenConsRef>Base_AllCZ_FixedWindowU36</FenConsRef>
               <PolyLp>
-                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>7.64206</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>3.35072</Coord></CartesianPt>
-                <CartesianPt><Coord>163.747</Coord><Coord>0</Coord><Coord>3.35072</Coord></CartesianPt>
-                <CartesianPt><Coord>163.747</Coord><Coord>0</Coord><Coord>7.64206</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+                <CartesianPt><Coord>140.539</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+                <CartesianPt><Coord>140.539</Coord><Coord>0</Coord><Coord>5</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>5</Coord></CartesianPt>
               </PolyLp>
             </Win>
           </ExtWall>
@@ -2388,10 +2670,10 @@
             <AdjacentSpcRef>Perimeter_bot_ZN_2</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-15.004</Coord><Coord>-15.004</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-15.004</Coord><Coord>-15.004</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <IntWall>
@@ -2399,21 +2681,21 @@
             <AdjacentSpcRef>Perimeter_bot_ZN_4</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-12.171</Coord><Coord>-17.381</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-12.171</Coord><Coord>-17.381</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <UndgrFlr>
             <Name>Perimeter_bot_ZN_1_Floor</Name>
             <ConsAssmRef>SlabOnOrBelowGradeF073</ConsAssmRef>
-            <PerimExposed>163.75</PerimExposed>
+            <PerimExposed>163</PerimExposed>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>45.632</Coord><Coord>12.227</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>57.859</Coord><Coord>-33.405</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>12.227</Coord><Coord>-45.632</Coord><Coord>0</Coord></CartesianPt>
             </PolyLp>
           </UndgrFlr>
         </Spc>
@@ -2457,29 +2739,23 @@
           <HotWtrHtgTot>2.54322</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
           <HotWtrSupTemp>135</HotWtrSupTemp>
-          <PolyLp>
-            <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
-            <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
-            <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
-            <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-          </PolyLp>
           <ExtWall>
             <Name>Perimeter_bot_ZN_2_Wall_East</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
             <Win>
               <Name>Perimeter_bot_ZN_2_Wall_East_Window</Name>
               <FenConsRef>Base_AllCZ_FixedWindowU36</FenConsRef>
               <PolyLp>
-                <CartesianPt><Coord>163.75</Coord><Coord>0.01</Coord><Coord>7.64206</Coord></CartesianPt>
-                <CartesianPt><Coord>163.75</Coord><Coord>0.01</Coord><Coord>3.35072</Coord></CartesianPt>
-                <CartesianPt><Coord>163.75</Coord><Coord>109.156</Coord><Coord>3.35072</Coord></CartesianPt>
-                <CartesianPt><Coord>163.75</Coord><Coord>109.156</Coord><Coord>7.64206</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>93.694</Coord><Coord>0</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>93.694</Coord><Coord>5</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>5</Coord></CartesianPt>
               </PolyLp>
             </Win>
           </ExtWall>
@@ -2488,21 +2764,21 @@
             <AdjacentSpcRef>Perimeter_bot_ZN_3</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-8.968</Coord><Coord>-19.231</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-8.968</Coord><Coord>-19.231</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <UndgrFlr>
             <Name>Perimeter_bot_ZN_2_Floor</Name>
             <ConsAssmRef>SlabOnOrBelowGradeF073</ConsAssmRef>
-            <PerimExposed>109.166</PerimExposed>
+            <PerimExposed>109</PerimExposed>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>32.553</Coord><Coord>18.794</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>51.347</Coord><Coord>-13.759</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>18.794</Coord><Coord>-32.553</Coord><Coord>0</Coord></CartesianPt>
             </PolyLp>
           </UndgrFlr>
         </Spc>
@@ -2546,29 +2822,23 @@
           <HotWtrHtgTot>4.01717</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
           <HotWtrSupTemp>135</HotWtrSupTemp>
-          <PolyLp>
-            <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
-            <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-            <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
-          </PolyLp>
           <ExtWall>
             <Name>Perimeter_bot_ZN_3_Wall_North</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-163.75</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-163.75</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
             <Win>
               <Name>Perimeter_bot_ZN_3_Wall_North_Window</Name>
               <FenConsRef>Base_AllCZ_FixedWindowU36</FenConsRef>
               <PolyLp>
-                <CartesianPt><Coord>163.747</Coord><Coord>109.166</Coord><Coord>7.64206</Coord></CartesianPt>
-                <CartesianPt><Coord>163.747</Coord><Coord>109.166</Coord><Coord>3.35072</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>3.35072</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>7.64206</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+                <CartesianPt><Coord>-140.539</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+                <CartesianPt><Coord>-140.539</Coord><Coord>0</Coord><Coord>5</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>5</Coord></CartesianPt>
               </PolyLp>
             </Win>
           </ExtWall>
@@ -2577,21 +2847,21 @@
             <AdjacentSpcRef>Perimeter_bot_ZN_4</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-5.492</Coord><Coord>-20.496</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>-5.492</Coord><Coord>-20.496</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <UndgrFlr>
             <Name>Perimeter_bot_ZN_3_Floor</Name>
             <ConsAssmRef>SlabOnOrBelowGradeF073</ConsAssmRef>
-            <PerimExposed>163.75</PerimExposed>
+            <PerimExposed>163</PerimExposed>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>33.405</Coord><Coord>33.405</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>66.81</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>33.405</Coord><Coord>-33.405</Coord><Coord>0</Coord></CartesianPt>
             </PolyLp>
           </UndgrFlr>
         </Spc>
@@ -2635,41 +2905,35 @@
           <HotWtrHtgTot>2.54304</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
           <HotWtrSupTemp>135</HotWtrSupTemp>
-          <PolyLp>
-            <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
-            <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
-          </PolyLp>
           <ExtWall>
             <Name>Perimeter_bot_ZN_4_Wall_West</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-109.166</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-109.166</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
             <Win>
               <Name>Perimeter_bot_ZN_4_Wall_West_Window</Name>
               <FenConsRef>Base_AllCZ_FixedWindowU36</FenConsRef>
               <PolyLp>
-                <CartesianPt><Coord>0</Coord><Coord>109.156</Coord><Coord>7.64206</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>109.156</Coord><Coord>3.35072</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>0.01</Coord><Coord>3.35072</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>0.01</Coord><Coord>7.64206</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>-93.694</Coord><Coord>0</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>-93.694</Coord><Coord>5</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>5</Coord></CartesianPt>
               </PolyLp>
             </Win>
           </ExtWall>
           <UndgrFlr>
             <Name>Perimeter_bot_ZN_4_Floor</Name>
             <ConsAssmRef>SlabOnOrBelowGradeF073</ConsAssmRef>
-            <PerimExposed>109.166</PerimExposed>
+            <PerimExposed>109</PerimExposed>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>0</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>0</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>18.794</Coord><Coord>32.551</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>51.345</Coord><Coord>13.757</Coord><Coord>0</Coord></CartesianPt>
+              <CartesianPt><Coord>32.551</Coord><Coord>-18.794</Coord><Coord>0</Coord></CartesianPt>
             </PolyLp>
           </UndgrFlr>
         </Spc>
@@ -2685,49 +2949,43 @@
           <InfModelCoefC index="0">0.10016</InfModelCoefC>
           <InfModelCoefD index="0">0</InfModelCoefD>
           <HotWtrHtgTot>0</HotWtrHtgTot>
-          <PolyLp>
-            <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
-            <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
-            <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
-            <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
-          </PolyLp>
           <ExtWall>
             <Name>Perimeter_bot_Plenum_Wall_East</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
             </PolyLp>
           </ExtWall>
           <ExtWall>
             <Name>Perimeter_bot_Plenum_Wall_North</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>-163.75</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>-163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
             </PolyLp>
           </ExtWall>
           <ExtWall>
             <Name>Perimeter_bot_Plenum_Wall_South</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
             </PolyLp>
           </ExtWall>
           <ExtWall>
             <Name>Perimeter_bot_Plenum_Wall_West</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-109.166</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-109.166</Coord><Coord>13</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
             </PolyLp>
           </ExtWall>
@@ -2736,10 +2994,10 @@
             <AdjacentSpcRef>Core_bottom</AdjacentSpcRef>
             <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>102.892</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>102.892</Coord><Coord>-102.892</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-102.892</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntFlr>
@@ -2747,10 +3005,10 @@
             <AdjacentSpcRef>Perimeter_bot_ZN_1</AdjacentSpcRef>
             <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>45.632</Coord><Coord>12.227</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>57.859</Coord><Coord>-33.405</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>12.227</Coord><Coord>-45.632</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntFlr>
@@ -2758,10 +3016,10 @@
             <AdjacentSpcRef>Perimeter_bot_ZN_2</AdjacentSpcRef>
             <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>32.553</Coord><Coord>18.794</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>51.347</Coord><Coord>-13.759</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>18.794</Coord><Coord>-32.553</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntFlr>
@@ -2769,10 +3027,10 @@
             <AdjacentSpcRef>Perimeter_bot_ZN_3</AdjacentSpcRef>
             <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>33.405</Coord><Coord>33.405</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>66.81</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>33.405</Coord><Coord>-33.405</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntFlr>
@@ -2780,10 +3038,10 @@
             <AdjacentSpcRef>Perimeter_bot_ZN_4</AdjacentSpcRef>
             <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>9</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>9</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>18.794</Coord><Coord>32.551</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>51.345</Coord><Coord>13.757</Coord><Coord>9</Coord></CartesianPt>
+              <CartesianPt><Coord>32.551</Coord><Coord>-18.794</Coord><Coord>9</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
         </Spc>
@@ -2830,21 +3088,15 @@
           <HotWtrHtgTot>19.0561</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
           <HotWtrSupTemp>135</HotWtrSupTemp>
-          <PolyLp>
-            <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-            <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-          </PolyLp>
           <IntFlr>
             <Name>Core_mid_ZN_5_Floor</Name>
             <AdjacentSpcRef>FirstFloor_Plenum</AdjacentSpcRef>
             <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>26.63</Coord><Coord>99.386</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>126.016</Coord><Coord>72.756</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>99.386</Coord><Coord>-26.63</Coord><Coord>13</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntWall>
@@ -2852,10 +3104,10 @@
             <AdjacentSpcRef>Perimeter_mid_ZN_2</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>-6.899</Coord><Coord>-78.857</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>-6.899</Coord><Coord>-78.857</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <IntWall>
@@ -2863,10 +3115,10 @@
             <AdjacentSpcRef>Perimeter_mid_ZN_3</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>11.656</Coord><Coord>-133.232</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>11.656</Coord><Coord>-133.232</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <IntWall>
@@ -2874,10 +3126,10 @@
             <AdjacentSpcRef>Perimeter_mid_ZN_1</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>34.615</Coord><Coord>-129.184</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>34.615</Coord><Coord>-129.184</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <IntWall>
@@ -2885,10 +3137,10 @@
             <AdjacentSpcRef>Perimeter_mid_ZN_4</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>33.454</Coord><Coord>-71.742</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>33.454</Coord><Coord>-71.742</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
         </Spc>
@@ -2932,29 +3184,23 @@
           <HotWtrHtgTot>4.01717</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
           <HotWtrSupTemp>135</HotWtrSupTemp>
-          <PolyLp>
-            <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
-            <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
-            <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
-          </PolyLp>
           <ExtWall>
             <Name>Perimeter_mid_ZN_1_Wall_South</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
             <Win>
               <Name>Perimeter_mid_ZN_1_Wall_South_Window</Name>
               <FenConsRef>Base_AllCZ_FixedWindowU36</FenConsRef>
               <PolyLp>
-                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>20.6421</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>16.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>163.747</Coord><Coord>0</Coord><Coord>16.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>163.747</Coord><Coord>0</Coord><Coord>20.6421</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+                <CartesianPt><Coord>140.541</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+                <CartesianPt><Coord>140.541</Coord><Coord>0</Coord><Coord>18</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>18</Coord></CartesianPt>
               </PolyLp>
             </Win>
           </ExtWall>
@@ -2963,10 +3209,10 @@
             <AdjacentSpcRef>FirstFloor_Plenum</AdjacentSpcRef>
             <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>47.242</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>47.242</Coord><Coord>47.242</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>47.242</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntWall>
@@ -2974,10 +3220,10 @@
             <AdjacentSpcRef>Perimeter_mid_ZN_2</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>12.171</Coord><Coord>-17.382</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>12.171</Coord><Coord>-17.382</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <IntWall>
@@ -2985,9 +3231,9 @@
             <AdjacentSpcRef>Perimeter_mid_ZN_4</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>15.004</Coord><Coord>-15.004</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>15.004</Coord><Coord>-15.004</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
@@ -3032,29 +3278,23 @@
           <HotWtrHtgTot>2.54322</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
           <HotWtrSupTemp>135</HotWtrSupTemp>
-          <PolyLp>
-            <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
-            <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
-            <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
-            <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-          </PolyLp>
           <ExtWall>
             <Name>Perimeter_mid_ZN_2_Wall_East</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
             <Win>
               <Name>Perimeter_mid_ZN_2_Wall_East_Window</Name>
               <FenConsRef>Base_AllCZ_FixedWindowU36</FenConsRef>
               <PolyLp>
-                <CartesianPt><Coord>163.75</Coord><Coord>0.01</Coord><Coord>20.6421</Coord></CartesianPt>
-                <CartesianPt><Coord>163.75</Coord><Coord>0.01</Coord><Coord>16.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>163.75</Coord><Coord>109.156</Coord><Coord>16.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>163.75</Coord><Coord>109.156</Coord><Coord>20.6421</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>93.695</Coord><Coord>13</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>93.695</Coord><Coord>18</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>18</Coord></CartesianPt>
               </PolyLp>
             </Win>
           </ExtWall>
@@ -3063,10 +3303,10 @@
             <AdjacentSpcRef>FirstFloor_Plenum</AdjacentSpcRef>
             <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>-9.729</Coord><Coord>36.308</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>26.579</Coord><Coord>46.037</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>36.308</Coord><Coord>9.729</Coord><Coord>13</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntWall>
@@ -3074,10 +3314,10 @@
             <AdjacentSpcRef>Perimeter_mid_ZN_3</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>17.382</Coord><Coord>-12.171</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>17.382</Coord><Coord>-12.171</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
         </Spc>
@@ -3121,29 +3361,23 @@
           <HotWtrHtgTot>4.01717</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
           <HotWtrSupTemp>135</HotWtrSupTemp>
-          <PolyLp>
-            <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
-            <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-            <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
-          </PolyLp>
           <ExtWall>
             <Name>Perimeter_mid_ZN_3_Wall_North</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>-163.75</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>-163.75</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
             <Win>
               <Name>Perimeter_mid_ZN_3_Wall_North_Window</Name>
               <FenConsRef>Base_AllCZ_FixedWindowU36</FenConsRef>
               <PolyLp>
-                <CartesianPt><Coord>163.747</Coord><Coord>109.166</Coord><Coord>20.6421</Coord></CartesianPt>
-                <CartesianPt><Coord>163.747</Coord><Coord>109.166</Coord><Coord>16.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>16.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>20.6421</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+                <CartesianPt><Coord>-140.541</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+                <CartesianPt><Coord>-140.541</Coord><Coord>0</Coord><Coord>18</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>18</Coord></CartesianPt>
               </PolyLp>
             </Win>
           </ExtWall>
@@ -3152,10 +3386,10 @@
             <AdjacentSpcRef>FirstFloor_Plenum</AdjacentSpcRef>
             <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>-23.621</Coord><Coord>40.912</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>17.291</Coord><Coord>64.533</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>40.912</Coord><Coord>23.621</Coord><Coord>13</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntWall>
@@ -3163,10 +3397,10 @@
             <AdjacentSpcRef>Perimeter_mid_ZN_4</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>19.231</Coord><Coord>-8.967</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>19.231</Coord><Coord>-8.967</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
         </Spc>
@@ -3210,29 +3444,23 @@
           <HotWtrHtgTot>2.54304</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
           <HotWtrSupTemp>135</HotWtrSupTemp>
-          <PolyLp>
-            <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
-            <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
-          </PolyLp>
           <ExtWall>
             <Name>Perimeter_mid_ZN_4_Wall_West</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-109.166</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-109.166</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
             <Win>
               <Name>Perimeter_mid_ZN_4_Wall_West_Window</Name>
               <FenConsRef>Base_AllCZ_FixedWindowU36</FenConsRef>
               <PolyLp>
-                <CartesianPt><Coord>0</Coord><Coord>109.156</Coord><Coord>20.6421</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>109.156</Coord><Coord>16.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>0.01</Coord><Coord>16.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>0.01</Coord><Coord>20.6421</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>-93.695</Coord><Coord>13</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>-93.695</Coord><Coord>18</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>18</Coord></CartesianPt>
               </PolyLp>
             </Win>
           </ExtWall>
@@ -3241,10 +3469,10 @@
             <AdjacentSpcRef>FirstFloor_Plenum</AdjacentSpcRef>
             <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>13</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>13</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>-26.578</Coord><Coord>26.578</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>53.156</Coord><Coord>13</Coord></CartesianPt>
+              <CartesianPt><Coord>26.578</Coord><Coord>26.578</Coord><Coord>13</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
         </Spc>
@@ -3260,49 +3488,43 @@
           <InfModelCoefC index="0">0.10016</InfModelCoefC>
           <InfModelCoefD index="0">0</InfModelCoefD>
           <HotWtrHtgTot>0</HotWtrHtgTot>
-          <PolyLp>
-            <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
-            <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
-            <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
-            <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
-          </PolyLp>
           <ExtWall>
             <Name>Perimeter_mid_Plenum_Wall_East</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
             </PolyLp>
           </ExtWall>
           <ExtWall>
             <Name>Perimeter_mid_Plenum_Wall_North</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>-163.75</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>-163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
             </PolyLp>
           </ExtWall>
           <ExtWall>
             <Name>Perimeter_mid_Plenum_Wall_South</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
             </PolyLp>
           </ExtWall>
           <ExtWall>
             <Name>Perimeter_mid_Plenum_Wall_West</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-109.166</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-109.166</Coord><Coord>26</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
             </PolyLp>
           </ExtWall>
@@ -3311,10 +3533,10 @@
             <AdjacentSpcRef>Core_mid</AdjacentSpcRef>
             <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>-89.107</Coord><Coord>51.446</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>-37.661</Coord><Coord>140.553</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>51.446</Coord><Coord>89.107</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntFlr>
@@ -3322,10 +3544,10 @@
             <AdjacentSpcRef>Perimeter_mid_ZN_1</AdjacentSpcRef>
             <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>-45.632</Coord><Coord>12.227</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>-33.405</Coord><Coord>57.859</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>12.227</Coord><Coord>45.632</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntFlr>
@@ -3333,10 +3555,10 @@
             <AdjacentSpcRef>Perimeter_mid_ZN_2</AdjacentSpcRef>
             <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>-37.589</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>-37.589</Coord><Coord>37.589</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>37.589</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntFlr>
@@ -3344,10 +3566,10 @@
             <AdjacentSpcRef>Perimeter_mid_ZN_3</AdjacentSpcRef>
             <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>-45.632</Coord><Coord>-12.227</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>-57.859</Coord><Coord>33.405</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>-12.227</Coord><Coord>45.632</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntFlr>
@@ -3355,10 +3577,10 @@
             <AdjacentSpcRef>Perimeter_mid_ZN_4</AdjacentSpcRef>
             <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>22</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>22</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>-32.551</Coord><Coord>-18.794</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>-51.345</Coord><Coord>13.757</Coord><Coord>22</Coord></CartesianPt>
+              <CartesianPt><Coord>-18.794</Coord><Coord>32.551</Coord><Coord>22</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
         </Spc>
@@ -3405,21 +3627,15 @@
           <HotWtrHtgTot>19.0561</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
           <HotWtrSupTemp>135</HotWtrSupTemp>
-          <PolyLp>
-            <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-            <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-          </PolyLp>
           <IntFlr>
             <Name>Core_top_ZN_5_Floor</Name>
             <AdjacentSpcRef>MidFloor_Plenum</AdjacentSpcRef>
             <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>-72.755</Coord><Coord>-72.755</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>-145.51</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>-72.755</Coord><Coord>72.755</Coord><Coord>26</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntWall>
@@ -3427,10 +3643,10 @@
             <AdjacentSpcRef>Perimeter_top_ZN_2</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>76.461</Coord><Coord>-20.488</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>76.461</Coord><Coord>-20.488</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <IntWall>
@@ -3438,10 +3654,10 @@
             <AdjacentSpcRef>Perimeter_top_ZN_3</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>133.232</Coord><Coord>-11.656</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>133.232</Coord><Coord>-11.656</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <IntWall>
@@ -3449,10 +3665,10 @@
             <AdjacentSpcRef>Perimeter_top_ZN_1</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>133.232</Coord><Coord>11.656</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>133.232</Coord><Coord>11.656</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <IntWall>
@@ -3460,10 +3676,10 @@
             <AdjacentSpcRef>Perimeter_top_ZN_4</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>76.461</Coord><Coord>20.488</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>76.461</Coord><Coord>20.488</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
         </Spc>
@@ -3507,29 +3723,23 @@
           <HotWtrHtgTot>4.01717</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
           <HotWtrSupTemp>135</HotWtrSupTemp>
-          <PolyLp>
-            <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
-            <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
-            <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
-          </PolyLp>
           <ExtWall>
             <Name>Perimeter_top_ZN_1_Wall_South</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
             <Win>
               <Name>Perimeter_top_ZN_1_Wall_South_Window</Name>
               <FenConsRef>Base_AllCZ_FixedWindowU36</FenConsRef>
               <PolyLp>
-                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>33.6421</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>29.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>163.747</Coord><Coord>0</Coord><Coord>29.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>163.747</Coord><Coord>0</Coord><Coord>33.6421</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+                <CartesianPt><Coord>140.541</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+                <CartesianPt><Coord>140.541</Coord><Coord>0</Coord><Coord>31</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>31</Coord></CartesianPt>
               </PolyLp>
             </Win>
           </ExtWall>
@@ -3538,10 +3748,10 @@
             <AdjacentSpcRef>MidFloor_Plenum</AdjacentSpcRef>
             <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>-23.621</Coord><Coord>-40.912</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>-64.533</Coord><Coord>-17.291</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>-40.912</Coord><Coord>23.621</Coord><Coord>26</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntWall>
@@ -3549,10 +3759,10 @@
             <AdjacentSpcRef>Perimeter_top_ZN_2</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>19.231</Coord><Coord>8.968</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>19.231</Coord><Coord>8.968</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
           <IntWall>
@@ -3560,9 +3770,9 @@
             <AdjacentSpcRef>Perimeter_top_ZN_4</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>17.381</Coord><Coord>12.171</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>17.381</Coord><Coord>12.171</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
@@ -3607,29 +3817,23 @@
           <HotWtrHtgTot>2.54322</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
           <HotWtrSupTemp>135</HotWtrSupTemp>
-          <PolyLp>
-            <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
-            <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
-            <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
-            <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-          </PolyLp>
           <ExtWall>
             <Name>Perimeter_top_ZN_2_Wall_East</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
             <Win>
               <Name>Perimeter_top_ZN_2_Wall_East_Window</Name>
               <FenConsRef>Base_AllCZ_FixedWindowU36</FenConsRef>
               <PolyLp>
-                <CartesianPt><Coord>163.75</Coord><Coord>0.01</Coord><Coord>33.6421</Coord></CartesianPt>
-                <CartesianPt><Coord>163.75</Coord><Coord>0.01</Coord><Coord>29.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>163.75</Coord><Coord>109.156</Coord><Coord>29.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>163.75</Coord><Coord>109.156</Coord><Coord>33.6421</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>93.695</Coord><Coord>26</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>93.695</Coord><Coord>31</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>31</Coord></CartesianPt>
               </PolyLp>
             </Win>
           </ExtWall>
@@ -3638,10 +3842,10 @@
             <AdjacentSpcRef>MidFloor_Plenum</AdjacentSpcRef>
             <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>-9.729</Coord><Coord>-36.308</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>-46.037</Coord><Coord>-26.579</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>-36.308</Coord><Coord>9.729</Coord><Coord>26</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntWall>
@@ -3649,10 +3853,10 @@
             <AdjacentSpcRef>Perimeter_top_ZN_3</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>15.004</Coord><Coord>15.004</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>15.004</Coord><Coord>15.004</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
         </Spc>
@@ -3696,29 +3900,23 @@
           <HotWtrHtgTot>4.01717</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
           <HotWtrSupTemp>135</HotWtrSupTemp>
-          <PolyLp>
-            <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
-            <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-            <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
-          </PolyLp>
           <ExtWall>
             <Name>Perimeter_top_ZN_3_Wall_North</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>-163.75</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>-163.75</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
             <Win>
               <Name>Perimeter_top_ZN_3_Wall_North_Window</Name>
               <FenConsRef>Base_AllCZ_FixedWindowU36</FenConsRef>
               <PolyLp>
-                <CartesianPt><Coord>163.747</Coord><Coord>109.166</Coord><Coord>33.6421</Coord></CartesianPt>
-                <CartesianPt><Coord>163.747</Coord><Coord>109.166</Coord><Coord>29.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>29.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>33.6421</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+                <CartesianPt><Coord>-140.541</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+                <CartesianPt><Coord>-140.541</Coord><Coord>0</Coord><Coord>31</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>31</Coord></CartesianPt>
               </PolyLp>
             </Win>
           </ExtWall>
@@ -3727,10 +3925,10 @@
             <AdjacentSpcRef>MidFloor_Plenum</AdjacentSpcRef>
             <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-47.242</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>-47.242</Coord><Coord>-47.242</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>-47.242</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntWall>
@@ -3738,10 +3936,10 @@
             <AdjacentSpcRef>Perimeter_top_ZN_4</AdjacentSpcRef>
             <ConsAssmRef>MetalFrameWallInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>12.171</Coord><Coord>17.381</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>12.171</Coord><Coord>17.381</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
           </IntWall>
         </Spc>
@@ -3785,29 +3983,23 @@
           <HotWtrHtgTot>2.54304</HotWtrHtgTot>
           <HotWtrHtgSchRef>OfficeServiceHotWater</HotWtrHtgSchRef>
           <HotWtrSupTemp>135</HotWtrSupTemp>
-          <PolyLp>
-            <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-            <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
-            <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
-          </PolyLp>
           <ExtWall>
             <Name>Perimeter_top_ZN_4_Wall_West</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-109.166</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-109.166</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
             <Win>
               <Name>Perimeter_top_ZN_4_Wall_West_Window</Name>
               <FenConsRef>Base_AllCZ_FixedWindowU36</FenConsRef>
               <PolyLp>
-                <CartesianPt><Coord>0</Coord><Coord>109.156</Coord><Coord>33.6421</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>109.156</Coord><Coord>29.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>0.01</Coord><Coord>29.3507</Coord></CartesianPt>
-                <CartesianPt><Coord>0</Coord><Coord>0.01</Coord><Coord>33.6421</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>-93.695</Coord><Coord>26</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>-93.695</Coord><Coord>31</Coord></CartesianPt>
+                <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>31</Coord></CartesianPt>
               </PolyLp>
             </Win>
           </ExtWall>
@@ -3816,10 +4008,10 @@
             <AdjacentSpcRef>MidFloor_Plenum</AdjacentSpcRef>
             <ConsAssmRef>TypicalFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>26</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>26</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>9.728</Coord><Coord>-36.306</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>-26.578</Coord><Coord>-46.034</Coord><Coord>26</Coord></CartesianPt>
+              <CartesianPt><Coord>-36.306</Coord><Coord>-9.728</Coord><Coord>26</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
         </Spc>
@@ -3835,49 +4027,43 @@
           <InfModelCoefC index="0">0.10016</InfModelCoefC>
           <InfModelCoefD index="0">0</InfModelCoefD>
           <HotWtrHtgTot>0</HotWtrHtgTot>
-          <PolyLp>
-            <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
-            <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
-            <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
-            <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
-          </PolyLp>
           <ExtWall>
             <Name>Perimeter_top_Plenum_Wall_East</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>39</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>39</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>39</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>39</Coord></CartesianPt>
             </PolyLp>
           </ExtWall>
           <ExtWall>
             <Name>Perimeter_top_Plenum_Wall_North</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>39</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>39</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>-163.75</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>-163.75</Coord><Coord>0</Coord><Coord>39</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>39</Coord></CartesianPt>
             </PolyLp>
           </ExtWall>
           <ExtWall>
             <Name>Perimeter_top_Plenum_Wall_South</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>39</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>39</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>39</Coord></CartesianPt>
             </PolyLp>
           </ExtWall>
           <ExtWall>
             <Name>Perimeter_top_Plenum_Wall_West</Name>
             <ConsAssmRef>MetalFrameWallU062</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>39</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-109.166</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-109.166</Coord><Coord>39</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>39</Coord></CartesianPt>
             </PolyLp>
           </ExtWall>
@@ -3886,10 +4072,10 @@
             <AdjacentSpcRef>Core_top</AdjacentSpcRef>
             <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>51.446</Coord><Coord>-89.107</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>-37.661</Coord><Coord>-140.553</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>-89.107</Coord><Coord>-51.446</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntFlr>
@@ -3897,10 +4083,10 @@
             <AdjacentSpcRef>Perimeter_top_ZN_1</AdjacentSpcRef>
             <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>33.405</Coord><Coord>-33.405</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-66.81</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>-33.405</Coord><Coord>-33.405</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntFlr>
@@ -3908,10 +4094,10 @@
             <AdjacentSpcRef>Perimeter_top_ZN_2</AdjacentSpcRef>
             <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>32.553</Coord><Coord>-18.794</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>13.759</Coord><Coord>-51.347</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>-18.794</Coord><Coord>-32.553</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntFlr>
@@ -3919,10 +4105,10 @@
             <AdjacentSpcRef>Perimeter_top_ZN_3</AdjacentSpcRef>
             <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>148.745</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>45.632</Coord><Coord>-12.227</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>33.405</Coord><Coord>-57.859</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>-12.227</Coord><Coord>-45.632</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <IntFlr>
@@ -3930,20 +4116,20 @@
             <AdjacentSpcRef>Perimeter_top_ZN_4</AdjacentSpcRef>
             <ConsAssmRef>TypicalPlenumFloorInterior</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>94.1621</Coord><Coord>35</Coord></CartesianPt>
-              <CartesianPt><Coord>15.0039</Coord><Coord>15.0039</Coord><Coord>35</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>37.587</Coord><Coord>0</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>37.587</Coord><Coord>-37.587</Coord><Coord>35</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-37.587</Coord><Coord>35</Coord></CartesianPt>
             </PolyLp>
           </IntFlr>
           <Roof>
             <Name>Building_Roof</Name>
             <ConsAssmRef>FlatNonresWoodFramingAndOtherRoofU039</ConsAssmRef>
             <PolyLp>
-              <CartesianPt><Coord>163.75</Coord><Coord>0</Coord><Coord>39</Coord></CartesianPt>
-              <CartesianPt><Coord>163.75</Coord><Coord>109.166</Coord><Coord>39</Coord></CartesianPt>
-              <CartesianPt><Coord>0</Coord><Coord>109.166</Coord><Coord>39</Coord></CartesianPt>
               <CartesianPt><Coord>0</Coord><Coord>0</Coord><Coord>39</Coord></CartesianPt>
+              <CartesianPt><Coord>0</Coord><Coord>-133.701</Coord><Coord>39</Coord></CartesianPt>
+              <CartesianPt><Coord>133.701</Coord><Coord>-133.701</Coord><Coord>39</Coord></CartesianPt>
+              <CartesianPt><Coord>133.701</Coord><Coord>0</Coord><Coord>39</Coord></CartesianPt>
             </PolyLp>
           </Roof>
         </Spc>
@@ -3952,6 +4138,7 @@
         <Name>Core_bottom Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
+        <VolSim>95280.3</VolSim>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -3972,6 +4159,7 @@
         <Name>Perimeter_bot_ZN_1 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
+        <VolSim>20085.8</VolSim>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -3985,24 +4173,14 @@
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
         <VentPerPersonSim>0</VentPerPersonSim>
         <VentPerAreaSim>0.15</VentPerAreaSim>
-        <DayltgIllumRefPt1Coord>81.8735</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>7.64206</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>2.5</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt2Coord>81.8736</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>14.75</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>2.5</DayltgIllumRefPt2Coord>
-        <DayltgIllumSetpt1>287.5</DayltgIllumSetpt1>
-        <DayltgIllumSetpt2>1150</DayltgIllumSetpt2>
-        <DayltgCtrlLtgFrac1>0.533414</DayltgCtrlLtgFrac1>
-        <DayltgCtrlLtgFrac2>0.466356</DayltgCtrlLtgFrac2>
-        <DayltgCtrlType>Continuous</DayltgCtrlType>
-        <DayltgMinDimLtgFrac>0.2</DayltgMinDimLtgFrac>
-        <DayltgMinDimPwrFrac>0.2</DayltgMinDimPwrFrac>
+        <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
+        <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
       <ThrmlZn>
         <Name>Perimeter_bot_ZN_2 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
+        <VolSim>12716.1</VolSim>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4016,24 +4194,14 @@
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
         <VentPerPersonSim>0</VentPerPersonSim>
         <VentPerAreaSim>0.15</VentPerAreaSim>
-        <DayltgIllumRefPt1Coord>156.108</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>54.583</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>2.5</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt2Coord>149</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>54.583</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>2.5</DayltgIllumRefPt2Coord>
-        <DayltgIllumSetpt1>287.5</DayltgIllumSetpt1>
-        <DayltgIllumSetpt2>1150</DayltgIllumSetpt2>
-        <DayltgCtrlLtgFrac1>0.547989</DayltgCtrlLtgFrac1>
-        <DayltgCtrlLtgFrac2>0.451726</DayltgCtrlLtgFrac2>
-        <DayltgCtrlType>Continuous</DayltgCtrlType>
-        <DayltgMinDimLtgFrac>0.2</DayltgMinDimLtgFrac>
-        <DayltgMinDimPwrFrac>0.2</DayltgMinDimPwrFrac>
+        <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
+        <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
       <ThrmlZn>
         <Name>Perimeter_bot_ZN_3 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
+        <VolSim>20085.8</VolSim>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4047,24 +4215,14 @@
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
         <VentPerPersonSim>0</VentPerPersonSim>
         <VentPerAreaSim>0.15</VentPerAreaSim>
-        <DayltgIllumRefPt1Coord>81.8735</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>101.524</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>2.5</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt2Coord>81.8736</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>94.4167</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>2.5</DayltgIllumRefPt2Coord>
-        <DayltgIllumSetpt1>287.5</DayltgIllumSetpt1>
-        <DayltgIllumSetpt2>1150</DayltgIllumSetpt2>
-        <DayltgCtrlLtgFrac1>0.533414</DayltgCtrlLtgFrac1>
-        <DayltgCtrlLtgFrac2>0.466356</DayltgCtrlLtgFrac2>
-        <DayltgCtrlType>Continuous</DayltgCtrlType>
-        <DayltgMinDimLtgFrac>0.2</DayltgMinDimLtgFrac>
-        <DayltgMinDimPwrFrac>0.2</DayltgMinDimPwrFrac>
+        <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
+        <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
       <ThrmlZn>
         <Name>Perimeter_bot_ZN_4 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
+        <VolSim>12715.2</VolSim>
         <PriAirCondgSysRef>BaseAirSys5</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4078,24 +4236,14 @@
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
         <VentPerPersonSim>0</VentPerPersonSim>
         <VentPerAreaSim>0.15</VentPerAreaSim>
-        <DayltgIllumRefPt1Coord>7.64206</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>54.583</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>2.5</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt2Coord>14.75</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>54.583</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>2.5</DayltgIllumRefPt2Coord>
-        <DayltgIllumSetpt1>287.5</DayltgIllumSetpt1>
-        <DayltgIllumSetpt2>1150</DayltgIllumSetpt2>
-        <DayltgCtrlLtgFrac1>0.548029</DayltgCtrlLtgFrac1>
-        <DayltgCtrlLtgFrac2>0.451759</DayltgCtrlLtgFrac2>
-        <DayltgCtrlType>Continuous</DayltgCtrlType>
-        <DayltgMinDimLtgFrac>0.2</DayltgMinDimLtgFrac>
-        <DayltgMinDimPwrFrac>0.2</DayltgMinDimPwrFrac>
+        <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
+        <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
       <ThrmlZn>
         <Name>FirstFloor_Plenum Thermal Zone</Name>
         <Type>Plenum</Type>
         <Mult>1</Mult>
+        <VolSim>71503.6</VolSim>
         <VentSpecMthdSim>NoVentilation</VentSpecMthdSim>
         <VentPerPersonSim>0</VentPerPersonSim>
         <VentPerAreaSim>0</VentPerAreaSim>
@@ -4106,6 +4254,7 @@
         <Name>Core_mid Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
+        <VolSim>95280.3</VolSim>
         <PriAirCondgSysRef>BaseAirSys5-2</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-2</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4126,6 +4275,7 @@
         <Name>Perimeter_mid_ZN_1 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
+        <VolSim>20085.8</VolSim>
         <PriAirCondgSysRef>BaseAirSys5-2</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-2</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4139,24 +4289,14 @@
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
         <VentPerPersonSim>0</VentPerPersonSim>
         <VentPerAreaSim>0.15</VentPerAreaSim>
-        <DayltgIllumRefPt1Coord>81.8735</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>7.6421</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>15.5</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt2Coord>81.8736</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>14.75</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>15.5</DayltgIllumRefPt2Coord>
-        <DayltgIllumSetpt1>287.5</DayltgIllumSetpt1>
-        <DayltgIllumSetpt2>1150</DayltgIllumSetpt2>
-        <DayltgCtrlLtgFrac1>0.533414</DayltgCtrlLtgFrac1>
-        <DayltgCtrlLtgFrac2>0.466356</DayltgCtrlLtgFrac2>
-        <DayltgCtrlType>Continuous</DayltgCtrlType>
-        <DayltgMinDimLtgFrac>0.2</DayltgMinDimLtgFrac>
-        <DayltgMinDimPwrFrac>0.2</DayltgMinDimPwrFrac>
+        <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
+        <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
       <ThrmlZn>
         <Name>Perimeter_mid_ZN_2 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
+        <VolSim>12716.1</VolSim>
         <PriAirCondgSysRef>BaseAirSys5-2</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-2</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4170,24 +4310,14 @@
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
         <VentPerPersonSim>0</VentPerPersonSim>
         <VentPerAreaSim>0.15</VentPerAreaSim>
-        <DayltgIllumRefPt1Coord>156.108</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>54.583</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>15.5</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt2Coord>149</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>54.583</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>15.5</DayltgIllumRefPt2Coord>
-        <DayltgIllumSetpt1>287.5</DayltgIllumSetpt1>
-        <DayltgIllumSetpt2>1150</DayltgIllumSetpt2>
-        <DayltgCtrlLtgFrac1>0.547989</DayltgCtrlLtgFrac1>
-        <DayltgCtrlLtgFrac2>0.451726</DayltgCtrlLtgFrac2>
-        <DayltgCtrlType>Continuous</DayltgCtrlType>
-        <DayltgMinDimLtgFrac>0.2</DayltgMinDimLtgFrac>
-        <DayltgMinDimPwrFrac>0.2</DayltgMinDimPwrFrac>
+        <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
+        <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
       <ThrmlZn>
         <Name>Perimeter_mid_ZN_3 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
+        <VolSim>20085.8</VolSim>
         <PriAirCondgSysRef>BaseAirSys5-2</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-2</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4201,24 +4331,14 @@
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
         <VentPerPersonSim>0</VentPerPersonSim>
         <VentPerAreaSim>0.15</VentPerAreaSim>
-        <DayltgIllumRefPt1Coord>81.8735</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>101.524</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>15.5</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt2Coord>81.8736</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>94.4167</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>15.5</DayltgIllumRefPt2Coord>
-        <DayltgIllumSetpt1>287.5</DayltgIllumSetpt1>
-        <DayltgIllumSetpt2>1150</DayltgIllumSetpt2>
-        <DayltgCtrlLtgFrac1>0.533414</DayltgCtrlLtgFrac1>
-        <DayltgCtrlLtgFrac2>0.466356</DayltgCtrlLtgFrac2>
-        <DayltgCtrlType>Continuous</DayltgCtrlType>
-        <DayltgMinDimLtgFrac>0.2</DayltgMinDimLtgFrac>
-        <DayltgMinDimPwrFrac>0.2</DayltgMinDimPwrFrac>
+        <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
+        <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
       <ThrmlZn>
         <Name>Perimeter_mid_ZN_4 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
+        <VolSim>12715.2</VolSim>
         <PriAirCondgSysRef>BaseAirSys5-2</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-2</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4232,24 +4352,14 @@
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
         <VentPerPersonSim>0</VentPerPersonSim>
         <VentPerAreaSim>0.15</VentPerAreaSim>
-        <DayltgIllumRefPt1Coord>7.6421</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>54.583</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>15.5</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt2Coord>14.75</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>54.583</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>15.5</DayltgIllumRefPt2Coord>
-        <DayltgIllumSetpt1>287.5</DayltgIllumSetpt1>
-        <DayltgIllumSetpt2>1150</DayltgIllumSetpt2>
-        <DayltgCtrlLtgFrac1>0.548029</DayltgCtrlLtgFrac1>
-        <DayltgCtrlLtgFrac2>0.451759</DayltgCtrlLtgFrac2>
-        <DayltgCtrlType>Continuous</DayltgCtrlType>
-        <DayltgMinDimLtgFrac>0.2</DayltgMinDimLtgFrac>
-        <DayltgMinDimPwrFrac>0.2</DayltgMinDimPwrFrac>
+        <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
+        <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
       <ThrmlZn>
         <Name>MidFloor_Plenum Thermal Zone</Name>
         <Type>Plenum</Type>
         <Mult>1</Mult>
+        <VolSim>71503.6</VolSim>
         <VentSpecMthdSim>NoVentilation</VentSpecMthdSim>
         <VentPerPersonSim>0</VentPerPersonSim>
         <VentPerAreaSim>0</VentPerAreaSim>
@@ -4260,6 +4370,7 @@
         <Name>Core_top Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
+        <VolSim>95280.3</VolSim>
         <PriAirCondgSysRef>BaseAirSys5-3</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-3</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4280,6 +4391,7 @@
         <Name>Perimeter_top_ZN_1 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
+        <VolSim>20085.8</VolSim>
         <PriAirCondgSysRef>BaseAirSys5-3</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-3</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4293,24 +4405,14 @@
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
         <VentPerPersonSim>0</VentPerPersonSim>
         <VentPerAreaSim>0.15</VentPerAreaSim>
-        <DayltgIllumRefPt1Coord>81.8735</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>7.6421</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>28.5</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt2Coord>81.8736</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>14.75</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>28.5</DayltgIllumRefPt2Coord>
-        <DayltgIllumSetpt1>287.5</DayltgIllumSetpt1>
-        <DayltgIllumSetpt2>1150</DayltgIllumSetpt2>
-        <DayltgCtrlLtgFrac1>0.533414</DayltgCtrlLtgFrac1>
-        <DayltgCtrlLtgFrac2>0.466356</DayltgCtrlLtgFrac2>
-        <DayltgCtrlType>Continuous</DayltgCtrlType>
-        <DayltgMinDimLtgFrac>0.2</DayltgMinDimLtgFrac>
-        <DayltgMinDimPwrFrac>0.2</DayltgMinDimPwrFrac>
+        <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
+        <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
       <ThrmlZn>
         <Name>Perimeter_top_ZN_2 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
+        <VolSim>12716.1</VolSim>
         <PriAirCondgSysRef>BaseAirSys5-3</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-3</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4324,24 +4426,14 @@
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
         <VentPerPersonSim>0</VentPerPersonSim>
         <VentPerAreaSim>0.15</VentPerAreaSim>
-        <DayltgIllumRefPt1Coord>156.108</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>54.583</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>28.5</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt2Coord>149</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>54.583</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>28.5</DayltgIllumRefPt2Coord>
-        <DayltgIllumSetpt1>287.5</DayltgIllumSetpt1>
-        <DayltgIllumSetpt2>1150</DayltgIllumSetpt2>
-        <DayltgCtrlLtgFrac1>0.547989</DayltgCtrlLtgFrac1>
-        <DayltgCtrlLtgFrac2>0.451726</DayltgCtrlLtgFrac2>
-        <DayltgCtrlType>Continuous</DayltgCtrlType>
-        <DayltgMinDimLtgFrac>0.2</DayltgMinDimLtgFrac>
-        <DayltgMinDimPwrFrac>0.2</DayltgMinDimPwrFrac>
+        <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
+        <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
       <ThrmlZn>
         <Name>Perimeter_top_ZN_3 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
+        <VolSim>20085.8</VolSim>
         <PriAirCondgSysRef>BaseAirSys5-3</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-3</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4355,24 +4447,14 @@
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
         <VentPerPersonSim>0</VentPerPersonSim>
         <VentPerAreaSim>0.15</VentPerAreaSim>
-        <DayltgIllumRefPt1Coord>81.8735</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>101.524</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>28.5</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt2Coord>81.8736</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>94.4167</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>28.5</DayltgIllumRefPt2Coord>
-        <DayltgIllumSetpt1>287.5</DayltgIllumSetpt1>
-        <DayltgIllumSetpt2>1150</DayltgIllumSetpt2>
-        <DayltgCtrlLtgFrac1>0.533414</DayltgCtrlLtgFrac1>
-        <DayltgCtrlLtgFrac2>0.466356</DayltgCtrlLtgFrac2>
-        <DayltgCtrlType>Continuous</DayltgCtrlType>
-        <DayltgMinDimLtgFrac>0.2</DayltgMinDimLtgFrac>
-        <DayltgMinDimPwrFrac>0.2</DayltgMinDimPwrFrac>
+        <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
+        <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
       <ThrmlZn>
         <Name>Perimeter_top_ZN_4 Thermal Zone</Name>
         <Type>Conditioned</Type>
         <Mult>1</Mult>
+        <VolSim>12715.2</VolSim>
         <PriAirCondgSysRef>BaseAirSys5-3</PriAirCondgSysRef>
         <VentSysRef>BaseAirSys5-3</VentSysRef>
         <ClgTstatSchRef>OfficeClgSetpt</ClgTstatSchRef>
@@ -4386,24 +4468,14 @@
         <VentSpecMthdSim>Maximum</VentSpecMthdSim>
         <VentPerPersonSim>0</VentPerPersonSim>
         <VentPerAreaSim>0.15</VentPerAreaSim>
-        <DayltgIllumRefPt1Coord>7.6421</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>54.583</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt1Coord>28.5</DayltgIllumRefPt1Coord>
-        <DayltgIllumRefPt2Coord>14.75</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>54.583</DayltgIllumRefPt2Coord>
-        <DayltgIllumRefPt2Coord>28.5</DayltgIllumRefPt2Coord>
-        <DayltgIllumSetpt1>287.5</DayltgIllumSetpt1>
-        <DayltgIllumSetpt2>1150</DayltgIllumSetpt2>
-        <DayltgCtrlLtgFrac1>0.548029</DayltgCtrlLtgFrac1>
-        <DayltgCtrlLtgFrac2>0.451759</DayltgCtrlLtgFrac2>
-        <DayltgCtrlType>Continuous</DayltgCtrlType>
-        <DayltgMinDimLtgFrac>0.2</DayltgMinDimLtgFrac>
-        <DayltgMinDimPwrFrac>0.2</DayltgMinDimPwrFrac>
+        <DayltgCtrlLtgFrac1>0</DayltgCtrlLtgFrac1>
+        <DayltgCtrlLtgFrac2>0</DayltgCtrlLtgFrac2>
       </ThrmlZn>
       <ThrmlZn>
         <Name>TopFloor_Plenum Thermal Zone</Name>
         <Type>Plenum</Type>
         <Mult>1</Mult>
+        <VolSim>71503.6</VolSim>
         <VentSpecMthdSim>NoVentilation</VentSpecMthdSim>
         <VentPerPersonSim>0</VentPerPersonSim>
         <VentPerAreaSim>0</VentPerAreaSim>
@@ -4439,16 +4511,13 @@
             <Name>BaseSys5 CoilClg</Name>
             <Type>DirectExpansion</Type>
             <FuelSrc>Electric</FuelSrc>
-            <NumClgStages>2</NumClgStages>
-            <CapTotGrossRtdSim>481605</CapTotGrossRtdSim>
-            <CapTotRtdStageFrac index="0">0.5</CapTotRtdStageFrac>
-            <CapTotRtdStageFrac index="1">1</CapTotRtdStageFrac>
+            <NumClgStages>1</NumClgStages>
             <Cap_fTempCrvRef>CoilClgDXQRatio_fTwbToadbSI</Cap_fTempCrvRef>
-            <Cap_fFlowCrvRef>CoilClgDXDblQRatio_fCFMRatio</Cap_fFlowCrvRef>
-            <DXEIR>0.292197</DXEIR>
+            <Cap_fFlowCrvRef>CoilClgDXSnglQRatio_fCFMRatio</Cap_fFlowCrvRef>
+            <DXEIR>0.333333</DXEIR>
             <DXEIR_fTempCrvRef>CoilClgDXEIRRatio_fTwbToadbSI</DXEIR_fTempCrvRef>
             <DXEIR_fPLFCrvRef>CoilClgDXEIRRatio_fQFrac</DXEIR_fPLFCrvRef>
-            <DXEIR_fFlowCrvRef>CoilClgDXDblEIRRatio_fCFMRatio</DXEIR_fFlowCrvRef>
+            <DXEIR_fFlowCrvRef>CoilClgDXSnglEIRRatio_fCFMRatio</DXEIR_fFlowCrvRef>
             <CndsrType>Air</CndsrType>
           </CoilClg>
           <CoilHtg>
@@ -4456,52 +4525,43 @@
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>44583.3</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
           <Fan>
             <Name>BaseSys5 Fan</Name>
             <CtrlMthdSim>VariableSpeedDrive</CtrlMthdSim>
-            <FlowCapSim>16358.5</FlowCapSim>
-            <FlowMinSim>3271.71</FlowMinSim>
-            <TotEff>0.5766</TotEff>
-            <TotStaticPress>4</TotStaticPress>
+            <TotEff>1</TotEff>
+            <TotStaticPress>1e-005</TotStaticPress>
             <Pwr_fPLRCrvRef>FanVSDGoodSpResetPwrRatio_fCFMRatio</Pwr_fPLRCrvRef>
-            <MtrEff>0.93</MtrEff>
+            <MtrEff>1</MtrEff>
             <MtrPos>InAirStream</MtrPos>
           </Fan>
         </AirSeg>
         <AirSeg>
           <Name>BaseSys5 RetAirSeg</Name>
-          <Type>Relief</Type>
+          <Type>Return</Type>
           <Path>Ducted</Path>
-          <Fan>
-            <Name>BaseRelief Fan</Name>
-            <CtrlMthdSim>VariableSpeedDrive</CtrlMthdSim>
-            <FlowCapSim>15464.8</FlowCapSim>
-            <FlowMinSim>0</FlowMinSim>
-            <TotEff>0.4475</TotEff>
-            <TotStaticPress>1</TotStaticPress>
-            <Pwr_fPLRCrvRef>FanVSDPwrRatio_fCFMRatio</Pwr_fPLRCrvRef>
-            <MtrEff>0.895</MtrEff>
-            <MtrPos>InAirStream</MtrPos>
-          </Fan>
         </AirSeg>
+        <OACtrl>
+          <Name>BaseSys5 OACtrl</Name>
+          <EconoCtrlMthd>NoEconomizer</EconoCtrlMthd>
+          <OASchMthd>FollowHVACAvailability</OASchMthd>
+          <StartUpDelay>1</StartUpDelay>
+          <AirSegSupRef>BaseSys5 SupAirSeg</AirSegSupRef>
+          <AirSegRetRef>BaseSys5 RetAirSeg</AirSegRetRef>
+        </OACtrl>
         <TrmlUnit>
           <Name>BaseVAVBox TrmlUnit</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Core_bottom Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
-          <PriAirFlowMaxSim>8741.13</PriAirFlowMaxSim>
-          <PriAirFlowMinSim>1748.23</PriAirFlowMinSim>
-          <HtgAirFlowMaxSim>4370.56</HtgAirFlowMaxSim>
+          <PriAirFlowMinSim>1588.01</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
             <Name>BaseVAVBox CoilHtg</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>81819.3</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
         </TrmlUnit>
@@ -4510,16 +4570,13 @@
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_bot_ZN_1 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
-          <PriAirFlowMaxSim>2513.07</PriAirFlowMaxSim>
-          <PriAirFlowMinSim>502.615</PriAirFlowMinSim>
-          <HtgAirFlowMaxSim>1256.54</HtgAirFlowMaxSim>
+          <PriAirFlowMinSim>334.764</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
             <Name>BaseVAVBox CoilHtg-2</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>45606.2</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
         </TrmlUnit>
@@ -4528,16 +4585,13 @@
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_bot_ZN_2 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
-          <PriAirFlowMaxSim>1616.09</PriAirFlowMaxSim>
-          <PriAirFlowMinSim>323.217</PriAirFlowMinSim>
-          <HtgAirFlowMaxSim>808.043</HtgAirFlowMaxSim>
+          <PriAirFlowMinSim>211.935</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
             <Name>BaseVAVBox CoilHtg-3</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>29881.2</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
         </TrmlUnit>
@@ -4546,16 +4600,13 @@
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_bot_ZN_3 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
-          <PriAirFlowMaxSim>1764.82</PriAirFlowMaxSim>
-          <PriAirFlowMinSim>352.965</PriAirFlowMinSim>
-          <HtgAirFlowMaxSim>882.412</HtgAirFlowMaxSim>
+          <PriAirFlowMinSim>334.764</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
             <Name>BaseVAVBox CoilHtg-4</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>37219.8</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
         </TrmlUnit>
@@ -4564,29 +4615,16 @@
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_bot_ZN_4 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg</PriAirSegRef>
-          <PriAirFlowMaxSim>1723.43</PriAirFlowMaxSim>
-          <PriAirFlowMinSim>344.687</PriAirFlowMinSim>
-          <HtgAirFlowMaxSim>861.717</HtgAirFlowMaxSim>
+          <PriAirFlowMinSim>211.92</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
             <Name>BaseVAVBox CoilHtg-5</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>30946.7</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
         </TrmlUnit>
-        <OACtrl>
-          <Name>BaseSys5 OACtrl</Name>
-          <EconoCtrlMthd>DifferentialDryBulb</EconoCtrlMthd>
-          <EconoIntegration>Integrated</EconoIntegration>
-          <MaxOARat>1</MaxOARat>
-          <OASchMthd>FollowHVACAvailability</OASchMthd>
-          <StartUpDelay>1</StartUpDelay>
-          <AirSegSupRef>BaseSys5 SupAirSeg</AirSegSupRef>
-          <AirSegRetRef>BaseSys5 RetAirSeg</AirSegRetRef>
-        </OACtrl>
       </AirSys>
       <AirSys>
         <Name>BaseAirSys5-2</Name>
@@ -4617,16 +4655,13 @@
             <Name>BaseSys5 CoilClg-2</Name>
             <Type>DirectExpansion</Type>
             <FuelSrc>Electric</FuelSrc>
-            <NumClgStages>2</NumClgStages>
-            <CapTotGrossRtdSim>532649</CapTotGrossRtdSim>
-            <CapTotRtdStageFrac index="0">0.5</CapTotRtdStageFrac>
-            <CapTotRtdStageFrac index="1">1</CapTotRtdStageFrac>
+            <NumClgStages>1</NumClgStages>
             <Cap_fTempCrvRef>CoilClgDXQRatio_fTwbToadbSI</Cap_fTempCrvRef>
-            <Cap_fFlowCrvRef>CoilClgDXDblQRatio_fCFMRatio</Cap_fFlowCrvRef>
-            <DXEIR>0.292197</DXEIR>
+            <Cap_fFlowCrvRef>CoilClgDXSnglQRatio_fCFMRatio</Cap_fFlowCrvRef>
+            <DXEIR>0.333333</DXEIR>
             <DXEIR_fTempCrvRef>CoilClgDXEIRRatio_fTwbToadbSI</DXEIR_fTempCrvRef>
             <DXEIR_fPLFCrvRef>CoilClgDXEIRRatio_fQFrac</DXEIR_fPLFCrvRef>
-            <DXEIR_fFlowCrvRef>CoilClgDXDblEIRRatio_fCFMRatio</DXEIR_fFlowCrvRef>
+            <DXEIR_fFlowCrvRef>CoilClgDXSnglEIRRatio_fCFMRatio</DXEIR_fFlowCrvRef>
             <CndsrType>Air</CndsrType>
           </CoilClg>
           <CoilHtg>
@@ -4634,52 +4669,43 @@
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>37877</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
           <Fan>
             <Name>BaseSys5 Fan-2</Name>
             <CtrlMthdSim>VariableSpeedDrive</CtrlMthdSim>
-            <FlowCapSim>18092.3</FlowCapSim>
-            <FlowMinSim>3618.47</FlowMinSim>
-            <TotEff>0.5766</TotEff>
-            <TotStaticPress>4</TotStaticPress>
+            <TotEff>1</TotEff>
+            <TotStaticPress>1e-005</TotStaticPress>
             <Pwr_fPLRCrvRef>FanVSDGoodSpResetPwrRatio_fCFMRatio</Pwr_fPLRCrvRef>
-            <MtrEff>0.93</MtrEff>
+            <MtrEff>1</MtrEff>
             <MtrPos>InAirStream</MtrPos>
           </Fan>
         </AirSeg>
         <AirSeg>
           <Name>BaseSys5 RetAirSeg-2</Name>
-          <Type>Relief</Type>
+          <Type>Return</Type>
           <Path>Ducted</Path>
-          <Fan>
-            <Name>BaseRelief Fan-2</Name>
-            <CtrlMthdSim>VariableSpeedDrive</CtrlMthdSim>
-            <FlowCapSim>17198.6</FlowCapSim>
-            <FlowMinSim>0</FlowMinSim>
-            <TotEff>0.4585</TotEff>
-            <TotStaticPress>1</TotStaticPress>
-            <Pwr_fPLRCrvRef>FanVSDPwrRatio_fCFMRatio</Pwr_fPLRCrvRef>
-            <MtrEff>0.917</MtrEff>
-            <MtrPos>InAirStream</MtrPos>
-          </Fan>
         </AirSeg>
+        <OACtrl>
+          <Name>BaseSys5 OACtrl-2</Name>
+          <EconoCtrlMthd>NoEconomizer</EconoCtrlMthd>
+          <OASchMthd>FollowHVACAvailability</OASchMthd>
+          <StartUpDelay>1</StartUpDelay>
+          <AirSegSupRef>BaseSys5 SupAirSeg-2</AirSegSupRef>
+          <AirSegRetRef>BaseSys5 RetAirSeg-2</AirSegRetRef>
+        </OACtrl>
         <TrmlUnit>
           <Name>BaseVAVBox TrmlUnit-6</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Core_mid Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-2</PriAirSegRef>
-          <PriAirFlowMaxSim>9233.08</PriAirFlowMaxSim>
-          <PriAirFlowMinSim>1846.62</PriAirFlowMinSim>
-          <HtgAirFlowMaxSim>4616.54</HtgAirFlowMaxSim>
+          <PriAirFlowMinSim>1588.01</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
             <Name>BaseVAVBox CoilHtg-6</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>108282</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
         </TrmlUnit>
@@ -4688,16 +4714,13 @@
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_mid_ZN_1 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-2</PriAirSegRef>
-          <PriAirFlowMaxSim>3037.62</PriAirFlowMaxSim>
-          <PriAirFlowMinSim>607.524</PriAirFlowMinSim>
-          <HtgAirFlowMaxSim>1518.81</HtgAirFlowMaxSim>
+          <PriAirFlowMinSim>334.764</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
             <Name>BaseVAVBox CoilHtg-7</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>52865.4</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
         </TrmlUnit>
@@ -4706,16 +4729,13 @@
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_mid_ZN_2 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-2</PriAirSegRef>
-          <PriAirFlowMaxSim>1911.1</PriAirFlowMaxSim>
-          <PriAirFlowMinSim>382.22</PriAirFlowMinSim>
-          <HtgAirFlowMaxSim>955.549</HtgAirFlowMaxSim>
+          <PriAirFlowMinSim>211.935</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
             <Name>BaseVAVBox CoilHtg-8</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>33987.3</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
         </TrmlUnit>
@@ -4724,16 +4744,13 @@
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_mid_ZN_3 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-2</PriAirSegRef>
-          <PriAirFlowMaxSim>1843.56</PriAirFlowMaxSim>
-          <PriAirFlowMinSim>368.712</PriAirFlowMinSim>
-          <HtgAirFlowMaxSim>921.781</HtgAirFlowMaxSim>
+          <PriAirFlowMinSim>334.764</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
             <Name>BaseVAVBox CoilHtg-9</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>39888.3</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
         </TrmlUnit>
@@ -4742,29 +4759,16 @@
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_mid_ZN_4 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-2</PriAirSegRef>
-          <PriAirFlowMaxSim>2066.99</PriAirFlowMaxSim>
-          <PriAirFlowMinSim>413.397</PriAirFlowMinSim>
-          <HtgAirFlowMaxSim>1033.49</HtgAirFlowMaxSim>
+          <PriAirFlowMinSim>211.92</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
             <Name>BaseVAVBox CoilHtg-10</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>35370.2</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
         </TrmlUnit>
-        <OACtrl>
-          <Name>BaseSys5 OACtrl-2</Name>
-          <EconoCtrlMthd>DifferentialDryBulb</EconoCtrlMthd>
-          <EconoIntegration>Integrated</EconoIntegration>
-          <MaxOARat>1</MaxOARat>
-          <OASchMthd>FollowHVACAvailability</OASchMthd>
-          <StartUpDelay>1</StartUpDelay>
-          <AirSegSupRef>BaseSys5 SupAirSeg-2</AirSegSupRef>
-          <AirSegRetRef>BaseSys5 RetAirSeg-2</AirSegRetRef>
-        </OACtrl>
       </AirSys>
       <AirSys>
         <Name>BaseAirSys5-3</Name>
@@ -4795,16 +4799,13 @@
             <Name>BaseSys5 CoilClg-3</Name>
             <Type>DirectExpansion</Type>
             <FuelSrc>Electric</FuelSrc>
-            <NumClgStages>2</NumClgStages>
-            <CapTotGrossRtdSim>548420</CapTotGrossRtdSim>
-            <CapTotRtdStageFrac index="0">0.5</CapTotRtdStageFrac>
-            <CapTotRtdStageFrac index="1">1</CapTotRtdStageFrac>
+            <NumClgStages>1</NumClgStages>
             <Cap_fTempCrvRef>CoilClgDXQRatio_fTwbToadbSI</Cap_fTempCrvRef>
-            <Cap_fFlowCrvRef>CoilClgDXDblQRatio_fCFMRatio</Cap_fFlowCrvRef>
-            <DXEIR>0.292197</DXEIR>
+            <Cap_fFlowCrvRef>CoilClgDXSnglQRatio_fCFMRatio</Cap_fFlowCrvRef>
+            <DXEIR>0.333333</DXEIR>
             <DXEIR_fTempCrvRef>CoilClgDXEIRRatio_fTwbToadbSI</DXEIR_fTempCrvRef>
             <DXEIR_fPLFCrvRef>CoilClgDXEIRRatio_fQFrac</DXEIR_fPLFCrvRef>
-            <DXEIR_fFlowCrvRef>CoilClgDXDblEIRRatio_fCFMRatio</DXEIR_fFlowCrvRef>
+            <DXEIR_fFlowCrvRef>CoilClgDXSnglEIRRatio_fCFMRatio</DXEIR_fFlowCrvRef>
             <CndsrType>Air</CndsrType>
           </CoilClg>
           <CoilHtg>
@@ -4812,52 +4813,43 @@
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>35003.6</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
           <Fan>
             <Name>BaseSys5 Fan-3</Name>
             <CtrlMthdSim>VariableSpeedDrive</CtrlMthdSim>
-            <FlowCapSim>18628</FlowCapSim>
-            <FlowMinSim>3725.61</FlowMinSim>
-            <TotEff>0.5766</TotEff>
-            <TotStaticPress>4</TotStaticPress>
+            <TotEff>1</TotEff>
+            <TotStaticPress>1e-005</TotStaticPress>
             <Pwr_fPLRCrvRef>FanVSDGoodSpResetPwrRatio_fCFMRatio</Pwr_fPLRCrvRef>
-            <MtrEff>0.93</MtrEff>
+            <MtrEff>1</MtrEff>
             <MtrPos>InAirStream</MtrPos>
           </Fan>
         </AirSeg>
         <AirSeg>
           <Name>BaseSys5 RetAirSeg-3</Name>
-          <Type>Relief</Type>
+          <Type>Return</Type>
           <Path>Ducted</Path>
-          <Fan>
-            <Name>BaseRelief Fan-3</Name>
-            <CtrlMthdSim>VariableSpeedDrive</CtrlMthdSim>
-            <FlowCapSim>17734.2</FlowCapSim>
-            <FlowMinSim>0</FlowMinSim>
-            <TotEff>0.4585</TotEff>
-            <TotStaticPress>1</TotStaticPress>
-            <Pwr_fPLRCrvRef>FanVSDPwrRatio_fCFMRatio</Pwr_fPLRCrvRef>
-            <MtrEff>0.917</MtrEff>
-            <MtrPos>InAirStream</MtrPos>
-          </Fan>
         </AirSeg>
+        <OACtrl>
+          <Name>BaseSys5 OACtrl-3</Name>
+          <EconoCtrlMthd>NoEconomizer</EconoCtrlMthd>
+          <OASchMthd>FollowHVACAvailability</OASchMthd>
+          <StartUpDelay>1</StartUpDelay>
+          <AirSegSupRef>BaseSys5 SupAirSeg-3</AirSegSupRef>
+          <AirSegRetRef>BaseSys5 RetAirSeg-3</AirSegRetRef>
+        </OACtrl>
         <TrmlUnit>
           <Name>BaseVAVBox TrmlUnit-11</Name>
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Core_top Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-3</PriAirSegRef>
-          <PriAirFlowMaxSim>9404.53</PriAirFlowMaxSim>
-          <PriAirFlowMinSim>1880.91</PriAirFlowMinSim>
-          <HtgAirFlowMaxSim>4702.26</HtgAirFlowMaxSim>
+          <PriAirFlowMinSim>1588.01</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
             <Name>BaseVAVBox CoilHtg-11</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>175966</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
         </TrmlUnit>
@@ -4866,16 +4858,13 @@
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_top_ZN_1 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-3</PriAirSegRef>
-          <PriAirFlowMaxSim>3116.4</PriAirFlowMaxSim>
-          <PriAirFlowMinSim>623.281</PriAirFlowMinSim>
-          <HtgAirFlowMaxSim>1558.2</HtgAirFlowMaxSim>
+          <PriAirFlowMinSim>334.764</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
             <Name>BaseVAVBox CoilHtg-12</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>60296.6</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
         </TrmlUnit>
@@ -4884,16 +4873,13 @@
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_top_ZN_2 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-3</PriAirSegRef>
-          <PriAirFlowMaxSim>1907.76</PriAirFlowMaxSim>
-          <PriAirFlowMinSim>381.551</PriAirFlowMinSim>
-          <HtgAirFlowMaxSim>953.878</HtgAirFlowMaxSim>
+          <PriAirFlowMinSim>211.935</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
             <Name>BaseVAVBox CoilHtg-13</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>37990</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
         </TrmlUnit>
@@ -4902,16 +4888,13 @@
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_top_ZN_3 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-3</PriAirSegRef>
-          <PriAirFlowMaxSim>2022.08</PriAirFlowMaxSim>
-          <PriAirFlowMinSim>404.416</PriAirFlowMinSim>
-          <HtgAirFlowMaxSim>1011.04</HtgAirFlowMaxSim>
+          <PriAirFlowMinSim>334.764</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
             <Name>BaseVAVBox CoilHtg-14</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>49470.1</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
         </TrmlUnit>
@@ -4920,31 +4903,99 @@
           <Type>VAVReheatBox</Type>
           <ZnServedRef>Perimeter_top_ZN_4 Thermal Zone</ZnServedRef>
           <PriAirSegRef>BaseSys5 SupAirSeg-3</PriAirSegRef>
-          <PriAirFlowMaxSim>2177.27</PriAirFlowMaxSim>
-          <PriAirFlowMinSim>435.453</PriAirFlowMinSim>
-          <HtgAirFlowMaxSim>1088.63</HtgAirFlowMaxSim>
+          <PriAirFlowMinSim>211.92</PriAirFlowMinSim>
           <ReheatCtrlMthd>DualMaximum</ReheatCtrlMthd>
           <CoilHtg>
             <Name>BaseVAVBox CoilHtg-15</Name>
             <Type>HotWater</Type>
             <FluidSegInRef>BaseHWPrimSupSeg</FluidSegInRef>
             <FluidSegOutRef>BaseHWPrimRetSeg</FluidSegOutRef>
-            <CapTotGrossRtdSim>40983.5</CapTotGrossRtdSim>
             <AuxPwr>0</AuxPwr>
           </CoilHtg>
         </TrmlUnit>
-        <OACtrl>
-          <Name>BaseSys5 OACtrl-3</Name>
-          <EconoCtrlMthd>DifferentialDryBulb</EconoCtrlMthd>
-          <EconoIntegration>Integrated</EconoIntegration>
-          <MaxOARat>1</MaxOARat>
-          <OASchMthd>FollowHVACAvailability</OASchMthd>
-          <StartUpDelay>1</StartUpDelay>
-          <AirSegSupRef>BaseSys5 SupAirSeg-3</AirSegSupRef>
-          <AirSegRetRef>BaseSys5 RetAirSeg-3</AirSegRetRef>
-        </OACtrl>
       </AirSys>
     </Bldg>
+    <ConsAssm>
+      <Name>SlabOnOrBelowGradeF073</Name>
+      <SpecMthd>FFactor</SpecMthd>
+      <FFactor>0.73</FFactor>
+      <ExtRoughness>MediumRough</ExtRoughness>
+      <ExtSolAbs>0.7</ExtSolAbs>
+      <ExtThrmlAbs>0.9</ExtThrmlAbs>
+      <ExtVisAbs>0.8</ExtVisAbs>
+      <IntSolAbs>0.7</IntSolAbs>
+      <IntThrmlAbs>0.9</IntThrmlAbs>
+      <IntVisAbs>0.8</IntVisAbs>
+      <MatRef index="0">Concrete - 140 lb/ft3 - 6 in.</MatRef>
+    </ConsAssm>
+    <ConsAssm>
+      <Name>MetalFrameWallU062</Name>
+      <SpecMthd>Layers</SpecMthd>
+      <ExtRoughness>MediumRough</ExtRoughness>
+      <ExtSolAbs>0.7</ExtSolAbs>
+      <ExtThrmlAbs>0.9</ExtThrmlAbs>
+      <ExtVisAbs>0.8</ExtVisAbs>
+      <IntSolAbs>0.7</IntSolAbs>
+      <IntThrmlAbs>0.9</IntThrmlAbs>
+      <IntVisAbs>0.8</IntVisAbs>
+      <MatRef index="0">Stucco - 7/8 in.</MatRef>
+      <MatRef index="1">Compliance Insulation R13.99</MatRef>
+      <MatRef index="2">Air - Metal Wall Framing - 16 or 24 in. OC</MatRef>
+      <MatRef index="3">Gypsum Board - 1/2 in.</MatRef>
+    </ConsAssm>
+    <ConsAssm>
+      <Name>MetalFrameWallInterior</Name>
+      <SpecMthd>Layers</SpecMthd>
+      <ExtRoughness>MediumRough</ExtRoughness>
+      <ExtSolAbs>0.7</ExtSolAbs>
+      <ExtThrmlAbs>0.9</ExtThrmlAbs>
+      <ExtVisAbs>0.8</ExtVisAbs>
+      <IntSolAbs>0.7</IntSolAbs>
+      <IntThrmlAbs>0.9</IntThrmlAbs>
+      <IntVisAbs>0.8</IntVisAbs>
+      <MatRef index="0">Gypsum Board - 5/8 in.</MatRef>
+      <MatRef index="1">Air - Metal Wall Framing - 16 or 24 in. OC</MatRef>
+      <MatRef index="2">Gypsum Board - 5/8 in.</MatRef>
+    </ConsAssm>
+    <ConsAssm>
+      <Name>FlatNonresWoodFramingAndOtherRoofU039</Name>
+      <SpecMthd>Layers</SpecMthd>
+      <ExtRoughness>MediumRough</ExtRoughness>
+      <ExtSolAbs>0.37</ExtSolAbs>
+      <ExtThrmlAbs>0.85</ExtThrmlAbs>
+      <ExtVisAbs>0.85</ExtVisAbs>
+      <IntSolAbs>0.7</IntSolAbs>
+      <IntThrmlAbs>0.9</IntThrmlAbs>
+      <IntVisAbs>0.8</IntVisAbs>
+      <MatRef index="0">Metal Standing Seam - 1/16 in.</MatRef>
+      <MatRef index="1">Compliance Insulation R24.86</MatRef>
+    </ConsAssm>
+    <ConsAssm>
+      <Name>TypicalPlenumFloorInterior</Name>
+      <SpecMthd>Layers</SpecMthd>
+      <ExtRoughness>MediumRough</ExtRoughness>
+      <ExtSolAbs>0.7</ExtSolAbs>
+      <ExtThrmlAbs>0.9</ExtThrmlAbs>
+      <ExtVisAbs>0.8</ExtVisAbs>
+      <IntSolAbs>0.7</IntSolAbs>
+      <IntThrmlAbs>0.9</IntThrmlAbs>
+      <IntVisAbs>0.8</IntVisAbs>
+      <MatRef index="0">Acoustic Tile - 3/4 in.</MatRef>
+    </ConsAssm>
+    <ConsAssm>
+      <Name>TypicalFloorInterior</Name>
+      <SpecMthd>Layers</SpecMthd>
+      <ExtRoughness>MediumRough</ExtRoughness>
+      <ExtSolAbs>0.7</ExtSolAbs>
+      <ExtThrmlAbs>0.9</ExtThrmlAbs>
+      <ExtVisAbs>0.8</ExtVisAbs>
+      <IntSolAbs>0.7</IntSolAbs>
+      <IntThrmlAbs>0.9</IntThrmlAbs>
+      <IntVisAbs>0.8</IntVisAbs>
+      <MatRef index="0">Metal Deck - 1/16 in.</MatRef>
+      <MatRef index="1">Concrete - 140 lb/ft3 - 4 in.</MatRef>
+      <MatRef index="2">Carpet - 3/4 in.</MatRef>
+    </ConsAssm>
     <FluidSys>
       <Name>BaseHWSystem</Name>
       <Type>HotWater</Type>
@@ -4953,14 +5004,6 @@
       <DsgnSupWtrDelT>40</DsgnSupWtrDelT>
       <TempCtrl>Fixed</TempCtrl>
       <FixedSupTemp>180</FixedSupTemp>
-      <FluidSeg>
-        <Name>BaseHWPrimSupSeg</Name>
-        <Type>PrimarySupply</Type>
-      </FluidSeg>
-      <FluidSeg>
-        <Name>BaseHWPrimRetSeg</Name>
-        <Type>PrimaryReturn</Type>
-      </FluidSeg>
       <Blr>
         <Name>Base Blr</Name>
         <Type>HotWater</Type>
@@ -4969,49 +5012,35 @@
         <FluidSegOutRef>BaseHWPrimSupSeg</FluidSegOutRef>
         <EntTempDsgn>140</EntTempDsgn>
         <LvgTempDsgn>180</LvgTempDsgn>
-        <CapRtd>390973</CapRtd>
         <ThrmlEff>0.8</ThrmlEff>
         <HIR_fPLRCrvRef>BlrHWBlrFIRRatio_fQRatioSI</HIR_fPLRCrvRef>
         <UnldRatMin>0.25</UnldRatMin>
-        <ParasiticLd>116.666</ParasiticLd>
-        <WtrFlowCap>19.5412</WtrFlowCap>
+        <ParasiticLd>480.076</ParasiticLd>
         <Pump>
           <Name>Base HW Pump</Name>
           <OperCtrl>OnDemand</OperCtrl>
           <SpdCtrl>ConstantSpeed</SpdCtrl>
           <Cnt>1</Cnt>
-          <FlowCap>19.5412</FlowCap>
-          <TotHd>60.3958</TotHd>
-          <MtrEff>0.855</MtrEff>
-          <Pwr>0.371283</Pwr>
+          <TotHd>0</TotHd>
+          <MtrEff>1</MtrEff>
+          <Pwr>0</Pwr>
         </Pump>
       </Blr>
-      <Blr>
-        <Name>Base Blr-2</Name>
-        <Type>HotWater</Type>
-        <FuelSrc>Gas</FuelSrc>
-        <FluidSegInRef>BaseHWPrimRetSeg</FluidSegInRef>
-        <FluidSegOutRef>BaseHWPrimSupSeg</FluidSegOutRef>
-        <EntTempDsgn>140</EntTempDsgn>
-        <LvgTempDsgn>180</LvgTempDsgn>
-        <CapRtd>390973</CapRtd>
-        <ThrmlEff>0.8</ThrmlEff>
-        <HIR_fPLRCrvRef>BlrHWBlrFIRRatio_fQRatioSI</HIR_fPLRCrvRef>
-        <UnldRatMin>0.25</UnldRatMin>
-        <ParasiticLd>116.666</ParasiticLd>
-        <WtrFlowCap>19.5412</WtrFlowCap>
-        <Pump>
-          <Name>Base HW Pump-2</Name>
-          <OperCtrl>OnDemand</OperCtrl>
-          <SpdCtrl>ConstantSpeed</SpdCtrl>
-          <Cnt>1</Cnt>
-          <FlowCap>19.5412</FlowCap>
-          <TotHd>60.3958</TotHd>
-          <MtrEff>0.855</MtrEff>
-          <Pwr>0.371283</Pwr>
-        </Pump>
-      </Blr>
+      <FluidSeg>
+        <Name>BaseHWPrimSupSeg</Name>
+        <Type>PrimarySupply</Type>
+      </FluidSeg>
+      <FluidSeg>
+        <Name>BaseHWPrimRetSeg</Name>
+        <Type>PrimaryReturn</Type>
+      </FluidSeg>
     </FluidSys>
+    <CrvQuad>
+      <Name>CoilClgDXSnglEIRRatio_fCFMRatio</Name>
+      <Coef1>1.156</Coef1>
+      <Coef2>-0.1816</Coef2>
+      <Coef3>0.0256</Coef3>
+    </CrvQuad>
     <FluidSys>
       <Name>BaseSHWSystem</Name>
       <Type>ServiceHotWater</Type>
@@ -5021,15 +5050,6 @@
       <CommonPipeSim>None</CommonPipeSim>
       <TempCtrl>Fixed</TempCtrl>
       <FixedSupTemp>135</FixedSupTemp>
-      <FluidSeg>
-        <Name>BaseSHWPrimSupSeg</Name>
-        <Type>PrimarySupply</Type>
-      </FluidSeg>
-      <FluidSeg>
-        <Name>BaseSHWMuniInlet</Name>
-        <Type>MakeupFluid</Type>
-        <Src>MunicipalWater</Src>
-      </FluidSeg>
       <WtrHtr>
         <Name>BaseWaterHeater</Name>
         <Type>Storage</Type>
@@ -5050,92 +5070,15 @@
         <MaxTempLimit>180</MaxTempLimit>
         <CtrlType>Cycle</CtrlType>
       </WtrHtr>
+      <FluidSeg>
+        <Name>BaseSHWPrimSupSeg</Name>
+        <Type>PrimarySupply</Type>
+      </FluidSeg>
+      <FluidSeg>
+        <Name>BaseSHWMuniInlet</Name>
+        <Type>MakeupFluid</Type>
+        <Src>MunicipalWater</Src>
+      </FluidSeg>
     </FluidSys>
-    <Hol>
-      <Name>New Year's Day</Name>
-      <SpecMthd>Date</SpecMthd>
-      <Month>January</Month>
-      <Day>1</Day>
-    </Hol>
-    <Hol>
-      <Name>Martin Luther King Day</Name>
-      <SpecMthd>Third</SpecMthd>
-      <DayOfWeek>Monday</DayOfWeek>
-      <Month>January</Month>
-    </Hol>
-    <Hol>
-      <Name>Presidents Day</Name>
-      <SpecMthd>Third</SpecMthd>
-      <DayOfWeek>Monday</DayOfWeek>
-      <Month>February</Month>
-    </Hol>
-    <Hol>
-      <Name>Memorial Day</Name>
-      <SpecMthd>Last</SpecMthd>
-      <DayOfWeek>Monday</DayOfWeek>
-      <Month>May</Month>
-    </Hol>
-    <Hol>
-      <Name>Independence Day</Name>
-      <SpecMthd>Date</SpecMthd>
-      <Month>July</Month>
-      <Day>4</Day>
-    </Hol>
-    <Hol>
-      <Name>Labor Day</Name>
-      <SpecMthd>First</SpecMthd>
-      <DayOfWeek>Monday</DayOfWeek>
-      <Month>September</Month>
-    </Hol>
-    <Hol>
-      <Name>Columbus Day</Name>
-      <SpecMthd>Second</SpecMthd>
-      <DayOfWeek>Monday</DayOfWeek>
-      <Month>October</Month>
-    </Hol>
-    <Hol>
-      <Name>Veterans Day</Name>
-      <SpecMthd>Date</SpecMthd>
-      <Month>November</Month>
-      <Day>11</Day>
-    </Hol>
-    <Hol>
-      <Name>Thanksgiving Day</Name>
-      <SpecMthd>Fourth</SpecMthd>
-      <DayOfWeek>Thursday</DayOfWeek>
-      <Month>November</Month>
-    </Hol>
-    <Hol>
-      <Name>Christmas Day</Name>
-      <SpecMthd>Date</SpecMthd>
-      <Month>December</Month>
-      <Day>25</Day>
-    </Hol>
-    <CrvCubic>
-      <Name>CoilClgDXDblQRatio_fCFMRatio</Name>
-      <Coef1>0.472786</Coef1>
-      <Coef2>1.24334</Coef2>
-      <Coef3>-1.03871</Coef3>
-      <Coef4>0.322578</Coef4>
-      <MinOut>0.47</MinOut>
-    </CrvCubic>
-    <CrvCubic>
-      <Name>CoilClgDXDblEIRRatio_fCFMRatio</Name>
-      <Coef1>1.00795</Coef1>
-      <Coef2>0.345441</Coef2>
-      <Coef3>-0.692289</Coef3>
-      <Coef4>0.338899</Coef4>
-    </CrvCubic>
-    <CrvCubic>
-      <Name>FanVSDPwrRatio_fCFMRatio</Name>
-      <Coef1>0.070429</Coef1>
-      <Coef2>0.38533</Coef2>
-      <Coef3>-0.460864</Coef3>
-      <Coef4>1.0092</Coef4>
-      <MaxOut>1</MaxOut>
-      <MaxVar1>1</MaxVar1>
-      <MinOut>0.1</MinOut>
-      <MinVar1>0.084</MinVar1>
-    </CrvCubic>
   </Proj>
 </SDDXML>
