@@ -1607,6 +1607,14 @@ TEST_F(ModelSimulationFixture,absorption_chillers_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture,dual_duct_rb) {
+  openstudio::SqlFile sql = runSimulation("dual_duct.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
 //TEST_F(ModelSimulationFixture,unitary_test_rb) {
 //  openstudio::SqlFile sql = runSimulation("unitary_test.rb");
 //
