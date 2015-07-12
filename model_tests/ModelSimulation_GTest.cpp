@@ -618,18 +618,6 @@ TEST_F(ModelSimulationFixture, unitary_system_rb) {
   EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
 
-TEST_F(ModelSimulationFixture, unitary_system_osm) {
-  openstudio::SqlFile sql = runSimulation("unitary_system.osm");
-
-  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_LT(*totalSiteEnergy, 1000000);
-
-  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
-  ASSERT_TRUE(hoursHeatingSetpointNotMet);
-  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-}
-
 TEST_F(ModelSimulationFixture, refrigeration_system_rb) {
   openstudio::SqlFile sql = runSimulation("refrigeration_system.rb");
 
@@ -738,8 +726,8 @@ TEST_F(ModelSimulationFixture, lowtemprad_constflow_rb) {
   boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
   ASSERT_TRUE(hoursHeatingSetpointNotMet);
   EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-	
-	boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
   ASSERT_TRUE(hoursCoolingSetpointNotMet);
   EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
@@ -753,7 +741,7 @@ TEST_F(ModelSimulationFixture, lowtemprad_constflow_osm) {
   boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
   ASSERT_TRUE(hoursHeatingSetpointNotMet);
   EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-	
+  
   boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
   ASSERT_TRUE(hoursCoolingSetpointNotMet);
   EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
@@ -769,7 +757,7 @@ TEST_F(ModelSimulationFixture, lowtemprad_varflow_rb) {
   boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
   ASSERT_TRUE(hoursHeatingSetpointNotMet);
   EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-	
+  
   boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
   ASSERT_TRUE(hoursCoolingSetpointNotMet);
   EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
@@ -784,8 +772,8 @@ TEST_F(ModelSimulationFixture, lowtemprad_varflow_osm) {
   boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
   ASSERT_TRUE(hoursHeatingSetpointNotMet);
   EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-	
-	boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
   ASSERT_TRUE(hoursCoolingSetpointNotMet);
   EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
