@@ -259,6 +259,12 @@ class BaselineModel < OpenStudio::Model::Model
         dc.setPositionZCoordinate(position.z + offsetZ)
         zone.setPrimaryDaylightingControl(dc)
         
+        glr = OpenStudio::Model::GlareSensor.new(self)
+        glr.setSpace(biggestWindow.surface.get.space.get)
+        glr.setPositionXCoordinate(position.x + offsetX)
+        glr.setPositionYCoordinate(position.y + offsetY)
+        glr.setPositionZCoordinate(position.z + offsetZ)
+        
         ill = OpenStudio::Model::IlluminanceMap.new(self)
         ill.setSpace(biggestWindow.surface.get.space.get)
         ill.setOriginXCoordinate(position.x + offsetX - 0.5)
@@ -266,8 +272,10 @@ class BaselineModel < OpenStudio::Model::Model
         ill.setOriginZCoordinate(position.z + offsetZ)
         ill.setXLength(1)
         ill.setYLength(1)
+        ill.setNumberofXGridPoints(5)
+        ill.setNumberofYGridPoints(5)
         zone.setIlluminanceMap(ill)
-  
+ 
       end
     end
     

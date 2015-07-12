@@ -18,10 +18,6 @@
 **********************************************************************/
 
 #include <model_tests/ModelSimulationFixture.hpp>
-
-#include <model/TimeDependentValuation.hpp>
-
-#include <utilities/filetypes/TimeDependentValuationFile.hpp>
 #include <utilities/sql/SqlFile.hpp>
 #include <utilities/core/FileLogSink.hpp>
 #include <utilities/core/Path.hpp>

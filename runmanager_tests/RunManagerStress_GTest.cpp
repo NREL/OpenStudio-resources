@@ -103,8 +103,8 @@ void RunManagerTestFixture::run_stress_test(bool t_show_ui, bool t_listener, boo
         }
       }
       openstudio::runmanager::Tools tools 
-        = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path(),
-            openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+        = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path());
+
 
       wf.add(tools);
       wf.addParam(openstudio::runmanager::JobParam("flatoutdir"));

@@ -111,8 +111,7 @@ openstudio::runmanager::Job createPostProcessComparisonJob(const openstudio::pat
 
   openstudio::runmanager::Tools tools 
     = openstudio::runmanager::ConfigOptions::makeTools(
-        energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path(),
-        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+        energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path());
 
   wf.add(tools);
 
@@ -203,7 +202,7 @@ TEST_P(EnergyPlusTestFixture, PostProcessComparison)
   if (!j.treeErrors().succeeded())
   {
 //    openstudio::path loggingoutdir = outdir / openstudio::toPath(boost::filesystem::stem(GetParam()));
-    openstudio::path loggingoutdir = outdir / openstudio::toPath(GetParam().stem());
+    openstudio::path loggingoutdir = outdir / GetParam().stem();
     boost::filesystem::create_directories(loggingoutdir);
 
     std::ofstream ofs(openstudio::toString(loggingoutdir / openstudio::toPath("JobLogs.txt")).c_str(), std::ios_base::trunc);
@@ -315,8 +314,7 @@ TEST_P(EnergyPlusTestFixture, ConversionFileComparison)
 
   openstudio::runmanager::Tools tools 
     = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), 
-        openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path(),
-        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+        openstudio::path(), openstudio::path(), rubyExePath().parent_path(), openstudio::path());
 
   wf.add(tools);
 

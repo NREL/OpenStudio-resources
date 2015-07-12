@@ -18,15 +18,9 @@
 **********************************************************************/
 
 #include <model_tests/ModelFixture.hpp>
-
-#include <model/TimeDependentValuation.hpp>
-
-#include <utilities/filetypes/TimeDependentValuationFile.hpp>
 #include <utilities/sql/SqlFile.hpp>
 #include <utilities/core/FileLogSink.hpp>
 #include <utilities/core/Path.hpp>
-
-
 
 void ModelFixture::SetUp() {}
 
@@ -42,52 +36,6 @@ void ModelFixture::SetUpTestCase() {
 void ModelFixture::TearDownTestCase() {}
 
 boost::optional<openstudio::FileLogSink> ModelFixture::logFile;
-
-
-void TimeDependentValuationFixture::SetUp() {
-  // load model
-  openstudio::path modelPath = resourcesPath()/
-                               openstudio::toPath(GetParam().first)/
-                               openstudio::toPath("in.osm");
-  openstudio::model::OptionalModel oModel = openstudio::model::Model::load(modelPath);
-  ASSERT_TRUE(oModel);
-  m_model = *oModel;
-
-  // set TDV file
-  openstudio::path tdvPath = resourcesPath()/openstudio::toPath(GetParam().second);
-  openstudio::OptionalTimeDependentValuationFile oTdvFile = openstudio::TimeDependentValuationFile::load(tdvPath);
-  ASSERT_TRUE(oTdvFile);
-  openstudio::model::OptionalTimeDependentValuation oTdv = openstudio::model::TimeDependentValuation::setTimeDependentValuation(m_model,*oTdvFile);
-  ASSERT_TRUE(oTdv);
-
-  // set SqlFile
-  openstudio::path sqlPath = resourcesPath()/
-                             openstudio::toPath(GetParam().first)/
-                             openstudio::toPath("eplusout.sql");
-  if (!boost::filesystem::exists(sqlPath)) {
-    sqlPath = resourcesPath()/
-              openstudio::toPath(GetParam().first)/
-              openstudio::toPath("in.sql");
-  }
-  openstudio::SqlFile sqlFile(sqlPath);
-  m_model.setSqlFile(sqlFile);
-}
-
-void TimeDependentValuationFixture::TearDown() {}
-
-void TimeDependentValuationFixture::SetUpTestCase() {
-  // set up logging
-  logFile = openstudio::FileLogSink(openstudio::toPath("./TimeDependentValuationFixture.log"));
-  logFile->setLogLevel(Info);
-}
-
-void TimeDependentValuationFixture::TearDownTestCase() {
-  logFile->disable();
-}
-
-boost::optional<openstudio::FileLogSink> TimeDependentValuationFixture::logFile;
-openstudio::model::Model TimeDependentValuationFixture::m_model;
-
 
 void IntersectionFixture::SetUp() {}
 

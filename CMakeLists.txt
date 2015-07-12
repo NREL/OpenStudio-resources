@@ -2,6 +2,7 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
  
 PROJECT(OpenStudioRegression)
 
+cmake_policy(SET CMP0020 NEW)
 ###############################################################################
 # Add to include path
 
@@ -34,8 +35,8 @@ option( REQUIRE_OSSERVER OFF )
 
 # Point to OpenStudio
 SET( OPENSTUDIO_BUILD_DIR "" CACHE PATH "Build or install directory for OpenStudio build to link against")
-SET( OPENSTUDIOCORE_BUILD_DIR "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build")
-INCLUDE ( "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/OpenStudioCoreConfig.cmake" )
+SET( OPENSTUDIOCORE_BUILD_DIR "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build")
+INCLUDE ( "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/OpenStudioCoreConfig.cmake" )
 
 # Point to openstudio-server
 SET( OSSERVER_PATH "" CACHE PATH "Path to your openstudio-server repository." )
@@ -79,53 +80,62 @@ INCLUDE(CTest)
 
 ###############################################################################
 # Compiler and system specific options
-IF(UNIX)
+if(UNIX)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing")
+
   # all warnings
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing")
-  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing")
-  # effective c++
-  #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
-  # treat warnings as errors
-  #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-ENDIF(UNIX)
-IF(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")
-  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -stdlib=libstdc++")
-ENDIF()
-IF(MINGW)
-  # all warnings
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-  # effective c++
-  #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
-  # treat warnings as errors
-  #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch -Wnon-virtual-dtor")
+  if(APPLE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual -ftemplate-depth=1024")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual")
+  endif()
   
-  # wchar not supported for MinGW
-  ADD_DEFINITIONS(-DBOOST_LOG_USE_CHAR)
-  ADD_DEFINITIONS(-DBOOST_LOG_NO_COMPILER_TLS)
-ENDIF(MINGW)
-IF(MSVC)
-  # warning level 3
-  SET(CMAKE_CXX_WARNING_LEVEL 3)
+  if(APPLE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  endif()
+endif()
+if(MINGW)
   # all warnings
-  #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+
+  # wchar not supported for MinGW
+  add_definitions(-DBOOST_LOG_USE_CHAR)
+  add_definitions(-DBOOST_LOG_NO_COMPILER_TLS)
+endif()
+if(MSVC)
+  # warning level 3
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
+  
   # create compiler processes on all effective processors
-  IF(BUILD_WITH_MULTIPLE_PROCESSES)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
-  ENDIF(BUILD_WITH_MULTIPLE_PROCESSES)
-  # ignore first seen as struct now using class
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4099")
+  if(BUILD_WITH_MULTIPLE_PROCESSES)
+    add_definitions(/MP)
+  endif()
+  
+  #Enable warning on thread un-safe static member initialization - DLM: we have been bit by this many times
+  add_definitions(/w44640)
+  
   # ignore decorated name length exceeded
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4503")
+  add_definitions(/wd4503)
+  
   # ignore needs to have dll-interface to be used by clients of class
-  # we will not rely on exporting templates instead all libraries must 
+  # we will not rely on exporting templates instead all libraries must
   # be linked against the same runtime
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251")
-  # treat warnings as errors
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+  add_definitions(/wd4251)
+  
+  if(NOT CMAKE_CL_64)
+    # treat warnings as errors
+    add_definitions(/WX)
+  else()
+    add_definitions(/bigobj)
+  endif()
+
   # ignore warnings about the stl being insecure
-  ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
-ENDIF(MSVC)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
+
+endif()
 ###############################################################################
 
 ###############################################################################
@@ -159,23 +169,23 @@ IF(MSVC)
   file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Products/RelWithDebInfo")
   list( APPEND CMAKE_LIBRARY_PATH ${OPENSTUDIO_LIB_DIR} )
 
-  file(GLOB DEBUG_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/*.dll")
-  file(GLOB RELEASE_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Release/*.dll")
-  file(GLOB RELDBG_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/RelWithDebInfo/*.dll")
+  file(GLOB DEBUG_DLLS "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug/*.dll")
+  file(GLOB RELEASE_DLLS "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/Products/Release/*.dll")
+  file(GLOB RELDBG_DLLS "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo/*.dll")
   list( APPEND ALL_DEBUG_DLLS ${DEBUG_DLLS} )
   list( APPEND ALL_RELEASE_DLLS ${RELEASE_DLLS} )
   list( APPEND ALL_RELDBG_DLLS ${RELDBG_DLLS} )
   
-  file(GLOB DEBUG_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/ruby/Debug/*.dll")
-  file(GLOB RELEASE_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/ruby/Release/*.dll")
-  file(GLOB RELDBG_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/ruby/RelWithDebInfo/*.dll")
+  file(GLOB DEBUG_DLLS "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/Products/ruby/Debug/*.dll")
+  file(GLOB RELEASE_DLLS "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/Products/ruby/Release/*.dll")
+  file(GLOB RELDBG_DLLS "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/Products/ruby/RelWithDebInfo/*.dll")
   list( APPEND ALL_DEBUG_DLLS ${DEBUG_DLLS} )
   list( APPEND ALL_RELEASE_DLLS ${RELEASE_DLLS} )
   list( APPEND ALL_RELDBG_DLLS ${RELDBG_DLLS} )  
   
-  file(GLOB DEBUG_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/ruby/Debug/*.so")
-  file(GLOB RELEASE_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/ruby/Release/*.so")
-  file(GLOB RELDBG_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/ruby/RelWithDebInfo/*.so")
+  file(GLOB DEBUG_DLLS "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/Products/ruby/Debug/*.so")
+  file(GLOB RELEASE_DLLS "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/Products/ruby/Release/*.so")
+  file(GLOB RELDBG_DLLS "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/Products/ruby/RelWithDebInfo/*.so")
   list( APPEND ALL_DEBUG_DLLS ${DEBUG_DLLS} )
   list( APPEND ALL_RELEASE_DLLS ${RELEASE_DLLS} )
   list( APPEND ALL_RELDBG_DLLS ${RELDBG_DLLS} )  
@@ -184,7 +194,7 @@ IF(MSVC)
   list( APPEND ALL_DLLS ${ALL_RELEASE_DLLS} )
   list( APPEND ALL_DLLS ${ALL_RELDBG_DLLS} )
   list( LENGTH ALL_DLLS NUM_DLLS )
-  message("Copying ${NUM_DLLS} DLLs under ${OPENSTUDIO_BUILD_DIR} to ${CMAKE_BINARY_DIR}")
+  message( STATUS "Copying ${NUM_DLLS} DLLs under ${OPENSTUDIO_BUILD_DIR} to ${CMAKE_BINARY_DIR}")
   file(COPY ${ALL_DEBUG_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/Products/Debug/")
   file(COPY ${ALL_RELEASE_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/Products/Release/")
   file(COPY ${ALL_RELDBG_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/Products/RelWithDebInfo/")
@@ -195,7 +205,6 @@ link_directories(${OpenStudioCore_LIBRARY_DIRS})
 SET(OPENSTUDIO_LIBS
   gtest
   gtest_main
-  zkqwt
   litesql
   litesql-util
   openstudio_utilities
@@ -234,45 +243,75 @@ MARK_AS_ADVANCED(
 
 # Ruby
 FIND_PROGRAM( RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} "${OPENSTUDIO_BUILD_DIR}/Ruby-prefix/src/Ruby/bin/" NO_SYSTEM_ENVIRONMENT_PATH )
-FIND_PACKAGE( Ruby REQUIRED )
+#FIND_PACKAGE( Ruby REQUIRED )
 
 # Google test library
 ADD_DEFINITIONS( -DGTEST_HAS_TR1_TUPLE=0 )
 
-# Enable support for boost > 1.42 ish by forcing boost_filesystem_version 2
-ADD_DEFINITIONS(-DBOOST_FILESYSTEM_VERSION=2)
+# Enable support for boost > 1.49 ish by forcing boost_filesystem_version 3
+ADD_DEFINITIONS(-DBOOST_FILESYSTEM_VERSION=3)
+
+# Use header only Chrono
+ADD_DEFINITIONS(-DBOOST_CHRONO_HEADER_ONLY)
 
 # Boost
-IF(APPLE)
-  set(Boost_USE_STATIC_LIBS ON)  
-ENDIF()
-IF (WIN32)
-  set(Boost_USE_STATIC_LIBS ON)  
+if(APPLE)
+  set(Boost_USE_STATIC_LIBS ON)
+elseif(WIN32)
+  set(Boost_USE_STATIC_LIBS ON)
+endif()
+mark_as_advanced(
+  Boost_DIR
+  BOOST_THREAD_LIBRARY
+)
 
-  #uncomment all of this if we want to force dynamic libs on windows
-#  set(Boost_USE_STATIC_LIBS OFF)  
-#  ADD_DEFINITIONS( -DBOOST_THREAD_USE_DLL -DBOOST_THREAD_DYN_LINK -DBOOST_PROGRAM_OPTIONS_DYN_LINK  -DBOOST_REGEX_DYN_LINK  -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -DBOOST_DATE_TIME_DYN_LINK)
-#  LINK_DIRECTORIES( ${Boost_LIBRARY_DIRS} )
-#  IF (MSVC)
-#    #Ignore dll specific warnings that are out of our hands to control, coming from external projects
-#    ADD_DEFINITIONS( "/wd4251 /wd4275" )
-#  ENDIF (MSVC)
-ENDIF (WIN32)
+# Check default Boost install location for Windows if Boost has not been found, and display missing components
+if(MSVC AND NOT Boost_FOUND AND EXISTS "C:/local/boost_1_55_0/")
+  if(CMAKE_CL_64)
+    set(BOOST_ARCH 64)
+  else()
+    set(BOOST_ARCH 32)
+  endif()
+  if(MSVC12)
+    set(BOOST_MSVC 12.0)
+  endif()
+  
+  if(EXISTS "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
+    set(BOOST_ROOT "C:/local/boost_1_55_0")
+    set(BOOST_LIBRARYDIR "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
+    find_package(Boost 1.55.0 COMPONENTS filesystem regex program_options system thread date_time log QUIET)
+    if(NOT Boost_FOUND)
+      message(STATUS "Could NOT find Boost\n${Boost_ERROR_REASON}")
+    endif()
+  endif()
+elseif(NOT Boost_FOUND)
+  message(STATUS "Could NOT find Boost\n${Boost_ERROR_REASON}")
+endif()
 
-SET( Boost_ADDITIONAL_VERSIONS "1.40" )
-FIND_PACKAGE( Boost 1.40.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time serialization)
-INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
-MARK_AS_ADVANCED( Boost_LIB_DIAGNOSTIC_DEFINITIONS )
+find_package(Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time log)
+include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 
-# Boost-log
-ADD_DEFINITIONS( -DBOOST_LOG_NO_LIB ) # disable autolinking
-ADD_DEFINITIONS( -DBOOST_LOG_SETUP_NO_LIB ) # disable autolinking
+# require these run time checks
+add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
+add_definitions(-DBOOST_UBLAS_TYPE_CHECK)
+add_definitions(-DBOOST_UBLAS_NO_STD_CERR)
 
+if(UNIX AND NOT APPLE)
+  add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
+endif()
 
-find_package(BoostLog REQUIRED HINTS "${OPENSTUDIO_BUILD_DIR}/BoostLog-prefix/src/BoostLog-build")
-INCLUDE_DIRECTORIES( ${BoostLog_INCLUDE_DIRS} )
-LINK_DIRECTORIES( ${BoostLog_LIBRARY_DIRS} )
+# use chrono as a header only library
+add_definitions(-DBOOST_CHRONO_HEADER_ONLY)
 
+# do not autolink with serialization
+add_definitions(-DBOOST_SERIALIZATION_NO_LIB)
+
+# check if boost is being linked dynamically
+# DLM: should we allow this on Unix or should we force static for all platforms?
+string(REGEX MATCH "^.*libboost_log.so$" BOOST_IS_DYN_LIBS "${Boost_LOG_LIBRARY_RELEASE}")
+if(BOOST_IS_DYN_LIBS)
+  add_definitions(-DBOOST_ALL_DYN_LINK)
+endif()
 
 # SketchUp executable location needed for testing
 if( BUILD_SQUISH_SKETCHUP_TESTS )
@@ -281,55 +320,68 @@ endif( BUILD_SQUISH_SKETCHUP_TESTS )
 
 #--------------------------------------------------------------------------------
 # Qt
-FIND_PACKAGE (Qt4 4.6.0 COMPONENTS QtCore QtGui QtNetwork QtXml REQUIRED)
-INCLUDE_DIRECTORIES( ${QT_INCLUDE_DIR} )
-#LIST( APPEND CMAKE_PROGRAM_PATH ${QT_LIBRARY_DIR})
-#LIST( APPEND CMAKE_LIBRARY_PATH ${QT_LIBRARY_DIR})
-#--------------------------------------------------------------------------------
-# QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that contains a path to
-# a CMake script that sets up this directory for building with Qt4
-INCLUDE( ${QT_USE_FILE} )
-MARK_AS_ADVANCED( QT_QMAKE_EXECUTABLE QT_QTMOTIF_INCLUDE_DIR QT_QTMOTIF_LIBRARY_DEBUG QT_QTMOTIF_LIBRARY_RELEASE )
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Sql REQUIRED)
+find_package(Qt5Network REQUIRED)
+find_package(Qt5Xml REQUIRED)
+find_package(Qt5WebKit REQUIRED)
+find_package(Qt5WebKitWidgets REQUIRED)
+#find_package(Qt5WinExtras)
+find_package(Qt5Concurrent REQUIRED)
+find_package(Qt5PrintSupport REQUIRED)
+mark_as_advanced(
+  Qt5Concurrent_DIR
+  Qt5Core_DIR
+  Qt5Gui_DIR
+  Qt5Gui_EGL_LIBRARY
+  Qt5Location_DIR
+  Qt5Multimedia_DIR
+  Qt5MultimediaWidgets_DIR
+  Qt5Network_DIR
+  Qt5OpenGL_DIR
+  Qt5Positioning_DIR
+  Qt5PrintSupport_DIR
+  Qt5Qml_DIR
+  Qt5Quick_DIR
+  Qt5Sensors_DIR
+  Qt5Sql_DIR
+  Qt5WebKit_DIR
+  Qt5WebKitWidgets_DIR
+  Qt5Widgets_DIR
+  #Qt5WinExtras_DIR
+  Qt5Xml_DIR
+)
 
-# This sets the windows build that will need the special winmain@16 call. Qt provides
-#  this for us in the qtmain.lib file. Using this cmake code will ensure we have it
-#  linked into our build. Not needed on Unix/OS X/Linux which is why we have the 
-#  IF(WIN32) conditional.
-IF (WIN32)
-    SET (QT_USE_QTMAIN TRUE)
-ENDIF (WIN32)
+set(CMAKE_AUTOMOC OFF)
 
-#--------------------------------------------------------------------------------
-# QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that contains a path to
-# a CMake script that sets up this directory for building with Qt4
-INCLUDE( ${QT_USE_FILE} )
+#Adding libraries to the list of includes
+include_directories(${Qt5Widgets_INCLUDE_DIRS})
+include_directories(${Qt5Sql_INCLUDE_DIRS})
+include_directories(${Qt5Network_INCLUDE_DIRS})
+include_directories(${Qt5Xml_INCLUDE_DIRS})
+include_directories(${Qt5WebKit_INCLUDE_DIRS})
+include_directories(${Qt5WebKitWidgets_INCLUDE_DIRS})
+#include_directories(${Qt5WinExtras_INCLUDE_DIRS})
+include_directories(${Qt5Concurrent_INCLUDE_DIRS})
+include_directories(${Qt5PrintSupport_INCLUDE_DIRS})
 
-#Adding the qtnetwork library to the includes
-INCLUDE_DIRECTORIES( ${QT_QTSQL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${QT_QTNETWORK_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${QT_QTXML_INCLUDE_DIR} )
+#include_directories is supposed to be a set, however there are tons of Qt duplicate includes
+get_directory_property(dupdirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} INCLUDE_DIRECTORIES)
+list(REMOVE_DUPLICATES dupdirs)
+set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${dupdirs}")
 
 # list of all Qt libs and dependencies we are using
-LIST( APPEND QT_LIBS ${QT_QTSQL_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTGUI_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTGUI_LIB_DEPENDENCIES})
-LIST( APPEND QT_LIBS ${QT_QTCORE_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTCORE_LIB_DEPENDENCIES})
-LIST( APPEND QT_LIBS ${QT_QTMAIN_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTNETWORK_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTNETWORK_LIB_DEPENDENCIES})
-LIST( APPEND QT_LIBS ${QT_QTXML_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTXML_LIB_DEPENDENCIES})
+list(APPEND QT_LIBS ${Qt5Widgets_LIBRARIES})
+list(APPEND QT_LIBS ${Qt5Sql_LIBRARIES})
+list(APPEND QT_LIBS ${Qt5Network_LIBRARIES})
+list(APPEND QT_LIBS ${Qt5Xml_LIBRARIES})
+list(APPEND QT_LIBS ${Qt5WebKit_LIBRARIES})
+list(APPEND QT_LIBS ${Qt5WebKitWidgets_LIBRARIES})
+#list(APPEND QT_LIBS ${Qt5WinExtras_LIBRARIES})
+list(APPEND QT_LIBS ${Qt5Concurrent_LIBRARIES})
+
 ###############################################################################
-
-# QJSON
-
-find_package(QJSON REQUIRED HINTS "${OPENSTUDIO_BUILD_DIR}/QJSON-prefix/src/QJSON-build")
-INCLUDE_DIRECTORIES( SYSTEM ${QJSON_INCLUDE_DIR} )
-LINK_DIRECTORIES( ${QJSON_LIBRARY_DIRS} )
-
 # openstudio-server
-
 IF (EXISTS "${OSSERVER_PATH}")
   SET (OSSERVER_FOUND TRUE)
   CONFIGURE_FILE("Vagrant.hxx.in" "${CMAKE_CURRENT_BINARY_DIR}/Vagrant.hxx")

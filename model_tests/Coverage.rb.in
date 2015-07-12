@@ -28,8 +28,8 @@ file_paths.each do |file_path|
   end
 end
 
-object_map.keys.sort.each do |file_name|
-  header << ',' << file_name
+object_map.keys.sort {|x,y| x.to_s <=> y.to_s}.each do |file_name|
+  header << ',' << file_name.to_s
 end
 
 output << header
@@ -45,7 +45,7 @@ all_idd_object_names.sort.each do |idd_name|
 
   hit = false;
 
-  object_map.keys.sort.each do |key|
+  object_map.keys.sort {|x,y| x.to_s <=> y.to_s}.each do |key|
     idd_object_names = object_map[key]
     if idd_object_names.include?(idd_name)
       match_string << 'x ,'

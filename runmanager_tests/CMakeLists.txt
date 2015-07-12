@@ -5,7 +5,7 @@ SET( runmanager_test_moc
 )
 
 ## Qt moc generation
-qt4_wrap_cpp( runmanager_test_moc_src ${runmanager_test_moc} )
+qt5_wrap_cpp( runmanager_test_moc_src ${runmanager_test_moc} )
 
 ADD_LIBRARY( openstudio_runmanager_lib_test STATIC
   ${runmanager_test_moc_src}

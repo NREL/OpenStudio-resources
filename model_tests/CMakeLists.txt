@@ -5,7 +5,6 @@ SET( ${target_name}_src
   ModelFixture.cpp
   Alpha1_GTest.cpp
   Intersection_GTest.cpp
-  TimeDependentValuation_GTest.cpp
   ModelProfileFixture.hpp
   ModelProfileFixture.cpp
   ModelProfiling_GTest.cpp
