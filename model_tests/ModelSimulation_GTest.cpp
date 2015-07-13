@@ -1543,3 +1543,11 @@ TEST_F(ModelSimulationFixture,humidity_control_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture,water_heaters_rb) {
+  openstudio::SqlFile sql = runSimulation("water_heaters.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+

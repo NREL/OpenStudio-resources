@@ -671,6 +671,396 @@ class BaselineModel < OpenStudio::Model::Model
 
     puts "finished running #{idf_name}"
 
-  end  
+  end
+
+  attr_accessor :standards
+
+  def add_standards(input_hash)
+    standards_hash = {}
+    standards_hash = standards_hash.merge(input_hash)
+    self.standards = standards_hash
+  end
+
+  # Method to search through a hash for the objects that meets the
+  # desired search criteria, as passed via a hash.  If capacity is supplied,
+  # the objects will only be returned if the specified capacity is between
+  # the minimum_capacity and maximum_capacity values.
+  # Returns an Array (empty if nothing found) of matching objects.
+  def find_objects(hash_of_objects, search_criteria, capacity = nil)
+    
+    desired_object = nil
+    search_criteria_matching_objects = []
+    matching_objects = []
+    
+    # Compare each of the objects against the search criteria
+    hash_of_objects.each do |object|
+      meets_all_search_criteria = true
+      search_criteria.each do |key, value|
+        # Don't check non-existent search criteria
+        next unless object.has_key?(key)
+        # Stop as soon as one of the search criteria is not met
+        if object[key] != value 
+          meets_all_search_criteria = false
+          break
+        end
+      end
+      # Skip objects that don't meet all search criteria
+      next if meets_all_search_criteria == false
+      # If made it here, object matches all search criteria
+      search_criteria_matching_objects << object
+    end
+   
+    # If capacity was specified, narrow down the matching objects
+    if capacity.nil?
+      matching_objects = search_criteria_matching_objects
+    else
+      # Round up if capacity is an integer
+      if capacity = capacity.round
+        capacity = capacity + (capacity * 0.01)
+      end    
+      search_criteria_matching_objects.each do |object|
+        # Skip objects that don't have fields for minimum_capacity and maximum_capacity
+        next if !object.has_key?('minimum_capacity') || !object.has_key?('maximum_capacity') 
+        # Skip objects that don't have values specified for minimum_capacity and maximum_capacity
+        next if object['minimum_capacity'].nil? || object['maximum_capacity'].nil?
+        # Skip objects whose the minimum capacity is below the specified capacity
+        next if capacity <= object['minimum_capacity']
+        # Skip objects whose max
+        next if capacity > object['maximum_capacity']
+        # Found a matching object      
+        matching_objects << object
+      end
+    end
+
+    # Check the number of matching objects found
+    if matching_objects.size == 0
+      desired_object = nil
+      #OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Find objects search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}.")
+    end
+    
+    return matching_objects
+   
+  end
+
+  # Create a schedule from the openstudio standards dataset.
+  # TODO make return an OptionalScheduleRuleset
+  def add_schedule(schedule_name)
+    return nil if schedule_name == nil or schedule_name == ""
+    # First check model and return schedule if it already exists
+    self.getSchedules.each do |schedule|
+      if schedule.name.get.to_s == schedule_name
+        # OpenStudio::logFree(OpenStudio::Debug, 'openstudio.standards.Model', "Already added schedule: #{schedule_name}")
+        return schedule
+      end
+    end
+ 
+    require 'date'
+
+    #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding schedule: #{schedule_name}")   
+    
+    # Find all the schedule rules that match the name
+    rules = self.find_objects(self.standards['schedules'], {'name'=>schedule_name})
+    if rules.size == 0
+      # OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Cannot find data for schedule: #{schedule_name}, will not be created.")
+      return false #TODO change to return empty optional schedule:ruleset?
+    end
+    
+    # Helper method to fill in hourly values
+    def add_vals_to_sch(day_sch, sch_type, values)
+      if sch_type == "Constant"
+        day_sch.addValue(OpenStudio::Time.new(0, 24, 0, 0), values[0])
+      elsif sch_type == "Hourly"
+        for i in 0..23
+          next if values[i] == values[i + 1]
+          day_sch.addValue(OpenStudio::Time.new(0, i + 1, 0, 0), values[i])     
+        end 
+      else
+        #OpenStudio::logFree(OpenStudio::Info, "Adding space type: #{template}-#{clim}-#{building_type}-#{spc_type}")
+      end
+    end
+    
+    # Make a schedule ruleset
+    sch_ruleset = OpenStudio::Model::ScheduleRuleset.new(self)
+    sch_ruleset.setName("#{schedule_name}")  
+
+    # Loop through the rules, making one for each row in the spreadsheet
+    rules.each do |rule|
+      day_types = rule['day_types']
+      start_date = DateTime.parse(rule['start_date'])
+      end_date = DateTime.parse(rule['end_date'])
+      sch_type = rule['type']
+      values = rule['values']
+      
+      #Day Type choices: Wkdy, Wknd, Mon, Tue, Wed, Thu, Fri, Sat, Sun, WntrDsn, SmrDsn, Hol
+      
+      # Default
+      if day_types.include?('Default')
+        day_sch = sch_ruleset.defaultDaySchedule
+        day_sch.setName("#{schedule_name} Default")
+        add_vals_to_sch(day_sch, sch_type, values) 
+      end
+      
+      # Winter Design Day
+      if day_types.include?('WntrDsn')
+        day_sch = OpenStudio::Model::ScheduleDay.new(self)  
+        sch_ruleset.setWinterDesignDaySchedule(day_sch)
+        day_sch = sch_ruleset.winterDesignDaySchedule
+        day_sch.setName("#{schedule_name} Winter Design Day")
+        add_vals_to_sch(day_sch, sch_type, values) 
+      end    
+      
+      # Summer Design Day
+      if day_types.include?('SmrDsn')
+        day_sch = OpenStudio::Model::ScheduleDay.new(self)  
+        sch_ruleset.setSummerDesignDaySchedule(day_sch)
+        day_sch = sch_ruleset.summerDesignDaySchedule
+        day_sch.setName("#{schedule_name} Summer Design Day")
+        add_vals_to_sch(day_sch, sch_type, values)
+      end
+      
+      # Other days (weekdays, weekends, etc)
+      if day_types.include?('Wknd') ||
+        day_types.include?('Wkdy') ||
+        day_types.include?('Sat') ||
+        day_types.include?('Sun') ||
+        day_types.include?('Mon') ||
+        day_types.include?('Tue') ||
+        day_types.include?('Wed') ||
+        day_types.include?('Thu') ||
+        day_types.include?('Fri')
+      
+        # Make the Rule
+        sch_rule = OpenStudio::Model::ScheduleRule.new(sch_ruleset)
+        day_sch = sch_rule.daySchedule
+        day_sch.setName("#{schedule_name} Summer Design Day")
+        add_vals_to_sch(day_sch, sch_type, values)
+        
+        # Set the dates when the rule applies
+        sch_rule.setStartDate(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(start_date.month.to_i), start_date.day.to_i))
+        sch_rule.setEndDate(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(end_date.month.to_i), end_date.day.to_i))
+        
+        # Set the days when the rule applies
+        # Weekends
+        if day_types.include?('Wknd')
+          sch_rule.setApplySaturday(true)
+          sch_rule.setApplySunday(true)
+        end
+        # Weekdays
+        if day_types.include?('Wkdy')
+          sch_rule.setApplyMonday(true)
+          sch_rule.setApplyTuesday(true)
+          sch_rule.setApplyWednesday(true)
+          sch_rule.setApplyThursday(true)
+          sch_rule.setApplyFriday(true)
+        end
+        # Individual Days
+        sch_rule.setApplyMonday(true) if day_types.include?('Mon')
+        sch_rule.setApplyTuesday(true) if day_types.include?('Tue')
+        sch_rule.setApplyWednesday(true) if day_types.include?('Wed')
+        sch_rule.setApplyThursday(true) if day_types.include?('Thu')
+        sch_rule.setApplyFriday(true) if day_types.include?('Fri')
+        sch_rule.setApplySaturday(true) if day_types.include?('Sat')
+        sch_rule.setApplySunday(true) if day_types.include?('Sun')
+
+      end
+      
+    end # Next rule  
+    
+    return sch_ruleset
+    
+  end
+
+  def add_swh_end_uses(swh_loop, flow_rate_fraction_schedule ) 
+    
+    # Water use connection
+    swh_connection = OpenStudio::Model::WaterUseConnections.new(self)
+    
+    # Water fixture definition
+    water_fixture_def = OpenStudio::Model::WaterUseEquipmentDefinition.new(self)
+    rated_flow_rate_gal_per_min = 1
+    rated_flow_rate_m3_per_s = OpenStudio.convert(rated_flow_rate_gal_per_min,'gal/min','m^3/s').get
+    water_fixture_def.setPeakFlowRate(rated_flow_rate_m3_per_s)
+    water_fixture_def.setName("Service Water Use Def #{rated_flow_rate_gal_per_min.round(2)}gal/min")
+    # Target mixed water temperature
+    mixed_water_temp_f = 110
+    mixed_water_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    mixed_water_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),OpenStudio.convert(mixed_water_temp_f,'F','C').get)
+    water_fixture_def.setTargetTemperatureSchedule(mixed_water_temp_sch)
+    
+    # Water use equipment
+    water_fixture = OpenStudio::Model::WaterUseEquipment.new(water_fixture_def)
+    schedule = self.add_schedule(flow_rate_fraction_schedule)
+    water_fixture.setFlowRateFractionSchedule(schedule)
+    water_fixture.setName("Service Water Use #{rated_flow_rate_gal_per_min.round(2)}gal/min")
+    swh_connection.addWaterUseEquipment(water_fixture)
+
+    # Connect the water use connection to the SWH loop
+    swh_loop.addDemandBranchForComponent(swh_connection)
+    
+  end
+
+  def add_swh_loop(water_heater_type, ambient_temperature_thermal_zone=nil)
+  
+    # Service water heating loop
+    service_water_loop = OpenStudio::Model::PlantLoop.new(self)
+    service_water_loop.setName("Service Water Loop")
+    service_water_loop.setMaximumLoopTemperature(60)
+    service_water_loop.setMinimumLoopTemperature(10)
+
+    # Temperature schedule type limits
+    temp_sch_type_limits = OpenStudio::Model::ScheduleTypeLimits.new(self)
+    temp_sch_type_limits.setName('Temperature Schedule Type Limits')
+    temp_sch_type_limits.setLowerLimitValue(0.0)
+    temp_sch_type_limits.setUpperLimitValue(100.0)
+    temp_sch_type_limits.setNumericType('Continuous')
+    temp_sch_type_limits.setUnitType('Temperature')
+    
+    # Service water heating loop controls
+    swh_temp_f = 140
+    swh_delta_t_r = 9 #9F delta-T    
+    swh_temp_c = OpenStudio.convert(swh_temp_f,'F','C').get
+    swh_delta_t_k = OpenStudio.convert(swh_delta_t_r,'R','K').get
+    swh_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    swh_temp_sch.setName("Hot Water Loop Temp - #{swh_temp_f}F")
+    swh_temp_sch.defaultDaySchedule().setName("Hot Water Loop Temp - #{swh_temp_f}F Default")
+    swh_temp_sch.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),swh_temp_c)
+    swh_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
+    swh_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,swh_temp_sch)    
+    swh_stpt_manager.addToNode(service_water_loop.supplyOutletNode)
+    sizing_plant = service_water_loop.sizingPlant
+    sizing_plant.setLoopType('Heating')
+    sizing_plant.setDesignLoopExitTemperature(swh_temp_c)
+    sizing_plant.setLoopDesignTemperatureDifference(swh_delta_t_k)         
+    
+    # Service water heating pump
+    swh_pump_head_press_pa = 0.001
+    swh_pump_motor_efficiency = 1
+
+    swh_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
+    swh_pump.setName('Service Water Loop Pump')
+    swh_pump.setRatedPumpHead(swh_pump_head_press_pa.to_f)
+    swh_pump.setMotorEfficiency(swh_pump_motor_efficiency)
+    swh_pump.setPumpControlType('Intermittent')
+    swh_pump.addToNode(service_water_loop.supplyInletNode)
+    
+    water_heater = add_water_heater(water_heater_type, "Natural Gas", temp_sch_type_limits, swh_temp_sch, ambient_temperature_thermal_zone)
+    service_water_loop.addSupplyBranchForComponent(water_heater)
+
+    # Service water heating loop bypass pipes
+    water_heater_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    service_water_loop.addSupplyBranchForComponent(water_heater_bypass_pipe)
+    coil_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    service_water_loop.addDemandBranchForComponent(coil_bypass_pipe)
+    supply_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    supply_outlet_pipe.addToNode(service_water_loop.supplyOutletNode)    
+    demand_inlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    demand_inlet_pipe.addToNode(service_water_loop.demandInletNode) 
+    demand_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    demand_outlet_pipe.addToNode(service_water_loop.demandOutletNode) 
+
+    return service_water_loop
+  end
+
+  def add_water_heater(water_heater_type, water_heater_fuel, temp_sch_type_limits = nil, swh_temp_sch = nil, ambient_temperature_thermal_zone=nil, service_water_flowrate_schedule = nil)
+    # Water heater
+    # TODO Standards - Change water heater methodology to follow
+    # 'Model Enhancements Appendix A.'
+    water_heater_capacity_btu_per_hr = 2883000
+    water_heater_capacity_kbtu_per_hr = OpenStudio.convert(water_heater_capacity_btu_per_hr, "Btu/hr", "kBtu/hr").get
+    water_heater_vol_gal = 100
+
+    if temp_sch_type_limits.nil?
+      # Temperature schedule type limits
+      temp_sch_type_limits = OpenStudio::Model::ScheduleTypeLimits.new(self)
+      temp_sch_type_limits.setName('Temperature Schedule Type Limits')
+      temp_sch_type_limits.setLowerLimitValue(0.0)
+      temp_sch_type_limits.setUpperLimitValue(100.0)
+      temp_sch_type_limits.setNumericType('Continuous')
+      temp_sch_type_limits.setUnitType('Temperature')
+    end
+
+    if swh_temp_sch.nil?
+      # Service water heating loop controls
+      swh_temp_f = 140
+      swh_delta_t_r = 9 #9F delta-T    
+      swh_temp_c = OpenStudio.convert(swh_temp_f,'F','C').get
+      swh_delta_t_k = OpenStudio.convert(swh_delta_t_r,'R','K').get
+      swh_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+      swh_temp_sch.setName("Hot Water Loop Temp - #{swh_temp_f}F")
+      swh_temp_sch.defaultDaySchedule.setName("Hot Water Loop Temp - #{swh_temp_f}F Default")
+      swh_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),swh_temp_c)
+      swh_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
+    end
+    
+    # Water heater depends on the fuel type
+    if water_heater_type == "Stratified"
+      water_heater = OpenStudio::Model::WaterHeaterStratified.new(self)
+    else
+      water_heater = OpenStudio::Model::WaterHeaterMixed.new(self)
+      water_heater.setSetpointTemperatureSchedule(swh_temp_sch)
+      water_heater.setHeaterMaximumCapacity(OpenStudio.convert(water_heater_capacity_btu_per_hr,'Btu/hr','W').get)
+      water_heater.setDeadbandTemperatureDifference(OpenStudio.convert(3.6,'R','K').get)
+      water_heater.setHeaterControlType('Cycle')
+    end
+      
+    water_heater.setName("#{water_heater_vol_gal}gal #{water_heater_fuel} Water Heater - #{water_heater_capacity_kbtu_per_hr.round}kBtu/hr")
+    water_heater.setTankVolume(OpenStudio.convert(water_heater_vol_gal,'gal','m^3').get)
+
+    if ambient_temperature_thermal_zone.nil?
+      # Assume the water heater is indoors at 70F for now
+      default_water_heater_ambient_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+      default_water_heater_ambient_temp_sch.setName('Water Heater Ambient Temp Schedule - 70F')
+      default_water_heater_ambient_temp_sch.defaultDaySchedule.setName('Water Heater Ambient Temp Schedule - 70F Default')
+      default_water_heater_ambient_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),OpenStudio::convert(70,"F","C").get)
+      default_water_heater_ambient_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
+      water_heater.setAmbientTemperatureIndicator('Schedule')
+      water_heater.setAmbientTemperatureSchedule(default_water_heater_ambient_temp_sch)
+    else
+      water_heater.setAmbientTemperatureIndicator('ThermalZone')
+      water_heater.setAmbientTemperatureThermalZone ambient_temperature_thermal_zone
+    end
+
+    water_heater.setMaximumTemperatureLimit(OpenStudio::convert(180,'F','C').get)
+    water_heater.setOffCycleParasiticHeatFractiontoTank(0.8)
+    water_heater.setIndirectWaterHeatingRecoveryTime(1.5) # 1.5hrs
+    if water_heater_fuel == 'Electricity'
+      water_heater.setHeaterFuelType('Electricity')
+      water_heater.setHeaterThermalEfficiency(1.0)
+      water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(68.24,'Btu/hr','W').get)
+      water_heater.setOnCycleParasiticFuelConsumptionRate(OpenStudio.convert(68.24,'Btu/hr','W').get)
+      water_heater.setOffCycleParasiticFuelType('Electricity')
+      water_heater.setOnCycleParasiticFuelType('Electricity')
+      if water_heater_type == "Stratified"
+        water_heater.setOffCycleFlueLossCoefficienttoAmbientTemperature(1.053)
+      else
+        water_heater.setOffCycleLossCoefficienttoAmbientTemperature(1.053)
+        water_heater.setOnCycleLossCoefficienttoAmbientTemperature(1.053)
+      end
+    elsif water_heater_fuel == 'Natural Gas'
+      water_heater.setHeaterFuelType('NaturalGas')
+      water_heater.setHeaterThermalEfficiency(0.78)
+      water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(68.24,'Btu/hr','W').get)
+      water_heater.setOnCycleParasiticFuelConsumptionRate(OpenStudio.convert(68.24,'Btu/hr','W').get)
+      water_heater.setOffCycleParasiticFuelType('NaturalGas')
+      water_heater.setOnCycleParasiticFuelType('NaturalGas')
+      if water_heater_type == "Stratified"
+        water_heater.setOffCycleFlueLossCoefficienttoAmbientTemperature(6.0)
+      else
+        water_heater.setOffCycleLossCoefficienttoAmbientTemperature(6.0)
+        water_heater.setOnCycleLossCoefficienttoAmbientTemperature(6.0)
+      end
+    end
+
+    if not service_water_flowrate_schedule.nil?
+      rated_flow_rate_gal_per_min = 0.164843359974645
+      rated_flow_rate_m3_per_s = OpenStudio.convert(rated_flow_rate_gal_per_min,'gal/min','m^3/s').get
+      water_heater.setPeakUseFlowRate(rated_flow_rate_m3_per_s)
+
+      schedule = self.add_schedule(service_water_flowrate_schedule)
+      water_heater.setUseFlowRateFractionSchedule(schedule)
+    end
+
+    return water_heater
+  end
   
 end
