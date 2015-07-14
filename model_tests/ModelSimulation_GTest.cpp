@@ -1469,6 +1469,14 @@ TEST_F(ModelSimulationFixture,evaporative_cooling_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture,evaporative_cooling_osm) {
+  openstudio::SqlFile sql = runSimulation("evaporative_cooling.osm");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
 
 TEST_F(ModelSimulationFixture, asymmetric_interior_constructions_osm) {
   unsigned N = 8;
@@ -1542,4 +1550,76 @@ TEST_F(ModelSimulationFixture,humidity_control_rb) {
   ASSERT_TRUE(totalSiteEnergy);
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
+
+TEST_F(ModelSimulationFixture,headered_pumps_rb) {
+  openstudio::SqlFile sql = runSimulation("headered_pumps.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,headered_pumps_osm) {
+  openstudio::SqlFile sql = runSimulation("headered_pumps.osm");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,hot_water_rb) {
+  openstudio::SqlFile sql = runSimulation("hot_water.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,heatpump_hot_water_rb) {
+  openstudio::SqlFile sql = runSimulation("heatpump_hot_water.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,cooling_coils_rb) {
+  openstudio::SqlFile sql = runSimulation("cooling_coils.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,thermal_storage_rb) {
+  openstudio::SqlFile sql = runSimulation("thermal_storage.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,absorption_chillers_rb) {
+  openstudio::SqlFile sql = runSimulation("absorption_chillers.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,dual_duct_rb) {
+  openstudio::SqlFile sql = runSimulation("dual_duct.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+//TEST_F(ModelSimulationFixture,unitary_test_rb) {
+//  openstudio::SqlFile sql = runSimulation("unitary_test.rb");
+//
+//  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+//  ASSERT_TRUE(totalSiteEnergy);
+//  EXPECT_LT(*totalSiteEnergy, 1000000);
+//}
 
