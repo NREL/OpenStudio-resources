@@ -50,25 +50,25 @@ unitary.setCoolingCoil(cooling_coil)
 unitary.addToNode(airloop.supplyOutletNode())
 unitary.setControllingZoneorThermostatLocation(zone)
 
-#CoilSystemCoolingWaterHeatExchangerAssisted
-zone = zones[2]
-zone.airLoopHVAC.get.removeBranchForZone(zone)
-airloop = OpenStudio::Model::AirLoopHVAC.new(model)
-terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,model.alwaysOnDiscreteSchedule())
-airloop.addBranchForZone(zone,terminal)
-fan = OpenStudio::Model::FanConstantVolume.new(model)
-fan.addToNode(airloop.supplyOutletNode)
-heating_coil = OpenStudio::Model::CoilHeatingGas.new(model)
-heating_coil.addToNode(airloop.supplyOutletNode)
-coil_system = OpenStudio::Model::CoilSystemCoolingWaterHeatExchangerAssisted.new(model)
-coil_system.addToNode(airloop.supplyOutletNode)
-spm = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(model)
-spm.setControlZone(zone)
-spm.addToNode(airloop.supplyOutletNode)
-water_coil = coil_system.coolingCoil
-chiller = model.getChillerElectricEIRs.first
-plant = chiller.plantLoop.get
-plant.addDemandBranchForComponent(water_coil)
+##CoilSystemCoolingWaterHeatExchangerAssisted
+#zone = zones[2]
+#zone.airLoopHVAC.get.removeBranchForZone(zone)
+#airloop = OpenStudio::Model::AirLoopHVAC.new(model)
+#terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,model.alwaysOnDiscreteSchedule())
+#airloop.addBranchForZone(zone,terminal)
+#fan = OpenStudio::Model::FanConstantVolume.new(model)
+#fan.addToNode(airloop.supplyOutletNode)
+#heating_coil = OpenStudio::Model::CoilHeatingGas.new(model)
+#heating_coil.addToNode(airloop.supplyOutletNode)
+#coil_system = OpenStudio::Model::CoilSystemCoolingWaterHeatExchangerAssisted.new(model)
+#coil_system.addToNode(airloop.supplyOutletNode)
+#spm = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(model)
+#spm.setControlZone(zone)
+#spm.addToNode(airloop.supplyOutletNode)
+#water_coil = coil_system.coolingCoil
+#chiller = model.getChillerElectricEIRs.first
+#plant = chiller.plantLoop.get
+#plant.addDemandBranchForComponent(water_coil)
 
 
 #add thermostats
