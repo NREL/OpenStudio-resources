@@ -1615,6 +1615,14 @@ TEST_F(ModelSimulationFixture,dual_duct_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture,availability_managers_rb) {
+  openstudio::SqlFile sql = runSimulation("availability_managers.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
 //TEST_F(ModelSimulationFixture,unitary_test_rb) {
 //  openstudio::SqlFile sql = runSimulation("unitary_test.rb");
 //
