@@ -38,6 +38,16 @@ systems.each_with_index do |system,i|
   elsif i == 1
     avm = OpenStudio::Model::AvailabilityManagerOptimumStart.new(model)
     system.setAvailabilityManager(avm)
+  elsif i == 2
+    avm = OpenStudio::Model::AvailabilityManagerDifferentialThermostat.new(model)
+    oa_node = system.airLoopHVACOutdoorAirSystem.get.outboardOANode.get
+    zone_node = system.thermalZones.first.zoneAirNode
+    avm.setHotNode(oa_node)
+    avm.setColdNode(zone_node)
+    system.setAvailabilityManager(avm)
+  elsif i == 3
+    avm = OpenStudio::Model::AvailabilityManagerHybridVentilation.new(model)
+    system.setAvailabilityManager(avm)
   end
 end
 
