@@ -1,5 +1,4 @@
 require 'openstudio'
-require 'test/unit'
 
 model = OpenStudio::Model::exampleModel()
 
