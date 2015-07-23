@@ -1623,6 +1623,38 @@ TEST_F(ModelSimulationFixture,availability_managers_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture, zone_mixing_rb) {
+  openstudio::SqlFile sql = runSimulation("zone_mixing.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture, zone_mixing_osm) {
+  openstudio::SqlFile sql = runSimulation("zone_mixing.osm");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture, zone_fan_exhaust_rb) {
+  openstudio::SqlFile sql = runSimulation("zone_fan_exhaust.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture, zone_fan_exhaust_osm) {
+  openstudio::SqlFile sql = runSimulation("zone_fan_exhaust.osm");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
 //TEST_F(ModelSimulationFixture,unitary_test_rb) {
 //  openstudio::SqlFile sql = runSimulation("unitary_test.rb");
 //
