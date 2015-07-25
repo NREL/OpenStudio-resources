@@ -105,7 +105,7 @@ shade = OpenStudio::Model::ShadingSurface.new(vertices, model)
 shade.setShadingSurfaceGroup(group)
 
 collector = OpenStudio::Model::SolarCollectorFlatPlateWater.new(model)
-collector.addToNode(water_heater.supplyOutletModelObject.get.to_Node.get)      
+collector.addToNode(water_heater.supplyOutletModelObject.get.to_Node.get) # DLM: should this be on the tank inlet side?
 collector.setSurface(shade)
 
 collector.outputVariableNames.each do |var|
