@@ -78,79 +78,79 @@ model.set_space_type()
 #add design days to the model (Chicago)
 model.add_design_days()
 
+# create the swh loop and uses
 mixed_swh_loop = model.add_swh_loop("Mixed")
-supply_components = mixed_swh_loop.supplyComponents("OS:WaterHeater:Mixed".to_IddObjectType)
-swh_water_heater = supply_components.first.to_WaterHeaterMixed.get
 
 zones = model.getThermalZones
 zones.each do |thermal_zone|
   model.add_swh_end_uses(mixed_swh_loop, "Medium Office Bldg Swh")
 end
+
+# remove the existing water heater
+supply_components = mixed_swh_loop.supplyComponents("OS:WaterHeater:Mixed".to_IddObjectType)
+swh_water_heater = supply_components.first.to_WaterHeaterMixed.get
+mixed_swh_loop.removeSupplyBranchWithComponent(swh_water_heater)
+
+supply_components = mixed_swh_loop.supplyComponents("OS:Pipe:Adiabatic".to_IddObjectType)
+swh_pipe = supply_components.first.to_PipeAdiabatic.get
+mixed_swh_loop.removeSupplyBranchWithComponent(swh_pipe)
+
+supply_components = mixed_swh_loop.supplyComponents("OS:Pump:ConstantSpeed".to_IddObjectType)
+swh_pump = supply_components.first.to_PumpConstantSpeed.get
       
-# Auxillary water heating loop
-aux_water_loop = OpenStudio::Model::PlantLoop.new(self)
-aux_water_loop.setName("Auxillary Water Loop")
-aux_water_loop.setMaximumLoopTemperature(60)
-aux_water_loop.setMinimumLoopTemperature(10)
+# storage water heating loop
+storage_water_loop = OpenStudio::Model::PlantLoop.new(model)
+storage_water_loop.setName("Storage Water Loop")
+storage_water_loop.setMaximumLoopTemperature(60)
+storage_water_loop.setMinimumLoopTemperature(10)
 
 # Temperature schedule type limits
-temp_sch_type_limits = OpenStudio::Model::ScheduleTypeLimits.new(self)
+temp_sch_type_limits = OpenStudio::Model::ScheduleTypeLimits.new(model)
 temp_sch_type_limits.setName('Temperature Schedule Type Limits')
 temp_sch_type_limits.setLowerLimitValue(0.0)
 temp_sch_type_limits.setUpperLimitValue(100.0)
 temp_sch_type_limits.setNumericType('Continuous')
 temp_sch_type_limits.setUnitType('Temperature')
 
-# Auxillary water heating loop controls
-aux_temp_f = 140
-aux_delta_t_r = 9 #9F delta-T    
-aux_temp_c = OpenStudio.convert(aux_temp_f,'F','C').get
-aux_delta_t_k = OpenStudio.convert(aux_delta_t_r,'R','K').get
-aux_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-aux_temp_sch.setName("Hot Water Loop Temp - #{aux_temp_f}F")
-aux_temp_sch.defaultDaySchedule().setName("Hot Water Loop Temp - #{aux_temp_f}F Default")
-aux_temp_sch.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),aux_temp_c)
-aux_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
-aux_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,aux_temp_sch)    
-aux_stpt_manager.addToNode(aux_water_loop.supplyOutletNode)
-sizing_plant = service_water_loop.sizingPlant
-sizing_plant.setLoopType('Heating')
-sizing_plant.setDesignLoopExitTemperature(swh_temp_c)
-sizing_plant.setLoopDesignTemperatureDifference(swh_delta_t_k)         
+# Storage water heating loop controls
+storage_temp_f = 140
+storage_delta_t_r = 9 #9F delta-T    
+storage_temp_c = OpenStudio.convert(storage_temp_f,'F','C').get
+storage_delta_t_k = OpenStudio.convert(storage_delta_t_r,'R','K').get
+storage_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model)
+storage_temp_sch.setName("Hot Water Loop Temp - #{storage_temp_f}F")
+storage_temp_sch.defaultDaySchedule().setName("Hot Water Loop Temp - #{storage_temp_f}F Default")
+storage_temp_sch.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),storage_temp_c)
+storage_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
+storage_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model,storage_temp_sch)    
+storage_stpt_manager.addToNode(storage_water_loop.supplyOutletNode)
 
-# Auxiliary water heating pump
-aux_pump_head_press_pa = 0.001
-aux_pump_motor_efficiency = 1
+storage_plant = storage_water_loop.sizingPlant
+storage_plant.setLoopType('Heating')
+storage_plant.setDesignLoopExitTemperature(storage_temp_c)
+storage_plant.setLoopDesignTemperatureDifference(storage_delta_t_k)         
 
-aux_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
-aux_pump.setName('Auxillary Water Loop Pump')
-aux_pump.setRatedPumpHead(aux_pump_head_press_pa.to_f)
-aux_pump.setMotorEfficiency(aux_pump_motor_efficiency)
-aux_pump.setPumpControlType('Intermittent')
-aux_pump.addToNode(aux_water_loop.supplyInletNode)
+# Storage water heating pump
+storage_pump_head_press_pa = 0.001
+storage_pump_motor_efficiency = 1
 
-aux_water_heater = OpenStudio::Model::WaterHeaterMixed.new(self)
-aux_water_heater.setName("Auxiliary Hot Water Tank")
-aux_water_heater.setSetpointTemperatureSchedule(swh_temp_sch)
-aux_water_heater.setHeaterMaximumCapacity(0.0)
-#aux_water_heater.setDeadbandTemperatureDifference(OpenStudio.convert(3.6,'R','K').get)
-#aux_water_heater.setHeaterControlType('Cycle')
-#aux_water_heater.setTankVolume(OpenStudio.convert(water_heater_vol_gal,'gal','m^3').get)
-aux_water_loop.addSupplyBranchForComponent(aux_water_heater)
+storage_pump = OpenStudio::Model::PumpConstantSpeed.new(model)
+storage_pump.setName('Storage Water Loop Pump')
+storage_pump.setRatedPumpHead(storage_pump_head_press_pa.to_f)
+storage_pump.setMotorEfficiency(storage_pump_motor_efficiency)
+storage_pump.setPumpControlType('Intermittent')
+storage_pump.addToNode(storage_water_loop.supplyInletNode)
 
-# Service water heating loop bypass pipes
-water_heater_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
-aux_water_loop.addSupplyBranchForComponent(water_heater_bypass_pipe)
-coil_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
-aux_water_loop.addDemandBranchForComponent(coil_bypass_pipe)
-supply_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
-supply_outlet_pipe.addToNode(aux_water_loop.supplyOutletNode)    
-demand_inlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
-demand_inlet_pipe.addToNode(aux_water_loop.demandInletNode) 
-demand_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
-demand_outlet_pipe.addToNode(aux_water_loop.demandOutletNode)   
-      
-# make a solar collector and add it to the loops
+storage_water_heater = OpenStudio::Model::WaterHeaterMixed.new(model)
+storage_water_heater.setName("Storage Hot Water Tank")
+storage_water_heater.setSetpointTemperatureSchedule(storage_temp_sch)
+storage_water_heater.setHeaterMaximumCapacity(0.0)
+#storage_water_heater.setDeadbandTemperatureDifference(OpenStudio.convert(3.6,'R','K').get)
+#storage_water_heater.setHeaterControlType('Cycle')
+#storage_water_heater.setTankVolume(OpenStudio.convert(water_heater_vol_gal,'gal','m^3').get)
+storage_water_loop.addDemandBranchForComponent(storage_water_heater)
+
+# make a solar collector and add it to the storage loop
 vertices = OpenStudio::Point3dVector.new
 vertices << OpenStudio::Point3d.new(0,0,0)
 vertices << OpenStudio::Point3d.new(10,0,0)
@@ -168,13 +168,27 @@ shade = OpenStudio::Model::ShadingSurface.new(vertices, model)
 shade.setShadingSurfaceGroup(group)
 
 collector = OpenStudio::Model::SolarCollectorFlatPlateWater.new(model)
-collector.addToNode(aux_water_heater.supplyInletModelObject.get.to_Node.get)
-collector.addToNode(swh_water_heater.demandInletModelObject.get.to_Node.get) 
+storage_water_loop.addSupplyBranchForComponent(collector)
 collector.setSurface(shade)
 
 collector.outputVariableNames.each do |var|
   OpenStudio::Model::OutputVariable.new(var, model)
 end
       
+# add a storage tank to the swh loop
+mixed_swh_loop.addSupplyBranchForComponent(storage_water_heater)
+
+# add instantaneous swh water heater after the storage tank
+swh_water_heater = OpenStudio::Model::WaterHeaterMixed.new(model)
+swh_water_heater.addToNode(mixed_swh_loop.supplyOutletNode)
+
+# add a tempering valve
+tempering_valve = OpenStudio::Model::TemperingValve.new(model)
+mixed_swh_loop.addSupplyBranchForComponent(tempering_valve)
+tempering_valve.setStream2SourceNode(storage_water_heater.supplyOutletModelObject.get.to_Node.get)
+tempering_valve.setTemperatureSetpointNode(swh_water_heater.supplyOutletModelObject.get.to_Node.get)
+tempering_valve.setPumpOutletNode(swh_pump.outletModelObject.get.to_Node.get)
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "out.osm"})
+

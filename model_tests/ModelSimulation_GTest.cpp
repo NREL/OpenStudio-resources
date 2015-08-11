@@ -1631,7 +1631,7 @@ TEST_F(ModelSimulationFixture,availability_managers_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
-TEST_F(ModelSimulationFixture, solar_collector_flat_plate_water) {
+TEST_F(ModelSimulationFixture, solar_collector_flat_plate_water_rb) {
   openstudio::SqlFile sql = runSimulation("solar_collector_flat_plate_water.rb");
 
   boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
