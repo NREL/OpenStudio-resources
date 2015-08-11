@@ -80,14 +80,77 @@ model.add_design_days()
 
 mixed_swh_loop = model.add_swh_loop("Mixed")
 supply_components = mixed_swh_loop.supplyComponents("OS:WaterHeater:Mixed".to_IddObjectType)
-water_heater = supply_components.first.to_WaterHeaterMixed.get
+swh_water_heater = supply_components.first.to_WaterHeaterMixed.get
 
 zones = model.getThermalZones
 zones.each do |thermal_zone|
   model.add_swh_end_uses(mixed_swh_loop, "Medium Office Bldg Swh")
 end
       
-# make a solar collector and add it to the loop
+# Auxillary water heating loop
+aux_water_loop = OpenStudio::Model::PlantLoop.new(self)
+aux_water_loop.setName("Auxillary Water Loop")
+aux_water_loop.setMaximumLoopTemperature(60)
+aux_water_loop.setMinimumLoopTemperature(10)
+
+# Temperature schedule type limits
+temp_sch_type_limits = OpenStudio::Model::ScheduleTypeLimits.new(self)
+temp_sch_type_limits.setName('Temperature Schedule Type Limits')
+temp_sch_type_limits.setLowerLimitValue(0.0)
+temp_sch_type_limits.setUpperLimitValue(100.0)
+temp_sch_type_limits.setNumericType('Continuous')
+temp_sch_type_limits.setUnitType('Temperature')
+
+# Auxillary water heating loop controls
+aux_temp_f = 140
+aux_delta_t_r = 9 #9F delta-T    
+aux_temp_c = OpenStudio.convert(aux_temp_f,'F','C').get
+aux_delta_t_k = OpenStudio.convert(aux_delta_t_r,'R','K').get
+aux_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+aux_temp_sch.setName("Hot Water Loop Temp - #{aux_temp_f}F")
+aux_temp_sch.defaultDaySchedule().setName("Hot Water Loop Temp - #{aux_temp_f}F Default")
+aux_temp_sch.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),aux_temp_c)
+aux_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
+aux_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,aux_temp_sch)    
+aux_stpt_manager.addToNode(aux_water_loop.supplyOutletNode)
+sizing_plant = service_water_loop.sizingPlant
+sizing_plant.setLoopType('Heating')
+sizing_plant.setDesignLoopExitTemperature(swh_temp_c)
+sizing_plant.setLoopDesignTemperatureDifference(swh_delta_t_k)         
+
+# Auxiliary water heating pump
+aux_pump_head_press_pa = 0.001
+aux_pump_motor_efficiency = 1
+
+aux_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
+aux_pump.setName('Auxillary Water Loop Pump')
+aux_pump.setRatedPumpHead(aux_pump_head_press_pa.to_f)
+aux_pump.setMotorEfficiency(aux_pump_motor_efficiency)
+aux_pump.setPumpControlType('Intermittent')
+aux_pump.addToNode(aux_water_loop.supplyInletNode)
+
+aux_water_heater = OpenStudio::Model::WaterHeaterMixed.new(self)
+aux_water_heater.setName("Auxiliary Hot Water Tank")
+aux_water_heater.setSetpointTemperatureSchedule(swh_temp_sch)
+aux_water_heater.setHeaterMaximumCapacity(0.0)
+#aux_water_heater.setDeadbandTemperatureDifference(OpenStudio.convert(3.6,'R','K').get)
+#aux_water_heater.setHeaterControlType('Cycle')
+#aux_water_heater.setTankVolume(OpenStudio.convert(water_heater_vol_gal,'gal','m^3').get)
+aux_water_loop.addSupplyBranchForComponent(aux_water_heater)
+
+# Service water heating loop bypass pipes
+water_heater_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+aux_water_loop.addSupplyBranchForComponent(water_heater_bypass_pipe)
+coil_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+aux_water_loop.addDemandBranchForComponent(coil_bypass_pipe)
+supply_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+supply_outlet_pipe.addToNode(aux_water_loop.supplyOutletNode)    
+demand_inlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+demand_inlet_pipe.addToNode(aux_water_loop.demandInletNode) 
+demand_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+demand_outlet_pipe.addToNode(aux_water_loop.demandOutletNode)   
+      
+# make a solar collector and add it to the loops
 vertices = OpenStudio::Point3dVector.new
 vertices << OpenStudio::Point3d.new(0,0,0)
 vertices << OpenStudio::Point3d.new(10,0,0)
@@ -105,7 +168,8 @@ shade = OpenStudio::Model::ShadingSurface.new(vertices, model)
 shade.setShadingSurfaceGroup(group)
 
 collector = OpenStudio::Model::SolarCollectorFlatPlateWater.new(model)
-collector.addToNode(water_heater.supplyOutletModelObject.get.to_Node.get) # DLM: should this be on the tank inlet side?
+collector.addToNode(aux_water_heater.supplyInletModelObject.get.to_Node.get)
+collector.addToNode(swh_water_heater.demandInletModelObject.get.to_Node.get) 
 collector.setSurface(shade)
 
 collector.outputVariableNames.each do |var|
