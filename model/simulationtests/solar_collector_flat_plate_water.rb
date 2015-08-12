@@ -168,6 +168,8 @@ shade = OpenStudio::Model::ShadingSurface.new(vertices, model)
 shade.setShadingSurfaceGroup(group)
 
 collector = OpenStudio::Model::SolarCollectorFlatPlateWater.new(model)
+#collector = OpenStudio::Model::SolarCollectorIntegralCollectorStorage.new(model)
+#collector = OpenStudio::Model::SolarCollectorFlatPlatePhotovoltaicThermal.new(model)
 storage_water_loop.addSupplyBranchForComponent(collector)
 collector.setSurface(shade)
 
