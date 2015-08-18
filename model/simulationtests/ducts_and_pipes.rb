@@ -24,8 +24,21 @@ coil = model.getCoilCoolingWaters.first
 airloop = coil.airLoopHVAC.get
 plantloop = coil.plantLoop.get
 
-duct = OpenStudio::Model::Duct.new(model);
-duct.addToNode(airloop.supplyOutletNode());
+duct = OpenStudio::Model::Duct.new(model)
+duct.addToNode(airloop.supplyOutletNode())
+
+pipe = OpenStudio::Model::PipeOutdoor.new(model)
+pipe.addToNode(plantloop.supplyOutletNode())
+
+mat = OpenStudio::Model::StandardOpaqueMaterial.new(model,"Smooth",3.00E-03,45.31,7833.0,500.0)
+mat.setThermalAbsorptance(OpenStudio::OptionalDouble.new(0.9))
+mat.setSolarAbsorptance(OpenStudio::OptionalDouble.new(0.5))
+mat.setVisibleAbsorptance(OpenStudio::OptionalDouble.new(0.5))
+
+const = OpenStudio::Model::Construction.new(model)
+const.insertLayer(0,mat)
+
+pipe.setConstruction(const)
 
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
