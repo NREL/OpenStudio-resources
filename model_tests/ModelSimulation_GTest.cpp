@@ -1631,6 +1631,38 @@ TEST_F(ModelSimulationFixture,availability_managers_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture,plant_op_schemes_rb) {
+  openstudio::SqlFile sql = runSimulation("plant_op_schemes.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,fluid_coolers_rb) {
+  openstudio::SqlFile sql = runSimulation("fluid_coolers.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,ducts_and_pipes_rb) {
+  openstudio::SqlFile sql = runSimulation("ducts_and_pipes.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,zone_air_movement_rb) {
+  openstudio::SqlFile sql = runSimulation("zone_air_movement.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
 TEST_F(ModelSimulationFixture, solar_collector_flat_plate_water_rb) {
   openstudio::SqlFile sql = runSimulation("solar_collector_flat_plate_water.rb");
 
