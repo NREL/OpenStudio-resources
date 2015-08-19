@@ -1551,6 +1551,14 @@ TEST_F(ModelSimulationFixture,humidity_control_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture,water_heaters_rb) {
+  openstudio::SqlFile sql = runSimulation("water_heaters.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
 TEST_F(ModelSimulationFixture,headered_pumps_rb) {
   openstudio::SqlFile sql = runSimulation("headered_pumps.rb");
 
@@ -1623,6 +1631,38 @@ TEST_F(ModelSimulationFixture,availability_managers_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture,plant_op_schemes_rb) {
+  openstudio::SqlFile sql = runSimulation("plant_op_schemes.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,fluid_coolers_rb) {
+  openstudio::SqlFile sql = runSimulation("fluid_coolers.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,ducts_and_pipes_rb) {
+  openstudio::SqlFile sql = runSimulation("ducts_and_pipes.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,zone_air_movement_rb) {
+  openstudio::SqlFile sql = runSimulation("zone_air_movement.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
 TEST_F(ModelSimulationFixture, zone_mixing_rb) {
   openstudio::SqlFile sql = runSimulation("zone_mixing.rb");
 
@@ -1662,4 +1702,3 @@ TEST_F(ModelSimulationFixture, zone_fan_exhaust_osm) {
 //  ASSERT_TRUE(totalSiteEnergy);
 //  EXPECT_LT(*totalSiteEnergy, 1000000);
 //}
-
