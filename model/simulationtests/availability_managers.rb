@@ -48,6 +48,8 @@ systems.each_with_index do |system,i|
   elsif i == 3
     avm = OpenStudio::Model::AvailabilityManagerHybridVentilation.new(model)
     system.setAvailabilityManager(avm)
+  elsif i == 4
+    system.setNightCycleControlType("CycleOnAny");
   end
 end
 
