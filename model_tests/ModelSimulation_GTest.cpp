@@ -1695,6 +1695,15 @@ TEST_F(ModelSimulationFixture, zone_fan_exhaust_osm) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture, solar_collector_flat_plate_water_rb) {
+  openstudio::SqlFile sql = runSimulation("solar_collector_flat_plate_water.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+
 //TEST_F(ModelSimulationFixture,unitary_test_rb) {
 //  openstudio::SqlFile sql = runSimulation("unitary_test.rb");
 //
