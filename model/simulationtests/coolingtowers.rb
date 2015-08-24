@@ -75,24 +75,11 @@ newTower3.setBlowdownConcentrationRatio(4.0)
 
 # FluidCoolerSingleSpeed
 fluidCoolerSingleSpeed = OpenStudio::Model::FluidCoolerSingleSpeed.new(model)
-plant.addSupplyBranchForComponent(FluidCoolerSingleSpeed)
+plant.addSupplyBranchForComponent(fluidCoolerSingleSpeed)
 
 # FluidCoolerTwoSpeed
 fluidCoolerTwoSpeed = OpenStudio::Model::FluidCoolerTwoSpeed.new(model)
-plant.addSupplyBranchForComponent(FluidCoolerTwoSpeed)
-
-# PipeIndoor
-pipeIndoor = OpenStudio::Model::PipeIndoor.new(model)
-pipeIndoor.addToNode(plant.supplyOutletNode)
-
-# PipeOutdoor
-pipeOutdoor = OpenStudio::Model::PipeOutdoor.new(model)
-pipeOutdoor.addToNode(plant.supplyOutletNode)
-
-# Duct
-airLoopHVAC = model.getAirLoopHVACs.first
-duct = OpenStudio::Model::Duct.new(model)
-duct.addToNode(airLoopHVAC.supplyOutletNode)
+plant.addSupplyBranchForComponent(fluidCoolerTwoSpeed)
 
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
