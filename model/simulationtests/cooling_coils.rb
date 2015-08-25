@@ -50,6 +50,27 @@ unitary.setCoolingCoil(cooling_coil)
 unitary.addToNode(airloop.supplyOutletNode())
 unitary.setControllingZoneorThermostatLocation(zone)
 
+# CoilCoolingDXVariableSpeed
+zone = zones[2]
+zone.airLoopHVAC.get.removeBranchForZone(zone)
+airloop = OpenStudio::Model::addSystemType7(model).to_AirLoopHVAC.get
+airloop.addBranchForZone(zone)
+#coil = airloop.supplyComponents(OpenStudio::Model::CoilCoolingWater::iddObjectType).first.to_CoilCoolingWater.get
+#newcoil = OpenStudio::Model::CoilCoolingDXVariableSpeed.new(model)
+#coildata = OpenStudio::Model::CoilCoolingDXVariableSpeedSpeedData.new(model)
+#newcoil.addSpeed(coildata)
+#newcoil.addToNode(coil.airOutletModelObject.get.to_Node.get)
+#coil.remove
+
+#node = newcoil.outletModelObject.get.to_Node.get
+#
+## CoilHeatingDXVariableSpeed
+#newcoil = OpenStudio::Model::CoilHeatingDXVariableSpeed.new(model)
+#coildata = OpenStudio::Model::CoilHeatingDXVariableSpeedSpeedData.new(model)
+#newcoil.addSpeed(coildata)
+#newcoil.addToNode(node)
+
+
 ##CoilSystemCoolingWaterHeatExchangerAssisted
 #zone = zones[2]
 #zone.airLoopHVAC.get.removeBranchForZone(zone)

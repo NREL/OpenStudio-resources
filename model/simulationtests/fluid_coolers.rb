@@ -32,6 +32,9 @@ plant.addSupplyBranchForComponent(single_speed_cooler)
 two_speed_cooler = OpenStudio::Model::FluidCoolerTwoSpeed.new(model)
 plant.addSupplyBranchForComponent(two_speed_cooler)
 
+two_speed_evap_cooler = OpenStudio::Model::EvaporativeFluidCoolerTwoSpeed.new(model)
+plant.addSupplyBranchForComponent(two_speed_evap_cooler)
+
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
