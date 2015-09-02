@@ -1719,7 +1719,6 @@ TEST_F(ModelSimulationFixture, ideal_plant_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
-
 //TEST_F(ModelSimulationFixture,unitary_test_rb) {
 //  openstudio::SqlFile sql = runSimulation("unitary_test.rb");
 //
@@ -1727,3 +1726,15 @@ TEST_F(ModelSimulationFixture, ideal_plant_rb) {
 //  ASSERT_TRUE(totalSiteEnergy);
 //  EXPECT_LT(*totalSiteEnergy, 1000000);
 //}
+
+TEST_F(ModelSimulationFixture, setpoint_managers_rb) {
+  openstudio::SqlFile sql = runSimulation("setpoint_managers.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
