@@ -726,8 +726,8 @@ TEST_F(ModelSimulationFixture, lowtemprad_constflow_rb) {
   boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
   ASSERT_TRUE(hoursHeatingSetpointNotMet);
   EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-	
-	boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
   ASSERT_TRUE(hoursCoolingSetpointNotMet);
   EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
@@ -741,7 +741,7 @@ TEST_F(ModelSimulationFixture, lowtemprad_constflow_osm) {
   boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
   ASSERT_TRUE(hoursHeatingSetpointNotMet);
   EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-	
+  
   boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
   ASSERT_TRUE(hoursCoolingSetpointNotMet);
   EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
@@ -757,7 +757,7 @@ TEST_F(ModelSimulationFixture, lowtemprad_varflow_rb) {
   boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
   ASSERT_TRUE(hoursHeatingSetpointNotMet);
   EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-	
+  
   boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
   ASSERT_TRUE(hoursCoolingSetpointNotMet);
   EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
@@ -772,8 +772,8 @@ TEST_F(ModelSimulationFixture, lowtemprad_varflow_osm) {
   boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
   ASSERT_TRUE(hoursHeatingSetpointNotMet);
   EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
-	
-	boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
+  
+  boost::optional<double> hoursCoolingSetpointNotMet = sql.hoursCoolingSetpointNotMet();
   ASSERT_TRUE(hoursCoolingSetpointNotMet);
   EXPECT_LT(*hoursCoolingSetpointNotMet, 350);
 }
@@ -1445,6 +1445,14 @@ TEST_F(ModelSimulationFixture,zone_hvac_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture,zone_hvac2_rb) {
+  openstudio::SqlFile sql = runSimulation("zone_hvac2.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
 TEST_F(ModelSimulationFixture,zone_hvac_osm) {
   openstudio::SqlFile sql = runSimulation("zone_hvac.osm");
 
@@ -1551,6 +1559,14 @@ TEST_F(ModelSimulationFixture,humidity_control_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture,water_heaters_rb) {
+  openstudio::SqlFile sql = runSimulation("water_heaters.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
 TEST_F(ModelSimulationFixture,headered_pumps_rb) {
   openstudio::SqlFile sql = runSimulation("headered_pumps.rb");
 
@@ -1623,6 +1639,87 @@ TEST_F(ModelSimulationFixture,availability_managers_rb) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(ModelSimulationFixture,plant_op_schemes_rb) {
+  openstudio::SqlFile sql = runSimulation("plant_op_schemes.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,fluid_coolers_rb) {
+  openstudio::SqlFile sql = runSimulation("fluid_coolers.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,ducts_and_pipes_rb) {
+  openstudio::SqlFile sql = runSimulation("ducts_and_pipes.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture,zone_air_movement_rb) {
+  openstudio::SqlFile sql = runSimulation("zone_air_movement.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture, zone_mixing_rb) {
+  openstudio::SqlFile sql = runSimulation("zone_mixing.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture, zone_mixing_osm) {
+  openstudio::SqlFile sql = runSimulation("zone_mixing.osm");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture, zone_fan_exhaust_rb) {
+  openstudio::SqlFile sql = runSimulation("zone_fan_exhaust.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture, zone_fan_exhaust_osm) {
+  openstudio::SqlFile sql = runSimulation("zone_fan_exhaust.osm");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture, solar_collector_flat_plate_water_rb) {
+  openstudio::SqlFile sql = runSimulation("solar_collector_flat_plate_water.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture, ideal_plant_rb) {
+  openstudio::SqlFile sql = runSimulation("ideal_plant.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+
 //TEST_F(ModelSimulationFixture,unitary_test_rb) {
 //  openstudio::SqlFile sql = runSimulation("unitary_test.rb");
 //
@@ -1630,6 +1727,7 @@ TEST_F(ModelSimulationFixture,availability_managers_rb) {
 //  ASSERT_TRUE(totalSiteEnergy);
 //  EXPECT_LT(*totalSiteEnergy, 1000000);
 //}
+<<<<<<< HEAD
 
 TEST_F(ModelSimulationFixture, setpoint_managers_rb) {
   openstudio::SqlFile sql = runSimulation("setpoint_managers.rb");
@@ -1642,3 +1740,5 @@ TEST_F(ModelSimulationFixture, setpoint_managers_rb) {
   ASSERT_TRUE(hoursHeatingSetpointNotMet);
   EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
+=======
+>>>>>>> develop

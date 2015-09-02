@@ -7,7 +7,7 @@ model = BaselineModel.new
 #make a 2 story, 100m X 50m, 10 zone core/perimeter building
 model.add_geometry({"length" => 100,
               "width" => 50,
-              "num_floors" => 1,
+              "num_floors" => 2,
               "floor_to_floor_height" => 4,
               "plenum_height" => 1,
               "perimeter_zone_depth" => 3})
@@ -20,35 +20,12 @@ model.add_windows({"wwr" => 0.4,
 #add ASHRAE System type 03, PSZ-AC
 model.add_hvac({"ashrae_sys_num" => '03'})
 
-schedule = OpenStudio::Model::ScheduleRuleset.new(model)
-day_schedule = schedule.defaultDaySchedule();
-day_schedule.addValue(OpenStudio::Time.new(0,6,0,0),0.0)  
-day_schedule.addValue(OpenStudio::Time.new(0,22,0,0),1.0)  
-day_schedule.addValue(OpenStudio::Time.new(0,24,0,0),0.0)  
-
-systems = model.getAirLoopHVACs
-systems.each_with_index do |system,i|
-  system.setAvailabilitySchedule(schedule)
-  if i == 0
-    avm = OpenStudio::Model::AvailabilityManagerNightVentilation.new(model)
-    ventilationTemperatureSchedule = OpenStudio::Model::ScheduleRuleset.new(model)
-    ventilationTemperatureSchedule.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),18.0);
-    avm.setVentilationTemperatureSchedule(ventilationTemperatureSchedule);
-    system.setAvailabilityManager(avm)
-  elsif i == 1
-    avm = OpenStudio::Model::AvailabilityManagerOptimumStart.new(model)
-    system.setAvailabilityManager(avm)
-  elsif i == 2
-    avm = OpenStudio::Model::AvailabilityManagerHybridVentilation.new(model)
-    system.setAvailabilityManager(avm)
-  elsif i == 3
-    system.setNightCycleControlType("CycleOnAny");
-  end
-end
-
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
+
+zone_ventilation = OpenStudio::Model::ZoneVentilationDesignFlowRate.new(model)
+zone_ventilation.addToThermalZone(model.getThermalZones.first)
               
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()

@@ -74,6 +74,7 @@ INCLUDE(ProjectMacros.cmake)
 LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR})
 
 # Use CTest
+SET(DART_TESTING_TIMEOUT "3000" CACHE STRING "")
 ENABLE_TESTING()
 INCLUDE(CTest) 
 ###############################################################################

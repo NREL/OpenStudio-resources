@@ -73,6 +73,13 @@ newTower3.setDriftLossPercent(0.05)
 newTower3.setBlowdownCalculationMode("ConcentrationRatio")
 newTower3.setBlowdownConcentrationRatio(4.0)
 
+# FluidCoolerSingleSpeed
+fluidCoolerSingleSpeed = OpenStudio::Model::FluidCoolerSingleSpeed.new(model)
+plant.addSupplyBranchForComponent(fluidCoolerSingleSpeed)
+
+# FluidCoolerTwoSpeed
+fluidCoolerTwoSpeed = OpenStudio::Model::FluidCoolerTwoSpeed.new(model)
+plant.addSupplyBranchForComponent(fluidCoolerTwoSpeed)
 
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
