@@ -25,6 +25,9 @@ airloops = model.getAirLoopHVACs()
 oa_airloops = model.getAirLoopHVACOutdoorAirSystems()
 schedule = model.alwaysOnDiscreteSchedule()
 
+# constant_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model);
+# constant_temp_sch.defaultDaySchedule().addValue( OpenStudio::Time.new(0, 24, 0), 50 );
+
 if oa_airloops.length > 0 then
 	oa_airloop = oa_airloops[0]
 	coil = OpenStudio::Model::CoilHeatingElectric.new(model,schedule)
@@ -55,6 +58,10 @@ if airloops.length > 0 then
 	spm_2.setHighSetpointSchedule(high_temperature_sch)
 	spm_2.setLowSetpointSchedule(low_temperature_sch)
 	spm_2.addToNode(heating_coil.airOutletModelObject.get.to_Node.get)
+
+	# test adding Return Air Bypass to AirLoopHVAC
+	# Not possible currently in OS, uncomment in future
+	# airloop.setReturnAirBypassFlowTemperatureSetpointSchedule(constant_temp_sch)
 end
 
 
