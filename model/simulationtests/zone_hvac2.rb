@@ -21,57 +21,57 @@ model.add_windows({"wwr" => 0.4,
 model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
                       
-## Add a hot water plant to supply the baseboard heaters
-## This could be baked into HVAC templates in the future
-#hotWaterPlant = OpenStudio::Model::PlantLoop.new(model)
-#hotWaterPlant.setName('Hot Water Plant')
-#
-#sizingPlant = hotWaterPlant.sizingPlant()
-#sizingPlant.setLoopType('Heating')
-#sizingPlant.setDesignLoopExitTemperature(82.0)
-#sizingPlant.setLoopDesignTemperatureDifference(11.0)
-#
-#hotWaterOutletNode = hotWaterPlant.supplyOutletNode()
-#hotWaterInletNode = hotWaterPlant.supplyInletNode()
-#
-#pump = OpenStudio::Model::PumpVariableSpeed.new(model)
-#pump.addToNode(hotWaterInletNode)
-#
-#boiler = OpenStudio::Model::BoilerHotWater.new(model)
-#node = hotWaterPlant.supplySplitter().lastOutletModelObject().get().to_Node().get()
-#boiler.addToNode(node)
-#
-#pipe = OpenStudio::Model::PipeAdiabatic.new(model)
-#hotWaterPlant.addSupplyBranchForComponent(pipe)
-#
-#pipe2 = OpenStudio::Model::PipeAdiabatic.new(model)
-#pipe2.addToNode(hotWaterOutletNode)
-#
-### Make a hot Water temperature schedule
-#  
-#osTime = OpenStudio::Time.new(0,24,0,0)
-#
-#hotWaterTempSchedule = OpenStudio::Model::ScheduleRuleset.new(model)
-#hotWaterTempSchedule.setName('Hot Water Temperature')
-#
-#### Winter Design Day
-#hotWaterTempScheduleWinter = OpenStudio::Model::ScheduleDay.new(model)
-#hotWaterTempSchedule.setWinterDesignDaySchedule(hotWaterTempScheduleWinter)
-#hotWaterTempSchedule.winterDesignDaySchedule().setName('Hot Water Temperature Winter Design Day')
-#hotWaterTempSchedule.winterDesignDaySchedule().addValue(osTime,67)
-#
-#### Summer Design Day
-#hotWaterTempScheduleSummer = OpenStudio::Model::ScheduleDay.new(model)
-#hotWaterTempSchedule.setSummerDesignDaySchedule(hotWaterTempScheduleSummer)
-#hotWaterTempSchedule.summerDesignDaySchedule().setName("Hot Water Temperature Summer Design Day")
-#hotWaterTempSchedule.summerDesignDaySchedule().addValue(osTime,67)
-#
-#### All other days
-#hotWaterTempSchedule.defaultDaySchedule().setName("Hot Water Temperature Default")
-#hotWaterTempSchedule.defaultDaySchedule().addValue(osTime,67)
-#
-#hotWaterSPM = OpenStudio::Model::SetpointManagerScheduled.new(model,hotWaterTempSchedule)
-#hotWaterSPM.addToNode(hotWaterOutletNode)                      
+# Add a hot water plant to supply the baseboard heaters
+# This could be baked into HVAC templates in the future
+hotWaterPlant = OpenStudio::Model::PlantLoop.new(model)
+hotWaterPlant.setName('Hot Water Plant')
+
+sizingPlant = hotWaterPlant.sizingPlant()
+sizingPlant.setLoopType('Heating')
+sizingPlant.setDesignLoopExitTemperature(82.0)
+sizingPlant.setLoopDesignTemperatureDifference(11.0)
+
+hotWaterOutletNode = hotWaterPlant.supplyOutletNode()
+hotWaterInletNode = hotWaterPlant.supplyInletNode()
+
+pump = OpenStudio::Model::PumpVariableSpeed.new(model)
+pump.addToNode(hotWaterInletNode)
+
+boiler = OpenStudio::Model::BoilerHotWater.new(model)
+node = hotWaterPlant.supplySplitter().lastOutletModelObject().get().to_Node().get()
+boiler.addToNode(node)
+
+pipe = OpenStudio::Model::PipeAdiabatic.new(model)
+hotWaterPlant.addSupplyBranchForComponent(pipe)
+
+pipe2 = OpenStudio::Model::PipeAdiabatic.new(model)
+pipe2.addToNode(hotWaterOutletNode)
+
+## Make a hot Water temperature schedule
+  
+osTime = OpenStudio::Time.new(0,24,0,0)
+
+hotWaterTempSchedule = OpenStudio::Model::ScheduleRuleset.new(model)
+hotWaterTempSchedule.setName('Hot Water Temperature')
+
+### Winter Design Day
+hotWaterTempScheduleWinter = OpenStudio::Model::ScheduleDay.new(model)
+hotWaterTempSchedule.setWinterDesignDaySchedule(hotWaterTempScheduleWinter)
+hotWaterTempSchedule.winterDesignDaySchedule().setName('Hot Water Temperature Winter Design Day')
+hotWaterTempSchedule.winterDesignDaySchedule().addValue(osTime,67)
+
+### Summer Design Day
+hotWaterTempScheduleSummer = OpenStudio::Model::ScheduleDay.new(model)
+hotWaterTempSchedule.setSummerDesignDaySchedule(hotWaterTempScheduleSummer)
+hotWaterTempSchedule.summerDesignDaySchedule().setName("Hot Water Temperature Summer Design Day")
+hotWaterTempSchedule.summerDesignDaySchedule().addValue(osTime,67)
+
+### All other days
+hotWaterTempSchedule.defaultDaySchedule().setName("Hot Water Temperature Default")
+hotWaterTempSchedule.defaultDaySchedule().addValue(osTime,67)
+
+hotWaterSPM = OpenStudio::Model::SetpointManagerScheduled.new(model,hotWaterTempSchedule)
+hotWaterSPM.addToNode(hotWaterOutletNode)
 
 # Add a hot water plant to supply the water to air heat pump
 # This could be baked into HVAC templates in the future
@@ -197,8 +197,10 @@ story_3_east_thermal_zone = model.getThermalZoneByName("Story 3 East Perimeter T
 story_3_west_thermal_zone = model.getThermalZoneByName("Story 3 West Perimeter Thermal Zone").get                      
 
 # Add ZoneHVACBaseboardRadiantConvectiveWater
-# zoneHVACBaseboardRadiantConvectiveWater = OpenStudio::Model::ZoneHVACBaseboardRadiantConvectiveWater.new(model)
-# zoneHVACBaseboardRadiantConvectiveWater.addToThermalZone(story_1_core_thermal_zone)
+zoneHVACBaseboardRadiantConvectiveWater = OpenStudio::Model::ZoneHVACBaseboardRadiantConvectiveWater.new(model)
+baseboard_coil = zoneHVACBaseboardRadiantConvectiveWater.heatingCoil()
+hotWaterPlant.addDemandBranchForComponent(baseboard_coil)
+zoneHVACBaseboardRadiantConvectiveWater.addToThermalZone(story_1_core_thermal_zone)
 
 # Add ZoneHVACBaseboardRadiantConvectiveElectric
 zoneHVACBaseboardRadiantConvectiveElectric = OpenStudio::Model::ZoneHVACBaseboardRadiantConvectiveElectric.new(model)
