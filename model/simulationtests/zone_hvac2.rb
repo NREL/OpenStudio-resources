@@ -227,8 +227,27 @@ zoneHVACUnitVentilator.setHeatingCoil( heating_coil )
 zoneHVACUnitVentilator.addToThermalZone(story_3_south_thermal_zone)
 
 # Add ZoneHVACEnergyRecoveryVentilator
-# zoneHVACEnergyRecoveryVentilator = OpenStudio::Model::ZoneHVACEnergyRecoveryVentilator.new(model)
-# zoneHVACEnergyRecoveryVentilator.addToThermalZone(story_1_east_thermal_zone)
+zoneHVACEnergyRecoveryVentilator = OpenStudio::Model::ZoneHVACEnergyRecoveryVentilator.new(model)
+zoneHVACEnergyRecoveryVentilator.addToThermalZone(story_1_east_thermal_zone)
+
+# Add ZoneHVACEnergyRecoveryVentilator
+zoneHVACEnergyRecoveryVentilator = OpenStudio::Model::ZoneHVACEnergyRecoveryVentilator.new(model)
+zoneHVACEnergyRecoveryVentilatorController = OpenStudio::Model::ZoneHVACEnergyRecoveryVentilatorController.new(model)
+zoneHVACEnergyRecoveryVentilator.setController( zoneHVACEnergyRecoveryVentilatorController )
+zoneHVACEnergyRecoveryVentilator.addToThermalZone(story_2_east_thermal_zone)
+
+# Add ZoneHVACEnergyRecoveryVentilator
+zoneHVACEnergyRecoveryVentilator = OpenStudio::Model::ZoneHVACEnergyRecoveryVentilator.new(model)
+zoneHVACEnergyRecoveryVentilatorController = OpenStudio::Model::ZoneHVACEnergyRecoveryVentilatorController.new(model)
+zoneHVACEnergyRecoveryVentilator.setController( zoneHVACEnergyRecoveryVentilatorController )
+zoneHVACEnergyRecoveryVentilatorController.setHighHumidityControlFlag( true )
+zoneHVACEnergyRecoveryVentilator.addToThermalZone(story_3_east_thermal_zone)
+# Add a humidistat at 50% RH to the zone
+dehumidify_sch = OpenStudio::Model::ScheduleConstant.new(model)
+dehumidify_sch.setValue(50)
+humidistat = OpenStudio::Model::ZoneControlHumidistat.new(model)
+humidistat.setHumidifyingRelativeHumiditySetpointSchedule(dehumidify_sch)
+story_3_east_thermal_zone.setZoneControlHumidistat(humidistat)
 
 # Add ZoneHVACDehumidifierDX
 zoneHVACDehumidifierDX = OpenStudio::Model::ZoneHVACDehumidifierDX.new(model)
