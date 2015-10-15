@@ -175,6 +175,22 @@ TEST_F(SDDSimulationFixture, CSUS_Phase_2_8_19_15_final_v6_7_rlh_ap_xml) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(SDDSimulationFixture, fixed_dual_sp_xml) {
+  openstudio::SqlFile sql = runSimulation("fixed_dual_sp.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, scheduled_dual_sp_xml) {
+  openstudio::SqlFile sql = runSimulation("scheduled_dual_sp.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
 //TEST_F(SDDSimulationFixture, RetlSml_DOAS_FPFC_ap_Issue1220_xml) {
 //  openstudio::SqlFile sql = runSimulation("RetlSml-DOAS_FPFC_ap_Issue1220.xml");
 //
