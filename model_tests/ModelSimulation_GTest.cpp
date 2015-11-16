@@ -1161,8 +1161,8 @@ TEST_F(ModelSimulationFixture, schedule_ruleset_2012_LeapYear_rb) {
     ASSERT_EQ(24*366, dayTypeTimeSeries->values().size());
     ASSERT_TRUE(dayTypeTimeSeries->intervalLength());
     EXPECT_EQ(60, dayTypeTimeSeries->intervalLength()->totalMinutes());
-// TODO: DLM, Fix this later
-//    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), dayTypeTimeSeries->firstReportDateTime());
+
+    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), dayTypeTimeSeries->firstReportDateTime());
 
     openstudio::DateTime dateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0));
     openstudio::Vector values = timeSeries->values();
@@ -1265,8 +1265,8 @@ TEST_F(ModelSimulationFixture, schedule_ruleset_2013_rb) {
     ASSERT_EQ(24*365, dayTypeTimeSeries->values().size());
     ASSERT_TRUE(dayTypeTimeSeries->intervalLength());
     EXPECT_EQ(60, dayTypeTimeSeries->intervalLength()->totalMinutes());
-// TODO: DLM, Fix this later
-//    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2012), openstudio::Time(0,1,0,0)), dayTypeTimeSeries->firstReportDateTime());
+
+    EXPECT_EQ(openstudio::DateTime(openstudio::Date(1, 1, 2013), openstudio::Time(0,1,0,0)), dayTypeTimeSeries->firstReportDateTime());
 
     openstudio::DateTime dateTime(openstudio::Date(1, 1, 2013), openstudio::Time(0,1,0,0));
     openstudio::Vector values = timeSeries->values();
