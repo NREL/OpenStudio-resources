@@ -382,7 +382,8 @@ class BaselineModel < OpenStudio::Model::Model
     #make sure the file exists on the filesystem; if it does, open it
     construction_library_path = OpenStudio::Path.new(construction_library_path)
     if OpenStudio::exists(construction_library_path)
-      construction_library = OpenStudio::IdfFile::load(construction_library_path, "OpenStudio".to_IddFileType).get
+      versionTranslator = OpenStudio::OSVersion::VersionTranslator.new 
+      construction_library = versionTranslator.loadModel(construction_library_path).get
     else
       puts "#{construction_library_path} couldn't be found"
     end
