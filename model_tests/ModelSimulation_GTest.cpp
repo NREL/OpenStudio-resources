@@ -1738,3 +1738,17 @@ TEST_F(ModelSimulationFixture, setpoint_managers_rb) {
   ASSERT_TRUE(hoursHeatingSetpointNotMet);
   EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
+
+TEST_F(ModelSimulationFixture, surface_properties_rb) {
+  openstudio::SqlFile sql = runSimulation("surface_properties.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+
+  boost::optional<double> hoursHeatingSetpointNotMet = sql.hoursHeatingSetpointNotMet();
+  ASSERT_TRUE(hoursHeatingSetpointNotMet);
+  EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
+}
+
+
