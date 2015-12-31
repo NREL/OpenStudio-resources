@@ -46,19 +46,29 @@ convectionCoefficients.setConvectionCoefficient2(1.0)
 # set surface properties
 groundConditions = OpenStudio::Model::SurfacePropertyOtherSideCoefficients.new(model)
 groundConditions.setConstantTemperature(10.0)
-groundConditions.setExternalDryBulbTemperatureCoefficient(1.0)
-groundConditions.setGroundTemperatureCoefficient(1.0)
+groundConditions.setExternalDryBulbTemperatureCoefficient(0.0)
+groundConditions.setGroundTemperatureCoefficient(0.0)
 groundConditions.setWindSpeedCoefficient(0.0)
 groundConditions.setZoneAirTemperatureCoefficient(0.0)
 groundConditions.setSinusoidalVariationofConstantTemperatureCoefficient(false)
 
+# have to do this because other side coefficient surfaces do not inherit constructions?
+model.getSpaces.each do |space|
+  space.hardApplyConstructions
+end
+
 model.getSurfaces.each do |surface|
   if surface.outsideBoundaryCondition == "Ground"
-    surface.setOtherSideCoefficients(groundConditions)
+    surface.setSurfacePropertyOtherSideCoefficients(groundConditions)
   end
 end
 
- 
+OpenStudio::Model::OutputVariable.new("Surface Inside Face Temperature", model)
+OpenStudio::Model::OutputVariable.new("Surface Outside Face Temperature", model)
+OpenStudio::Model::OutputVariable.new("Surface Inside Face Convection Heat Transfer Coefficient", model)
+OpenStudio::Model::OutputVariable.new("Surface Outside Face Convection Heat Transfer Coefficient", model)
+
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "out.osm"})
