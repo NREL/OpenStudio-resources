@@ -594,7 +594,7 @@ class BaselineModel < OpenStudio::Model::Model
     require 'openstudio/energyplus/find_energyplus'
      
     # find energyplus
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,3)
+    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,4)
     weather_path = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s)
       
     #load the design days for Chicago
@@ -622,7 +622,7 @@ class BaselineModel < OpenStudio::Model::Model
     idf_name = params["idf_name"]
      
     # find energyplus
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
+    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,4)
     ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
     idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
     weather_path = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s)
