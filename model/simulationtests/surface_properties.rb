@@ -43,7 +43,7 @@ convectionCoefficients.setConvectionCoefficient2Location("Outside")
 convectionCoefficients.setConvectionCoefficient2Type("Value")
 convectionCoefficients.setConvectionCoefficient2(1.0)
  
-# set surface properties
+# set SurfacePropertyOtherSideCoefficients
 groundConditions = OpenStudio::Model::SurfacePropertyOtherSideCoefficients.new(model)
 groundConditions.setConstantTemperature(10.0)
 groundConditions.setExternalDryBulbTemperatureCoefficient(0.0)
@@ -52,14 +52,23 @@ groundConditions.setWindSpeedCoefficient(0.0)
 groundConditions.setZoneAirTemperatureCoefficient(0.0)
 groundConditions.setSinusoidalVariationofConstantTemperatureCoefficient(false)
 
+# set SurfacePropertyOtherSideConditionsModel
+roofConditions = OpenStudio::Model::SurfacePropertyOtherSideConditionsModel.new(model)
+puts "initial type of modeling is #{roofConditions.typeOfModeling}."
+roofConditions.setTypeOfModeling("UndergroundPipingSystemSurface")
+puts "final type of modeling is #{roofConditions.typeOfModeling}."
+
 # have to do this because other side coefficient surfaces do not inherit constructions?
 model.getSpaces.each do |space|
   space.hardApplyConstructions
 end
 
+# change boundary conditions for ground and roofs
 model.getSurfaces.each do |surface|
   if surface.outsideBoundaryCondition == "Ground"
-    surface.setSurfacePropertyOtherSideCoefficients(groundConditions)
+    surface.setSurfacePropertyOtherSideCoefficients(groundConditions) # this change the boundary condition
+  elsif surface.outsideBoundaryCondition == "Outdoors" and surface.surfaceType == "RoofCeiling"
+    surface.setSurfacePropertyOtherSideConditionsModel(roofConditions) # this change the boundary condition
   end
 end
 
