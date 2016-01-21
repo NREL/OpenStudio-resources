@@ -1738,3 +1738,20 @@ TEST_F(ModelSimulationFixture, setpoint_managers_rb) {
   ASSERT_TRUE(hoursHeatingSetpointNotMet);
   EXPECT_LT(*hoursHeatingSetpointNotMet, 350);
 }
+
+TEST_F(ModelSimulationFixture, water_to_water_hp_rb) {
+  openstudio::SqlFile sql = runSimulation("water_to_water_hp.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(ModelSimulationFixture, zone_control_contaminant_controller_rb) {
+  openstudio::SqlFile sql = runSimulation("zone_control_contaminant_controller.rb");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
