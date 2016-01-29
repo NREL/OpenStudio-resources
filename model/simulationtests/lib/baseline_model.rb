@@ -382,7 +382,8 @@ class BaselineModel < OpenStudio::Model::Model
     #make sure the file exists on the filesystem; if it does, open it
     construction_library_path = OpenStudio::Path.new(construction_library_path)
     if OpenStudio::exists(construction_library_path)
-      construction_library = OpenStudio::IdfFile::load(construction_library_path, "OpenStudio".to_IddFileType).get
+      versionTranslator = OpenStudio::OSVersion::VersionTranslator.new 
+      construction_library = versionTranslator.loadModel(construction_library_path).get
     else
       puts "#{construction_library_path} couldn't be found"
     end
@@ -593,7 +594,7 @@ class BaselineModel < OpenStudio::Model::Model
     require 'openstudio/energyplus/find_energyplus'
      
     # find energyplus
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,3)
+    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,4)
     weather_path = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s)
       
     #load the design days for Chicago
@@ -621,7 +622,7 @@ class BaselineModel < OpenStudio::Model::Model
     idf_name = params["idf_name"]
      
     # find energyplus
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
+    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,4)
     ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
     idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
     weather_path = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s)

@@ -191,6 +191,70 @@ TEST_F(SDDSimulationFixture, scheduled_dual_sp_xml) {
   EXPECT_LT(*totalSiteEnergy, 1000000);
 }
 
+TEST_F(SDDSimulationFixture, 040012_OffLrg_CECStd_ab_xml) {
+  openstudio::SqlFile sql = runSimulation("040012-OffLrg-CECStd - ab.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, OffSml_Res_AirSysCyclingSZAC_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("OffSml-Res_AirSysCyclingSZAC - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, Test) {
+  openstudio::SqlFile sql = runSimulation("test.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, abschiller) {
+  openstudio::SqlFile sql = runSimulation("abschiller.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, non_int_water_econo) {
+  openstudio::SqlFile sql = runSimulation("non_int_water_econo.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, int_water_econo) {
+  openstudio::SqlFile sql = runSimulation("int_water_econo.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, diffsizing) {
+  openstudio::SqlFile sql = runSimulation("diffsizing.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
+TEST_F(SDDSimulationFixture, OffSml_VRFSys_ap_xml) {
+  openstudio::SqlFile sql = runSimulation("OffSml-VRFSys - ap.xml");
+
+  boost::optional<double> totalSiteEnergy = sql.totalSiteEnergy();
+  ASSERT_TRUE(totalSiteEnergy);
+  EXPECT_LT(*totalSiteEnergy, 1000000);
+}
+
 //TEST_F(SDDSimulationFixture, RetlSml_DOAS_FPFC_ap_Issue1220_xml) {
 //  openstudio::SqlFile sql = runSimulation("RetlSml-DOAS_FPFC_ap_Issue1220.xml");
 //
