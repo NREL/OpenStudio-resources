@@ -396,6 +396,14 @@ class BaselineModel < OpenStudio::Model::Model
     building = self.getBuilding
     default_construction_set = OpenStudio::Model::getDefaultConstructionSets(self)[0]
     building.setDefaultConstructionSet(default_construction_set)
+
+    # get the air wall
+    construction_library.getConstructions.each do |c|
+      if (c.name.to_s.strip == "Air_Wall")
+        c.clone(self)
+        break
+      end
+    end
   
   end
   
