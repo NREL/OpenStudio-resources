@@ -389,7 +389,8 @@ class BaselineModel < OpenStudio::Model::Model
     end
 
     #add the objects in the construction library to the model
-    self.addObjects(construction_library.objects)
+    sets = construction_library.to_Model.getDefaultConstructionSets
+    sets.first.clone(self)
     
     #apply the newly-added construction set to the model
     building = self.getBuilding
