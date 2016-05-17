@@ -49,6 +49,33 @@ water_def = OpenStudio::Model::WaterUseEquipmentDefinition.new(model)
 water_equipment = OpenStudio::Model::WaterUseEquipment.new(water_def)
 water_connections.addWaterUseEquipment(water_equipment)
 
+# hot water system 2
+zone = zones.first
+plant = OpenStudio::Model::PlantLoop.new(model)
+pump = OpenStudio::Model::PumpConstantSpeed.new(model)
+pump.addToNode(plant.supplyInletNode())
+
+hot_water_heater = OpenStudio::Model::WaterHeaterHeatPumpWrappedCondenser.new(model)
+hot_water_heater.addToThermalZone(zone)
+tank = hot_water_heater.tank()
+plant.addSupplyBranchForComponent(tank)
+
+#hot_water_heater = OpenStudio::Model::WaterHeaterHeatPumpWrappedCondenser.new(model)
+#tank = hot_water_heater.tank()
+#plant.addSupplyBranchForComponent(tank)
+
+hot_water_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model)
+hot_water_temp_sch.setName("Hot_Water_Temperature")
+hot_water_temp_sch.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),55.0)  
+hot_water_spm = OpenStudio::Model::SetpointManagerScheduled.new(model,hot_water_temp_sch)
+hot_water_spm.addToNode(plant.supplyOutletNode())
+
+water_connections = OpenStudio::Model::WaterUseConnections.new(model)
+plant.addDemandBranchForComponent(water_connections)
+water_def = OpenStudio::Model::WaterUseEquipmentDefinition.new(model)
+water_equipment = OpenStudio::Model::WaterUseEquipment.new(water_def)
+water_connections.addWaterUseEquipment(water_equipment)
+
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
