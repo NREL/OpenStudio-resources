@@ -7,7 +7,7 @@ model = BaselineModel.new
 #make a 2 story, 100m X 50m, 10 zone core/perimeter building
 model.add_geometry({"length" => 100,
               "width" => 50,
-              "num_floors" => 1,
+              "num_floors" => 2,
               "floor_to_floor_height" => 4,
               "plenum_height" => 1,
               "perimeter_zone_depth" => 3})
@@ -25,41 +25,41 @@ _hotWaterSchedule.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0), 
 _chilledWaterSchedule = OpenStudio::Model::ScheduleRuleset.new(model)
 _chilledWaterSchedule.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0), 6.7)
 
-## Hot Water Plant
-#hotWaterPlant = OpenStudio::Model::PlantLoop.new(model)
-#sizingPlant = hotWaterPlant.sizingPlant()
-#sizingPlant.setLoopType("Heating")
-#sizingPlant.setDesignLoopExitTemperature(82.0)
-#sizingPlant.setLoopDesignTemperatureDifference(11.0)
-#
-#hotWaterOutletNode = hotWaterPlant.supplyOutletNode()
-#hotWaterInletNode = hotWaterPlant.supplyInletNode()
-#hotWaterDemandOutletNode = hotWaterPlant.demandOutletNode()
-#hotWaterDemandInletNode = hotWaterPlant.demandInletNode()
-#
-#pump = OpenStudio::Model::PumpVariableSpeed.new(model)
-#boiler = OpenStudio::Model::BoilerHotWater.new(model)
-#
-#pump.addToNode(hotWaterInletNode)
-#node = hotWaterPlant.supplySplitter().lastOutletModelObject().get.to_Node.get
-#boiler.addToNode(node)
-#
-#pipe = OpenStudio::Model::PipeAdiabatic.new(model)
-#hotWaterPlant.addSupplyBranchForComponent(pipe)
-#
-#hotWaterBypass = OpenStudio::Model::PipeAdiabatic.new(model)
-#hotWaterDemandInlet = OpenStudio::Model::PipeAdiabatic.new(model)
-#hotWaterDemandOutlet = OpenStudio::Model::PipeAdiabatic.new(model)
-#hotWaterPlant.addDemandBranchForComponent(hotWaterBypass)
-#hotWaterDemandOutlet.addToNode(hotWaterDemandOutletNode)
-#hotWaterDemandInlet.addToNode(hotWaterDemandInletNode)
-#
-#pipe2 = OpenStudio::Model::PipeAdiabatic.new(model)
-#pipe2.addToNode(hotWaterOutletNode)
-#
-#hotWaterSPM = OpenStudio::Model::SetpointManagerScheduled.new(model, _hotWaterSchedule)
-#hotWaterSPM.addToNode(hotWaterOutletNode)
-#
+# Hot Water Plant
+hotWaterPlant = OpenStudio::Model::PlantLoop.new(model)
+sizingPlant = hotWaterPlant.sizingPlant()
+sizingPlant.setLoopType("Heating")
+sizingPlant.setDesignLoopExitTemperature(82.0)
+sizingPlant.setLoopDesignTemperatureDifference(11.0)
+
+hotWaterOutletNode = hotWaterPlant.supplyOutletNode()
+hotWaterInletNode = hotWaterPlant.supplyInletNode()
+hotWaterDemandOutletNode = hotWaterPlant.demandOutletNode()
+hotWaterDemandInletNode = hotWaterPlant.demandInletNode()
+
+pump = OpenStudio::Model::PumpVariableSpeed.new(model)
+boiler = OpenStudio::Model::BoilerHotWater.new(model)
+
+pump.addToNode(hotWaterInletNode)
+node = hotWaterPlant.supplySplitter().lastOutletModelObject().get.to_Node.get
+boiler.addToNode(node)
+
+pipe = OpenStudio::Model::PipeAdiabatic.new(model)
+hotWaterPlant.addSupplyBranchForComponent(pipe)
+
+hotWaterBypass = OpenStudio::Model::PipeAdiabatic.new(model)
+hotWaterDemandInlet = OpenStudio::Model::PipeAdiabatic.new(model)
+hotWaterDemandOutlet = OpenStudio::Model::PipeAdiabatic.new(model)
+hotWaterPlant.addDemandBranchForComponent(hotWaterBypass)
+hotWaterDemandOutlet.addToNode(hotWaterDemandOutletNode)
+hotWaterDemandInlet.addToNode(hotWaterDemandInletNode)
+
+pipe2 = OpenStudio::Model::PipeAdiabatic.new(model)
+pipe2.addToNode(hotWaterOutletNode)
+
+hotWaterSPM = OpenStudio::Model::SetpointManagerScheduled.new(model, _hotWaterSchedule)
+hotWaterSPM.addToNode(hotWaterOutletNode)
+
 # Chilled Water Plant
 chilledWaterPlant = OpenStudio::Model::PlantLoop.new(model)
 sizingPlant = chilledWaterPlant.sizingPlant()
@@ -386,21 +386,144 @@ unitary_4.addToNode(airLoop_4_supplyNode)
 
 air_terminal_4 = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, schedule)
 airLoop_4.addBranchForZone(zones[3], air_terminal_4)
-        
+
+# Unitary System test 5
+airLoop_5 = OpenStudio::Model::AirLoopHVAC.new(model)
+airLoop_5_supplyNode = airLoop_5.supplyOutletNode()
+
+unitary_5 = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
+fan_5 = OpenStudio::Model::FanConstantVolume.new(model, schedule)
+cooling_coil_5 = OpenStudio::Model::CoilCoolingDXTwoStageWithHumidityControlMode.new(model)
+heating_coil_5 = OpenStudio::Model::CoilHeatingDXMultiSpeed.new(model)
+heat_stage_1 = OpenStudio::Model::CoilHeatingDXMultiSpeedStageData.new(model)
+heat_stage_2 = OpenStudio::Model::CoilHeatingDXMultiSpeedStageData.new(model)
+heating_coil_5.addStage(heat_stage_1)
+heating_coil_5.addStage(heat_stage_2)
+unitary_5.setControllingZoneorThermostatLocation(zones[4])
+unitary_5.setFanPlacement("BlowThrough")
+unitary_5.setSupplyAirFanOperatingModeSchedule(schedule)
+unitary_5.setSupplyFan(fan_5)
+unitary_5.setCoolingCoil(cooling_coil_5)
+unitary_5.setHeatingCoil(heating_coil_5)
+
+unitary_5.addToNode(airLoop_5_supplyNode)
+air_terminal_5 = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, schedule)
+airLoop_5.addBranchForZone(zones[4], air_terminal_5)
+
+# Unitary System test 6
+airLoop_6 = OpenStudio::Model::AirLoopHVAC.new(model)
+airLoop_6_supplyNode = airLoop_6.supplyOutletNode()
+
+unitary_6 = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
+fan_6 = OpenStudio::Model::FanConstantVolume.new(model, schedule)
+cooling_coil_6 = OpenStudio::Model::CoilCoolingWater.new(model)
+chilledWaterPlant.addDemandBranchForComponent(cooling_coil_6)
+heating_coil_6 = OpenStudio::Model::CoilHeatingGasMultiStage.new(model)
+heat_stage_1 = OpenStudio::Model::CoilHeatingGasMultiStageStageData.new(model)
+heat_stage_2 = OpenStudio::Model::CoilHeatingGasMultiStageStageData.new(model)
+heating_coil_6.addStage(heat_stage_1)
+heating_coil_6.addStage(heat_stage_2)
+unitary_6.setControllingZoneorThermostatLocation(zones[5])
+unitary_6.setFanPlacement("BlowThrough")
+unitary_6.setSupplyAirFanOperatingModeSchedule(schedule)
+unitary_6.setSupplyFan(fan_6)
+unitary_6.setCoolingCoil(cooling_coil_6)
+unitary_6.setHeatingCoil(heating_coil_6)
+
+unitary_6.addToNode(airLoop_6_supplyNode)
+air_terminal_6 = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, schedule)
+airLoop_6.addBranchForZone(zones[5], air_terminal_6)
+
+# Unitary System test 7
+airLoop_7 = OpenStudio::Model::AirLoopHVAC.new(model)
+airLoop_7_supplyNode = airLoop_7.supplyOutletNode()
+
+unitary_7 = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
+fan_7 = OpenStudio::Model::FanConstantVolume.new(model, schedule)
+cooling_coil_7 = OpenStudio::Model::CoilCoolingDXMultiSpeed.new(model)
+cool_stage_1 = OpenStudio::Model::CoilCoolingDXMultiSpeedStageData.new(model)
+cool_stage_2 = OpenStudio::Model::CoilCoolingDXMultiSpeedStageData.new(model)
+cooling_coil_7.addStage(cool_stage_1)
+cooling_coil_7.addStage(cool_stage_2)
+heating_coil_7 = OpenStudio::Model::CoilHeatingDXVariableSpeed.new(model)
+heat_speed_1 = OpenStudio::Model::CoilHeatingDXVariableSpeedSpeedData.new(model)
+heat_speed_2 = OpenStudio::Model::CoilHeatingDXVariableSpeedSpeedData.new(model)
+heating_coil_7.addSpeed(heat_speed_1)
+heating_coil_7.addSpeed(heat_speed_2)
+unitary_7.setControllingZoneorThermostatLocation(zones[6])
+unitary_7.setFanPlacement("BlowThrough")
+unitary_7.setSupplyAirFanOperatingModeSchedule(schedule)
+unitary_7.setSupplyFan(fan_7)
+unitary_7.setCoolingCoil(cooling_coil_7)
+unitary_7.setHeatingCoil(heating_coil_7)
+
+unitary_7.addToNode(airLoop_7_supplyNode)
+air_terminal_7 = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, schedule)
+airLoop_7.addBranchForZone(zones[6], air_terminal_7)
+
+# # Unitary System test 8
+# airLoop_8 = OpenStudio::Model::AirLoopHVAC.new(model)
+# airLoop_8_supplyNode = airLoop_8.supplyOutletNode()
+
+# unitary_8 = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
+# fan_8 = OpenStudio::Model::FanConstantVolume.new(model, schedule)
+# coil_system_8 = OpenStudio::Model::CoilSystemCoolingWaterHeatExchangerAssisted.new(model)
+# hx_8 = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(model)
+# cooling_coil_8 = OpenStudio::Model::CoilCoolingWater.new(model)
+# chilledWaterPlant.addDemandBranchForComponent(cooling_coil_8)
+# coil_system_8.setHeatExchanger(hx_8)
+# coil_system_8.setCoolingCoil(cooling_coil_8)
+# heating_coil_8 = OpenStudio::Model::CoilHeatingWater.new(model)
+# hotWaterPlant.addDemandBranchForComponent(heating_coil_8)
+# unitary_8.setControllingZoneorThermostatLocation(zones[7])
+# unitary_8.setFanPlacement("BlowThrough")
+# unitary_8.setSupplyAirFanOperatingModeSchedule(schedule)
+# unitary_8.setSupplyFan(fan_8)
+# unitary_8.setCoolingCoil(coil_system_8)
+# unitary_8.setHeatingCoil(heating_coil_8)
+
+# unitary_8.addToNode(airLoop_8_supplyNode)
+# air_terminal_8 = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, schedule)
+# airLoop_8.addBranchForZone(zones[7], air_terminal_8)
+
+# # Unitary System test 9
+# airLoop_9 = OpenStudio::Model::AirLoopHVAC.new(model)
+# airLoop_9_supplyNode = airLoop_9.supplyOutletNode()
+
+# unitary_9 = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
+# fan_9 = OpenStudio::Model::FanConstantVolume.new(model, schedule)
+# coil_system_9 = OpenStudio::Model::CoilSystemCoolingDXHeatExchangerAssisted.new(model)
+# hx_9 = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(model)
+# cooling_coil_9 = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model, schedule, cooling_curve_1, cooling_curve_2, cooling_curve_3, cooling_curve_4, cooling_curve_5)
+# coil_system_9.setHeatExchanger(hx_9)
+# coil_system_9.setCoolingCoil(cooling_coil_9)
+# heating_coil_9 = OpenStudio::Model::CoilHeatingWater.new(model)
+# hotWaterPlant.addDemandBranchForComponent(heating_coil_9)
+# unitary_9.setControllingZoneorThermostatLocation(zones[8])
+# unitary_9.setFanPlacement("BlowThrough")
+# unitary_9.setSupplyAirFanOperatingModeSchedule(schedule)
+# unitary_9.setSupplyFan(fan_9)
+# unitary_9.setCoolingCoil(coil_system_9)
+# unitary_9.setHeatingCoil(heating_coil_9)
+
+# unitary_9.addToNode(airLoop_9_supplyNode)
+# air_terminal_9 = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, schedule)
+# airLoop_9.addBranchForZone(zones[8], air_terminal_9)
+
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
-              
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #add design days to the model (Chicago)
 model.add_design_days()
-       
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "out.osm"})
-                           
+
