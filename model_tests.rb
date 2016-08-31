@@ -9,7 +9,7 @@ $ModelDir = File.join($RootDir, 'model/simulationtests/')
 $TestDir = File.join($RootDir, 'testruns')
 
 # run a test
-def run_test(filename)
+def run_test(filename, weather_file = nil, model_measures = [], energyplus_measures = [], reporting_measures = [])
   dir = File.join($TestDir, filename)
   osw = File.join(dir, 'in.osw')
  
@@ -28,6 +28,8 @@ def run_test(filename)
   end
   
   system("'#{$OpenstudioCli}' run -w '#{osw}'") 
+  
+  # todo, allow different weather file to be passed in, design days changed
   
   # todo, stick a QAQC measure on the end and check for reasonableness
   
