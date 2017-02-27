@@ -2,8 +2,6 @@ require 'openstudio'
 
 require 'fileutils'
 require 'json'
-require 'minitest/unit'
-require 'minitest/parallel_each'
 require 'minitest/autorun'
 
 # config stuff
@@ -13,7 +11,9 @@ $OswFile = File.join($RootDir, 'test.osw')
 $ModelDir = File.join($RootDir, 'model/simulationtests/')
 $TestDir = File.join($RootDir, 'testruns')
 
-ENV['RUBYLIB'] = $ModelDir 
+$:.unshift($ModelDir)
+ENV['RUBYLIB'] = $ModelDir
+ENV['RUBYPATH'] = $ModelDir
 
 # run a simulation test
 def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measures = [], reporting_measures = [])
