@@ -140,8 +140,10 @@ end
 
 
 # the tests
-class SimulationTests < MiniTest::Unit::TestCase
+class ModelTests < MiniTest::Unit::TestCase
   parallelize_me!
+  
+  # simulation tests
   
   def test_absorption_chillers_rb
     result = sim_test('absorption_chillers.rb')
@@ -539,11 +541,7 @@ class SimulationTests < MiniTest::Unit::TestCase
     result = sim_test('zone_mixing.rb')
   end
 
-end
-
-
-class IntersectionTests < MiniTest::Unit::TestCase
-  parallelize_me!
+  # intersection tests
   
   def test_intersect_22_osm
     result = intersect_test('22.osm')
