@@ -9,6 +9,7 @@ $OpenstudioCli = OpenStudio::getOpenStudioCLI
 $RootDir = File.absolute_path(File.dirname(__FILE__))
 $OswFile = File.join($RootDir, 'test.osw')
 $ModelDir = File.join($RootDir, 'model/simulationtests/')
+$IntersectDir = File.join($RootDir, 'model/intersectiontests/')
 $TestDir = File.join($RootDir, 'testruns')
 
 $:.unshift($ModelDir)
@@ -69,6 +70,52 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
   return result
 end
 
+def intersect_test(filename)
+
+  dir = File.join($TestDir, 'intersections', filename)
+  src_osm = File.join($IntersectDir, filename)
+  in_osm = File.join(dir, 'in.osm')
+  out_osm = File.join(dir, 'out.osm')
+  
+  FileUtils.rm_rf(dir) if File.exists?(dir)
+  FileUtils.mkdir_p(dir)
+  
+  vt = OpenStudio::OSVersion::VersionTranslator.new
+  
+  model = vt.loadModel(src_osm)
+  fail "Cannot load model from #{src_osm}" if model.empty?
+  model = model.get
+  
+  model.save(in_osm, true)
+
+  logSink = OpenStudio::StringStreamLogSink.new
+  logSink.setLogLevel(OpenStudio::Error)
+
+  spaces = model.getSpaces
+  n = spaces.size
+  boundingBoxes = OpenStudio::BoundingBoxVector.new 
+  spaces.each do |space|
+    t = space.buildingTransformation
+    boundingBox = t*space.boundingBox
+    boundingBoxes << boundingBox
+  end
+  
+  for i in 0...n
+    for j in i+1...n
+      if boundingBoxes[i].intersects(boundingBoxes[j])
+        spaces[i].intersectSurfaces(spaces[j])
+        spaces[i].matchSurfaces(spaces[j])
+      end
+    end
+  end
+  
+  # check no errors
+  logSink.logMessages().each do |msg|
+    assert(false, msg.logMessage)
+  end
+
+  model.save(out_osm, true)
+end
 
 
 # the tests
@@ -471,4 +518,53 @@ class SimulationTests < MiniTest::Unit::TestCase
     result = sim_test('zone_mixing.rb')
   end
 
+end
+
+
+class IntersectionTests < MiniTest::Unit::TestCase
+  parallelize_me!
+  
+  def test_intersect_22_osm
+    result = intersect_test('22.osm')
+  end
+  
+  def test_intersect_74_osm
+    result = intersect_test('74.osm')
+  end  
+  
+  def test_intersect_131_osm
+    result = intersect_test('131.osm')
+  end  
+  
+  def test_intersect_136_osm
+    result = intersect_test('136.osm')
+  end  
+  
+  def test_intersect_145_osm
+    result = intersect_test('145.osm')
+  end  
+  
+  def test_intersect_146_osm
+    result = intersect_test('146.osm')
+  end  
+  
+  def test_intersect_156_osm
+    result = intersect_test('156.osm')
+  end  
+  
+  def test_intersect_356_osm
+    result = intersect_test('356.osm')
+  end  
+  
+  def test_intersect_370_osm
+    result = intersect_test('370.osm')
+  end  
+  
+  def test_intersect_test3_osm
+    result = intersect_test('test3.osm')
+  end  
+  
+  def test_intersect_test4_osm
+    result = intersect_test('test4.osm')
+  end
 end
