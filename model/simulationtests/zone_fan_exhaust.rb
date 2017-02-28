@@ -110,4 +110,4 @@ OpenStudio::Model::OutputVariable.new("System Node Mass Flow Rate", model)
 
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
-                           "osm_name" => "out.osm"})
+                           "osm_name" => "in.osm"})

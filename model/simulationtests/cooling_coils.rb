@@ -134,7 +134,7 @@ m.add_design_days()
       
 #save the OpenStudio model (.osm)
 m.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
-                           "osm_name" => "out.osm"})
+                           "osm_name" => "in.osm"})
                            
 #m.save(Dir.pwd + '/out.osm',true)
 
