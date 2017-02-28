@@ -6,6 +6,9 @@ require 'erb'
 require 'timeout'
 require 'open3'
 
+require 'etc'
+ENV['N'] = [1, Etc.nprocessors - 1].max.to_s
+
 require 'minitest/autorun'
 
 # config stuff
