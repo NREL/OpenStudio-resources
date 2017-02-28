@@ -42,6 +42,7 @@ def run_command(command, dir, timeout = Float::INFINITY)
       
       result = w.value.exitstatus
       if result != 0
+        Dir.chdir(pwd)
         fail "Exit code #{result}:\n#{out}"
       end
       
