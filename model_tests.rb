@@ -2,6 +2,10 @@ require 'openstudio'
 
 require 'fileutils'
 require 'json'
+require 'erb'
+require 'timeout'
+require 'open3'
+
 require 'minitest/autorun'
 
 # config stuff
@@ -10,11 +14,46 @@ $RootDir = File.absolute_path(File.dirname(__FILE__))
 $OswFile = File.join($RootDir, 'test.osw')
 $ModelDir = File.join($RootDir, 'model/simulationtests/')
 $IntersectDir = File.join($RootDir, 'model/intersectiontests/')
+$IntersectFile = File.join($RootDir, 'intersect.rb.erb')
 $TestDir = File.join($RootDir, 'testruns')
 
 $:.unshift($ModelDir)
 ENV['RUBYLIB'] = $ModelDir
 ENV['RUBYPATH'] = $ModelDir
+
+# run a command in directory dir, throws exception on timeout or exit status != 0, always returns to initial directory
+def run_command(command, dir, timeout = Float::INFINITY)
+  pwd = Dir.pwd
+  Dir.chdir(dir)
+  
+  result = nil
+  Open3.popen3(command) do |i,o,e,w|
+    out = ""
+    begin
+      Timeout.timeout(timeout) do 
+        # process output of the process. it will produce EOF when done.
+        until o.eof? do
+          out += o.read_nonblock(100)
+        end
+        until e.eof? do
+          out += e.read_nonblock(100)
+        end        
+      end
+      
+      result = w.value.exitstatus
+      if result != 0
+        fail "Exit code #{result}:\n#{out}"
+      end
+      
+    rescue Timeout::Error
+      Process.kill("KILL", w.pid)
+      Dir.chdir(pwd)
+      fail "Timeout #{timeout}:\n#{out}"
+    end
+  end
+  
+  Dir.chdir(pwd)
+end
 
 # run a simulation test
 def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measures = [], reporting_measures = [])
@@ -35,11 +74,8 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
   if (ext == '.osm')
     FileUtils.cp(File.join($ModelDir,filename), in_osm)  
   elsif (ext == '.rb')
-    pwd = Dir.pwd
-    Dir.chdir(dir)
     command = "\"#{$OpenstudioCli}\" \"#{File.join($ModelDir,filename)}\""
-    system(command) # creates in.osm
-    Dir.chdir(pwd)
+    run_command(command, dir, 600)
     
     # tests used to write out.osm
     out_osm = File.join(dir, 'out.osm')
@@ -54,20 +90,20 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
   command = "\"#{$OpenstudioCli}\" run -w \"#{osw}\""
   #command = "\"#{$OpenstudioCli}\" run --debug -w \"#{osw}\""
 
-  result = system(command) 
+  run_command(command, dir, 1200)
   
   fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
 
-  result = nil
+  result_osw = nil
   File.open(out_osw, 'r') do |f|
-    result = JSON::parse(f.read, :symbolize_names=>true)
+    result_osw = JSON::parse(f.read, :symbolize_names=>true)
   end
   
   # standard checks
-  assert_equal("Success", result[:completed_status])
+  assert_equal("Success", result_osw[:completed_status])
   
-  # return out_osw for further checks
-  return result
+  # return result_osw for further checks
+  return result_osw
 end
 
 def intersect_test(filename)
@@ -76,45 +112,26 @@ def intersect_test(filename)
   src_osm = File.join($IntersectDir, filename)
   in_osm = File.join(dir, 'in.osm')
   out_osm = File.join(dir, 'out.osm')
+  rb_file = File.join(dir, 'intersect.rb')
   
   FileUtils.rm_rf(dir) if File.exists?(dir)
   FileUtils.mkdir_p(dir)
   
-  vt = OpenStudio::OSVersion::VersionTranslator.new
-  
-  model = vt.loadModel(src_osm)
-  fail "Cannot load model from #{src_osm}" if model.empty?
-  model = model.get
-  
-  model.save(in_osm, true)
-
-  logSink = OpenStudio::StringStreamLogSink.new
-  logSink.setLogLevel(OpenStudio::Error)
-
-  spaces = model.getSpaces
-  n = spaces.size
-  boundingBoxes = OpenStudio::BoundingBoxVector.new 
-  spaces.each do |space|
-    t = space.buildingTransformation
-    boundingBox = t*space.boundingBox
-    boundingBoxes << boundingBox
-  end
-  
-  for i in 0...n
-    for j in i+1...n
-      if boundingBoxes[i].intersects(boundingBoxes[j])
-        spaces[i].intersectSurfaces(spaces[j])
-        spaces[i].matchSurfaces(spaces[j])
-      end
-    end
-  end
-  
-  # check no errors
-  logSink.logMessages().each do |msg|
-    assert(false, msg.logMessage)
+  erb_in = ''
+  File.open($IntersectFile, 'r') do |file|
+    erb_in = file.read
   end
 
-  model.save(out_osm, true)
+  # configure template with variable values
+  renderer = ERB.new(erb_in)
+  erb_out = renderer.result(binding)
+ 
+  File.open(rb_file, 'w') do |file|
+    file.puts erb_out
+  end
+
+  command = "\"#{$OpenstudioCli}\" intersect.rb"
+  run_command(command, dir, 360)
 end
 
 

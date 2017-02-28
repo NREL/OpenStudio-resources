@@ -1,0 +1,45 @@
+require 'openstudio'
+
+src_osm = '<%= src_osm %>'
+in_osm = '<%= in_osm %>'
+out_osm = '<%= out_osm %>'
+
+vt = OpenStudio::OSVersion::VersionTranslator.new
+
+model = vt.loadModel(src_osm)
+fail "Cannot load model from #{src_osm}" if model.empty?
+model = model.get
+
+model.save(in_osm, true)
+
+logSink = OpenStudio::StringStreamLogSink.new
+logSink.setLogLevel(OpenStudio::Error)
+
+spaces = model.getSpaces
+n = spaces.size
+boundingBoxes = OpenStudio::BoundingBoxVector.new 
+spaces.each do |space|
+  t = space.buildingTransformation
+  boundingBox = t*space.boundingBox
+  boundingBoxes << boundingBox
+end
+
+for i in 0...n
+  for j in i+1...n
+    if boundingBoxes[i].intersects(boundingBoxes[j])
+      spaces[i].intersectSurfaces(spaces[j])
+      spaces[i].matchSurfaces(spaces[j])
+    end
+  end
+end
+
+# check no errors
+did_fail = false
+logSink.logMessages().each do |msg|
+  puts msg.logMessage
+  did_fail = true
+end
+
+model.save(out_osm, true)
+
+fail "Incorrect messages detected" if did_fail
