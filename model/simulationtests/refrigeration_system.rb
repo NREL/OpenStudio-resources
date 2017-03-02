@@ -1,6 +1,6 @@
 
 require 'openstudio'
-require 'lib/baseline_model'
+require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 
@@ -223,5 +223,5 @@ end
        
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
-                           "osm_name" => "out.osm"})
+                           "osm_name" => "in.osm"})
                            

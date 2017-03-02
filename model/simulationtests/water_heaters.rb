@@ -1,7 +1,7 @@
 
 require 'openstudio'
 require 'lib/baseline_model'
-require 'JSON'
+require 'json'
 
 model = BaselineModel.new
   
@@ -95,4 +95,4 @@ zones.each do |thermal_zone|
 end
        
 #save the OpenStudio model (.osm)
-model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "out.osm"})
+model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})

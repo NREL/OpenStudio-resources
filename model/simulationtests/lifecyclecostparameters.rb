@@ -21,6 +21,6 @@ model.getConstructions.each do |construction|
   maintenance_cost = OpenStudio::Model::LifeCycleCost::createLifeCycleCost("Maintenance Cost", construction, 1.0, "CostPerArea", "Maintenance", 1, 1)
 end
 
-model.save(OpenStudio::Path.new("out.osm") , true);
+model.save(OpenStudio::Path.new("in.osm") , true);
 
 

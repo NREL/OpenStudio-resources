@@ -92,4 +92,4 @@ OpenStudio::Model::OutputVariable.new("Zone Mass Balance Infiltration Air Mass F
        
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
-                           "osm_name" => "out.osm"})
+                           "osm_name" => "in.osm"})

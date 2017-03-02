@@ -1,7 +1,7 @@
 
 require 'openstudio'
 require 'lib/baseline_model'
-require 'JSON'
+require 'json'
 
 model = BaselineModel.new
   
@@ -192,5 +192,5 @@ tempering_valve.setTemperatureSetpointNode(swh_water_heater.supplyOutletModelObj
 tempering_valve.setPumpOutletNode(swh_pump.outletModelObject.get.to_Node.get)
 
 #save the OpenStudio model (.osm)
-model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "out.osm"})
+model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})
 
