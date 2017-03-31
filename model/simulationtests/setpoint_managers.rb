@@ -44,9 +44,9 @@ end
 
 if airloops.length > 0 then
 	airloop = airloops[0]
-	spm = OpenStudio::Model::SetpointManagerOutdoorAirPretreat.new(model)
-	node = airloop.mixedAirNode.get
-	spm.addToNode(node)
+	#spm = OpenStudio::Model::SetpointManagerOutdoorAirPretreat.new(model)
+	#node = airloop.mixedAirNode.get
+	#spm.addToNode(node)
 
 	heating_coils = airloop.supplyComponents(OpenStudio::Model::CoilHeatingWater.iddObjectType)
 	heating_coil = heating_coils[0].to_CoilHeatingWater.get
