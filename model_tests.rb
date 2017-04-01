@@ -401,10 +401,6 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('lowtemprad_varflow.rb')
   end
 
-  def test_Medium_HVACHeavy_osm
-    result = sim_test('Medium_HVACHeavy.osm')
-  end
-
   def test_multi_stage_rb
     result = sim_test('multi_stage.rb')
   end
