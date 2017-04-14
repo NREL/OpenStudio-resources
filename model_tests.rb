@@ -337,6 +337,10 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('fluid_coolers.rb')
   end
 
+  def test_fuelcell_osm
+    result = sim_test('fuelcell.osm')
+  end
+  
   def test_fuelcell_rb
     result = sim_test('fuelcell.rb')
   end
