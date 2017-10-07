@@ -138,6 +138,391 @@ def intersect_test(filename)
   run_command(command, dir, 360)
 end
 
+# test the autosizing methods
+def autosizing_test(filename, weather_file = nil, model_measures = [], energyplus_measures = [], reporting_measures = [])
+  dir = File.join($TestDir, filename)
+  osw = File.join(dir, 'in.osw')
+  out_osw = File.join(dir, 'out.osw')
+  in_osm = File.join(dir, 'in.osm')
+  sql_path = File.join(dir, 'run', 'eplusout.sql')
+  
+  $OPENSTUDIO_LOG = OpenStudio::StringStreamLogSink.new
+  $OPENSTUDIO_LOG.setLogLevel(OpenStudio::Debug)
+
+  # Run the workflow
+  run_sim = false
+  if run_sim
+    FileUtils.rm_rf(dir) if File.exists?(dir)
+    FileUtils.mkdir_p(dir)
+    FileUtils.cp($OswFile, osw)
+    
+    ext = File.extname(filename)
+    if (ext == '.osm')
+      FileUtils.cp(File.join($ModelDir,filename), in_osm)  
+    elsif (ext == '.rb')
+      command = "\"#{$OpenstudioCli}\" \"#{File.join($ModelDir,filename)}\""
+      run_command(command, dir, 600)
+      
+      # tests used to write out.osm
+      out_osm = File.join(dir, 'out.osm')
+      if File.exists?(out_osm)
+        puts "moving #{out_osm} to #{in_osm}"
+        FileUtils.mv(out_osm, in_osm)
+      end
+      
+      fail "Cannot find file #{in_osm}" if !File.exists?(in_osm)
+    end
+    
+    command = "\"#{$OpenstudioCli}\" run -w \"#{osw}\""
+    #command = "\"#{$OpenstudioCli}\" run --debug -w \"#{osw}\""
+
+    run_command(command, dir, 1200)
+  end
+  
+  fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
+  
+  result_osw = nil
+  File.open(out_osw, 'r') do |f|
+    result_osw = JSON::parse(f.read, :symbolize_names=>true)
+  end
+
+  # Load the model
+  versionTranslator = OpenStudio::OSVersion::VersionTranslator.new 
+  model = versionTranslator.loadModel(in_osm)
+  if model.empty?
+    assert(model.is_initialized, "Could not load the resulting model, #{in_osm}")
+  end
+  model = model.get
+  
+  # Load and attach the sql file to the model
+  sql_path = OpenStudio::Path.new(sql_path)
+  if OpenStudio.exists(sql_path)
+    sql = OpenStudio::SqlFile.new(sql_path)
+    # Check to make sure the sql file is readable,
+    # which won't be true if EnergyPlus crashed during simulation.
+    unless sql.connectionOpen
+      OpenStudio.logFree(OpenStudio::Error, 'openstudio.model.Model', "The run failed, cannot create model.  Look at the eplusout.err file in #{File.dirname(sql_path.to_s)} to see the cause.")
+      return false
+    end
+    # Attach the sql file from the run to the model
+    model.setSqlFile(sql)
+  else
+    OpenStudio.logFree(OpenStudio::Error, 'openstudio.model.Model', "Results for the run couldn't be found here: #{sql_path}.")
+    return false
+  end
+  
+  # Assert that the sizing run succeeded
+  assert_equal("Success", result_osw[:completed_status]) 
+
+  # Skip testing all methods for some objects
+  # Skip testing some methods for other objects
+  obj_types_to_skip = {
+    'OS:WaterHeater:Mixed' => 'all', # WH sizing object not wrapped
+    'OS:WaterHeater:Stratified' => 'all', # WH sizing object not wrapped
+    'OS:WaterHeater:HeatPump' => 'all', # WH sizing object not wrapped
+    'OS:WaterHeater:HeatPump:PumpedCondenser' => 'all', # WH sizing object not wrapped
+    'OS:Boiler:Steam' => 'all', # CoilHeatingSteam is not wrapped, cannot use steam boiler in OS
+    'OS:ChillerHeaterPerformance:Electric:EIR' => 'all', # TODO Not in test model (central HP system)
+    'OS:SolarCollector:FlatPlate:PhotovoltaicThermal' => 'all', # TODO Not in test model
+    'OS:Chiller:Absorption' => [
+      'autosizedDesignGeneratorFluidFlowRate' # Generator loop not supported by OS
+    ],
+    'OS:Chiller:Absorption:Indirect' => [
+      'autosizedDesignGeneratorFluidFlowRate' # Generator loop not supported by OS
+    ],
+    'OS:AirConditioner:VariableRefrigerantFlow' => [
+      'autosizedWaterCondenserVolumeFlowRate' # Water-cooled VRF not supported by OS
+    ],
+    'OS:CoolingTower:TwoSpeed' => [
+      'autosizedLowSpeedNominalCapacity', # Method only works on cooling towers sized a certain way, which test model isn't using
+      'autosizedFreeConvectionNominalCapacity' # Method only works on cooling towers sized a certain way, which test model isn't using
+    ],
+    'OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow' => [
+      'autosizedHeatingDesignCapacity', # No OS methods for this field
+      'autosizedCoolingDesignCapacity' # No OS methods for this field
+    ]
+  }
+  
+  # Aliases for some OS onjects
+  os_type_aliases = {
+    'OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow' => 'OS:Coil:Cooling:LowTempRadiant:VarFlow',
+    'OS:Coil:Heating:LowTemperatureRadiant:VariableFlow' => 'OS:Coil:Heating:LowTempRadiant:VarFlow',
+    'OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow' => 'OS:ZoneHVAC:LowTempRadiant:VarFlow',
+  }
+  
+  # List of objects and fields where the autosized output does
+  # not exist in the E+ output, even under a different name.
+  # These are things the E+ team should fix.
+  missing_getters = {
+    'OS:Coil:Heating:Water:Baseboard:Radiant' => [
+      'autosizedHeatingDesignCapacity'
+    ],
+    'OS:AirLoopHVAC:Unitary:HeatPump:AirToAir' => [
+      'autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded'
+    ],
+    'OS:Coil:Heating:Water:Baseboard' => [
+      'autosizedHeatingDesignCapacity'
+    ],
+    'OS:EvaporativeFluidCooler:TwoSpeed' => [
+      'autosizedLowSpeedUserSpecifiedDesignCapacity',
+      'autosizedLowSpeedStandardDesignCapacity'
+    ],
+    'OS:ZoneHVAC:IdealLoadsAirSystem' => [
+      'autosizedMaximumSensibleHeatingCapacity',
+      'autosizedMaximumTotalCoolingCapacity'
+    ],
+    'OS:ZoneHVAC:FourPipeFanCoil' => [
+      'autosizedMinimumSupplyAirTemperatureinCoolingMode',
+      'autosizedMaximumSupplyAirTemperatureinHeatingMode'
+    ],
+    'OS:ZoneHVAC:UnitHeater' => [
+      'autosizedMaximumHotWaterFlowRate'
+    ],
+    'OS:FluidCooler:TwoSpeed' => [
+      'autosizedLowSpeedStandardDesignCapacity',
+      'autosizedLowSpeedUserSpecifiedDesignCapacity'
+    ],
+    'OS:ZoneHVAC:Baseboard:RadiantConvective:Water' => [
+      'autosizedHeatingDesignCapacity' # OS method for child coil, but E+ is missing output
+    ],
+    'OS:ZoneHVAC:Baseboard:Convective:Water' => [
+      'autosizedHeatingDesignCapacity' # OS method for child coil, but E+ is missing output
+    ],
+    'OS:ThermalStorage:ChilledWater:Stratified' => [
+      'autosizedUseSideInletHeight',
+      'autosizedSourceSideOutletHeight'
+    ]
+    
+  }
+ 
+  # List of objects and methods where the getter name does not
+  # match the IDD field name because of IDD shift, capitalization, etc.
+  getter_aliases = {
+    'OS:AirTerminal:SingleDuct:VAV:Reheat' => {
+      'autosizedMaximumHotWaterorSteamFlowRate' => 'autosizedMaximumHotWaterOrSteamFlowRate', # Capitalization of 'Or'
+      'autosizedMaximumFlowperZoneFloorAreaDuringReheat' => 'autosizedMaximumFlowPerZoneFloorAreaDuringReheat', # Capitalization of 'Per'
+    },
+    'OS:HeatPump:WaterToWater:EquationFit:Heating' => {
+      'autosizedReferenceHeatingCapacity' => 'autosizedRatedHeatingCapacity',
+      'autosizedReferenceHeatingPowerConsumption' => 'autosizedRatedHeatingPowerConsumption',
+    },
+    'OS:HeatPump:WaterToWater:EquationFit:Cooling' => {
+      'autosizedReferenceCoolingCapacity' => 'autosizedRatedCoolingCapacity',
+      'autosizedReferenceCoolingPowerConsumption' => 'autosizedRatedCoolingPowerConsumption',
+    }
+  }
+  
+  # Search the IDD associated with this model
+  # and assert that there is at least one of every object
+  # that has autosized fields in the test model.
+  obj_counts = {}
+  not_wrapped = []
+  missing_autosizedFoo = []
+  failed_autosizedFoo = []
+  succeeded_autosizedFoo = []
+  model.iddFile.objects.each do |idd_obj_type|
+    autosizable_field_names = []
+    idd_obj_type.nonextensibleFields.each do |idd_field|
+      if idd_field.properties.autosizable
+        autosizable_field_names << idd_field.name
+      end
+    end
+    
+    # Get the OS type
+    os_type = idd_obj_type.type.valueDescription
+    
+    # Check if this object type has a different name in OS
+    os_type = os_type_aliases[os_type] if os_type_aliases[os_type]  
+    
+    # Convert to IDD type
+    type = os_type.gsub('OS:','').gsub(':','')
+
+    # Skip objects with no autosizable fields
+    next if autosizable_field_names.empty?
+
+    # Skip certain object types entirely
+    methods_to_skip = obj_types_to_skip[os_type]
+    next if methods_to_skip == 'all'
+    methods_to_skip = [] if methods_to_skip.nil?
+    
+    # Convert the type name into a getter for objects from model
+    method_name = "get#{type}s"
+    
+    # Skip objects that are in the IDD but not wrapped
+    unless model.respond_to? method_name
+      not_wrapped << type
+      next
+    end
+   
+    # Get the total number count of the objects
+    # Add the objects to a hash by object type
+    objs = model.public_send(method_name)
+    obj_counts[type] = objs.size
+    next if objs.size == 0
+    
+    # Get the first instance of this object type in the model
+    obj = objs.sort[0]
+    
+    # Special cases
+    case type 
+    when 'SizingSystem' # Need to check an AirLoop with an OA system
+      objs.sort.each do |o| 
+        obj = o if o.airLoopHVAC.name.get == 'Air Loop'
+      end
+    when 'SizingZone' # Need to check a zone sized w/ DOAS
+      objs.sort.each do |o|
+        obj = o if o.thermalZone.name.get == 'Story 5 North Perimeter Thermal Zone'
+      end
+    when 'AirLoopHVACUnitarySystem' # Need to check a unitary where no load flow is autosized
+      objs.sort.each do |o|
+        obj = o if o.name.get == 'Air Loop HVAC Unitary System 3'
+      end  
+    end
+    
+    # Test all autosizedFoo methods on this instance
+    autosizable_field_names.each do |auto_field|
+      # Make the getter name from the IDD field
+      getter_name = "autosized#{auto_field.gsub(/\W/,'').strip}"
+
+      # Replace the getter name with known alias, if one exists
+      obj_aliases = getter_aliases[os_type]
+      if obj_aliases
+        getter_name = obj_aliases[getter_name] unless obj_aliases[getter_name].nil?
+      end
+
+      # Don't test this getter if it is designated to be skipped
+      next if methods_to_skip.include?(getter_name)
+      
+      # Don't test this getter if it is known to be missing from E+ output
+      obj_missing_getters = missing_getters[os_type]
+      if obj_missing_getters
+        next if obj_missing_getters.include?(getter_name)
+      end
+      
+      # Check if the autosizedFoo method has been implemented for this object
+      unless obj.respond_to? getter_name
+        missing_autosizedFoo << "#{getter_name} not a valid method for object of type #{type}"
+        next
+      end
+        
+      # Try the method on the object to ensure that the SQL query in C++ is correct
+      val = obj.public_send(getter_name)
+      if val.is_initialized
+        succeeded_autosizedFoo << "#{getter_name} succeeded for #{obj.name} of type #{type}"
+      else
+        failed_autosizedFoo << "#{getter_name} failed for #{obj.name} of type #{type}"
+      end
+
+    end
+
+  end
+
+  puts "\n*** Autosizable Objects not Wrapped by OpenStudio ***"
+  not_wrapped.each { |f| puts f }
+
+  puts "\n*** Failures ***"
+  failed_autosizedFoo.each { |f| puts f }
+  
+  puts "\n*** Methods that aren't implemented in C++ (but should be) ***"
+  missing_autosizedFoo.each { |f| puts f }
+
+  puts "\n*** Missing Objects ***"
+  missing_objs = []
+  obj_counts.each do |type, count|
+    if count.zero?
+      missing_objs << type
+      puts "#{type} is missing from test model"
+    end
+  end
+  
+  # Assert that no autosizable objects are missing from the test model
+  # so that if someone wraps a new object and doesn't add it to this file, the test will fail.
+  assert_equal(0, missing_objs.size, "There are #{missing_objs.size} autosizable objects missing from the test model:\n#{missing_objs.join("\n")}.")
+
+  # Assert that every autosizable field for every object has a corresponding method implemented
+  assert_equal(0, missing_autosizedFoo.size, "#{missing_autosizedFoo.size} autosizedFoo methods not implemented in C++:\n#{missing_autosizedFoo.join("\n")}.")
+  
+  # Assert that every autosizable field's getter returns a value 
+  assert_equal(0, failed_autosizedFoo.size, "#{failed_autosizedFoo.size} autosizedFoo methods failed to return a value:\n#{failed_autosizedFoo.join("\n")}.")
+
+  # Add a few more object types to skip testing for based on test file object inputs
+  obj_types_to_skip['OS:EvaporativeFluidCooler:TwoSpeed'] = [
+      'autosizedDesignWaterFlowRate', # Value only present for some fluid cooler sizing input methods in test file
+    ]
+  obj_types_to_skip['OS:Sizing:System'] = [
+      'autosizedDesignOutdoorAirFlowRate', # Not all AirLoopHVACs in model have OA system, needed for this output to exist
+    ]
+  obj_types_to_skip['OS:AirLoopHVAC:UnitarySystem'] = [
+      'autosizedNoLoadSupplyAirFlowRate', # Not all Unitarys in test model have this field autosized
+    ]
+    
+  # Count the number of autosized fields in the model
+  def autosized_fields(model, obj_types_to_skip, missing_getters)
+  
+    # Convert to IDF
+    idf = OpenStudio::EnergyPlus::ForwardTranslator.new.translateModel(model).toIdfFile
+
+    # Ensure that all fields are set to "Autosize" or "Autocalculate"
+    fields_autosized = []
+    autosize_aliases = ['AutoSize', 'Autocalculate', 'Autosize', 'autocalculate']  
+    idf.objects.sort.each do |obj|
+      os_type = "OS:#{obj.iddObject.type.valueDescription}"
+      
+      # Skip certain object types entirely
+      methods_to_skip = obj_types_to_skip[os_type]
+      next if methods_to_skip == 'all'
+      methods_to_skip = [] if methods_to_skip.nil?
+      
+      # Get the list of getters to skip because missing from E+
+      fields_to_skip = missing_getters[os_type]
+      fields_to_skip = [] if fields_to_skip.nil?
+      
+      for field_num in 0..obj.numFields
+        field_name = obj.fieldComment(field_num, true).to_s.gsub('!-','').gsub(/{.*}/,'').gsub(' ', '').strip
+        getter_name = "autosized#{field_name}"
+        # Don't check fields whose getters aren't being tested
+        next if methods_to_skip.include?(getter_name)
+        # Don't check fields whose getters aren't working because of E+ defficiencies
+        next if fields_to_skip.include?(getter_name)
+        # Check the value of the field
+        val = obj.getString(field_num).to_s
+        if autosize_aliases.include?(val)
+          fields_still_autosized << "field #{field_name} in #{obj.iddObject.type.valueDescription}"
+        end
+      end
+      
+      return fields_autosized
+    end
+    
+    # return result_osw for further checks
+    return result_osw
+  end
+  
+  # Get the autosized fields before hard sizing
+  autosized_fields_before_hard_size = autosized_fields(model, obj_types_to_skip, missing_getters)
+  
+  # Hard-size the entire model
+  model.applySizingValues()
+    
+  # Get the autosized fields after hard sizing
+  autosized_fields_after_hard_size = autosized_fields(model, obj_types_to_skip, missing_getters)
+  
+  # Auto-size the entire model
+  model.autosize()
+  
+  # Get the autosized fields after hard sizing
+  autosized_fields_after_auto_size = autosized_fields(model, obj_types_to_skip, missing_getters)
+
+  puts "\n*** Fields that are still autosized after hard sizing (but should not be) ***"
+  autosized_fields_after_hard_size.each { |f| puts f }
+  
+  # Assert that all fields were hard-sized appropriately
+  assert_equal(0, autosized_fields_after_hard_size.size, "#{autosized_fields_after_hard_size.size} autosized fields should be hard-sized, but aren't:\n#{failed_autosizedFoo.join("\n")}.")  
+  
+  # Assert that all fields were set back to autosized
+  assert_equal(autosized_fields_before_hard_size.size, autosized_fields_after_auto_size.size, "The number of autosized fields before hard sizing and after autosizing don't match.")  
+
+end  
 
 # the tests
 class ModelTests < MiniTest::Unit::TestCase
@@ -582,4 +967,10 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_intersect_test4_osm
     result = intersect_test('test4.osm')
   end
+  
+  # autosizing tests
+  def test_autosizing_rb
+    result = autosizing_test('autosize_hvac.rb')
+  end
+  
 end
