@@ -40,6 +40,28 @@ foundation_kiva_settings.setSoilDensity(1842.3)
 #get foundation kiva settings object from site
 foundation_kiva_settings = model.getSite.foundationKivaSettings.get
 foundation_kiva_settings.resetSoilDensity
+
+#create a foundation kiva object
+foundation_kiva = OpenStudio::Model::FoundationKiva.new(model)
+foundation_kiva.setInteriorVerticalInsulationDepth(2.4384)
+foundation_kiva.setWallHeightAboveGrade(0.2032)
+foundation_kiva.setWallDepthBelowSlab(0.2032)
+material = OpenStudio::Model::StandardOpaqueMaterial.new(model)
+material.setThickness(0.0508)
+material.setConductivity(0.02885)
+material.setDensity(32.04)
+material.setSpecificHeat(1214.23)
+foundation_kiva.setInteriorVerticalInsulationMaterial(material)
+
+#attach foundation kiva object to surfaces
+model.getSurfaces.each do |surface|
+  construction = surface.construction.get
+  next if surface.outsideBoundaryCondition.downcase != "ground"
+  surface.setAdjacentFoundation(foundation_kiva)
+  surface.setConstruction(construction)
+  next if surface.surfaceType.downcase != "floor"
+  # surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter")
+end
        
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})
