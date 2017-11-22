@@ -32,35 +32,31 @@ model.set_space_type()
 #add design days to the model (Chicago)
 model.add_design_days()
 
-#create a foundation kiva settings object
-foundation_kiva_settings = OpenStudio::Model::FoundationKivaSettings.new(model)
-foundation_kiva_settings.setSoilConductivity(1.731)
-foundation_kiva_settings.setSoilDensity(1842.3)
+#create the foundation kiva settings object
+foundation_kiva_settings = model.getFoundationKivaSettings
 
-#get foundation kiva settings object from site
-foundation_kiva_settings = model.getSite.foundationKivaSettings.get
-foundation_kiva_settings.resetSoilDensity
+#create 8in concrete construction
+material = OpenStudio::Model::StandardOpaqueMaterial.new(model)
+material.setThickness(0.2032)
+material.setConductivity(1.3114056)
+material.setDensity(2242.8)
+material.setSpecificHeat(837.4)
+construction = OpenStudio::Model::Construction.new(model)
+construction.insertLayer(0, material)
 
 #create a foundation kiva object
 foundation_kiva = OpenStudio::Model::FoundationKiva.new(model)
-foundation_kiva.setInteriorVerticalInsulationDepth(2.4384)
 foundation_kiva.setWallHeightAboveGrade(0.2032)
 foundation_kiva.setWallDepthBelowSlab(0.2032)
-material = OpenStudio::Model::StandardOpaqueMaterial.new(model)
-material.setThickness(0.0508)
-material.setConductivity(0.02885)
-material.setDensity(32.04)
-material.setSpecificHeat(1214.23)
-foundation_kiva.setInteriorVerticalInsulationMaterial(material)
+foundation_kiva.setFootingWallConstruction(construction)
 
-#attach foundation kiva object to surfaces
+#attach foundation kiva object to floor surfaces
 model.getSurfaces.each do |surface|
-  construction = surface.construction.get
+  next if surface.surfaceType.downcase != "floor"
   next if surface.outsideBoundaryCondition.downcase != "ground"
   surface.setAdjacentFoundation(foundation_kiva)
-  surface.setConstruction(construction)
-  next if surface.surfaceType.downcase != "floor"
-  # surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter")
+  surface.setConstruction(construction)  
+  surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 4 * ( surface.grossArea ** 0.5 ))
 end
        
 # save the OpenStudio model (.osm)
