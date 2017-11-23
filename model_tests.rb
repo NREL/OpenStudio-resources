@@ -921,6 +921,14 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_zone_mixing_rb
     result = sim_test('zone_mixing.rb')
   end
+  
+  def test_moisture_settings_osm
+    result = sim_test('moisture_settings.osm')
+  end
+  
+  def test_moisture_settings_rb
+    result = sim_test('moisture_settings.rb')
+  end
 
   # intersection tests
   
