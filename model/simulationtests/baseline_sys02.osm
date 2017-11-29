@@ -1,7 +1,21 @@
 
 OS:Version,
-  {f36eabb6-9b7d-4292-9e40-4e086e36f867}, ! Handle
-  0.9.3;                                  ! Version Identifier
+  {87d0caa7-26e5-436d-87e1-8d7085952ea4}, !- Handle
+  2.2.2;                                  !- Version Identifier
+
+OS:Schedule:Constant,
+  {1f5e6c06-cada-48d0-b0f5-1ae393e06bfe}, !- Handle
+  Always On Discrete,                     !- Name
+  {af99d191-1d84-4dea-8387-178620ae8676}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {af99d191-1d84-4dea-8387-178620ae8676}, !- Handle
+  Always On Discrete Limits,              !- Name
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
 
 OS:BuildingStory,
   {cfdd3f1f-c3e7-4d02-8f3f-4dc6d8515054}, ! Handle
@@ -37,10 +51,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 0,                                ! X,Y,Z Vertex 1 {m}
-  0, 50, 0,                               ! X,Y,Z Vertex 2 {m}
-  3, 47, 0,                               ! X,Y,Z Vertex 3 {m}
-  3, 3, 0;                                ! X,Y,Z Vertex 4 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 1 {m}
+  0, 50, 0,                               !- X,Y,Z Vertex 2 {m}
+  3, 47, 0,                               !- X,Y,Z Vertex 3 {m}
+  3, 3, 0;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {4de329a0-8190-4372-ae98-f205f40ffe0f}, ! Handle
@@ -54,10 +68,10 @@ OS:Surface,
   WindExposed,                            ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 50, 4,                               ! X,Y,Z Vertex 1 {m}
-  0, 50, 0,                               ! X,Y,Z Vertex 2 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 3 {m}
-  0, 0, 4;                                ! X,Y,Z Vertex 4 {m}
+  0, 50, 4,                               !- X,Y,Z Vertex 1 {m}
+  0, 50, 0,                               !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 0, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {48a99786-2123-4545-91be-d96c57878e3a}, ! Handle
@@ -71,10 +85,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  3, 47, 4,                               ! X,Y,Z Vertex 1 {m}
-  3, 47, 0,                               ! X,Y,Z Vertex 2 {m}
-  0, 50, 0,                               ! X,Y,Z Vertex 3 {m}
-  0, 50, 4;                               ! X,Y,Z Vertex 4 {m}
+  3, 47, 4,                               !- X,Y,Z Vertex 1 {m}
+  3, 47, 0,                               !- X,Y,Z Vertex 2 {m}
+  0, 50, 0,                               !- X,Y,Z Vertex 3 {m}
+  0, 50, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {1bff7d00-91dd-47fa-98aa-662a372b16f3}, ! Handle
@@ -88,10 +102,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  3, 3, 4,                                ! X,Y,Z Vertex 1 {m}
-  3, 3, 0,                                ! X,Y,Z Vertex 2 {m}
-  3, 47, 0,                               ! X,Y,Z Vertex 3 {m}
-  3, 47, 4;                               ! X,Y,Z Vertex 4 {m}
+  3, 3, 4,                                !- X,Y,Z Vertex 1 {m}
+  3, 3, 0,                                !- X,Y,Z Vertex 2 {m}
+  3, 47, 0,                               !- X,Y,Z Vertex 3 {m}
+  3, 47, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {60ec13db-c9f9-4ea3-a7eb-ab8c812d6482}, ! Handle
@@ -105,10 +119,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 4,                                ! X,Y,Z Vertex 1 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 2 {m}
-  3, 3, 0,                                ! X,Y,Z Vertex 3 {m}
-  3, 3, 4;                                ! X,Y,Z Vertex 4 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  3, 3, 0,                                !- X,Y,Z Vertex 3 {m}
+  3, 3, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {185ffeaa-3c15-46ee-8460-c2cbb1652831}, ! Handle
@@ -122,10 +136,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  3, 3, 4,                                ! X,Y,Z Vertex 1 {m}
-  3, 47, 4,                               ! X,Y,Z Vertex 2 {m}
-  0, 50, 4,                               ! X,Y,Z Vertex 3 {m}
-  0, 0, 4;                                ! X,Y,Z Vertex 4 {m}
+  3, 3, 4,                                !- X,Y,Z Vertex 1 {m}
+  3, 47, 4,                               !- X,Y,Z Vertex 2 {m}
+  0, 50, 4,                               !- X,Y,Z Vertex 3 {m}
+  0, 0, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Space,
   {f356168b-513c-4d5e-bed2-4e5da5d7d466}, ! Handle
@@ -152,10 +166,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  -3, 3, 0,                               ! X,Y,Z Vertex 1 {m}
-  97, 3, 0,                               ! X,Y,Z Vertex 2 {m}
-  94, 0, 0,                               ! X,Y,Z Vertex 3 {m}
-  0, 0, 0;                                ! X,Y,Z Vertex 4 {m}
+  -3, 3, 0,                               !- X,Y,Z Vertex 1 {m}
+  97, 3, 0,                               !- X,Y,Z Vertex 2 {m}
+  94, 0, 0,                               !- X,Y,Z Vertex 3 {m}
+  0, 0, 0;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {65bff910-7364-46a6-9fdc-d58d56b16a58}, ! Handle
@@ -169,10 +183,10 @@ OS:Surface,
   WindExposed,                            ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  97, 3, 4,                               ! X,Y,Z Vertex 1 {m}
-  97, 3, 0,                               ! X,Y,Z Vertex 2 {m}
-  -3, 3, 0,                               ! X,Y,Z Vertex 3 {m}
-  -3, 3, 4;                               ! X,Y,Z Vertex 4 {m}
+  97, 3, 4,                               !- X,Y,Z Vertex 1 {m}
+  97, 3, 0,                               !- X,Y,Z Vertex 2 {m}
+  -3, 3, 0,                               !- X,Y,Z Vertex 3 {m}
+  -3, 3, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {80916991-3a33-4c0f-80c2-ac370ee9552f}, ! Handle
@@ -186,10 +200,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  94, 0, 4,                               ! X,Y,Z Vertex 1 {m}
-  94, 0, 0,                               ! X,Y,Z Vertex 2 {m}
-  97, 3, 0,                               ! X,Y,Z Vertex 3 {m}
-  97, 3, 4;                               ! X,Y,Z Vertex 4 {m}
+  94, 0, 4,                               !- X,Y,Z Vertex 1 {m}
+  94, 0, 0,                               !- X,Y,Z Vertex 2 {m}
+  97, 3, 0,                               !- X,Y,Z Vertex 3 {m}
+  97, 3, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {fa853576-f4a3-49de-875c-fa921a2a6aee}, ! Handle
@@ -203,10 +217,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 4,                                ! X,Y,Z Vertex 1 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 2 {m}
-  94, 0, 0,                               ! X,Y,Z Vertex 3 {m}
-  94, 0, 4;                               ! X,Y,Z Vertex 4 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  94, 0, 0,                               !- X,Y,Z Vertex 3 {m}
+  94, 0, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {43289f68-51ea-4749-830e-556a7449e470}, ! Handle
@@ -220,10 +234,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  -3, 3, 4,                               ! X,Y,Z Vertex 1 {m}
-  -3, 3, 0,                               ! X,Y,Z Vertex 2 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 3 {m}
-  0, 0, 4;                                ! X,Y,Z Vertex 4 {m}
+  -3, 3, 4,                               !- X,Y,Z Vertex 1 {m}
+  -3, 3, 0,                               !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 0, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {a6abbd35-535b-4c6e-8278-e190cb3e47dc}, ! Handle
@@ -237,10 +251,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 4,                                ! X,Y,Z Vertex 1 {m}
-  94, 0, 4,                               ! X,Y,Z Vertex 2 {m}
-  97, 3, 4,                               ! X,Y,Z Vertex 3 {m}
-  -3, 3, 4;                               ! X,Y,Z Vertex 4 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 1 {m}
+  94, 0, 4,                               !- X,Y,Z Vertex 2 {m}
+  97, 3, 4,                               !- X,Y,Z Vertex 3 {m}
+  -3, 3, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Space,
   {b0a84a2e-fbd1-418d-b3be-72e362488c2d}, ! Handle
@@ -267,10 +281,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  3, 47, 0,                               ! X,Y,Z Vertex 1 {m}
-  3, -3, 0,                               ! X,Y,Z Vertex 2 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 3 {m}
-  0, 44, 0;                               ! X,Y,Z Vertex 4 {m}
+  3, 47, 0,                               !- X,Y,Z Vertex 1 {m}
+  3, -3, 0,                               !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 44, 0;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {501d3e02-83ee-4bff-b304-7da5de2728b7}, ! Handle
@@ -284,10 +298,10 @@ OS:Surface,
   WindExposed,                            ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  3, -3, 4,                               ! X,Y,Z Vertex 1 {m}
-  3, -3, 0,                               ! X,Y,Z Vertex 2 {m}
-  3, 47, 0,                               ! X,Y,Z Vertex 3 {m}
-  3, 47, 4;                               ! X,Y,Z Vertex 4 {m}
+  3, -3, 4,                               !- X,Y,Z Vertex 1 {m}
+  3, -3, 0,                               !- X,Y,Z Vertex 2 {m}
+  3, 47, 0,                               !- X,Y,Z Vertex 3 {m}
+  3, 47, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {1042aa8e-0fb8-43f8-a893-fa6ddb31f2e9}, ! Handle
@@ -301,10 +315,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 4,                                ! X,Y,Z Vertex 1 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 2 {m}
-  3, -3, 0,                               ! X,Y,Z Vertex 3 {m}
-  3, -3, 4;                               ! X,Y,Z Vertex 4 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  3, -3, 0,                               !- X,Y,Z Vertex 3 {m}
+  3, -3, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {623aa4b2-49d0-48e6-9f5f-f9f490a04b50}, ! Handle
@@ -318,10 +332,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 44, 4,                               ! X,Y,Z Vertex 1 {m}
-  0, 44, 0,                               ! X,Y,Z Vertex 2 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 3 {m}
-  0, 0, 4;                                ! X,Y,Z Vertex 4 {m}
+  0, 44, 4,                               !- X,Y,Z Vertex 1 {m}
+  0, 44, 0,                               !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 0, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {8aa600ce-c074-4a17-922c-026bc99da5f5}, ! Handle
@@ -335,10 +349,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  3, 47, 4,                               ! X,Y,Z Vertex 1 {m}
-  3, 47, 0,                               ! X,Y,Z Vertex 2 {m}
-  0, 44, 0,                               ! X,Y,Z Vertex 3 {m}
-  0, 44, 4;                               ! X,Y,Z Vertex 4 {m}
+  3, 47, 4,                               !- X,Y,Z Vertex 1 {m}
+  3, 47, 0,                               !- X,Y,Z Vertex 2 {m}
+  0, 44, 0,                               !- X,Y,Z Vertex 3 {m}
+  0, 44, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {682f4cd4-9a89-4575-ab89-988327e0acb2}, ! Handle
@@ -352,10 +366,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 44, 4,                               ! X,Y,Z Vertex 1 {m}
-  0, 0, 4,                                ! X,Y,Z Vertex 2 {m}
-  3, -3, 4,                               ! X,Y,Z Vertex 3 {m}
-  3, 47, 4;                               ! X,Y,Z Vertex 4 {m}
+  0, 44, 4,                               !- X,Y,Z Vertex 1 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 2 {m}
+  3, -3, 4,                               !- X,Y,Z Vertex 3 {m}
+  3, 47, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Space,
   {9d006f28-588c-4f3f-8954-06ffd192110d}, ! Handle
@@ -382,10 +396,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  100, 0, 0,                              ! X,Y,Z Vertex 1 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 2 {m}
-  3, 3, 0,                                ! X,Y,Z Vertex 3 {m}
-  97, 3, 0;                               ! X,Y,Z Vertex 4 {m}
+  100, 0, 0,                              !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  3, 3, 0,                                !- X,Y,Z Vertex 3 {m}
+  97, 3, 0;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {ee3e2e8e-28bb-45ec-9477-de4f31258d7e}, ! Handle
@@ -399,10 +413,10 @@ OS:Surface,
   WindExposed,                            ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 4,                                ! X,Y,Z Vertex 1 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 2 {m}
-  100, 0, 0,                              ! X,Y,Z Vertex 3 {m}
-  100, 0, 4;                              ! X,Y,Z Vertex 4 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  100, 0, 0,                              !- X,Y,Z Vertex 3 {m}
+  100, 0, 4;                              !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {66fcff3b-bc2f-40a2-96ba-518cae1121b2}, ! Handle
@@ -416,10 +430,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  3, 3, 4,                                ! X,Y,Z Vertex 1 {m}
-  3, 3, 0,                                ! X,Y,Z Vertex 2 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 3 {m}
-  0, 0, 4;                                ! X,Y,Z Vertex 4 {m}
+  3, 3, 4,                                !- X,Y,Z Vertex 1 {m}
+  3, 3, 0,                                !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 0, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {300a21f3-526b-4e03-90a5-0fbcbc5b479e}, ! Handle
@@ -433,10 +447,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  97, 3, 4,                               ! X,Y,Z Vertex 1 {m}
-  97, 3, 0,                               ! X,Y,Z Vertex 2 {m}
-  3, 3, 0,                                ! X,Y,Z Vertex 3 {m}
-  3, 3, 4;                                ! X,Y,Z Vertex 4 {m}
+  97, 3, 4,                               !- X,Y,Z Vertex 1 {m}
+  97, 3, 0,                               !- X,Y,Z Vertex 2 {m}
+  3, 3, 0,                                !- X,Y,Z Vertex 3 {m}
+  3, 3, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {407ecf5e-6893-4d81-a4ef-20a716af9d6b}, ! Handle
@@ -450,10 +464,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  100, 0, 4,                              ! X,Y,Z Vertex 1 {m}
-  100, 0, 0,                              ! X,Y,Z Vertex 2 {m}
-  97, 3, 0,                               ! X,Y,Z Vertex 3 {m}
-  97, 3, 4;                               ! X,Y,Z Vertex 4 {m}
+  100, 0, 4,                              !- X,Y,Z Vertex 1 {m}
+  100, 0, 0,                              !- X,Y,Z Vertex 2 {m}
+  97, 3, 0,                               !- X,Y,Z Vertex 3 {m}
+  97, 3, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {0232bf90-5578-4a97-bb9d-fe257999fca4}, ! Handle
@@ -467,10 +481,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  97, 3, 4,                               ! X,Y,Z Vertex 1 {m}
-  3, 3, 4,                                ! X,Y,Z Vertex 2 {m}
-  0, 0, 4,                                ! X,Y,Z Vertex 3 {m}
-  100, 0, 4;                              ! X,Y,Z Vertex 4 {m}
+  97, 3, 4,                               !- X,Y,Z Vertex 1 {m}
+  3, 3, 4,                                !- X,Y,Z Vertex 2 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 3 {m}
+  100, 0, 4;                              !- X,Y,Z Vertex 4 {m}
 
 OS:Space,
   {c2623558-1814-46f2-b139-f5866d7677fa}, ! Handle
@@ -497,10 +511,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 0,                                ! X,Y,Z Vertex 1 {m}
-  0, 44, 0,                               ! X,Y,Z Vertex 2 {m}
-  94, 44, 0,                              ! X,Y,Z Vertex 3 {m}
-  94, 0, 0;                               ! X,Y,Z Vertex 4 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 1 {m}
+  0, 44, 0,                               !- X,Y,Z Vertex 2 {m}
+  94, 44, 0,                              !- X,Y,Z Vertex 3 {m}
+  94, 0, 0;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {bf58f46f-3bf4-4279-9470-5d367a545005}, ! Handle
@@ -514,10 +528,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 44, 4,                               ! X,Y,Z Vertex 1 {m}
-  0, 44, 0,                               ! X,Y,Z Vertex 2 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 3 {m}
-  0, 0, 4;                                ! X,Y,Z Vertex 4 {m}
+  0, 44, 4,                               !- X,Y,Z Vertex 1 {m}
+  0, 44, 0,                               !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 0, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {d6e2dcfa-ff13-4c2b-88aa-0ebf301032d5}, ! Handle
@@ -531,10 +545,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  94, 44, 4,                              ! X,Y,Z Vertex 1 {m}
-  94, 44, 0,                              ! X,Y,Z Vertex 2 {m}
-  0, 44, 0,                               ! X,Y,Z Vertex 3 {m}
-  0, 44, 4;                               ! X,Y,Z Vertex 4 {m}
+  94, 44, 4,                              !- X,Y,Z Vertex 1 {m}
+  94, 44, 0,                              !- X,Y,Z Vertex 2 {m}
+  0, 44, 0,                               !- X,Y,Z Vertex 3 {m}
+  0, 44, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {3fd849e7-9b74-415d-b37c-a46f79f073a3}, ! Handle
@@ -548,10 +562,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  94, 0, 4,                               ! X,Y,Z Vertex 1 {m}
-  94, 0, 0,                               ! X,Y,Z Vertex 2 {m}
-  94, 44, 0,                              ! X,Y,Z Vertex 3 {m}
-  94, 44, 4;                              ! X,Y,Z Vertex 4 {m}
+  94, 0, 4,                               !- X,Y,Z Vertex 1 {m}
+  94, 0, 0,                               !- X,Y,Z Vertex 2 {m}
+  94, 44, 0,                              !- X,Y,Z Vertex 3 {m}
+  94, 44, 4;                              !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {a8a5eda0-9403-4918-943a-bd1967bbd4f0}, ! Handle
@@ -565,10 +579,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 4,                                ! X,Y,Z Vertex 1 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 2 {m}
-  94, 0, 0,                               ! X,Y,Z Vertex 3 {m}
-  94, 0, 4;                               ! X,Y,Z Vertex 4 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  94, 0, 0,                               !- X,Y,Z Vertex 3 {m}
+  94, 0, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {b043963c-a2fd-46c9-b312-a3739632caa4}, ! Handle
@@ -582,10 +596,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  94, 0, 4,                               ! X,Y,Z Vertex 1 {m}
-  94, 44, 4,                              ! X,Y,Z Vertex 2 {m}
-  0, 44, 4,                               ! X,Y,Z Vertex 3 {m}
-  0, 0, 4;                                ! X,Y,Z Vertex 4 {m}
+  94, 0, 4,                               !- X,Y,Z Vertex 1 {m}
+  94, 44, 4,                              !- X,Y,Z Vertex 2 {m}
+  0, 44, 4,                               !- X,Y,Z Vertex 3 {m}
+  0, 0, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:BuildingStory,
   {5ef36f85-2a63-41e4-b480-bf93214b2d36}, ! Handle
@@ -621,10 +635,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 0,                                ! X,Y,Z Vertex 1 {m}
-  0, 50, 0,                               ! X,Y,Z Vertex 2 {m}
-  3, 47, 0,                               ! X,Y,Z Vertex 3 {m}
-  3, 3, 0;                                ! X,Y,Z Vertex 4 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 1 {m}
+  0, 50, 0,                               !- X,Y,Z Vertex 2 {m}
+  3, 47, 0,                               !- X,Y,Z Vertex 3 {m}
+  3, 3, 0;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {4ba4c545-6add-490e-aa79-bccd01316973}, ! Handle
@@ -638,10 +652,10 @@ OS:Surface,
   WindExposed,                            ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 50, 4,                               ! X,Y,Z Vertex 1 {m}
-  0, 50, 0,                               ! X,Y,Z Vertex 2 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 3 {m}
-  0, 0, 4;                                ! X,Y,Z Vertex 4 {m}
+  0, 50, 4,                               !- X,Y,Z Vertex 1 {m}
+  0, 50, 0,                               !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 0, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {8aaf751c-25f5-4852-836e-b5aa0d49347b}, ! Handle
@@ -655,10 +669,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  3, 47, 4,                               ! X,Y,Z Vertex 1 {m}
-  3, 47, 0,                               ! X,Y,Z Vertex 2 {m}
-  0, 50, 0,                               ! X,Y,Z Vertex 3 {m}
-  0, 50, 4;                               ! X,Y,Z Vertex 4 {m}
+  3, 47, 4,                               !- X,Y,Z Vertex 1 {m}
+  3, 47, 0,                               !- X,Y,Z Vertex 2 {m}
+  0, 50, 0,                               !- X,Y,Z Vertex 3 {m}
+  0, 50, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {0f890f20-4408-4ab6-9885-4a3d3114bbac}, ! Handle
@@ -672,10 +686,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  3, 3, 4,                                ! X,Y,Z Vertex 1 {m}
-  3, 3, 0,                                ! X,Y,Z Vertex 2 {m}
-  3, 47, 0,                               ! X,Y,Z Vertex 3 {m}
-  3, 47, 4;                               ! X,Y,Z Vertex 4 {m}
+  3, 3, 4,                                !- X,Y,Z Vertex 1 {m}
+  3, 3, 0,                                !- X,Y,Z Vertex 2 {m}
+  3, 47, 0,                               !- X,Y,Z Vertex 3 {m}
+  3, 47, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {9f396bb3-f665-40df-8b8e-a208a179a6a7}, ! Handle
@@ -689,10 +703,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 4,                                ! X,Y,Z Vertex 1 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 2 {m}
-  3, 3, 0,                                ! X,Y,Z Vertex 3 {m}
-  3, 3, 4;                                ! X,Y,Z Vertex 4 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  3, 3, 0,                                !- X,Y,Z Vertex 3 {m}
+  3, 3, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {157319bd-6896-468d-b902-538844d8a1da}, ! Handle
@@ -706,10 +720,10 @@ OS:Surface,
   WindExposed,                            ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  3, 3, 4,                                ! X,Y,Z Vertex 1 {m}
-  3, 47, 4,                               ! X,Y,Z Vertex 2 {m}
-  0, 50, 4,                               ! X,Y,Z Vertex 3 {m}
-  0, 0, 4;                                ! X,Y,Z Vertex 4 {m}
+  3, 3, 4,                                !- X,Y,Z Vertex 1 {m}
+  3, 47, 4,                               !- X,Y,Z Vertex 2 {m}
+  0, 50, 4,                               !- X,Y,Z Vertex 3 {m}
+  0, 0, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Space,
   {ccf08d78-ed56-47b6-b7e2-9af92c694a3f}, ! Handle
@@ -736,10 +750,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  -3, 3, 0,                               ! X,Y,Z Vertex 1 {m}
-  97, 3, 0,                               ! X,Y,Z Vertex 2 {m}
-  94, 0, 0,                               ! X,Y,Z Vertex 3 {m}
-  0, 0, 0;                                ! X,Y,Z Vertex 4 {m}
+  -3, 3, 0,                               !- X,Y,Z Vertex 1 {m}
+  97, 3, 0,                               !- X,Y,Z Vertex 2 {m}
+  94, 0, 0,                               !- X,Y,Z Vertex 3 {m}
+  0, 0, 0;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {420b7d15-67ff-4fa3-8aa5-a78dce2a08dc}, ! Handle
@@ -753,10 +767,10 @@ OS:Surface,
   WindExposed,                            ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  97, 3, 4,                               ! X,Y,Z Vertex 1 {m}
-  97, 3, 0,                               ! X,Y,Z Vertex 2 {m}
-  -3, 3, 0,                               ! X,Y,Z Vertex 3 {m}
-  -3, 3, 4;                               ! X,Y,Z Vertex 4 {m}
+  97, 3, 4,                               !- X,Y,Z Vertex 1 {m}
+  97, 3, 0,                               !- X,Y,Z Vertex 2 {m}
+  -3, 3, 0,                               !- X,Y,Z Vertex 3 {m}
+  -3, 3, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {2918e606-b57d-49d5-9b02-9903e431b84e}, ! Handle
@@ -770,10 +784,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  94, 0, 4,                               ! X,Y,Z Vertex 1 {m}
-  94, 0, 0,                               ! X,Y,Z Vertex 2 {m}
-  97, 3, 0,                               ! X,Y,Z Vertex 3 {m}
-  97, 3, 4;                               ! X,Y,Z Vertex 4 {m}
+  94, 0, 4,                               !- X,Y,Z Vertex 1 {m}
+  94, 0, 0,                               !- X,Y,Z Vertex 2 {m}
+  97, 3, 0,                               !- X,Y,Z Vertex 3 {m}
+  97, 3, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {8034e7da-ebcd-4209-9f1d-29b5fc09fca6}, ! Handle
@@ -787,10 +801,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 4,                                ! X,Y,Z Vertex 1 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 2 {m}
-  94, 0, 0,                               ! X,Y,Z Vertex 3 {m}
-  94, 0, 4;                               ! X,Y,Z Vertex 4 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  94, 0, 0,                               !- X,Y,Z Vertex 3 {m}
+  94, 0, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {051c29bf-d60e-480d-abea-2d482000a8cd}, ! Handle
@@ -804,10 +818,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  -3, 3, 4,                               ! X,Y,Z Vertex 1 {m}
-  -3, 3, 0,                               ! X,Y,Z Vertex 2 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 3 {m}
-  0, 0, 4;                                ! X,Y,Z Vertex 4 {m}
+  -3, 3, 4,                               !- X,Y,Z Vertex 1 {m}
+  -3, 3, 0,                               !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 0, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {9c9cc2aa-0851-4e60-b7f8-c96c84bad7a6}, ! Handle
@@ -821,10 +835,10 @@ OS:Surface,
   WindExposed,                            ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 4,                                ! X,Y,Z Vertex 1 {m}
-  94, 0, 4,                               ! X,Y,Z Vertex 2 {m}
-  97, 3, 4,                               ! X,Y,Z Vertex 3 {m}
-  -3, 3, 4;                               ! X,Y,Z Vertex 4 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 1 {m}
+  94, 0, 4,                               !- X,Y,Z Vertex 2 {m}
+  97, 3, 4,                               !- X,Y,Z Vertex 3 {m}
+  -3, 3, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Space,
   {51c4f3dc-49e9-4762-af76-970ce4e0bff1}, ! Handle
@@ -851,10 +865,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  3, 47, 0,                               ! X,Y,Z Vertex 1 {m}
-  3, -3, 0,                               ! X,Y,Z Vertex 2 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 3 {m}
-  0, 44, 0;                               ! X,Y,Z Vertex 4 {m}
+  3, 47, 0,                               !- X,Y,Z Vertex 1 {m}
+  3, -3, 0,                               !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 44, 0;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {be21db52-810a-4919-bef0-98316e44b042}, ! Handle
@@ -868,10 +882,10 @@ OS:Surface,
   WindExposed,                            ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  3, -3, 4,                               ! X,Y,Z Vertex 1 {m}
-  3, -3, 0,                               ! X,Y,Z Vertex 2 {m}
-  3, 47, 0,                               ! X,Y,Z Vertex 3 {m}
-  3, 47, 4;                               ! X,Y,Z Vertex 4 {m}
+  3, -3, 4,                               !- X,Y,Z Vertex 1 {m}
+  3, -3, 0,                               !- X,Y,Z Vertex 2 {m}
+  3, 47, 0,                               !- X,Y,Z Vertex 3 {m}
+  3, 47, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {7bf1b2ac-e13a-4965-a04c-57fc668cddb2}, ! Handle
@@ -885,10 +899,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 4,                                ! X,Y,Z Vertex 1 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 2 {m}
-  3, -3, 0,                               ! X,Y,Z Vertex 3 {m}
-  3, -3, 4;                               ! X,Y,Z Vertex 4 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  3, -3, 0,                               !- X,Y,Z Vertex 3 {m}
+  3, -3, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {5849c5c1-d7f6-4a2a-9040-1c806895dbe1}, ! Handle
@@ -902,10 +916,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 44, 4,                               ! X,Y,Z Vertex 1 {m}
-  0, 44, 0,                               ! X,Y,Z Vertex 2 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 3 {m}
-  0, 0, 4;                                ! X,Y,Z Vertex 4 {m}
+  0, 44, 4,                               !- X,Y,Z Vertex 1 {m}
+  0, 44, 0,                               !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 0, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {411f4945-f348-4bf7-aece-05c00aef8361}, ! Handle
@@ -919,10 +933,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  3, 47, 4,                               ! X,Y,Z Vertex 1 {m}
-  3, 47, 0,                               ! X,Y,Z Vertex 2 {m}
-  0, 44, 0,                               ! X,Y,Z Vertex 3 {m}
-  0, 44, 4;                               ! X,Y,Z Vertex 4 {m}
+  3, 47, 4,                               !- X,Y,Z Vertex 1 {m}
+  3, 47, 0,                               !- X,Y,Z Vertex 2 {m}
+  0, 44, 0,                               !- X,Y,Z Vertex 3 {m}
+  0, 44, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {183a609e-f0dd-432b-840b-69c1de3d6a6a}, ! Handle
@@ -936,10 +950,10 @@ OS:Surface,
   WindExposed,                            ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 44, 4,                               ! X,Y,Z Vertex 1 {m}
-  0, 0, 4,                                ! X,Y,Z Vertex 2 {m}
-  3, -3, 4,                               ! X,Y,Z Vertex 3 {m}
-  3, 47, 4;                               ! X,Y,Z Vertex 4 {m}
+  0, 44, 4,                               !- X,Y,Z Vertex 1 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 2 {m}
+  3, -3, 4,                               !- X,Y,Z Vertex 3 {m}
+  3, 47, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Space,
   {286ecd0f-24d3-4133-9889-ee71877e8ed5}, ! Handle
@@ -966,10 +980,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  100, 0, 0,                              ! X,Y,Z Vertex 1 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 2 {m}
-  3, 3, 0,                                ! X,Y,Z Vertex 3 {m}
-  97, 3, 0;                               ! X,Y,Z Vertex 4 {m}
+  100, 0, 0,                              !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  3, 3, 0,                                !- X,Y,Z Vertex 3 {m}
+  97, 3, 0;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {0402f241-8ecb-47d2-af16-7995c79da348}, ! Handle
@@ -983,10 +997,10 @@ OS:Surface,
   WindExposed,                            ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 4,                                ! X,Y,Z Vertex 1 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 2 {m}
-  100, 0, 0,                              ! X,Y,Z Vertex 3 {m}
-  100, 0, 4;                              ! X,Y,Z Vertex 4 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  100, 0, 0,                              !- X,Y,Z Vertex 3 {m}
+  100, 0, 4;                              !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {d6a0e016-6741-4fa1-bf7e-a2e0da437afc}, ! Handle
@@ -1000,10 +1014,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  3, 3, 4,                                ! X,Y,Z Vertex 1 {m}
-  3, 3, 0,                                ! X,Y,Z Vertex 2 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 3 {m}
-  0, 0, 4;                                ! X,Y,Z Vertex 4 {m}
+  3, 3, 4,                                !- X,Y,Z Vertex 1 {m}
+  3, 3, 0,                                !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 0, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {871de44f-8108-4548-b830-15b056183594}, ! Handle
@@ -1017,10 +1031,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  97, 3, 4,                               ! X,Y,Z Vertex 1 {m}
-  97, 3, 0,                               ! X,Y,Z Vertex 2 {m}
-  3, 3, 0,                                ! X,Y,Z Vertex 3 {m}
-  3, 3, 4;                                ! X,Y,Z Vertex 4 {m}
+  97, 3, 4,                               !- X,Y,Z Vertex 1 {m}
+  97, 3, 0,                               !- X,Y,Z Vertex 2 {m}
+  3, 3, 0,                                !- X,Y,Z Vertex 3 {m}
+  3, 3, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {4eeea28c-4120-45a5-b414-81bdde3c97bb}, ! Handle
@@ -1034,10 +1048,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  100, 0, 4,                              ! X,Y,Z Vertex 1 {m}
-  100, 0, 0,                              ! X,Y,Z Vertex 2 {m}
-  97, 3, 0,                               ! X,Y,Z Vertex 3 {m}
-  97, 3, 4;                               ! X,Y,Z Vertex 4 {m}
+  100, 0, 4,                              !- X,Y,Z Vertex 1 {m}
+  100, 0, 0,                              !- X,Y,Z Vertex 2 {m}
+  97, 3, 0,                               !- X,Y,Z Vertex 3 {m}
+  97, 3, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {5cedde12-b3ab-47e8-9874-fb06c6184a40}, ! Handle
@@ -1051,10 +1065,10 @@ OS:Surface,
   WindExposed,                            ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  97, 3, 4,                               ! X,Y,Z Vertex 1 {m}
-  3, 3, 4,                                ! X,Y,Z Vertex 2 {m}
-  0, 0, 4,                                ! X,Y,Z Vertex 3 {m}
-  100, 0, 4;                              ! X,Y,Z Vertex 4 {m}
+  97, 3, 4,                               !- X,Y,Z Vertex 1 {m}
+  3, 3, 4,                                !- X,Y,Z Vertex 2 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 3 {m}
+  100, 0, 4;                              !- X,Y,Z Vertex 4 {m}
 
 OS:Space,
   {666e2e21-4593-49bc-a3c0-fcc3cabc449d}, ! Handle
@@ -1081,10 +1095,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 0,                                ! X,Y,Z Vertex 1 {m}
-  0, 44, 0,                               ! X,Y,Z Vertex 2 {m}
-  94, 44, 0,                              ! X,Y,Z Vertex 3 {m}
-  94, 0, 0;                               ! X,Y,Z Vertex 4 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 1 {m}
+  0, 44, 0,                               !- X,Y,Z Vertex 2 {m}
+  94, 44, 0,                              !- X,Y,Z Vertex 3 {m}
+  94, 0, 0;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {5bc2455b-6247-40a9-b64e-85af3b057442}, ! Handle
@@ -1098,10 +1112,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 44, 4,                               ! X,Y,Z Vertex 1 {m}
-  0, 44, 0,                               ! X,Y,Z Vertex 2 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 3 {m}
-  0, 0, 4;                                ! X,Y,Z Vertex 4 {m}
+  0, 44, 4,                               !- X,Y,Z Vertex 1 {m}
+  0, 44, 0,                               !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 0, 4;                                !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {ba1198ab-2ad2-4cbb-a52f-d28b5e65620e}, ! Handle
@@ -1115,10 +1129,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  94, 44, 4,                              ! X,Y,Z Vertex 1 {m}
-  94, 44, 0,                              ! X,Y,Z Vertex 2 {m}
-  0, 44, 0,                               ! X,Y,Z Vertex 3 {m}
-  0, 44, 4;                               ! X,Y,Z Vertex 4 {m}
+  94, 44, 4,                              !- X,Y,Z Vertex 1 {m}
+  94, 44, 0,                              !- X,Y,Z Vertex 2 {m}
+  0, 44, 0,                               !- X,Y,Z Vertex 3 {m}
+  0, 44, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {88272280-8c21-4d67-bb7e-d44d4e641d3f}, ! Handle
@@ -1132,10 +1146,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  94, 0, 4,                               ! X,Y,Z Vertex 1 {m}
-  94, 0, 0,                               ! X,Y,Z Vertex 2 {m}
-  94, 44, 0,                              ! X,Y,Z Vertex 3 {m}
-  94, 44, 4;                              ! X,Y,Z Vertex 4 {m}
+  94, 0, 4,                               !- X,Y,Z Vertex 1 {m}
+  94, 0, 0,                               !- X,Y,Z Vertex 2 {m}
+  94, 44, 0,                              !- X,Y,Z Vertex 3 {m}
+  94, 44, 4;                              !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {d213a94b-e0b4-4e17-92db-2f763401ea1a}, ! Handle
@@ -1149,10 +1163,10 @@ OS:Surface,
   NoWind,                                 ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  0, 0, 4,                                ! X,Y,Z Vertex 1 {m}
-  0, 0, 0,                                ! X,Y,Z Vertex 2 {m}
-  94, 0, 0,                               ! X,Y,Z Vertex 3 {m}
-  94, 0, 4;                               ! X,Y,Z Vertex 4 {m}
+  0, 0, 4,                                !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  94, 0, 0,                               !- X,Y,Z Vertex 3 {m}
+  94, 0, 4;                               !- X,Y,Z Vertex 4 {m}
 
 OS:Surface,
   {d6876cd3-4c47-46eb-af4f-0554b09a0ea2}, ! Handle
@@ -1166,10 +1180,22 @@ OS:Surface,
   WindExposed,                            ! Wind Exposure
   ,                                       ! View Factor to Ground
   ,                                       ! Number of Vertices
-  94, 0, 4,                               ! X,Y,Z Vertex 1 {m}
-  94, 44, 4,                              ! X,Y,Z Vertex 2 {m}
-  0, 44, 4,                               ! X,Y,Z Vertex 3 {m}
-  0, 0, 4;                                ! X,Y,Z Vertex 4 {m}
+  94, 0, 4,                               !- X,Y,Z Vertex 1 {m}
+  94, 44, 4,                              !- X,Y,Z Vertex 2 {m}
+  0, 44, 4,                               !- X,Y,Z Vertex 3 {m}
+  0, 0, 4;                                !- X,Y,Z Vertex 4 {m}
+
+OS:PortList,
+  {71afc349-1e64-4f13-8830-20c1a9a51b15}, !- Handle
+  Port List 1,                            !- Name
+  {4540ba4f-9431-4ff0-86d5-12cd66399ccf}, !- HVAC Component
+  {d3ddf6f0-49d4-430e-ae9e-b22abd209e5e}; !- Port 1
+
+OS:PortList,
+  {2a9b56e5-56e3-4505-b1c5-27e6597f1bb6}, !- Handle
+  Port List 2,                            !- Name
+  {4540ba4f-9431-4ff0-86d5-12cd66399ccf}, !- HVAC Component
+  {82eb7d5f-17cf-4108-8ebb-4dd2efb068a2}; !- Port 1
 
 OS:ThermalZone,
   {4540ba4f-9431-4ff0-86d5-12cd66399ccf}, ! Handle
@@ -1208,37 +1234,35 @@ OS:Connection,
   {02db7ca5-8c7e-4f34-be64-237ba04fcca9}, ! Target Object
   2;                                      ! Inlet Port
 
-OS:PortList,
-  {71afc349-1e64-4f13-8830-20c1a9a51b15}, ! Handle
-  Port List 1,                            ! Name
-  {d3ddf6f0-49d4-430e-ae9e-b22abd209e5e}; ! Port 1
-
-OS:PortList,
-  {2a9b56e5-56e3-4505-b1c5-27e6597f1bb6}, ! Handle
-  Port List 2,                            ! Name
-  {82eb7d5f-17cf-4108-8ebb-4dd2efb068a2}; ! Port 1
-
 OS:Sizing:Zone,
-  {5fc68e2f-136f-4cc2-92c7-b9e54323eaa8}, ! Handle
-  {4540ba4f-9431-4ff0-86d5-12cd66399ccf}, ! Zone or ZoneList Name
-  14,                                     ! Zone Cooling Design Supply Air Temperature {C}
-  40,                                     ! Zone Heating Design Supply Air Temperature {C}
-  0.0085,                                 ! Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  0.008,                                  ! Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  ,                                       ! Zone Heating Sizing Factor
-  ,                                       ! Zone Cooling Sizing Factor
-  DesignDay,                              ! Cooling Design Air Flow Method
-  ,                                       ! Cooling Design Air Flow Rate {m3/s}
-  ,                                       ! Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Cooling Minimum Air Flow {m3/s}
-  ,                                       ! Cooling Minimum Air Flow Fraction
-  DesignDay,                              ! Heating Design Air Flow Method
-  ,                                       ! Heating Design Air Flow Rate {m3/s}
-  ,                                       ! Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Heating Maximum Air Flow {m3/s}
-  ,                                       ! Heating Maximum Air Flow Fraction
-  ,                                       ! Design Zone Air Distribution Effectiveness in Cooling Mode
-  ;                                       ! Design Zone Air Distribution Effectiveness in Heating Mode
+  {5fc68e2f-136f-4cc2-92c7-b9e54323eaa8}, !- Handle
+  {4540ba4f-9431-4ff0-86d5-12cd66399ccf}, !- Zone or ZoneList Name
+  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
+  14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
+  40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
+  0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Zone Heating Sizing Factor
+  ,                                       !- Zone Cooling Sizing Factor
+  DesignDay,                              !- Cooling Design Air Flow Method
+  ,                                       !- Cooling Design Air Flow Rate {m3/s}
+  ,                                       !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Cooling Minimum Air Flow {m3/s}
+  ,                                       !- Cooling Minimum Air Flow Fraction
+  DesignDay,                              !- Heating Design Air Flow Method
+  ,                                       !- Heating Design Air Flow Rate {m3/s}
+  ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Heating Maximum Air Flow {m3/s}
+  ,                                       !- Heating Maximum Air Flow Fraction
+  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
+  ,                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+  No,                                     !- Account for Dedicated Outdoor Air System
+  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
+  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
 OS:ZoneHVAC:EquipmentList,
   {35672913-a112-4547-b9b1-907270c88aea}, ! Handle
@@ -1247,6 +1271,18 @@ OS:ZoneHVAC:EquipmentList,
   {0bcc454c-bb91-40da-9f22-bdee18049071}, ! Zone Equipment 1
   1,                                      ! Zone Equipment Cooling Sequence 1
   1;                                      ! Zone Equipment Heating or No-Load Sequence 1
+
+OS:PortList,
+  {19f2a292-7a68-40f0-bcb0-6cd1f9e03473}, !- Handle
+  Port List 3,                            !- Name
+  {e872472e-d811-450f-bbcd-155284f6b848}, !- HVAC Component
+  {666b862a-a51d-4759-a5e1-7faf223ed712}; !- Port 1
+
+OS:PortList,
+  {a54bed2c-1df7-4ecd-934e-b1e24ce3a8af}, !- Handle
+  Port List 4,                            !- Name
+  {e872472e-d811-450f-bbcd-155284f6b848}, !- HVAC Component
+  {36d610ae-a18d-4114-819c-b6db5aa6ae48}; !- Port 1
 
 OS:ThermalZone,
   {e872472e-d811-450f-bbcd-155284f6b848}, ! Handle
@@ -1285,37 +1321,35 @@ OS:Connection,
   {2f20d308-155b-47a5-a2a2-2357f1470d15}, ! Target Object
   2;                                      ! Inlet Port
 
-OS:PortList,
-  {19f2a292-7a68-40f0-bcb0-6cd1f9e03473}, ! Handle
-  Port List 3,                            ! Name
-  {666b862a-a51d-4759-a5e1-7faf223ed712}; ! Port 1
-
-OS:PortList,
-  {a54bed2c-1df7-4ecd-934e-b1e24ce3a8af}, ! Handle
-  Port List 4,                            ! Name
-  {36d610ae-a18d-4114-819c-b6db5aa6ae48}; ! Port 1
-
 OS:Sizing:Zone,
-  {d8803236-f90e-4ff2-a5a3-a3d48b0a444a}, ! Handle
-  {e872472e-d811-450f-bbcd-155284f6b848}, ! Zone or ZoneList Name
-  14,                                     ! Zone Cooling Design Supply Air Temperature {C}
-  40,                                     ! Zone Heating Design Supply Air Temperature {C}
-  0.0085,                                 ! Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  0.008,                                  ! Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  ,                                       ! Zone Heating Sizing Factor
-  ,                                       ! Zone Cooling Sizing Factor
-  DesignDay,                              ! Cooling Design Air Flow Method
-  ,                                       ! Cooling Design Air Flow Rate {m3/s}
-  ,                                       ! Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Cooling Minimum Air Flow {m3/s}
-  ,                                       ! Cooling Minimum Air Flow Fraction
-  DesignDay,                              ! Heating Design Air Flow Method
-  ,                                       ! Heating Design Air Flow Rate {m3/s}
-  ,                                       ! Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Heating Maximum Air Flow {m3/s}
-  ,                                       ! Heating Maximum Air Flow Fraction
-  ,                                       ! Design Zone Air Distribution Effectiveness in Cooling Mode
-  ;                                       ! Design Zone Air Distribution Effectiveness in Heating Mode
+  {d8803236-f90e-4ff2-a5a3-a3d48b0a444a}, !- Handle
+  {e872472e-d811-450f-bbcd-155284f6b848}, !- Zone or ZoneList Name
+  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
+  14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
+  40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
+  0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Zone Heating Sizing Factor
+  ,                                       !- Zone Cooling Sizing Factor
+  DesignDay,                              !- Cooling Design Air Flow Method
+  ,                                       !- Cooling Design Air Flow Rate {m3/s}
+  ,                                       !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Cooling Minimum Air Flow {m3/s}
+  ,                                       !- Cooling Minimum Air Flow Fraction
+  DesignDay,                              !- Heating Design Air Flow Method
+  ,                                       !- Heating Design Air Flow Rate {m3/s}
+  ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Heating Maximum Air Flow {m3/s}
+  ,                                       !- Heating Maximum Air Flow Fraction
+  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
+  ,                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+  No,                                     !- Account for Dedicated Outdoor Air System
+  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
+  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
 OS:ZoneHVAC:EquipmentList,
   {673b7df9-7f90-4a4d-9cc4-c71dc9db5bac}, ! Handle
@@ -1324,6 +1358,18 @@ OS:ZoneHVAC:EquipmentList,
   {6b5fef4c-77dc-473b-bbad-667c1df9799b}, ! Zone Equipment 1
   1,                                      ! Zone Equipment Cooling Sequence 1
   1;                                      ! Zone Equipment Heating or No-Load Sequence 1
+
+OS:PortList,
+  {b1cd0f73-9743-427d-a596-91cbe81f8db8}, !- Handle
+  Port List 5,                            !- Name
+  {6d3ecd49-6959-4722-8bf6-a6df591dddfb}, !- HVAC Component
+  {6983b0f1-3d56-4989-b927-6e77cd8345e3}; !- Port 1
+
+OS:PortList,
+  {d7e8cf14-6091-4703-a8d6-f8b716025d45}, !- Handle
+  Port List 6,                            !- Name
+  {6d3ecd49-6959-4722-8bf6-a6df591dddfb}, !- HVAC Component
+  {5c8b2462-8a28-45ca-9921-b9730c3d3f86}; !- Port 1
 
 OS:ThermalZone,
   {6d3ecd49-6959-4722-8bf6-a6df591dddfb}, ! Handle
@@ -1362,37 +1408,35 @@ OS:Connection,
   {07bdd8e5-56ce-4bc2-9356-d6fb71eca66b}, ! Target Object
   2;                                      ! Inlet Port
 
-OS:PortList,
-  {b1cd0f73-9743-427d-a596-91cbe81f8db8}, ! Handle
-  Port List 5,                            ! Name
-  {6983b0f1-3d56-4989-b927-6e77cd8345e3}; ! Port 1
-
-OS:PortList,
-  {d7e8cf14-6091-4703-a8d6-f8b716025d45}, ! Handle
-  Port List 6,                            ! Name
-  {5c8b2462-8a28-45ca-9921-b9730c3d3f86}; ! Port 1
-
 OS:Sizing:Zone,
-  {43e96bcc-3e3d-443c-9186-c685326248ef}, ! Handle
-  {6d3ecd49-6959-4722-8bf6-a6df591dddfb}, ! Zone or ZoneList Name
-  14,                                     ! Zone Cooling Design Supply Air Temperature {C}
-  40,                                     ! Zone Heating Design Supply Air Temperature {C}
-  0.0085,                                 ! Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  0.008,                                  ! Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  ,                                       ! Zone Heating Sizing Factor
-  ,                                       ! Zone Cooling Sizing Factor
-  DesignDay,                              ! Cooling Design Air Flow Method
-  ,                                       ! Cooling Design Air Flow Rate {m3/s}
-  ,                                       ! Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Cooling Minimum Air Flow {m3/s}
-  ,                                       ! Cooling Minimum Air Flow Fraction
-  DesignDay,                              ! Heating Design Air Flow Method
-  ,                                       ! Heating Design Air Flow Rate {m3/s}
-  ,                                       ! Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Heating Maximum Air Flow {m3/s}
-  ,                                       ! Heating Maximum Air Flow Fraction
-  ,                                       ! Design Zone Air Distribution Effectiveness in Cooling Mode
-  ;                                       ! Design Zone Air Distribution Effectiveness in Heating Mode
+  {43e96bcc-3e3d-443c-9186-c685326248ef}, !- Handle
+  {6d3ecd49-6959-4722-8bf6-a6df591dddfb}, !- Zone or ZoneList Name
+  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
+  14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
+  40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
+  0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Zone Heating Sizing Factor
+  ,                                       !- Zone Cooling Sizing Factor
+  DesignDay,                              !- Cooling Design Air Flow Method
+  ,                                       !- Cooling Design Air Flow Rate {m3/s}
+  ,                                       !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Cooling Minimum Air Flow {m3/s}
+  ,                                       !- Cooling Minimum Air Flow Fraction
+  DesignDay,                              !- Heating Design Air Flow Method
+  ,                                       !- Heating Design Air Flow Rate {m3/s}
+  ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Heating Maximum Air Flow {m3/s}
+  ,                                       !- Heating Maximum Air Flow Fraction
+  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
+  ,                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+  No,                                     !- Account for Dedicated Outdoor Air System
+  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
+  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
 OS:ZoneHVAC:EquipmentList,
   {c9a522ed-68c0-48ef-bdf0-e8c0acd9a458}, ! Handle
@@ -1401,6 +1445,18 @@ OS:ZoneHVAC:EquipmentList,
   {d12b1840-6ae2-40d7-a0ec-c900a0ce4a2b}, ! Zone Equipment 1
   1,                                      ! Zone Equipment Cooling Sequence 1
   1;                                      ! Zone Equipment Heating or No-Load Sequence 1
+
+OS:PortList,
+  {e329db8a-91d7-4291-8790-ba9594b8df9d}, !- Handle
+  Port List 7,                            !- Name
+  {df259c97-2eb1-4483-8a2c-b7ad45d6e00a}, !- HVAC Component
+  {48a7b2fd-c18e-494c-a829-479ffbf23f05}; !- Port 1
+
+OS:PortList,
+  {ba014fce-845d-47ce-9150-6f1d0de092b2}, !- Handle
+  Port List 8,                            !- Name
+  {df259c97-2eb1-4483-8a2c-b7ad45d6e00a}, !- HVAC Component
+  {6eb0e4b5-5af0-481c-a6bd-50f053422ac3}; !- Port 1
 
 OS:ThermalZone,
   {df259c97-2eb1-4483-8a2c-b7ad45d6e00a}, ! Handle
@@ -1439,37 +1495,35 @@ OS:Connection,
   {2d88edd4-e84a-42e3-ad9a-042d3eeb07b1}, ! Target Object
   2;                                      ! Inlet Port
 
-OS:PortList,
-  {e329db8a-91d7-4291-8790-ba9594b8df9d}, ! Handle
-  Port List 7,                            ! Name
-  {48a7b2fd-c18e-494c-a829-479ffbf23f05}; ! Port 1
-
-OS:PortList,
-  {ba014fce-845d-47ce-9150-6f1d0de092b2}, ! Handle
-  Port List 8,                            ! Name
-  {6eb0e4b5-5af0-481c-a6bd-50f053422ac3}; ! Port 1
-
 OS:Sizing:Zone,
-  {100fdcdb-f78f-46bb-8d74-51d4a1aa6b3b}, ! Handle
-  {df259c97-2eb1-4483-8a2c-b7ad45d6e00a}, ! Zone or ZoneList Name
-  14,                                     ! Zone Cooling Design Supply Air Temperature {C}
-  40,                                     ! Zone Heating Design Supply Air Temperature {C}
-  0.0085,                                 ! Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  0.008,                                  ! Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  ,                                       ! Zone Heating Sizing Factor
-  ,                                       ! Zone Cooling Sizing Factor
-  DesignDay,                              ! Cooling Design Air Flow Method
-  ,                                       ! Cooling Design Air Flow Rate {m3/s}
-  ,                                       ! Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Cooling Minimum Air Flow {m3/s}
-  ,                                       ! Cooling Minimum Air Flow Fraction
-  DesignDay,                              ! Heating Design Air Flow Method
-  ,                                       ! Heating Design Air Flow Rate {m3/s}
-  ,                                       ! Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Heating Maximum Air Flow {m3/s}
-  ,                                       ! Heating Maximum Air Flow Fraction
-  ,                                       ! Design Zone Air Distribution Effectiveness in Cooling Mode
-  ;                                       ! Design Zone Air Distribution Effectiveness in Heating Mode
+  {100fdcdb-f78f-46bb-8d74-51d4a1aa6b3b}, !- Handle
+  {df259c97-2eb1-4483-8a2c-b7ad45d6e00a}, !- Zone or ZoneList Name
+  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
+  14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
+  40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
+  0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Zone Heating Sizing Factor
+  ,                                       !- Zone Cooling Sizing Factor
+  DesignDay,                              !- Cooling Design Air Flow Method
+  ,                                       !- Cooling Design Air Flow Rate {m3/s}
+  ,                                       !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Cooling Minimum Air Flow {m3/s}
+  ,                                       !- Cooling Minimum Air Flow Fraction
+  DesignDay,                              !- Heating Design Air Flow Method
+  ,                                       !- Heating Design Air Flow Rate {m3/s}
+  ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Heating Maximum Air Flow {m3/s}
+  ,                                       !- Heating Maximum Air Flow Fraction
+  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
+  ,                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+  No,                                     !- Account for Dedicated Outdoor Air System
+  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
+  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
 OS:ZoneHVAC:EquipmentList,
   {c2e214ab-ba00-4442-b8ff-04901e8e0767}, ! Handle
@@ -1478,6 +1532,18 @@ OS:ZoneHVAC:EquipmentList,
   {81ba19d4-3dee-4eca-86ac-75ec931ff777}, ! Zone Equipment 1
   1,                                      ! Zone Equipment Cooling Sequence 1
   1;                                      ! Zone Equipment Heating or No-Load Sequence 1
+
+OS:PortList,
+  {eaeb3976-0541-4fe2-823c-5d19bc7ccdbf}, !- Handle
+  Port List 9,                            !- Name
+  {6c33036d-c158-44ce-b094-664a3f535772}, !- HVAC Component
+  {80f89988-d3e9-436b-a9fa-454fe205abb6}; !- Port 1
+
+OS:PortList,
+  {5ea41afd-e0b9-4ac3-ba73-507e85e2d45a}, !- Handle
+  Port List 10,                           !- Name
+  {6c33036d-c158-44ce-b094-664a3f535772}, !- HVAC Component
+  {24f21c53-fc72-4654-91b1-cde65501db34}; !- Port 1
 
 OS:ThermalZone,
   {6c33036d-c158-44ce-b094-664a3f535772}, ! Handle
@@ -1516,37 +1582,35 @@ OS:Connection,
   {c0784cd8-15cf-4079-899f-36b1ce05cbef}, ! Target Object
   2;                                      ! Inlet Port
 
-OS:PortList,
-  {eaeb3976-0541-4fe2-823c-5d19bc7ccdbf}, ! Handle
-  Port List 9,                            ! Name
-  {80f89988-d3e9-436b-a9fa-454fe205abb6}; ! Port 1
-
-OS:PortList,
-  {5ea41afd-e0b9-4ac3-ba73-507e85e2d45a}, ! Handle
-  Port List 10,                           ! Name
-  {24f21c53-fc72-4654-91b1-cde65501db34}; ! Port 1
-
 OS:Sizing:Zone,
-  {a0e1f693-294b-4fd8-876e-da0eed1c6de4}, ! Handle
-  {6c33036d-c158-44ce-b094-664a3f535772}, ! Zone or ZoneList Name
-  14,                                     ! Zone Cooling Design Supply Air Temperature {C}
-  40,                                     ! Zone Heating Design Supply Air Temperature {C}
-  0.0085,                                 ! Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  0.008,                                  ! Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  ,                                       ! Zone Heating Sizing Factor
-  ,                                       ! Zone Cooling Sizing Factor
-  DesignDay,                              ! Cooling Design Air Flow Method
-  ,                                       ! Cooling Design Air Flow Rate {m3/s}
-  ,                                       ! Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Cooling Minimum Air Flow {m3/s}
-  ,                                       ! Cooling Minimum Air Flow Fraction
-  DesignDay,                              ! Heating Design Air Flow Method
-  ,                                       ! Heating Design Air Flow Rate {m3/s}
-  ,                                       ! Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Heating Maximum Air Flow {m3/s}
-  ,                                       ! Heating Maximum Air Flow Fraction
-  ,                                       ! Design Zone Air Distribution Effectiveness in Cooling Mode
-  ;                                       ! Design Zone Air Distribution Effectiveness in Heating Mode
+  {a0e1f693-294b-4fd8-876e-da0eed1c6de4}, !- Handle
+  {6c33036d-c158-44ce-b094-664a3f535772}, !- Zone or ZoneList Name
+  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
+  14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
+  40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
+  0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Zone Heating Sizing Factor
+  ,                                       !- Zone Cooling Sizing Factor
+  DesignDay,                              !- Cooling Design Air Flow Method
+  ,                                       !- Cooling Design Air Flow Rate {m3/s}
+  ,                                       !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Cooling Minimum Air Flow {m3/s}
+  ,                                       !- Cooling Minimum Air Flow Fraction
+  DesignDay,                              !- Heating Design Air Flow Method
+  ,                                       !- Heating Design Air Flow Rate {m3/s}
+  ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Heating Maximum Air Flow {m3/s}
+  ,                                       !- Heating Maximum Air Flow Fraction
+  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
+  ,                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+  No,                                     !- Account for Dedicated Outdoor Air System
+  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
+  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
 OS:ZoneHVAC:EquipmentList,
   {3fdc64c5-7170-4377-9cc2-adf1eb5afe03}, ! Handle
@@ -1555,6 +1619,18 @@ OS:ZoneHVAC:EquipmentList,
   {a17e5bab-df65-47e3-ab94-86748ed58418}, ! Zone Equipment 1
   1,                                      ! Zone Equipment Cooling Sequence 1
   1;                                      ! Zone Equipment Heating or No-Load Sequence 1
+
+OS:PortList,
+  {23e04107-1e0f-411c-ba8b-1164c11b23e9}, !- Handle
+  Port List 11,                           !- Name
+  {3978573d-4d0e-4585-9ecb-caf0cb2f3887}, !- HVAC Component
+  {847c48a4-24bc-4ccc-b6ad-5090ed92f1cd}; !- Port 1
+
+OS:PortList,
+  {c9a037cb-24c5-4348-bb9e-81c279cc4fa2}, !- Handle
+  Port List 12,                           !- Name
+  {3978573d-4d0e-4585-9ecb-caf0cb2f3887}, !- HVAC Component
+  {74b5788a-903f-4037-ab5f-963eff1ff7f3}; !- Port 1
 
 OS:ThermalZone,
   {3978573d-4d0e-4585-9ecb-caf0cb2f3887}, ! Handle
@@ -1593,37 +1669,35 @@ OS:Connection,
   {c8106edc-99cb-4441-ab3f-94df00cbc662}, ! Target Object
   2;                                      ! Inlet Port
 
-OS:PortList,
-  {23e04107-1e0f-411c-ba8b-1164c11b23e9}, ! Handle
-  Port List 11,                           ! Name
-  {847c48a4-24bc-4ccc-b6ad-5090ed92f1cd}; ! Port 1
-
-OS:PortList,
-  {c9a037cb-24c5-4348-bb9e-81c279cc4fa2}, ! Handle
-  Port List 12,                           ! Name
-  {74b5788a-903f-4037-ab5f-963eff1ff7f3}; ! Port 1
-
 OS:Sizing:Zone,
-  {51e1df1f-5438-4116-a852-3927b7e6a3d4}, ! Handle
-  {3978573d-4d0e-4585-9ecb-caf0cb2f3887}, ! Zone or ZoneList Name
-  14,                                     ! Zone Cooling Design Supply Air Temperature {C}
-  40,                                     ! Zone Heating Design Supply Air Temperature {C}
-  0.0085,                                 ! Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  0.008,                                  ! Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  ,                                       ! Zone Heating Sizing Factor
-  ,                                       ! Zone Cooling Sizing Factor
-  DesignDay,                              ! Cooling Design Air Flow Method
-  ,                                       ! Cooling Design Air Flow Rate {m3/s}
-  ,                                       ! Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Cooling Minimum Air Flow {m3/s}
-  ,                                       ! Cooling Minimum Air Flow Fraction
-  DesignDay,                              ! Heating Design Air Flow Method
-  ,                                       ! Heating Design Air Flow Rate {m3/s}
-  ,                                       ! Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Heating Maximum Air Flow {m3/s}
-  ,                                       ! Heating Maximum Air Flow Fraction
-  ,                                       ! Design Zone Air Distribution Effectiveness in Cooling Mode
-  ;                                       ! Design Zone Air Distribution Effectiveness in Heating Mode
+  {51e1df1f-5438-4116-a852-3927b7e6a3d4}, !- Handle
+  {3978573d-4d0e-4585-9ecb-caf0cb2f3887}, !- Zone or ZoneList Name
+  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
+  14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
+  40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
+  0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Zone Heating Sizing Factor
+  ,                                       !- Zone Cooling Sizing Factor
+  DesignDay,                              !- Cooling Design Air Flow Method
+  ,                                       !- Cooling Design Air Flow Rate {m3/s}
+  ,                                       !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Cooling Minimum Air Flow {m3/s}
+  ,                                       !- Cooling Minimum Air Flow Fraction
+  DesignDay,                              !- Heating Design Air Flow Method
+  ,                                       !- Heating Design Air Flow Rate {m3/s}
+  ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Heating Maximum Air Flow {m3/s}
+  ,                                       !- Heating Maximum Air Flow Fraction
+  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
+  ,                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+  No,                                     !- Account for Dedicated Outdoor Air System
+  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
+  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
 OS:ZoneHVAC:EquipmentList,
   {2a8d0a5e-d527-4e81-86ce-d28ef9c3b766}, ! Handle
@@ -1632,6 +1706,18 @@ OS:ZoneHVAC:EquipmentList,
   {fcd2910f-00b5-4cf0-b6f0-24b38e68494c}, ! Zone Equipment 1
   1,                                      ! Zone Equipment Cooling Sequence 1
   1;                                      ! Zone Equipment Heating or No-Load Sequence 1
+
+OS:PortList,
+  {7d3f4726-0676-4c75-9d6d-e38c9a3a44b5}, !- Handle
+  Port List 13,                           !- Name
+  {cd4eeb7f-fbad-42a3-a8db-12d0421403d1}, !- HVAC Component
+  {1ce99fc1-8faf-4d89-9f85-310c43a7c390}; !- Port 1
+
+OS:PortList,
+  {a064448b-3f6d-41b5-a003-1f15c7774262}, !- Handle
+  Port List 14,                           !- Name
+  {cd4eeb7f-fbad-42a3-a8db-12d0421403d1}, !- HVAC Component
+  {9de1d07f-7a5f-4cfd-98ab-022c468bdeaf}; !- Port 1
 
 OS:ThermalZone,
   {cd4eeb7f-fbad-42a3-a8db-12d0421403d1}, ! Handle
@@ -1670,37 +1756,35 @@ OS:Connection,
   {4831d74c-a754-47b2-9293-65a7736e7ede}, ! Target Object
   2;                                      ! Inlet Port
 
-OS:PortList,
-  {7d3f4726-0676-4c75-9d6d-e38c9a3a44b5}, ! Handle
-  Port List 13,                           ! Name
-  {1ce99fc1-8faf-4d89-9f85-310c43a7c390}; ! Port 1
-
-OS:PortList,
-  {a064448b-3f6d-41b5-a003-1f15c7774262}, ! Handle
-  Port List 14,                           ! Name
-  {9de1d07f-7a5f-4cfd-98ab-022c468bdeaf}; ! Port 1
-
 OS:Sizing:Zone,
-  {0ee0dfec-ce41-4365-aad7-feec91bb601d}, ! Handle
-  {cd4eeb7f-fbad-42a3-a8db-12d0421403d1}, ! Zone or ZoneList Name
-  14,                                     ! Zone Cooling Design Supply Air Temperature {C}
-  40,                                     ! Zone Heating Design Supply Air Temperature {C}
-  0.0085,                                 ! Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  0.008,                                  ! Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  ,                                       ! Zone Heating Sizing Factor
-  ,                                       ! Zone Cooling Sizing Factor
-  DesignDay,                              ! Cooling Design Air Flow Method
-  ,                                       ! Cooling Design Air Flow Rate {m3/s}
-  ,                                       ! Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Cooling Minimum Air Flow {m3/s}
-  ,                                       ! Cooling Minimum Air Flow Fraction
-  DesignDay,                              ! Heating Design Air Flow Method
-  ,                                       ! Heating Design Air Flow Rate {m3/s}
-  ,                                       ! Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Heating Maximum Air Flow {m3/s}
-  ,                                       ! Heating Maximum Air Flow Fraction
-  ,                                       ! Design Zone Air Distribution Effectiveness in Cooling Mode
-  ;                                       ! Design Zone Air Distribution Effectiveness in Heating Mode
+  {0ee0dfec-ce41-4365-aad7-feec91bb601d}, !- Handle
+  {cd4eeb7f-fbad-42a3-a8db-12d0421403d1}, !- Zone or ZoneList Name
+  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
+  14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
+  40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
+  0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Zone Heating Sizing Factor
+  ,                                       !- Zone Cooling Sizing Factor
+  DesignDay,                              !- Cooling Design Air Flow Method
+  ,                                       !- Cooling Design Air Flow Rate {m3/s}
+  ,                                       !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Cooling Minimum Air Flow {m3/s}
+  ,                                       !- Cooling Minimum Air Flow Fraction
+  DesignDay,                              !- Heating Design Air Flow Method
+  ,                                       !- Heating Design Air Flow Rate {m3/s}
+  ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Heating Maximum Air Flow {m3/s}
+  ,                                       !- Heating Maximum Air Flow Fraction
+  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
+  ,                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+  No,                                     !- Account for Dedicated Outdoor Air System
+  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
+  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
 OS:ZoneHVAC:EquipmentList,
   {c5b6f7e4-89ba-43d6-afed-552d25715c72}, ! Handle
@@ -1709,6 +1793,18 @@ OS:ZoneHVAC:EquipmentList,
   {746353ea-80d2-4c4c-aad0-966818717242}, ! Zone Equipment 1
   1,                                      ! Zone Equipment Cooling Sequence 1
   1;                                      ! Zone Equipment Heating or No-Load Sequence 1
+
+OS:PortList,
+  {c309e721-50b9-4b46-83f4-0d8de5751ddd}, !- Handle
+  Port List 15,                           !- Name
+  {26012911-b228-4f6c-a348-92030b25a361}, !- HVAC Component
+  {2128022e-c31b-4c00-b056-954e38f25b15}; !- Port 1
+
+OS:PortList,
+  {12a604ff-95b7-41af-9596-b6d2feecf9e0}, !- Handle
+  Port List 16,                           !- Name
+  {26012911-b228-4f6c-a348-92030b25a361}, !- HVAC Component
+  {bf51e6fb-fb9e-4cab-93bb-b2ef832d0092}; !- Port 1
 
 OS:ThermalZone,
   {26012911-b228-4f6c-a348-92030b25a361}, ! Handle
@@ -1747,37 +1843,35 @@ OS:Connection,
   {5c25c82f-e187-4639-be29-6e3e3bb0f57b}, ! Target Object
   2;                                      ! Inlet Port
 
-OS:PortList,
-  {c309e721-50b9-4b46-83f4-0d8de5751ddd}, ! Handle
-  Port List 15,                           ! Name
-  {2128022e-c31b-4c00-b056-954e38f25b15}; ! Port 1
-
-OS:PortList,
-  {12a604ff-95b7-41af-9596-b6d2feecf9e0}, ! Handle
-  Port List 16,                           ! Name
-  {bf51e6fb-fb9e-4cab-93bb-b2ef832d0092}; ! Port 1
-
 OS:Sizing:Zone,
-  {215ed1ee-3898-4fe3-94b9-6b4aeb4b9d68}, ! Handle
-  {26012911-b228-4f6c-a348-92030b25a361}, ! Zone or ZoneList Name
-  14,                                     ! Zone Cooling Design Supply Air Temperature {C}
-  40,                                     ! Zone Heating Design Supply Air Temperature {C}
-  0.0085,                                 ! Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  0.008,                                  ! Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  ,                                       ! Zone Heating Sizing Factor
-  ,                                       ! Zone Cooling Sizing Factor
-  DesignDay,                              ! Cooling Design Air Flow Method
-  ,                                       ! Cooling Design Air Flow Rate {m3/s}
-  ,                                       ! Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Cooling Minimum Air Flow {m3/s}
-  ,                                       ! Cooling Minimum Air Flow Fraction
-  DesignDay,                              ! Heating Design Air Flow Method
-  ,                                       ! Heating Design Air Flow Rate {m3/s}
-  ,                                       ! Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Heating Maximum Air Flow {m3/s}
-  ,                                       ! Heating Maximum Air Flow Fraction
-  ,                                       ! Design Zone Air Distribution Effectiveness in Cooling Mode
-  ;                                       ! Design Zone Air Distribution Effectiveness in Heating Mode
+  {215ed1ee-3898-4fe3-94b9-6b4aeb4b9d68}, !- Handle
+  {26012911-b228-4f6c-a348-92030b25a361}, !- Zone or ZoneList Name
+  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
+  14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
+  40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
+  0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Zone Heating Sizing Factor
+  ,                                       !- Zone Cooling Sizing Factor
+  DesignDay,                              !- Cooling Design Air Flow Method
+  ,                                       !- Cooling Design Air Flow Rate {m3/s}
+  ,                                       !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Cooling Minimum Air Flow {m3/s}
+  ,                                       !- Cooling Minimum Air Flow Fraction
+  DesignDay,                              !- Heating Design Air Flow Method
+  ,                                       !- Heating Design Air Flow Rate {m3/s}
+  ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Heating Maximum Air Flow {m3/s}
+  ,                                       !- Heating Maximum Air Flow Fraction
+  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
+  ,                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+  No,                                     !- Account for Dedicated Outdoor Air System
+  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
+  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
 OS:ZoneHVAC:EquipmentList,
   {a548857e-396d-4092-b8d7-e3f93f547bd5}, ! Handle
@@ -1786,6 +1880,18 @@ OS:ZoneHVAC:EquipmentList,
   {26156f80-a6cb-4e09-b046-056747aaed8d}, ! Zone Equipment 1
   1,                                      ! Zone Equipment Cooling Sequence 1
   1;                                      ! Zone Equipment Heating or No-Load Sequence 1
+
+OS:PortList,
+  {e658589c-e3d0-4682-a7d6-cbf5476864bd}, !- Handle
+  Port List 17,                           !- Name
+  {c3623ed3-ae91-44cb-b0a0-7b36e3d2902d}, !- HVAC Component
+  {95f3219f-f05b-4753-b13a-da0ebf1c32c8}; !- Port 1
+
+OS:PortList,
+  {00b0056a-5cad-4981-8913-d333c443446e}, !- Handle
+  Port List 18,                           !- Name
+  {c3623ed3-ae91-44cb-b0a0-7b36e3d2902d}, !- HVAC Component
+  {e4c9887e-4f7c-4fe7-8e05-f8c2ce411771}; !- Port 1
 
 OS:ThermalZone,
   {c3623ed3-ae91-44cb-b0a0-7b36e3d2902d}, ! Handle
@@ -1824,37 +1930,35 @@ OS:Connection,
   {658ede7f-b1ea-4a2b-be18-8ac6f1e10615}, ! Target Object
   2;                                      ! Inlet Port
 
-OS:PortList,
-  {e658589c-e3d0-4682-a7d6-cbf5476864bd}, ! Handle
-  Port List 17,                           ! Name
-  {95f3219f-f05b-4753-b13a-da0ebf1c32c8}; ! Port 1
-
-OS:PortList,
-  {00b0056a-5cad-4981-8913-d333c443446e}, ! Handle
-  Port List 18,                           ! Name
-  {e4c9887e-4f7c-4fe7-8e05-f8c2ce411771}; ! Port 1
-
 OS:Sizing:Zone,
-  {f96f261c-2b57-423e-b757-6a57d7fd8c0f}, ! Handle
-  {c3623ed3-ae91-44cb-b0a0-7b36e3d2902d}, ! Zone or ZoneList Name
-  14,                                     ! Zone Cooling Design Supply Air Temperature {C}
-  40,                                     ! Zone Heating Design Supply Air Temperature {C}
-  0.0085,                                 ! Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  0.008,                                  ! Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  ,                                       ! Zone Heating Sizing Factor
-  ,                                       ! Zone Cooling Sizing Factor
-  DesignDay,                              ! Cooling Design Air Flow Method
-  ,                                       ! Cooling Design Air Flow Rate {m3/s}
-  ,                                       ! Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Cooling Minimum Air Flow {m3/s}
-  ,                                       ! Cooling Minimum Air Flow Fraction
-  DesignDay,                              ! Heating Design Air Flow Method
-  ,                                       ! Heating Design Air Flow Rate {m3/s}
-  ,                                       ! Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Heating Maximum Air Flow {m3/s}
-  ,                                       ! Heating Maximum Air Flow Fraction
-  ,                                       ! Design Zone Air Distribution Effectiveness in Cooling Mode
-  ;                                       ! Design Zone Air Distribution Effectiveness in Heating Mode
+  {f96f261c-2b57-423e-b757-6a57d7fd8c0f}, !- Handle
+  {c3623ed3-ae91-44cb-b0a0-7b36e3d2902d}, !- Zone or ZoneList Name
+  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
+  14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
+  40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
+  0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Zone Heating Sizing Factor
+  ,                                       !- Zone Cooling Sizing Factor
+  DesignDay,                              !- Cooling Design Air Flow Method
+  ,                                       !- Cooling Design Air Flow Rate {m3/s}
+  ,                                       !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Cooling Minimum Air Flow {m3/s}
+  ,                                       !- Cooling Minimum Air Flow Fraction
+  DesignDay,                              !- Heating Design Air Flow Method
+  ,                                       !- Heating Design Air Flow Rate {m3/s}
+  ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Heating Maximum Air Flow {m3/s}
+  ,                                       !- Heating Maximum Air Flow Fraction
+  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
+  ,                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+  No,                                     !- Account for Dedicated Outdoor Air System
+  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
+  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
 OS:ZoneHVAC:EquipmentList,
   {5c934590-1a47-4da8-88c2-5e14bb424ccd}, ! Handle
@@ -1863,6 +1967,18 @@ OS:ZoneHVAC:EquipmentList,
   {53da5bc4-9bf7-44b9-a8bc-ee12daf15d37}, ! Zone Equipment 1
   1,                                      ! Zone Equipment Cooling Sequence 1
   1;                                      ! Zone Equipment Heating or No-Load Sequence 1
+
+OS:PortList,
+  {da0a00b7-cf88-47ee-9d03-1b648e8b595a}, !- Handle
+  Port List 19,                           !- Name
+  {0ac29121-706b-44e9-b9e0-0445d25b0291}, !- HVAC Component
+  {8bff2c41-6dc6-4528-960d-68b5a4526fde}; !- Port 1
+
+OS:PortList,
+  {656cdceb-c182-4a8f-b60b-4e4775078409}, !- Handle
+  Port List 20,                           !- Name
+  {0ac29121-706b-44e9-b9e0-0445d25b0291}, !- HVAC Component
+  {fabfbf8f-367b-4a43-9b91-e1c90571323b}; !- Port 1
 
 OS:ThermalZone,
   {0ac29121-706b-44e9-b9e0-0445d25b0291}, ! Handle
@@ -1901,37 +2017,35 @@ OS:Connection,
   {28e0f421-2e8c-4987-a7e4-0392923e958d}, ! Target Object
   2;                                      ! Inlet Port
 
-OS:PortList,
-  {da0a00b7-cf88-47ee-9d03-1b648e8b595a}, ! Handle
-  Port List 19,                           ! Name
-  {8bff2c41-6dc6-4528-960d-68b5a4526fde}; ! Port 1
-
-OS:PortList,
-  {656cdceb-c182-4a8f-b60b-4e4775078409}, ! Handle
-  Port List 20,                           ! Name
-  {fabfbf8f-367b-4a43-9b91-e1c90571323b}; ! Port 1
-
 OS:Sizing:Zone,
-  {8a63f6d6-47f3-489d-a1b1-76c354b6ce26}, ! Handle
-  {0ac29121-706b-44e9-b9e0-0445d25b0291}, ! Zone or ZoneList Name
-  14,                                     ! Zone Cooling Design Supply Air Temperature {C}
-  40,                                     ! Zone Heating Design Supply Air Temperature {C}
-  0.0085,                                 ! Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  0.008,                                  ! Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
-  ,                                       ! Zone Heating Sizing Factor
-  ,                                       ! Zone Cooling Sizing Factor
-  DesignDay,                              ! Cooling Design Air Flow Method
-  ,                                       ! Cooling Design Air Flow Rate {m3/s}
-  ,                                       ! Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Cooling Minimum Air Flow {m3/s}
-  ,                                       ! Cooling Minimum Air Flow Fraction
-  DesignDay,                              ! Heating Design Air Flow Method
-  ,                                       ! Heating Design Air Flow Rate {m3/s}
-  ,                                       ! Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-  ,                                       ! Heating Maximum Air Flow {m3/s}
-  ,                                       ! Heating Maximum Air Flow Fraction
-  ,                                       ! Design Zone Air Distribution Effectiveness in Cooling Mode
-  ;                                       ! Design Zone Air Distribution Effectiveness in Heating Mode
+  {8a63f6d6-47f3-489d-a1b1-76c354b6ce26}, !- Handle
+  {0ac29121-706b-44e9-b9e0-0445d25b0291}, !- Zone or ZoneList Name
+  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
+  14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
+  40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
+  0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Zone Heating Sizing Factor
+  ,                                       !- Zone Cooling Sizing Factor
+  DesignDay,                              !- Cooling Design Air Flow Method
+  ,                                       !- Cooling Design Air Flow Rate {m3/s}
+  ,                                       !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Cooling Minimum Air Flow {m3/s}
+  ,                                       !- Cooling Minimum Air Flow Fraction
+  DesignDay,                              !- Heating Design Air Flow Method
+  ,                                       !- Heating Design Air Flow Rate {m3/s}
+  ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Heating Maximum Air Flow {m3/s}
+  ,                                       !- Heating Maximum Air Flow Fraction
+  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
+  ,                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+  No,                                     !- Account for Dedicated Outdoor Air System
+  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
+  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
 OS:ZoneHVAC:EquipmentList,
   {380d0f5a-ebc6-4132-8142-f8f61cf2528a}, ! Handle
@@ -1953,10 +2067,10 @@ OS:SubSurface,
   ,                                       ! Frame and Divider Name
   ,                                       ! Multiplier
   ,                                       ! Number of Vertices
-  0.0254, 0, 2.60081321311226,            ! X,Y,Z Vertex 1 {m}
-  0.0254, 0, 1,                           ! X,Y,Z Vertex 2 {m}
-  99.9746, 0, 1,                          ! X,Y,Z Vertex 3 {m}
-  99.9746, 0, 2.60081321311226;           ! X,Y,Z Vertex 4 {m}
+  0.0254, 0, 2.60081321311226,            !- X,Y,Z Vertex 1 {m}
+  0.0254, 0, 1,                           !- X,Y,Z Vertex 2 {m}
+  99.9746, 0, 1,                          !- X,Y,Z Vertex 3 {m}
+  99.9746, 0, 2.60081321311226;           !- X,Y,Z Vertex 4 {m}
 
 OS:SubSurface,
   {c832ee0d-1e9a-48e9-84b6-7589ef0244e3}, ! Handle
@@ -1970,10 +2084,10 @@ OS:SubSurface,
   ,                                       ! Frame and Divider Name
   ,                                       ! Multiplier
   ,                                       ! Number of Vertices
-  96.9746, 3, 2.60081321311226,           ! X,Y,Z Vertex 1 {m}
-  96.9746, 3, 1,                          ! X,Y,Z Vertex 2 {m}
-  -2.97460000000001, 3, 1,                ! X,Y,Z Vertex 3 {m}
-  -2.97460000000001, 3, 2.60081321311226; ! X,Y,Z Vertex 4 {m}
+  96.9746, 3, 2.60081321311226,           !- X,Y,Z Vertex 1 {m}
+  96.9746, 3, 1,                          !- X,Y,Z Vertex 2 {m}
+  -2.97460000000001, 3, 1,                !- X,Y,Z Vertex 3 {m}
+  -2.97460000000001, 3, 2.60081321311226; !- X,Y,Z Vertex 4 {m}
 
 OS:SubSurface,
   {a78e743c-d027-4cb5-8f5b-db5392c490e2}, ! Handle
@@ -1987,10 +2101,10 @@ OS:SubSurface,
   ,                                       ! Frame and Divider Name
   ,                                       ! Multiplier
   ,                                       ! Number of Vertices
-  0, 49.9746, 2.60162725328934,           ! X,Y,Z Vertex 1 {m}
-  0, 49.9746, 1,                          ! X,Y,Z Vertex 2 {m}
-  0, 0.0254000000000048, 1,               ! X,Y,Z Vertex 3 {m}
-  0, 0.0254000000000048, 2.60162725328934; ! X,Y,Z Vertex 4 {m}
+  0, 49.9746, 2.60162725328934,           !- X,Y,Z Vertex 1 {m}
+  0, 49.9746, 1,                          !- X,Y,Z Vertex 2 {m}
+  0, 0.0254000000000048, 1,               !- X,Y,Z Vertex 3 {m}
+  0, 0.0254000000000048, 2.60162725328934; !- X,Y,Z Vertex 4 {m}
 
 OS:SubSurface,
   {fe3d1897-553f-4168-be81-80aa3654f520}, ! Handle
@@ -2004,10 +2118,10 @@ OS:SubSurface,
   ,                                       ! Frame and Divider Name
   ,                                       ! Multiplier
   ,                                       ! Number of Vertices
-  0, 49.9746, 2.60162725328934,           ! X,Y,Z Vertex 1 {m}
-  0, 49.9746, 1,                          ! X,Y,Z Vertex 2 {m}
-  0, 0.0254000000000048, 1,               ! X,Y,Z Vertex 3 {m}
-  0, 0.0254000000000048, 2.60162725328934; ! X,Y,Z Vertex 4 {m}
+  0, 49.9746, 2.60162725328934,           !- X,Y,Z Vertex 1 {m}
+  0, 49.9746, 1,                          !- X,Y,Z Vertex 2 {m}
+  0, 0.0254000000000048, 1,               !- X,Y,Z Vertex 3 {m}
+  0, 0.0254000000000048, 2.60162725328934; !- X,Y,Z Vertex 4 {m}
 
 OS:SubSurface,
   {76c9dd4d-66e5-4f08-95f5-6ffad7298ad8}, ! Handle
@@ -2021,10 +2135,10 @@ OS:SubSurface,
   ,                                       ! Frame and Divider Name
   ,                                       ! Multiplier
   ,                                       ! Number of Vertices
-  3, -2.9746, 2.60162725328934,           ! X,Y,Z Vertex 1 {m}
-  3, -2.9746, 1,                          ! X,Y,Z Vertex 2 {m}
-  3, 46.9746, 1,                          ! X,Y,Z Vertex 3 {m}
-  3, 46.9746, 2.60162725328934;           ! X,Y,Z Vertex 4 {m}
+  3, -2.9746, 2.60162725328934,           !- X,Y,Z Vertex 1 {m}
+  3, -2.9746, 1,                          !- X,Y,Z Vertex 2 {m}
+  3, 46.9746, 1,                          !- X,Y,Z Vertex 3 {m}
+  3, 46.9746, 2.60162725328934;           !- X,Y,Z Vertex 4 {m}
 
 OS:SubSurface,
   {7ef06153-e255-4305-bc2b-3510d67334c1}, ! Handle
@@ -2038,10 +2152,10 @@ OS:SubSurface,
   ,                                       ! Frame and Divider Name
   ,                                       ! Multiplier
   ,                                       ! Number of Vertices
-  96.9746, 3, 2.60081321311226,           ! X,Y,Z Vertex 1 {m}
-  96.9746, 3, 1,                          ! X,Y,Z Vertex 2 {m}
-  -2.97460000000001, 3, 1,                ! X,Y,Z Vertex 3 {m}
-  -2.97460000000001, 3, 2.60081321311226; ! X,Y,Z Vertex 4 {m}
+  96.9746, 3, 2.60081321311226,           !- X,Y,Z Vertex 1 {m}
+  96.9746, 3, 1,                          !- X,Y,Z Vertex 2 {m}
+  -2.97460000000001, 3, 1,                !- X,Y,Z Vertex 3 {m}
+  -2.97460000000001, 3, 2.60081321311226; !- X,Y,Z Vertex 4 {m}
 
 OS:SubSurface,
   {3563cc5e-fde9-4aba-9745-eb509d7b3951}, ! Handle
@@ -2055,10 +2169,10 @@ OS:SubSurface,
   ,                                       ! Frame and Divider Name
   ,                                       ! Multiplier
   ,                                       ! Number of Vertices
-  3, -2.9746, 2.60162725328934,           ! X,Y,Z Vertex 1 {m}
-  3, -2.9746, 1,                          ! X,Y,Z Vertex 2 {m}
-  3, 46.9746, 1,                          ! X,Y,Z Vertex 3 {m}
-  3, 46.9746, 2.60162725328934;           ! X,Y,Z Vertex 4 {m}
+  3, -2.9746, 2.60162725328934,           !- X,Y,Z Vertex 1 {m}
+  3, -2.9746, 1,                          !- X,Y,Z Vertex 2 {m}
+  3, 46.9746, 1,                          !- X,Y,Z Vertex 3 {m}
+  3, 46.9746, 2.60162725328934;           !- X,Y,Z Vertex 4 {m}
 
 OS:SubSurface,
   {aebca395-2131-4e1f-9204-faf8c1605aeb}, ! Handle
@@ -2072,10 +2186,10 @@ OS:SubSurface,
   ,                                       ! Frame and Divider Name
   ,                                       ! Multiplier
   ,                                       ! Number of Vertices
-  0.0254, 0, 2.60081321311226,            ! X,Y,Z Vertex 1 {m}
-  0.0254, 0, 1,                           ! X,Y,Z Vertex 2 {m}
-  99.9746, 0, 1,                          ! X,Y,Z Vertex 3 {m}
-  99.9746, 0, 2.60081321311226;           ! X,Y,Z Vertex 4 {m}
+  0.0254, 0, 2.60081321311226,            !- X,Y,Z Vertex 1 {m}
+  0.0254, 0, 1,                           !- X,Y,Z Vertex 2 {m}
+  99.9746, 0, 1,                          !- X,Y,Z Vertex 3 {m}
+  99.9746, 0, 2.60081321311226;           !- X,Y,Z Vertex 4 {m}
 
 OS:Schedule:Ruleset,
   {60c10503-0721-4909-bdc4-a8acd51e79dd}, ! Handle
@@ -2279,28 +2393,29 @@ OS:Curve:Quadratic,
   1;                                      ! Maximum Value of x {BasedOnField A2}
 
 OS:Coil:Heating:DX:SingleSpeed,
-  {932a3d04-b80c-440e-8530-4b2ee21f5fa8}, ! Handle
-  Coil Heating DX Single Speed 1,         ! Name
-  {60c10503-0721-4909-bdc4-a8acd51e79dd}, ! Availability Schedule Name
-  Autosize,                               ! Rated Total Heating Capacity {W}
-  5,                                      ! Rated COP {W/W}
-  Autosize,                               ! Rated Air Flow Rate {m3/s}
-  ,                                       ! Air Inlet Node Name
-  ,                                       ! Air Outlet Node Name
-  {59ea4b60-ecb9-4319-b97d-f64d481b2dca}, ! Total Heating Capacity Function of Temperature Curve Name
-  {89f55896-d1da-4d2c-8de2-3700d67abb05}, ! Total Heating Capacity Function of Flow Fraction Curve Name
-  {2ff45c53-241f-4a95-b8c6-0c1d5eab3d42}, ! Energy Input Ratio Function of Temperature Curve Name
-  {11851df5-160a-447c-b91f-9cd55a27f12e}, ! Energy Input Ratio Function of Flow Fraction Curve Name
-  {01d0a786-0767-4453-b081-baf4c0923271}, ! Part Load Fraction Correlation Curve Name
-  ,                                       ! Defrost Energy Input Ratio Function of Temperature Curve Name
-  ,                                       ! Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
-  ,                                       ! Crankcase Heater Capacity {W}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
-  Resistive,                              ! Defrost Strategy
-  Timed,                                  ! Defrost Control
-  0.166667,                               ! Defrost Time Period Fraction
-  2000;                                   ! Resistive Defrost Heater Capacity {W}
+  {932a3d04-b80c-440e-8530-4b2ee21f5fa8}, !- Handle
+  Coil Heating DX Single Speed 1,         !- Name
+  {60c10503-0721-4909-bdc4-a8acd51e79dd}, !- Availability Schedule Name
+  Autosize,                               !- Rated Total Heating Capacity {W}
+  5,                                      !- Rated COP {W/W}
+  Autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {59ea4b60-ecb9-4319-b97d-f64d481b2dca}, !- Total Heating Capacity Function of Temperature Curve Name
+  {89f55896-d1da-4d2c-8de2-3700d67abb05}, !- Total Heating Capacity Function of Flow Fraction Curve Name
+  {2ff45c53-241f-4a95-b8c6-0c1d5eab3d42}, !- Energy Input Ratio Function of Temperature Curve Name
+  {11851df5-160a-447c-b91f-9cd55a27f12e}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {01d0a786-0767-4453-b081-baf4c0923271}, !- Part Load Fraction Correlation Curve Name
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  ,                                       !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  ,                                       !- Crankcase Heater Capacity {W}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  Resistive,                              !- Defrost Strategy
+  Timed,                                  !- Defrost Control
+  0.166667,                               !- Defrost Time Period Fraction
+  2000;                                   !- Resistive Defrost Heater Capacity {W}
 
 OS:ZoneHVAC:PackagedTerminalHeatPump,
   {9b0a8a22-0e4e-429c-80a0-b1d9c1d072d6}, ! Handle
@@ -2566,28 +2681,29 @@ OS:Curve:Quadratic,
   1;                                      ! Maximum Value of x {BasedOnField A2}
 
 OS:Coil:Heating:DX:SingleSpeed,
-  {051f866b-fefe-4df4-b50e-645030661789}, ! Handle
-  Coil Heating DX Single Speed 2,         ! Name
-  {55acccff-31c7-4455-a4d6-33f07fe7e4a6}, ! Availability Schedule Name
-  Autosize,                               ! Rated Total Heating Capacity {W}
-  5,                                      ! Rated COP {W/W}
-  Autosize,                               ! Rated Air Flow Rate {m3/s}
-  ,                                       ! Air Inlet Node Name
-  ,                                       ! Air Outlet Node Name
-  {abf578d0-6103-46fc-8aa2-0a7ae23fd78a}, ! Total Heating Capacity Function of Temperature Curve Name
-  {7b1134c9-5d16-4a73-8b52-d66821a9696e}, ! Total Heating Capacity Function of Flow Fraction Curve Name
-  {1912d207-acce-447a-928f-86912bc637e5}, ! Energy Input Ratio Function of Temperature Curve Name
-  {cd3d6739-0fc3-46bf-abc4-19e05324273c}, ! Energy Input Ratio Function of Flow Fraction Curve Name
-  {932e2355-c2ad-407c-b32e-53df9a59f40c}, ! Part Load Fraction Correlation Curve Name
-  ,                                       ! Defrost Energy Input Ratio Function of Temperature Curve Name
-  ,                                       ! Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
-  ,                                       ! Crankcase Heater Capacity {W}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
-  Resistive,                              ! Defrost Strategy
-  Timed,                                  ! Defrost Control
-  0.166667,                               ! Defrost Time Period Fraction
-  2000;                                   ! Resistive Defrost Heater Capacity {W}
+  {051f866b-fefe-4df4-b50e-645030661789}, !- Handle
+  Coil Heating DX Single Speed 2,         !- Name
+  {55acccff-31c7-4455-a4d6-33f07fe7e4a6}, !- Availability Schedule Name
+  Autosize,                               !- Rated Total Heating Capacity {W}
+  5,                                      !- Rated COP {W/W}
+  Autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {abf578d0-6103-46fc-8aa2-0a7ae23fd78a}, !- Total Heating Capacity Function of Temperature Curve Name
+  {7b1134c9-5d16-4a73-8b52-d66821a9696e}, !- Total Heating Capacity Function of Flow Fraction Curve Name
+  {1912d207-acce-447a-928f-86912bc637e5}, !- Energy Input Ratio Function of Temperature Curve Name
+  {cd3d6739-0fc3-46bf-abc4-19e05324273c}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {932e2355-c2ad-407c-b32e-53df9a59f40c}, !- Part Load Fraction Correlation Curve Name
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  ,                                       !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  ,                                       !- Crankcase Heater Capacity {W}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  Resistive,                              !- Defrost Strategy
+  Timed,                                  !- Defrost Control
+  0.166667,                               !- Defrost Time Period Fraction
+  2000;                                   !- Resistive Defrost Heater Capacity {W}
 
 OS:ZoneHVAC:PackagedTerminalHeatPump,
   {26156f80-a6cb-4e09-b046-056747aaed8d}, ! Handle
@@ -2853,28 +2969,29 @@ OS:Curve:Quadratic,
   1;                                      ! Maximum Value of x {BasedOnField A2}
 
 OS:Coil:Heating:DX:SingleSpeed,
-  {6caf7579-e0ac-47f9-963a-856952639c97}, ! Handle
-  Coil Heating DX Single Speed 3,         ! Name
-  {24434ee6-1104-4ae0-aef5-bd2961dba920}, ! Availability Schedule Name
-  Autosize,                               ! Rated Total Heating Capacity {W}
-  5,                                      ! Rated COP {W/W}
-  Autosize,                               ! Rated Air Flow Rate {m3/s}
-  ,                                       ! Air Inlet Node Name
-  ,                                       ! Air Outlet Node Name
-  {a8027ca9-39ac-468e-8933-4b247828b9d6}, ! Total Heating Capacity Function of Temperature Curve Name
-  {cc61fa7e-4dcd-40bf-9a16-9375d54114b5}, ! Total Heating Capacity Function of Flow Fraction Curve Name
-  {8becf73e-7b05-42c9-abb8-6c683bea817a}, ! Energy Input Ratio Function of Temperature Curve Name
-  {8b6f3315-37fe-481f-a725-729c2e81e177}, ! Energy Input Ratio Function of Flow Fraction Curve Name
-  {9c34b5fd-29e0-41fc-bb13-a8cb45881e64}, ! Part Load Fraction Correlation Curve Name
-  ,                                       ! Defrost Energy Input Ratio Function of Temperature Curve Name
-  ,                                       ! Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
-  ,                                       ! Crankcase Heater Capacity {W}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
-  Resistive,                              ! Defrost Strategy
-  Timed,                                  ! Defrost Control
-  0.166667,                               ! Defrost Time Period Fraction
-  2000;                                   ! Resistive Defrost Heater Capacity {W}
+  {6caf7579-e0ac-47f9-963a-856952639c97}, !- Handle
+  Coil Heating DX Single Speed 3,         !- Name
+  {24434ee6-1104-4ae0-aef5-bd2961dba920}, !- Availability Schedule Name
+  Autosize,                               !- Rated Total Heating Capacity {W}
+  5,                                      !- Rated COP {W/W}
+  Autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {a8027ca9-39ac-468e-8933-4b247828b9d6}, !- Total Heating Capacity Function of Temperature Curve Name
+  {cc61fa7e-4dcd-40bf-9a16-9375d54114b5}, !- Total Heating Capacity Function of Flow Fraction Curve Name
+  {8becf73e-7b05-42c9-abb8-6c683bea817a}, !- Energy Input Ratio Function of Temperature Curve Name
+  {8b6f3315-37fe-481f-a725-729c2e81e177}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {9c34b5fd-29e0-41fc-bb13-a8cb45881e64}, !- Part Load Fraction Correlation Curve Name
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  ,                                       !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  ,                                       !- Crankcase Heater Capacity {W}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  Resistive,                              !- Defrost Strategy
+  Timed,                                  !- Defrost Control
+  0.166667,                               !- Defrost Time Period Fraction
+  2000;                                   !- Resistive Defrost Heater Capacity {W}
 
 OS:ZoneHVAC:PackagedTerminalHeatPump,
   {fcd2910f-00b5-4cf0-b6f0-24b38e68494c}, ! Handle
@@ -3140,28 +3257,29 @@ OS:Curve:Quadratic,
   1;                                      ! Maximum Value of x {BasedOnField A2}
 
 OS:Coil:Heating:DX:SingleSpeed,
-  {39e17ee7-b13a-4d17-af8a-fa0ab1d20dbe}, ! Handle
-  Coil Heating DX Single Speed 4,         ! Name
-  {84534a43-c927-4aa1-bf0f-d8dee49b9945}, ! Availability Schedule Name
-  Autosize,                               ! Rated Total Heating Capacity {W}
-  5,                                      ! Rated COP {W/W}
-  Autosize,                               ! Rated Air Flow Rate {m3/s}
-  ,                                       ! Air Inlet Node Name
-  ,                                       ! Air Outlet Node Name
-  {fc1ab529-82a2-4447-ab5e-bcccec04fcad}, ! Total Heating Capacity Function of Temperature Curve Name
-  {5a7ec5fb-d543-436e-87d2-6c8d51fd8d4c}, ! Total Heating Capacity Function of Flow Fraction Curve Name
-  {17bbb745-7bf7-44ba-a053-8a90f05ddca5}, ! Energy Input Ratio Function of Temperature Curve Name
-  {1fd0156e-2c5d-4409-8a52-ebe845f28943}, ! Energy Input Ratio Function of Flow Fraction Curve Name
-  {286dbe67-881a-4b77-b200-3f75a157ad19}, ! Part Load Fraction Correlation Curve Name
-  ,                                       ! Defrost Energy Input Ratio Function of Temperature Curve Name
-  ,                                       ! Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
-  ,                                       ! Crankcase Heater Capacity {W}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
-  Resistive,                              ! Defrost Strategy
-  Timed,                                  ! Defrost Control
-  0.166667,                               ! Defrost Time Period Fraction
-  2000;                                   ! Resistive Defrost Heater Capacity {W}
+  {39e17ee7-b13a-4d17-af8a-fa0ab1d20dbe}, !- Handle
+  Coil Heating DX Single Speed 4,         !- Name
+  {84534a43-c927-4aa1-bf0f-d8dee49b9945}, !- Availability Schedule Name
+  Autosize,                               !- Rated Total Heating Capacity {W}
+  5,                                      !- Rated COP {W/W}
+  Autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {fc1ab529-82a2-4447-ab5e-bcccec04fcad}, !- Total Heating Capacity Function of Temperature Curve Name
+  {5a7ec5fb-d543-436e-87d2-6c8d51fd8d4c}, !- Total Heating Capacity Function of Flow Fraction Curve Name
+  {17bbb745-7bf7-44ba-a053-8a90f05ddca5}, !- Energy Input Ratio Function of Temperature Curve Name
+  {1fd0156e-2c5d-4409-8a52-ebe845f28943}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {286dbe67-881a-4b77-b200-3f75a157ad19}, !- Part Load Fraction Correlation Curve Name
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  ,                                       !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  ,                                       !- Crankcase Heater Capacity {W}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  Resistive,                              !- Defrost Strategy
+  Timed,                                  !- Defrost Control
+  0.166667,                               !- Defrost Time Period Fraction
+  2000;                                   !- Resistive Defrost Heater Capacity {W}
 
 OS:ZoneHVAC:PackagedTerminalHeatPump,
   {0bcc454c-bb91-40da-9f22-bdee18049071}, ! Handle
@@ -3427,28 +3545,29 @@ OS:Curve:Quadratic,
   1;                                      ! Maximum Value of x {BasedOnField A2}
 
 OS:Coil:Heating:DX:SingleSpeed,
-  {252ebad2-2a35-49de-b55f-710ccdec36e0}, ! Handle
-  Coil Heating DX Single Speed 5,         ! Name
-  {b8299ce9-2b0d-4b40-9b4f-d96c443cdd2a}, ! Availability Schedule Name
-  Autosize,                               ! Rated Total Heating Capacity {W}
-  5,                                      ! Rated COP {W/W}
-  Autosize,                               ! Rated Air Flow Rate {m3/s}
-  ,                                       ! Air Inlet Node Name
-  ,                                       ! Air Outlet Node Name
-  {3dc5a8a7-70b3-48fc-ba8b-4769e936f414}, ! Total Heating Capacity Function of Temperature Curve Name
-  {1208d3d5-7353-43a1-86b6-8b1e2e0083e7}, ! Total Heating Capacity Function of Flow Fraction Curve Name
-  {33e17421-42d2-452e-a704-3a1737452f71}, ! Energy Input Ratio Function of Temperature Curve Name
-  {53e6180a-a0d1-4f86-9ff8-5f48a7179dde}, ! Energy Input Ratio Function of Flow Fraction Curve Name
-  {722cf1c8-b97d-45f8-bd0f-93811e446d25}, ! Part Load Fraction Correlation Curve Name
-  ,                                       ! Defrost Energy Input Ratio Function of Temperature Curve Name
-  ,                                       ! Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
-  ,                                       ! Crankcase Heater Capacity {W}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
-  Resistive,                              ! Defrost Strategy
-  Timed,                                  ! Defrost Control
-  0.166667,                               ! Defrost Time Period Fraction
-  2000;                                   ! Resistive Defrost Heater Capacity {W}
+  {252ebad2-2a35-49de-b55f-710ccdec36e0}, !- Handle
+  Coil Heating DX Single Speed 5,         !- Name
+  {b8299ce9-2b0d-4b40-9b4f-d96c443cdd2a}, !- Availability Schedule Name
+  Autosize,                               !- Rated Total Heating Capacity {W}
+  5,                                      !- Rated COP {W/W}
+  Autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {3dc5a8a7-70b3-48fc-ba8b-4769e936f414}, !- Total Heating Capacity Function of Temperature Curve Name
+  {1208d3d5-7353-43a1-86b6-8b1e2e0083e7}, !- Total Heating Capacity Function of Flow Fraction Curve Name
+  {33e17421-42d2-452e-a704-3a1737452f71}, !- Energy Input Ratio Function of Temperature Curve Name
+  {53e6180a-a0d1-4f86-9ff8-5f48a7179dde}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {722cf1c8-b97d-45f8-bd0f-93811e446d25}, !- Part Load Fraction Correlation Curve Name
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  ,                                       !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  ,                                       !- Crankcase Heater Capacity {W}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  Resistive,                              !- Defrost Strategy
+  Timed,                                  !- Defrost Control
+  0.166667,                               !- Defrost Time Period Fraction
+  2000;                                   !- Resistive Defrost Heater Capacity {W}
 
 OS:ZoneHVAC:PackagedTerminalHeatPump,
   {a17e5bab-df65-47e3-ab94-86748ed58418}, ! Handle
@@ -3714,28 +3833,29 @@ OS:Curve:Quadratic,
   1;                                      ! Maximum Value of x {BasedOnField A2}
 
 OS:Coil:Heating:DX:SingleSpeed,
-  {87d1cd11-5779-47a6-854e-2851fc25dc31}, ! Handle
-  Coil Heating DX Single Speed 6,         ! Name
-  {29e85e52-23b4-4965-bfdc-7a9ff5092693}, ! Availability Schedule Name
-  Autosize,                               ! Rated Total Heating Capacity {W}
-  5,                                      ! Rated COP {W/W}
-  Autosize,                               ! Rated Air Flow Rate {m3/s}
-  ,                                       ! Air Inlet Node Name
-  ,                                       ! Air Outlet Node Name
-  {e4cc0cf5-b403-44bb-9078-534e56bf6d0c}, ! Total Heating Capacity Function of Temperature Curve Name
-  {19f69ae8-cb64-4cba-a6b4-322cd6933f49}, ! Total Heating Capacity Function of Flow Fraction Curve Name
-  {3b3d3b3f-e406-43e0-9402-ade7891bbbb7}, ! Energy Input Ratio Function of Temperature Curve Name
-  {9331a315-e247-49ea-8dcd-33c3c7614988}, ! Energy Input Ratio Function of Flow Fraction Curve Name
-  {c24fabcb-52aa-469d-8995-cf56f798b1e7}, ! Part Load Fraction Correlation Curve Name
-  ,                                       ! Defrost Energy Input Ratio Function of Temperature Curve Name
-  ,                                       ! Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
-  ,                                       ! Crankcase Heater Capacity {W}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
-  Resistive,                              ! Defrost Strategy
-  Timed,                                  ! Defrost Control
-  0.166667,                               ! Defrost Time Period Fraction
-  2000;                                   ! Resistive Defrost Heater Capacity {W}
+  {87d1cd11-5779-47a6-854e-2851fc25dc31}, !- Handle
+  Coil Heating DX Single Speed 6,         !- Name
+  {29e85e52-23b4-4965-bfdc-7a9ff5092693}, !- Availability Schedule Name
+  Autosize,                               !- Rated Total Heating Capacity {W}
+  5,                                      !- Rated COP {W/W}
+  Autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {e4cc0cf5-b403-44bb-9078-534e56bf6d0c}, !- Total Heating Capacity Function of Temperature Curve Name
+  {19f69ae8-cb64-4cba-a6b4-322cd6933f49}, !- Total Heating Capacity Function of Flow Fraction Curve Name
+  {3b3d3b3f-e406-43e0-9402-ade7891bbbb7}, !- Energy Input Ratio Function of Temperature Curve Name
+  {9331a315-e247-49ea-8dcd-33c3c7614988}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {c24fabcb-52aa-469d-8995-cf56f798b1e7}, !- Part Load Fraction Correlation Curve Name
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  ,                                       !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  ,                                       !- Crankcase Heater Capacity {W}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  Resistive,                              !- Defrost Strategy
+  Timed,                                  !- Defrost Control
+  0.166667,                               !- Defrost Time Period Fraction
+  2000;                                   !- Resistive Defrost Heater Capacity {W}
 
 OS:ZoneHVAC:PackagedTerminalHeatPump,
   {d12b1840-6ae2-40d7-a0ec-c900a0ce4a2b}, ! Handle
@@ -4001,28 +4121,29 @@ OS:Curve:Quadratic,
   1;                                      ! Maximum Value of x {BasedOnField A2}
 
 OS:Coil:Heating:DX:SingleSpeed,
-  {406e3dcc-8fcc-4774-afad-7d0a19fbb482}, ! Handle
-  Coil Heating DX Single Speed 7,         ! Name
-  {141ca3b5-23d6-4617-af83-3fe5aef0d55c}, ! Availability Schedule Name
-  Autosize,                               ! Rated Total Heating Capacity {W}
-  5,                                      ! Rated COP {W/W}
-  Autosize,                               ! Rated Air Flow Rate {m3/s}
-  ,                                       ! Air Inlet Node Name
-  ,                                       ! Air Outlet Node Name
-  {ba978956-42c2-4a99-ab78-0d9267ce3616}, ! Total Heating Capacity Function of Temperature Curve Name
-  {ccc43df2-f792-4d65-81a2-a34ed399cd71}, ! Total Heating Capacity Function of Flow Fraction Curve Name
-  {e195d85a-1f73-479d-a9ff-b7e85740db40}, ! Energy Input Ratio Function of Temperature Curve Name
-  {13f29ef7-67d3-4b43-a488-b447ffdb677d}, ! Energy Input Ratio Function of Flow Fraction Curve Name
-  {f528d0bf-9516-4811-9f4b-3b405ed4e5bf}, ! Part Load Fraction Correlation Curve Name
-  ,                                       ! Defrost Energy Input Ratio Function of Temperature Curve Name
-  ,                                       ! Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
-  ,                                       ! Crankcase Heater Capacity {W}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
-  Resistive,                              ! Defrost Strategy
-  Timed,                                  ! Defrost Control
-  0.166667,                               ! Defrost Time Period Fraction
-  2000;                                   ! Resistive Defrost Heater Capacity {W}
+  {406e3dcc-8fcc-4774-afad-7d0a19fbb482}, !- Handle
+  Coil Heating DX Single Speed 7,         !- Name
+  {141ca3b5-23d6-4617-af83-3fe5aef0d55c}, !- Availability Schedule Name
+  Autosize,                               !- Rated Total Heating Capacity {W}
+  5,                                      !- Rated COP {W/W}
+  Autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {ba978956-42c2-4a99-ab78-0d9267ce3616}, !- Total Heating Capacity Function of Temperature Curve Name
+  {ccc43df2-f792-4d65-81a2-a34ed399cd71}, !- Total Heating Capacity Function of Flow Fraction Curve Name
+  {e195d85a-1f73-479d-a9ff-b7e85740db40}, !- Energy Input Ratio Function of Temperature Curve Name
+  {13f29ef7-67d3-4b43-a488-b447ffdb677d}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {f528d0bf-9516-4811-9f4b-3b405ed4e5bf}, !- Part Load Fraction Correlation Curve Name
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  ,                                       !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  ,                                       !- Crankcase Heater Capacity {W}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  Resistive,                              !- Defrost Strategy
+  Timed,                                  !- Defrost Control
+  0.166667,                               !- Defrost Time Period Fraction
+  2000;                                   !- Resistive Defrost Heater Capacity {W}
 
 OS:ZoneHVAC:PackagedTerminalHeatPump,
   {53da5bc4-9bf7-44b9-a8bc-ee12daf15d37}, ! Handle
@@ -4288,28 +4409,29 @@ OS:Curve:Quadratic,
   1;                                      ! Maximum Value of x {BasedOnField A2}
 
 OS:Coil:Heating:DX:SingleSpeed,
-  {a3d394a9-745d-47b4-8958-d65c95067a63}, ! Handle
-  Coil Heating DX Single Speed 8,         ! Name
-  {f069a1ef-b267-4773-bc18-42f5fdce08ea}, ! Availability Schedule Name
-  Autosize,                               ! Rated Total Heating Capacity {W}
-  5,                                      ! Rated COP {W/W}
-  Autosize,                               ! Rated Air Flow Rate {m3/s}
-  ,                                       ! Air Inlet Node Name
-  ,                                       ! Air Outlet Node Name
-  {0df9f56c-2020-433d-90a1-86aabf3beec7}, ! Total Heating Capacity Function of Temperature Curve Name
-  {70e30422-0944-4c5c-8ff6-3feeb960d11e}, ! Total Heating Capacity Function of Flow Fraction Curve Name
-  {f13e9515-931e-425a-a48f-58cc138114f9}, ! Energy Input Ratio Function of Temperature Curve Name
-  {f0334a9f-9751-44c5-b5e2-70c71f6b07b5}, ! Energy Input Ratio Function of Flow Fraction Curve Name
-  {c0f76134-5c8f-4934-840d-b30432bfbd16}, ! Part Load Fraction Correlation Curve Name
-  ,                                       ! Defrost Energy Input Ratio Function of Temperature Curve Name
-  ,                                       ! Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
-  ,                                       ! Crankcase Heater Capacity {W}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
-  Resistive,                              ! Defrost Strategy
-  Timed,                                  ! Defrost Control
-  0.166667,                               ! Defrost Time Period Fraction
-  2000;                                   ! Resistive Defrost Heater Capacity {W}
+  {a3d394a9-745d-47b4-8958-d65c95067a63}, !- Handle
+  Coil Heating DX Single Speed 8,         !- Name
+  {f069a1ef-b267-4773-bc18-42f5fdce08ea}, !- Availability Schedule Name
+  Autosize,                               !- Rated Total Heating Capacity {W}
+  5,                                      !- Rated COP {W/W}
+  Autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {0df9f56c-2020-433d-90a1-86aabf3beec7}, !- Total Heating Capacity Function of Temperature Curve Name
+  {70e30422-0944-4c5c-8ff6-3feeb960d11e}, !- Total Heating Capacity Function of Flow Fraction Curve Name
+  {f13e9515-931e-425a-a48f-58cc138114f9}, !- Energy Input Ratio Function of Temperature Curve Name
+  {f0334a9f-9751-44c5-b5e2-70c71f6b07b5}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {c0f76134-5c8f-4934-840d-b30432bfbd16}, !- Part Load Fraction Correlation Curve Name
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  ,                                       !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  ,                                       !- Crankcase Heater Capacity {W}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  Resistive,                              !- Defrost Strategy
+  Timed,                                  !- Defrost Control
+  0.166667,                               !- Defrost Time Period Fraction
+  2000;                                   !- Resistive Defrost Heater Capacity {W}
 
 OS:ZoneHVAC:PackagedTerminalHeatPump,
   {746353ea-80d2-4c4c-aad0-966818717242}, ! Handle
@@ -4575,28 +4697,29 @@ OS:Curve:Quadratic,
   1;                                      ! Maximum Value of x {BasedOnField A2}
 
 OS:Coil:Heating:DX:SingleSpeed,
-  {32aadd11-d66a-4eb9-979c-00e2f5ccfc93}, ! Handle
-  Coil Heating DX Single Speed 9,         ! Name
-  {19c34ebe-99b3-45a5-a9c8-650a75e25a45}, ! Availability Schedule Name
-  Autosize,                               ! Rated Total Heating Capacity {W}
-  5,                                      ! Rated COP {W/W}
-  Autosize,                               ! Rated Air Flow Rate {m3/s}
-  ,                                       ! Air Inlet Node Name
-  ,                                       ! Air Outlet Node Name
-  {5a12f55a-4d5b-483a-99fd-9ddfa1b5e51b}, ! Total Heating Capacity Function of Temperature Curve Name
-  {b59ef33e-289d-4dc3-86b4-953d001c413d}, ! Total Heating Capacity Function of Flow Fraction Curve Name
-  {e457f46d-318d-42eb-888e-3607d351be04}, ! Energy Input Ratio Function of Temperature Curve Name
-  {d7db597c-67a3-4ce3-b224-7987d663f552}, ! Energy Input Ratio Function of Flow Fraction Curve Name
-  {0cf995b7-ea1f-4f4e-83e0-31a0777f0a2f}, ! Part Load Fraction Correlation Curve Name
-  ,                                       ! Defrost Energy Input Ratio Function of Temperature Curve Name
-  ,                                       ! Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
-  ,                                       ! Crankcase Heater Capacity {W}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
-  Resistive,                              ! Defrost Strategy
-  Timed,                                  ! Defrost Control
-  0.166667,                               ! Defrost Time Period Fraction
-  2000;                                   ! Resistive Defrost Heater Capacity {W}
+  {32aadd11-d66a-4eb9-979c-00e2f5ccfc93}, !- Handle
+  Coil Heating DX Single Speed 9,         !- Name
+  {19c34ebe-99b3-45a5-a9c8-650a75e25a45}, !- Availability Schedule Name
+  Autosize,                               !- Rated Total Heating Capacity {W}
+  5,                                      !- Rated COP {W/W}
+  Autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {5a12f55a-4d5b-483a-99fd-9ddfa1b5e51b}, !- Total Heating Capacity Function of Temperature Curve Name
+  {b59ef33e-289d-4dc3-86b4-953d001c413d}, !- Total Heating Capacity Function of Flow Fraction Curve Name
+  {e457f46d-318d-42eb-888e-3607d351be04}, !- Energy Input Ratio Function of Temperature Curve Name
+  {d7db597c-67a3-4ce3-b224-7987d663f552}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {0cf995b7-ea1f-4f4e-83e0-31a0777f0a2f}, !- Part Load Fraction Correlation Curve Name
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  ,                                       !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  ,                                       !- Crankcase Heater Capacity {W}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  Resistive,                              !- Defrost Strategy
+  Timed,                                  !- Defrost Control
+  0.166667,                               !- Defrost Time Period Fraction
+  2000;                                   !- Resistive Defrost Heater Capacity {W}
 
 OS:ZoneHVAC:PackagedTerminalHeatPump,
   {81ba19d4-3dee-4eca-86ac-75ec931ff777}, ! Handle
@@ -4862,28 +4985,29 @@ OS:Curve:Quadratic,
   1;                                      ! Maximum Value of x {BasedOnField A2}
 
 OS:Coil:Heating:DX:SingleSpeed,
-  {cddfc077-884c-47fa-ad9e-77c013078562}, ! Handle
-  Coil Heating DX Single Speed 10,        ! Name
-  {f7acffce-e1f0-47ef-8796-2cf1bd19e9e4}, ! Availability Schedule Name
-  Autosize,                               ! Rated Total Heating Capacity {W}
-  5,                                      ! Rated COP {W/W}
-  Autosize,                               ! Rated Air Flow Rate {m3/s}
-  ,                                       ! Air Inlet Node Name
-  ,                                       ! Air Outlet Node Name
-  {9c1f8b3c-4309-42be-bd5f-af4a71257f3b}, ! Total Heating Capacity Function of Temperature Curve Name
-  {97eac85f-c850-436a-ae24-1528f5c92ead}, ! Total Heating Capacity Function of Flow Fraction Curve Name
-  {30b033d8-8357-4af8-b0c8-3aa853b80d91}, ! Energy Input Ratio Function of Temperature Curve Name
-  {2b764f48-562e-4d02-b0d9-3481f8d23ba9}, ! Energy Input Ratio Function of Flow Fraction Curve Name
-  {7ce5df47-1879-480d-ab61-996a8909fe3c}, ! Part Load Fraction Correlation Curve Name
-  ,                                       ! Defrost Energy Input Ratio Function of Temperature Curve Name
-  ,                                       ! Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
-  ,                                       ! Crankcase Heater Capacity {W}
-  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
-  Resistive,                              ! Defrost Strategy
-  Timed,                                  ! Defrost Control
-  0.166667,                               ! Defrost Time Period Fraction
-  2000;                                   ! Resistive Defrost Heater Capacity {W}
+  {cddfc077-884c-47fa-ad9e-77c013078562}, !- Handle
+  Coil Heating DX Single Speed 10,        !- Name
+  {f7acffce-e1f0-47ef-8796-2cf1bd19e9e4}, !- Availability Schedule Name
+  Autosize,                               !- Rated Total Heating Capacity {W}
+  5,                                      !- Rated COP {W/W}
+  Autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {9c1f8b3c-4309-42be-bd5f-af4a71257f3b}, !- Total Heating Capacity Function of Temperature Curve Name
+  {97eac85f-c850-436a-ae24-1528f5c92ead}, !- Total Heating Capacity Function of Flow Fraction Curve Name
+  {30b033d8-8357-4af8-b0c8-3aa853b80d91}, !- Energy Input Ratio Function of Temperature Curve Name
+  {2b764f48-562e-4d02-b0d9-3481f8d23ba9}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {7ce5df47-1879-480d-ab61-996a8909fe3c}, !- Part Load Fraction Correlation Curve Name
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  ,                                       !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  ,                                       !- Crankcase Heater Capacity {W}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  Resistive,                              !- Defrost Strategy
+  Timed,                                  !- Defrost Control
+  0.166667,                               !- Defrost Time Period Fraction
+  2000;                                   !- Resistive Defrost Heater Capacity {W}
 
 OS:ZoneHVAC:PackagedTerminalHeatPump,
   {6b5fef4c-77dc-473b-bbad-667c1df9799b}, ! Handle
@@ -4984,6 +5108,66 @@ OS:Schedule:Day,
   24,                                     ! Hour 1
   0,                                      ! Minute 1
   24;                                     ! Value Until Time 1
+
+OS:ThermostatSetpoint:DualSetpoint,
+  {fd14216d-f67d-4978-859b-826535f766b7}, ! Handle
+  Thermal Zone 1 Thermostat,              ! Name
+  {4f49899d-ac5a-47a1-bb47-aa1baa8a8236}, ! Heating Setpoint Temperature Schedule Name
+  {dd8e53bb-6f82-4e1d-9ebf-cdbd532e7cdf}; ! Cooling Setpoint Temperature Schedule Name
+
+OS:ThermostatSetpoint:DualSetpoint,
+  {80fdd8e2-a792-4e8a-831d-fd2d1937a1a3}, ! Handle
+  Thermal Zone 2 Thermostat,              ! Name
+  {4f49899d-ac5a-47a1-bb47-aa1baa8a8236}, ! Heating Setpoint Temperature Schedule Name
+  {dd8e53bb-6f82-4e1d-9ebf-cdbd532e7cdf}; ! Cooling Setpoint Temperature Schedule Name
+
+OS:ThermostatSetpoint:DualSetpoint,
+  {df2be213-d725-4cd1-ba90-7cf883c63232}, ! Handle
+  Thermal Zone 3 Thermostat,              ! Name
+  {4f49899d-ac5a-47a1-bb47-aa1baa8a8236}, ! Heating Setpoint Temperature Schedule Name
+  {dd8e53bb-6f82-4e1d-9ebf-cdbd532e7cdf}; ! Cooling Setpoint Temperature Schedule Name
+
+OS:ThermostatSetpoint:DualSetpoint,
+  {c6bce480-787e-4b19-8f40-b705d709f25d}, ! Handle
+  Thermal Zone 4 Thermostat,              ! Name
+  {4f49899d-ac5a-47a1-bb47-aa1baa8a8236}, ! Heating Setpoint Temperature Schedule Name
+  {dd8e53bb-6f82-4e1d-9ebf-cdbd532e7cdf}; ! Cooling Setpoint Temperature Schedule Name
+
+OS:ThermostatSetpoint:DualSetpoint,
+  {e6bf0cce-93d6-45e6-8611-8834656ac873}, ! Handle
+  Thermal Zone 5 Thermostat,              ! Name
+  {4f49899d-ac5a-47a1-bb47-aa1baa8a8236}, ! Heating Setpoint Temperature Schedule Name
+  {dd8e53bb-6f82-4e1d-9ebf-cdbd532e7cdf}; ! Cooling Setpoint Temperature Schedule Name
+
+OS:ThermostatSetpoint:DualSetpoint,
+  {e70d37d9-2acf-4dd7-826e-d3703b5f9ecb}, ! Handle
+  Thermal Zone 6 Thermostat,              ! Name
+  {4f49899d-ac5a-47a1-bb47-aa1baa8a8236}, ! Heating Setpoint Temperature Schedule Name
+  {dd8e53bb-6f82-4e1d-9ebf-cdbd532e7cdf}; ! Cooling Setpoint Temperature Schedule Name
+
+OS:ThermostatSetpoint:DualSetpoint,
+  {03cb18e7-4b52-4077-b1e4-4e8bb0a659e4}, ! Handle
+  Thermal Zone 7 Thermostat,              ! Name
+  {4f49899d-ac5a-47a1-bb47-aa1baa8a8236}, ! Heating Setpoint Temperature Schedule Name
+  {dd8e53bb-6f82-4e1d-9ebf-cdbd532e7cdf}; ! Cooling Setpoint Temperature Schedule Name
+
+OS:ThermostatSetpoint:DualSetpoint,
+  {3e34ade7-f2f2-40ef-8286-cf6e7add9989}, ! Handle
+  Thermal Zone 8 Thermostat,              ! Name
+  {4f49899d-ac5a-47a1-bb47-aa1baa8a8236}, ! Heating Setpoint Temperature Schedule Name
+  {dd8e53bb-6f82-4e1d-9ebf-cdbd532e7cdf}; ! Cooling Setpoint Temperature Schedule Name
+
+OS:ThermostatSetpoint:DualSetpoint,
+  {27df2676-f540-46e2-9293-0b4c2ac95abc}, ! Handle
+  Thermal Zone 9 Thermostat,              ! Name
+  {4f49899d-ac5a-47a1-bb47-aa1baa8a8236}, ! Heating Setpoint Temperature Schedule Name
+  {dd8e53bb-6f82-4e1d-9ebf-cdbd532e7cdf}; ! Cooling Setpoint Temperature Schedule Name
+
+OS:ThermostatSetpoint:DualSetpoint,
+  {edb014a6-c967-4d97-8ab8-d5f2af381e3d}, ! Handle
+  Thermal Zone 10 Thermostat,             ! Name
+  {4f49899d-ac5a-47a1-bb47-aa1baa8a8236}, ! Heating Setpoint Temperature Schedule Name
+  {dd8e53bb-6f82-4e1d-9ebf-cdbd532e7cdf}; ! Cooling Setpoint Temperature Schedule Name
 
 OS:ThermostatSetpoint:DualSetpoint,
   {cf864535-c819-4df0-8844-8186177cf1fa}, ! Handle
@@ -5363,16 +5547,6 @@ OS:YearDescription,
   {3a8e1de0-3a3d-4173-a7fa-d5939919b08b}, ! Handle
   ,                                       ! Calendar Year
   UseWeatherFile;                         ! Day of Week for Start Day
-
-OS:Building,
-  {fb614a82-9017-419d-a189-2133fe742e4c}, ! Handle
-  OS:Building 1,                          ! Name
-  ,                                       ! Building Type
-  ,                                       ! North Axis {deg}
-  ,                                       ! Nominal Floor to Floor Height {m}
-  {3530659a-c003-4d7c-a635-a7de0062aa4e}, ! Space Type Name
-  {f2e5db64-7396-45a9-9018-be1369813991}, ! Default Construction Set Name
-  ;                                       ! Default Schedule Set Name
 
 OS:SpaceType,
   {3530659a-c003-4d7c-a635-a7de0062aa4e}, ! Handle
@@ -5791,7 +5965,9 @@ OS:SizingPeriod:DesignDay,
   2.05;                                   ! ASHRAE Taud {dimensionless}
 
 OS:YearDescription,
-  {9a433564-4eed-48fd-b3a9-e5c8c427c1ab}; ! Handle
+  {9a433564-4eed-48fd-b3a9-e5c8c427c1ab}, ! Handle
+  ,                                       !- Calendar Year
+  Sunday;                                 !- Day of Week for Start Day
 
 OS:SizingPeriod:DesignDay,
   {9ba20b28-5c9e-4ecf-9f62-f86c924de4a5}, ! Handle
@@ -5865,10 +6041,232 @@ OS:SizingPeriod:DesignDay,
 
 OS:Site,
   {e50dd785-5109-427b-960b-484b6b1ed954}, ! Handle
-  Chicago Ohare Intl Ap_IL_USA Design_Conditions, ! Name
+  Chicago Ohare Intl Ap,                  ! Name
   41.98,                                  ! Latitude {deg}
   -87.92,                                 ! Longitude {deg}
   -6,                                     ! Time Zone {hr}
   201,                                    ! Elevation {m}
   ;                                       ! Terrain
+
+OS:Building,
+  {fb614a82-9017-419d-a189-2133fe742e4c}, !- Handle
+  OS:Building 1,                          !- Name
+  ,                                       !- Building Sector Type
+  ,                                       !- North Axis {deg}
+  ,                                       !- Nominal Floor to Floor Height {m}
+  {3530659a-c003-4d7c-a635-a7de0062aa4e}, !- Space Type Name
+  {f2e5db64-7396-45a9-9018-be1369813991}, !- Default Construction Set Name
+  ;                                       !- Default Schedule Set Name
+
+OS:ClimateZones,
+  {038cabb8-88b8-41ef-b75a-e0360119abfe}, !- Handle
+  ,                                       !- Active Institution
+  ,                                       !- Active Year
+  ,                                       !- Climate Zone Institution Name 1
+  ,                                       !- Climate Zone Document Name 1
+  ,                                       !- Climate Zone Document Year 1
+  ,                                       !- Climate Zone Value 1
+  CEC,                                    !- Climate Zone Institution Name 2
+  California Climate Zone Descriptions,   !- Climate Zone Document Name 2
+  1995,                                   !- Climate Zone Document Year 2
+  ;                                       !- Climate Zone Value 2
+
+OS:Facility,
+  {a64d84fa-64dc-4063-98bd-91adb5a308e5}; !- Handle
+
+OS:SimulationControl,
+  {cd301c20-18a8-49e8-99c2-b2e4f55e594e}; !- Handle
+
+OS:Sizing:Parameters,
+  {39982e71-41f9-4402-a43c-947ca8644892}, !- Handle
+  1.25,                                   !- Heating Sizing Factor
+  1.15;                                   !- Cooling Sizing Factor
+
+OS:Timestep,
+  {1e618734-2bdf-4fa7-930f-bf2a5836dd37}, !- Handle
+  6;                                      !- Number of Timesteps per Hour
+
+OS:ShadowCalculation,
+  {eaba989d-f0d2-497a-9ca9-70af416b0202}, !- Handle
+  20,                                     !- Calculation Frequency
+  15000;                                  !- Maximum Figures in Shadow Overlap Calculations
+
+OS:HeatBalanceAlgorithm,
+  {ffffa0ac-965f-4f1d-a067-a0e8943f6f4a}, !- Handle
+  ConductionTransferFunction,             !- Algorithm
+  200;                                    !- Surface Temperature Upper Limit {C}
+
+OS:RunPeriod,
+  {02645260-dbf0-480f-8de0-459d97487640}, !- Handle
+  Run Period 1,                           !- Name
+  1,                                      !- Begin Month
+  1,                                      !- Begin Day of Month
+  12,                                     !- End Month
+  31,                                     !- End Day of Month
+  ,                                       !- Use Weather File Holidays and Special Days
+  ,                                       !- Use Weather File Daylight Saving Period
+  ,                                       !- Apply Weekend Holiday Rule
+  ,                                       !- Use Weather File Rain Indicators
+  ,                                       !- Use Weather File Snow Indicators
+  ;                                       !- Number of Times Runperiod to be Repeated
+
+OS:LifeCycleCost:Parameters,
+  {f2b3fc5b-e832-4aee-93ae-4590fd763ea0}, !- Handle
+  ,                                       !- Analysis Type
+  ,                                       !- Discounting Convention
+  ,                                       !- Inflation Approach
+  ,                                       !- Real Discount Rate
+  ,                                       !- Nominal Discount Rate
+  ,                                       !- Inflation
+  ,                                       !- Base Date Month
+  ,                                       !- Base Date Year
+  ,                                       !- Service Date Month
+  ,                                       !- Service Date Year
+  ;                                       !- Length of Study Period in Years
+
+OS:StandardsInformation:Construction,
+  {e62238cb-f527-4dbc-8334-5ed0501505f0}, !- Handle
+  {2faeb3e6-cacf-4223-97f9-c70c68e36093}; !- Construction Name
+
+OS:StandardsInformation:Construction,
+  {4890ef60-5963-4b80-a46f-fc67abeef4ec}, !- Handle
+  {12122357-6584-405e-8999-cf966a5534cd}; !- Construction Name
+
+OS:StandardsInformation:Construction,
+  {cc5f453d-ec92-4ba6-8961-5cf9d193391d}, !- Handle
+  {5d89f431-efbe-4a55-a1a0-e2202da85aa6}; !- Construction Name
+
+OS:StandardsInformation:Construction,
+  {4ff3241a-7d0f-41a1-bfb9-111f5620aa6f}, !- Handle
+  {2e216989-f41c-4381-92a7-a1bf55c33c20}; !- Construction Name
+
+OS:StandardsInformation:Construction,
+  {c01db7ef-789f-4752-b253-1b2231473873}, !- Handle
+  {b20b28ef-8398-4c5a-978b-5043547b80f0}; !- Construction Name
+
+OS:StandardsInformation:Construction,
+  {d2624b29-1c66-42b6-a8f9-b7eeb590aa29}, !- Handle
+  {567c9127-7b64-4159-b0a8-3c86f8b4066b}; !- Construction Name
+
+OS:StandardsInformation:Construction,
+  {1ccd0e87-e424-47b5-b802-c2ed24a9176d}, !- Handle
+  {005f80c0-5028-4543-bc6c-e3dfbe3c64a5}; !- Construction Name
+
+OS:StandardsInformation:Construction,
+  {d941bd81-b773-4732-af03-76f25e0a2bc6}, !- Handle
+  {91733ac8-1ebf-4b1c-8bbc-b29a22439055}; !- Construction Name
+
+OS:StandardsInformation:Construction,
+  {49cd5fa0-f9d9-4e2a-8e3b-c9123208d3e4}, !- Handle
+  {dc122cd2-b8f4-4ec0-807a-a86e1d793678}; !- Construction Name
+
+OS:StandardsInformation:Construction,
+  {10cb3d9b-d0a8-400d-a690-8dbd436f0018}, !- Handle
+  {eae8fc43-c074-43cf-a019-653aa70f44f8}; !- Construction Name
+
+OS:StandardsInformation:Construction,
+  {51fb2554-fcdc-491e-b419-70b105df6326}, !- Handle
+  {287389d8-6580-414f-969c-6744d2502882}; !- Construction Name
+
+OS:StandardsInformation:Construction,
+  {5196e2e4-27cb-4202-a05b-188ff2b0c0ce}, !- Handle
+  {7085f211-c939-4543-8f24-d7f96e294f91}; !- Construction Name
+
+OS:StandardsInformation:Construction,
+  {049410ec-7c2d-4272-99a0-aaee2d458a3c}, !- Handle
+  {db273564-a0de-4979-bd14-462e054691ec}; !- Construction Name
+
+OS:StandardsInformation:Material,
+  {7f77b9e4-402a-4e45-9f6c-bec3a3145232}, !- Handle
+  {23f347a2-30fe-4c37-a7eb-583424c3777d}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {e63f306a-71c6-401a-a6a6-02b86c9e1891}, !- Handle
+  {d13bc5aa-f6d3-4eb8-a6ed-c185498f5709}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {98ec0a5b-b099-4ca3-b601-1c3911502096}, !- Handle
+  {01c2fab8-8bf8-4240-8cec-f8dc113ff6cd}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {374330a9-0af3-4ff0-a9d7-f76c2ad86b14}, !- Handle
+  {27616aae-1111-4b89-9ae6-f718d7cf01c1}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {ccfdb65e-eab0-43af-baae-8411a315b3fe}, !- Handle
+  {77834741-3369-4b92-beca-ace762b26e34}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {08071b9e-5bfc-4ee5-bc7d-7b69e8a8c43d}, !- Handle
+  {2d4c9395-2356-4985-82b9-86cb53c0b9be}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {21c85220-bdf9-4e8d-98e1-24f26e458591}, !- Handle
+  {116ef4e8-8e4a-4c51-be5c-1676a799c794}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {e56af4cf-a8c9-42c3-ba56-58ce04eb232e}, !- Handle
+  {9e0251b0-f777-430e-84f7-f6b497842903}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {885d00cd-f3a8-46cd-afe0-344ffefa726f}, !- Handle
+  {df6218c4-78d6-4120-afb7-16792829b1c2}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {d50cb248-deaa-4723-9c7b-ff2170c6546b}, !- Handle
+  {c5de2307-5583-465c-82b8-242c1cbe257a}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {274826c5-ab66-4a1b-a346-17cf246cba86}, !- Handle
+  {ddc8292f-6921-41e0-8f62-11cb91577c42}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {2aa2e23f-a3c2-4d95-8e0f-768ed078d98d}, !- Handle
+  {e6613be7-548b-4ce3-bc0b-554cdde6a943}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {2944cb7d-fed1-4ae5-aaac-1e2027bbfd77}, !- Handle
+  {88f50b98-ff02-41fd-bb34-75ee9a83fbb4}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {b85b6587-8702-4d74-b65e-d3844b6eca2d}, !- Handle
+  {cccf5620-873a-463c-b8bc-5d925023c3db}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {522bc8b9-206a-4862-8ec6-c2679150af24}, !- Handle
+  {0dc8eae3-1033-4bf1-8cca-47557c62d3d8}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {cfd6f356-583e-4e39-951e-ac54fcc46b35}, !- Handle
+  {1b5ae51b-5ceb-4d59-aa2f-896f89daaf10}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {587aa4fd-827d-4dbb-89a1-1d2c1d58efbf}, !- Handle
+  {c715baee-4622-444f-993c-13849f12eb5b}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {07fbacfe-8255-4a2f-9e11-8ab45564f8d0}, !- Handle
+  {44c353dd-4f5a-4b1c-b502-3e4eda5c8520}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {7ad163fa-9bf7-4485-aff6-b302e34263e8}, !- Handle
+  {e1f3f922-08f3-4dff-97f5-5f4a96a34383}; !- Material Name
+
+OS:StandardsInformation:Material,
+  {5f4eb7ef-2dba-4ce4-8ffa-b34e8e6a3f5f}, !- Handle
+  {5dca790c-4566-4c80-a3b9-cfb69cfeafe2}; !- Material Name
+
+OS:WeatherFile,
+  {f5cf1213-5567-4d6a-93f4-55d5930cc8fc}, !- Handle
+  Chicago Ohare Intl Ap,                  !- City
+  IL,                                     !- State Province Region
+  USA,                                    !- Country
+  TMY3,                                   !- Data Source
+  725300,                                 !- WMO Number
+  41.98,                                  !- Latitude {deg}
+  -87.92,                                 !- Longitude {deg}
+  -6,                                     !- Time Zone {hr}
+  201,                                    !- Elevation {m}
+  file:USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw, !- Url
+  C254B53F;                               !- Checksum
 
