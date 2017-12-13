@@ -51,12 +51,14 @@ foundation_kiva.setWallDepthBelowSlab(0.2032)
 foundation_kiva.setFootingWallConstruction(construction)
 
 #attach foundation kiva object to floor surfaces
-model.getSurfaces.each do |surface|
+model.getSurfaces.each_with_index do |surface, i|
   next if surface.surfaceType.downcase != "floor"
   next if surface.outsideBoundaryCondition.downcase != "ground"
   surface.setAdjacentFoundation(foundation_kiva)
-  surface.setConstruction(construction)  
-  surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 4 * ( surface.grossArea ** 0.5 ))
+  surface.setConstruction(construction)
+  if i == 0 # try creating one with no default properties
+    surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 4 * ( surface.grossArea ** 0.5 ))
+  end
 end
        
 # save the OpenStudio model (.osm)
