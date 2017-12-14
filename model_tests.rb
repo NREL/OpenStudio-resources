@@ -849,6 +849,14 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_unitary_system_rb
     result = sim_test('unitary_system.rb')
   end
+  
+  def test_unitary_system_performance_multispeed_rb
+    result = sim_test('unitary_system_performance_multispeed.rb')
+  end
+
+  def test_unitary_system_performance_multispeed_osm
+    result = sim_test('unitary_system_performance_multispeed.osm')
+  end
 
   def test_unitary_test_rb
     result = sim_test('unitary_test.rb')
