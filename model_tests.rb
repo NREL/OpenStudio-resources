@@ -689,6 +689,14 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_ducts_and_pipes_rb
     result = sim_test('ducts_and_pipes.rb')
   end
+  
+  def test_ems_osm
+    result = sim_test('ems.osm')
+  end
+  
+  def test_ems_rb
+    result = sim_test('ems.rb')
+  end
 
   def test_evaporative_cooling_osm
     result = sim_test('evaporative_cooling.osm')
@@ -714,6 +722,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('fluid_coolers.rb')
   end
 
+  def test_fuelcell_osm
+    result = sim_test('fuelcell.osm')
+  end
+  
+  def test_fuelcell_rb
+    result = sim_test('fuelcell.rb')
+  end
+  
   def test_headered_pumps_osm
     result = sim_test('headered_pumps.osm')
   end
