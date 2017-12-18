@@ -150,7 +150,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
   $OPENSTUDIO_LOG.setLogLevel(OpenStudio::Debug)
 
   # Run the workflow
-  run_sim = false
+  run_sim = true
   if run_sim
     FileUtils.rm_rf(dir) if File.exists?(dir)
     FileUtils.mkdir_p(dir)
@@ -179,6 +179,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     run_command(command, dir, 3600)
   end
 
+  # DLM: this line fails on a clean repo if run_sim is false, why would you want run_sim to be false?
   fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
 
   result_osw = nil
