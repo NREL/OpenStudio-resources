@@ -79,7 +79,7 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
     FileUtils.cp(File.join($ModelDir,filename), in_osm)
   elsif (ext == '.rb')
     command = "\"#{$OpenstudioCli}\" \"#{File.join($ModelDir,filename)}\""
-    run_command(command, dir, 600)
+    run_command(command, dir, 3600)
 
     # tests used to write out.osm
     out_osm = File.join(dir, 'out.osm')
@@ -94,7 +94,7 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
   command = "\"#{$OpenstudioCli}\" run -w \"#{osw}\""
   #command = "\"#{$OpenstudioCli}\" run --debug -w \"#{osw}\""
 
-  run_command(command, dir, 1200)
+  run_command(command, dir, 3600)
 
   fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
 
@@ -161,7 +161,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       FileUtils.cp(File.join($ModelDir,filename), in_osm)
     elsif (ext == '.rb')
       command = "\"#{$OpenstudioCli}\" \"#{File.join($ModelDir,filename)}\""
-      run_command(command, dir, 600)
+      run_command(command, dir, 3600)
 
       # tests used to write out.osm
       out_osm = File.join(dir, 'out.osm')
@@ -176,7 +176,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     command = "\"#{$OpenstudioCli}\" run -w \"#{osw}\""
     #command = "\"#{$OpenstudioCli}\" run --debug -w \"#{osw}\""
 
-    run_command(command, dir, 1200)
+    run_command(command, dir, 3600)
   end
 
   fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
@@ -969,7 +969,11 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_plantloop_avms_rb
     result = sim_test('plantloop_avms.rb')
   end
-
+  
+  def test_photovoltaics_rb
+    result = sim_test('photovoltaics.rb')
+  end
+  
   # intersection tests
 
   def test_intersect_22_osm
