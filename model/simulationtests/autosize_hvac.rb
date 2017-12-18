@@ -4,28 +4,28 @@ require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 
-#make a 7 story, 100m X 50m, 35 zone core/perimeter building
+#make a 8 story, 100m X 50m, 40 zone core/perimeter building
 model.add_geometry({"length" => 100,
               "width" => 50,
-              "num_floors" => 7,
+              "num_floors" => 8,
               "floor_to_floor_height" => 4,
               "plenum_height" => 1,
               "perimeter_zone_depth" => 3})
 
-              
+
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
-              
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #add design days to the model (Chicago)
 model.add_design_days()
-                   
+
 #add windows at a 40% window-to-wall ratio
 # model.add_windows({"wwr" => 0.4,
                   # "offset" => 1,
@@ -33,7 +33,7 @@ model.add_design_days()
 
 zones = model.getThermalZones.sort
 puts "The model has #{zones.size} thermal zones"
-                  
+
 # Change the simulation to only run the sizing days
 sim_control = model.getSimulationControl
 sim_control.setRunSimulationforSizingPeriods(true)
@@ -150,7 +150,7 @@ cw_loop.addSupplyBranchForComponent(clg_twr)
 cw_loop.addSupplyBranchForComponent(OpenStudio::Model::CoolingTowerVariableSpeed.new(model))
 fluid_clr = OpenStudio::Model::FluidCoolerSingleSpeed.new(model)
 fluid_clr.autosizeDesignAirFlowRate
-fluid_clr.autosizeDesignAirFlowRateFanPower	
+fluid_clr.autosizeDesignAirFlowRateFanPower
 fluid_clr.autosizeDesignAirFlowRateUfactorTimesAreaValue
 fluid_clr.autosizeDesignWaterFlowRate
 cw_loop.addSupplyBranchForComponent(fluid_clr)
@@ -607,7 +607,7 @@ zones.each_with_index do |zn, zone_index|
     htg_coil = OpenStudio::Model::CoilHeatingWaterToAirHeatPumpEquationFit.new(model)
     cw_loop.addDemandBranchForComponent(htg_coil)
     clg_coil = OpenStudio::Model::CoilCoolingWaterToAirHeatPumpEquationFit.new(model)
-    cw_loop.addDemandBranchForComponent(clg_coil)    
+    cw_loop.addDemandBranchForComponent(clg_coil)
     OpenStudio::Model::ZoneHVACWaterToAirHeatPump.new(model, s1, fan, htg_coil, clg_coil, sup_htg_coil).addToThermalZone(zn)
   when 9
     fan = OpenStudio::Model::FanConstantVolume.new(model, s1)
@@ -624,7 +624,7 @@ zones.each_with_index do |zn, zone_index|
     zone_hvac = OpenStudio::Model::ZoneHVACEnergyRecoveryVentilator.new(model, heat_exchanger, supply_fan, exhaust_fan)
     zone_hvac.setVentilationRateperUnitFloorArea(0.001)
     zone_hvac.setController(erv_controller)
-    zone_hvac.addToThermalZone(zn)    
+    zone_hvac.addToThermalZone(zn)
   when 11
     fan = OpenStudio::Model::FanOnOff.new(model)
     fan.setName('ZoneHVACEnergyRecoveryVentilator Fan')
@@ -635,7 +635,7 @@ zones.each_with_index do |zn, zone_index|
     obj = OpenStudio::Model::ZoneHVACBaseboardRadiantConvectiveWater.new(model)
     obj.addToThermalZone(zn)
     hw_loop.addDemandBranchForComponent(obj.heatingCoil)
-    
+
     htg_coil = OpenStudio::Model::CoilHeatingWaterBaseboard.new(model)
     hw_loop.addDemandBranchForComponent(htg_coil)
     OpenStudio::Model::ZoneHVACBaseboardConvectiveWater.new(model, s1, htg_coil).addToThermalZone(zn)
@@ -695,7 +695,7 @@ zones.each_with_index do |zn, zone_index|
     low_temp_rad = OpenStudio::Model::ZoneHVACLowTempRadiantVarFlow.new(model, s1, htg_coil, clg_coil)
     low_temp_rad.setRadiantSurfaceType("Floors")
     low_temp_rad.addToThermalZone(zn)
-    
+
 
 
     # heat_coil = OpenStudio::Model::CoilHeatingLowTempRadiantVarFlow.new(model,heatingControlTemperatureSched)
@@ -708,10 +708,10 @@ zones.each_with_index do |zn, zone_index|
 
     # hotWaterPlant.addDemandBranchForComponent(heat_coil)
     # chilledWaterPlant.addDemandBranchForComponent(cool_coil)
-    
-    
+
+
   when 16
-    # hp_wh.addToThermalZone(zn)    
+    # hp_wh.addToThermalZone(zn)
   when 17
     rht_coil = OpenStudio::Model::CoilHeatingWater.new(model)
     hw_loop.addDemandBranchForComponent(rht_coil)
@@ -745,11 +745,11 @@ zones.each_with_index do |zn, zone_index|
   when 22
     term = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, s1)
     air_loop.addBranchForZone(zn, term)
-    
+
     # Make this zone sizing account for DOAS
     # to check the Sizing:Zone autosizing methods
     zn.sizingZone.setAccountforDedicatedOutdoorAirSystem(true)
-  
+
     fan = OpenStudio::Model::FanOnOff.new(model, s1)
     fan.setName('ZoneHVACFourPipeFanCoil Fan On Off')
     clg_coil = OpenStudio::Model::CoilCoolingWater.new(model, s1)
@@ -765,11 +765,17 @@ zones.each_with_index do |zn, zone_index|
     hw_loop.addDemandBranchForComponent(rht_coil)
     term = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(model, s1, rht_coil)
     air_loop.addBranchForZone(zn, term)
-  when 25 
+  when 25
     term = OpenStudio::Model::AirTerminalDualDuctVAV.new(model)
     air_loop_dual_duct.addBranchForZone(zn, term)
-  when 26, 27, 28, 29, 30, 31
-    # Previously used for the unitary systems
+  when 34
+    term = OpenStudio::Model::AirTerminalDualDuctConstantVolume.new(model)
+    air_loop_dual_duct.addBranchForZone(zn, term)
+  when 35
+    term = OpenStudio::Model::AirTerminalDualDuctVAVOutdoorAir.new(model)
+    air_loop_dual_duct.addBranchForZone(zn, term)
+  when 26, 27, 28, 29, 30, 31, 32, 33
+    # Previously used for the unitary systems, dehum, etc
   else
     puts "Nothing added to #{zn.name}, index #{zone_index}"
     # Do nothing
@@ -779,4 +785,4 @@ end
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})
-                           
+
