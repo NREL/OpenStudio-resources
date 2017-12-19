@@ -245,14 +245,26 @@ module OsLib_Reporting
     general_building_information[:data] << [display, value, target_units]
     runner.registerValue(OsLib_Reporting.reg_val_string_prep(display), value, target_units)
 
+    # total site energy
+    display = 'Total Site Energy'
+    source_units = 'GJ'
+    target_units = 'kBtu'
+    value = OpenStudio.convert(sqlFile.totalSiteEnergy.get, source_units, target_units).get
+    value_neat = OpenStudio.toNeatString(value, 0, true)
+    runner.registerValue(OsLib_Reporting.reg_val_string_prep(display), value, target_units)
+    general_building_information[:data] << [display, value_neat, target_units]
+
     # net site energy
     display = 'Net Site Energy'
     source_units = 'GJ'
     target_units = 'kBtu'
     value = OpenStudio.convert(sqlFile.netSiteEnergy.get, source_units, target_units).get
     value_neat = OpenStudio.toNeatString(value, 0, true)
-    general_building_information[:data] << [display, value_neat, target_units]
     runner.registerValue(OsLib_Reporting.reg_val_string_prep(display), value, target_units)
+    # always register value, but only add to table if net is different than total
+    if sqlFile.totalSiteEnergy.get != sqlFile.netSiteEnergy.get
+      general_building_information[:data] << [display, value_neat, target_units]
+    end
 
     # total building area
     query = 'SELECT Value FROM tabulardatawithstrings WHERE '
@@ -283,8 +295,22 @@ module OsLib_Reporting
       runner.registerWarning("EnergyPlus reported area is #{query_results.get.round} (m^2). OpenStudio reported area is #{model.getBuilding.floorArea.round} (m^2).")
     end
 
-    # EUI
-    eui =  sqlFile.netSiteEnergy.get / query_results.get
+    # total EUI
+    eui =  sqlFile.totalSiteEnergy.get / energy_plus_area
+    display = 'Total Site EUI'
+    source_units = 'GJ/m^2'
+    target_units = 'kBtu/ft^2'
+    if query_results.get > 0.0 # don't calculate EUI if building doesn't have any area
+      value = OpenStudio.convert(eui, source_units, target_units).get
+      value_neat = OpenStudio.toNeatString(value, 2, true)
+      runner.registerValue(OsLib_Reporting.reg_val_string_prep(display), value, target_units) # is it ok not to calc EUI if no area in model
+    else
+      value_neat = "can't calculate Total EUI."
+    end
+    general_building_information[:data] << ["#{display}", value_neat, target_units]
+
+    # net EUI
+    eui =  sqlFile.netSiteEnergy.get / energy_plus_area
     display = 'EUI'
     source_units = 'GJ/m^2'
     target_units = 'kBtu/ft^2'
@@ -293,9 +319,12 @@ module OsLib_Reporting
       value_neat = OpenStudio.toNeatString(value, 2, true)
       runner.registerValue(OsLib_Reporting.reg_val_string_prep(display), value, target_units) # is it ok not to calc EUI if no area in model
     else
-      value_neat = "can't calculate EUI."
+      value_neat = "can't calculate Net EUI."
     end
-    general_building_information[:data] << ["#{display} (Based on Net Site Energy and Total Building Area)", value_neat, target_units]
+    # always register value, but only add to table if net is different than total
+    if sqlFile.totalSiteEnergy.get != sqlFile.netSiteEnergy.get
+      general_building_information[:data] << ["Net Site EUI", value_neat, target_units]
+    end
 
     # get standards building type
     building_type = ''
@@ -469,7 +498,6 @@ module OsLib_Reporting
 
     # loop through fuels for consumption tables
     counter = 0
-    found_value = false
     OpenStudio::EndUseCategoryType.getValues.each do |end_use|
       # get end uses
       end_use = OpenStudio::EndUseCategoryType.new(end_use).valueDescription
@@ -481,18 +509,12 @@ module OsLib_Reporting
       runner.registerValue("end_use_electricity_#{end_use.downcase.gsub(" ","_")}", value, target_units)
       if value > 0
         output_data_end_use_electricity[:chart] << JSON.generate(label: end_use, value: value, color: end_use_colors[counter])
-        found_value = true
       end
 
       counter += 1
     end
 
-    if found_value
-      return output_data_end_use_electricity
-    else
-      return false
-    end
-
+    return output_data_end_use_electricity
   end
 
   # create table with general building information
@@ -514,7 +536,6 @@ module OsLib_Reporting
 
     # loop through fuels for consumption tables
     counter = 0
-    found_value = false
     OpenStudio::EndUseCategoryType.getValues.each do |end_use|
       # get end uses
       end_use = OpenStudio::EndUseCategoryType.new(end_use).valueDescription
@@ -526,18 +547,12 @@ module OsLib_Reporting
       runner.registerValue("end_use_natural_gas_#{end_use.downcase.gsub(" ","_")}", value, target_units)
       if value > 0
         output_data_end_use_gas[:chart] << JSON.generate(label: end_use, value: value, color: end_use_colors[counter])
-        found_value = true
       end
 
       counter += 1
     end
 
-    if found_value
-      return output_data_end_use_gas
-    else
-      return false
-    end
-
+    return output_data_end_use_gas
   end
 
   # create table with general building information
@@ -1984,19 +1999,38 @@ module OsLib_Reporting
       instances = spaceType.people
       instances.each do |instance|
         def_display = instance.definition.name
-        if instance.numberOfPeople.is_initialized && instance.numberOfPeople.get > 0
-          def_value = instance.numberOfPeople.get
-          def_value_neat = OpenStudio.toNeatString(def_value, 0, true)
+        pd = instance.definition.to_PeopleDefinition.get
+
+        if pd.numberofPeopleCalculationMethod.downcase == 'people'
           def_units = 'people'
-        elsif instance.peoplePerFloorArea.is_initialized && instance.peoplePerFloorArea.get > 0
-          def_value = instance.peoplePerFloorArea.get / OpenStudio.convert(1, 'm^2', 'ft^2').get
-          def_value_neat = OpenStudio.toNeatString(def_value, 4, true)
-          def_units = 'people/ft^2'
-        elsif instance.spaceFloorAreaPerPerson.is_initialized && instance.spaceFloorAreaPerPerson.get > 0
-          def_value = OpenStudio.convert(instance.spaceFloorAreaPerPerson.get, 'm^2', 'ft^2').get
-          def_value_neat = OpenStudio.toNeatString(def_value, 0, true)
+          def_value = pd.numberOfPeople
+          if def_value.is_initialized
+            def_value = def_value.get
+            def_value_neat = OpenStudio.toNeatString(def_value, 0, true)
+          else
+            def_value_neat = "N/A"
+          end
+        elsif pd.numberofPeopleCalculationMethod.downcase == 'area/person'
           def_units = 'ft^2/person'
+          def_value = pd.spaceFloorAreaperPerson
+          if def_value.is_initialized
+            def_value = OpenStudio::convert(def_value.get, "m^2", "ft^2").get
+            def_value_neat = OpenStudio.toNeatString(def_value, 0, true)
+          else
+            def_value_neat = "N/A"
+          end
+
+        elsif pd.numberofPeopleCalculationMethod.downcase == 'people/area'
+          def_units = 'people/ft^2'
+          def_value = pd.peopleperSpaceFloorArea
+          if def_value.is_initialized
+            def_value = def_value.get / OpenStudio.convert(1, 'm^2', 'ft^2').get
+            def_value_neat = OpenStudio.toNeatString(def_value, 0, true)
+          else
+            def_value_neat = "N/A"
+          end
         end
+
         count = instance.multiplier
         output_data_space_type_details[:data] << [def_display, def_value_neat, def_units, count]
       end
@@ -2681,7 +2715,7 @@ module OsLib_Reporting
         temperature_bins["#{temperature_bins_temps_ip[i - 1]}-#{temperature_bins_temps_ip[i]}"] = 0
       end
     end
-	
+
 	# catchall bin for values over the top
 	temperature_bins[">= #{temperature_bins_temps_ip.last}"] = 0
 
@@ -2730,14 +2764,14 @@ module OsLib_Reporting
               if found_bin == false && output_timeseries[i] < temperature_bins_temps_si[j]
                 temperature_bins[temperature_bins.keys[j]] += 1
                 found_bin = true
-              end	
+              end
             end
-			
+
 			# add to top if larger than all other hash values
 			if not found_bin
 			  temperature_bins[temperature_bins.keys.last] += 1
 			end
-			
+
           end # end of for i in 0..(output_timeseries.size - 1)
         else
           runner.registerWarning("Didn't find data for Zone Air Temperature")
@@ -2799,7 +2833,7 @@ module OsLib_Reporting
 
 	# add catch all bin at top
 	humidity_bins[">= #{humidity_bins_ip.last}"] = 0
-	
+
     # create table
     humidity_table = {}
     humidity_table[:title] = 'Humidity (Table values represent hours spent in each Humidity range)'
@@ -2847,12 +2881,12 @@ module OsLib_Reporting
                 found_bin = true
               end
             end
-			
+
 			# add to top if larger than all other hash values
 			if not found_bin
 			  humidity_bins[humidity_bins.keys.last] += 1
 			end
-			
+
           end # end of for i in 0..(output_timeseries.size - 1)
         else
           runner.registerWarning("Didn't find data for Zone Air Relative Humidity")
@@ -3332,24 +3366,16 @@ module OsLib_Reporting
     columns_query = ['', 'Heating/Cooling', 'Calculated Design Load', 'User Design Load', 'Calculated Design Air Flow', 'User Design Air Flow', 'Date/Time Of Peak {TIMESTAMP}', 'Outdoor Temperature at Peak Load', 'Outdoor Humidity Ratio at Peak Load']
 
     # populate dynamic rows
-    rows = []
     rows_name_query = "SELECT DISTINCT  RowName FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_01_name}'"
-    row_names_clg = sqlFile.execAndReturnVectorOfString(rows_name_query).get
-    row_names_clg.each do |row_name|
-      next if row_name == 'None'
-      rows << row_name
-    end
-    # second query is used to support heating only models where zone names are not the same for heating and cooling tables
-    rows_name_query = "SELECT DISTINCT  RowName FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_02_name}'"
-    row_names_htg = sqlFile.execAndReturnVectorOfString(rows_name_query).get
-    row_names_htg.each do |row_name|
-      next if row_name == 'None'
+    row_names = sqlFile.execAndReturnVectorOfString(rows_name_query).get
+    rows = []
+    row_names.each do |row_name|
       rows << row_name
     end
 
     # create zone_dd_table
     zone_dd_table = {}
-    zone_dd_table[:title] = 'Zone Sensible Heating and Cooling Sizing'
+    zone_dd_table[:title] = 'Zone Sensible Cooling and Heating Sensible Sizing'
     zone_dd_table[:header] = columns
     source_units_power = 'W'
     target_units_power_clg = 'ton'
@@ -3363,8 +3389,7 @@ module OsLib_Reporting
     zone_dd_table[:data] = []
 
     # run query and populate zone_dd_table
-    rows.uniq.each do |row|
-
+    rows.each do |row|
       # populate cooling row
       row_data = [row, 'Cooling']
       column_counter = -1
@@ -3385,11 +3410,7 @@ module OsLib_Reporting
           row_data << results
         end
       end
-      if row_names_clg.include?(row.to_s)
-        zone_dd_table[:data] << row_data
-      else
-        zone_dd_table[:data] << [row, 'No Cooling','','','','','','','']
-      end
+      zone_dd_table[:data] << row_data
 
       # populate heating row
       row_data = [row, 'Heating']
@@ -3411,11 +3432,7 @@ module OsLib_Reporting
           row_data << results
         end
       end
-      if row_names_htg.include?(row.to_s)
-        zone_dd_table[:data] << row_data
-      else
-        zone_dd_table[:data] << [row, 'No Heating','','','','','','','']
-      end
+      zone_dd_table[:data] << row_data
     end
 
     # add zone_dd_table to array of tables
@@ -3585,16 +3602,6 @@ module OsLib_Reporting
     cost_summary_table[:chart_attributes] = { value: 'Annual Cash Flow ($)', label_x: 'Date', sort_yaxis: yaxis_order }
     cost_summary_table[:chart] = []
 
-    # create table for running total
-    running_cost_table = {}
-    running_cost_table[:title] = 'Running Annual Cash Flow <br>(Not adjusted for inflation or utility escalation)'
-    running_cost_table[:header] = ['Year', 'Annual Cost']
-    running_cost_table[:units] = ['', '$']
-    running_cost_table[:data] = []
-    running_cost_table[:chart_type] = 'line'
-    running_cost_table[:chart_attributes] = { value: 'Running Annual Cash Flow ($)', label_x: 'Date', sort_yaxis: yaxis_order }
-    running_cost_table[:chart] = []
-
     # inflation approach
     inf_appr_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Life-Cycle Cost Parameters' AND RowName='Inflation Approach' AND ColumnName='Value'"
     inf_appr = sqlFile.execAndReturnFirstString(inf_appr_query)
@@ -3720,18 +3727,20 @@ module OsLib_Reporting
         ann_dist_clg_cash += dist_clg.get
       end
 
-      water_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Energy and Water Cost Cash Flows (Without Escalation)' AND RowName='#{yr}' AND ColumnName='Water'"
-      water = sqlFile.execAndReturnFirstDouble(water_query)
-      if water.is_initialized
-        ann_water_cash += water.get
-      end
-
       # energy cash flow
       energy_cash_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Operating Cash Flow by Category (Without Escalation)' AND RowName='#{yr}' AND ColumnName='Energy'"
       energy_cash = sqlFile.execAndReturnFirstDouble(energy_cash_query)
       if energy_cash.is_initialized
         ann_energy_cash += energy_cash.get
         ann_tot_cash += energy_cash.get
+      end
+
+      # water cash flow
+      water_cash_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Operating Cash Flow by Category (Without Escalation)' AND RowName='#{yr}' AND ColumnName='Water'"
+      water_cash = sqlFile.execAndReturnFirstDouble(water_cash_query)
+      if water_cash.is_initialized
+        ann_water_cash += water_cash.get
+        ann_tot_cash += water_cash.get
       end
 
       # log the values for this year
@@ -3773,19 +3782,15 @@ module OsLib_Reporting
 
       # gather running total data for line plot
       running_total += ann_tot_cash
-      running_cost_table[:data] << [yr, running_total]
-      running_cost_table[:chart] << JSON.generate(label: 'Running Total', label_x: yr, value: running_total)
 
     end # next year
 
     # add table to array of tables
     if running_total > 0
       cost_summary_section_tables << cost_summary_table
-      cost_summary_section_tables << running_cost_table
     else
       # don't make chart of no data to add to it.
       cost_summary_table[:chart] = []
-      running_cost_table[:chart] = []
     end
 
     return @cost_summary_section
