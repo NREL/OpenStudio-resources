@@ -130,7 +130,12 @@ module OsLib_HelperMethods
       argument = user_arguments[argument]
 
       # get arg values
-      arg_value = argument.valueDisplayName.to_f   # instead of valueAsDouble so it allows integer arguments as well
+      arg_value = nil
+      if argument.hasValue
+        arg_value = argument.valueDisplayName.to_f   # instead of valueAsDouble so it allows integer arguments as well
+      elsif argument.hasDefaultValue
+        arg_value = argument.defaultValueDisplayName.to_f
+      end
       arg_display = argument.displayName
 
       unless min.nil?
@@ -167,6 +172,84 @@ module OsLib_HelperMethods
     else
       return true
     end
+  end
+
+  # open channel to log info/warning/error messages
+  def self.setup_log_msgs(runner,debug = false)
+
+    # Open a channel to log info/warning/error messages
+    @msg_log = OpenStudio::StringStreamLogSink.new
+    if debug
+      @msg_log.setLogLevel(OpenStudio::Debug)
+    else
+      @msg_log.setLogLevel(OpenStudio::Info)
+    end
+    @start_time = Time.new
+    @runner = runner
+
+  end
+
+  # Get all the log messages and put into output
+  # for users to see.
+  def self.log_msgs
+    @msg_log.logMessages.each do |msg|
+      # DLM: you can filter on log channel here for now
+      if /openstudio.*/.match(msg.logChannel) #/openstudio\.model\..*/
+        # Skip certain messages that are irrelevant/misleading
+        next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
+            msg.logChannel.include?("runmanager") || # RunManager messages
+            msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
+            msg.logChannel.include?("Translator") || # Forward translator and geometry translator
+            msg.logMessage.include?("UseWeatherFile") # 'UseWeatherFile' is not yet a supported option for YearDescription
+
+        # Report the message in the correct way
+        if msg.logLevel == OpenStudio::Info
+          @runner.registerInfo(msg.logMessage)
+        elsif msg.logLevel == OpenStudio::Warn
+          @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
+        elsif msg.logLevel == OpenStudio::Error
+          @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
+        elsif msg.logLevel == OpenStudio::Debug && @debug
+          @runner.registerInfo("DEBUG - #{msg.logMessage}")
+        end
+      end
+    end
+    @runner.registerInfo("Total Time = #{(Time.new - @start_time).round}sec.")
+  end
+
+  def self.check_upstream_measure_for_arg(runner,arg_name)
+
+    # 2.x methods (currently setup for measure display name but snake_case arg names)
+    arg_name_value = {}
+    runner.workflow.workflowSteps.each do |step|
+      if step.to_MeasureStep.is_initialized
+        measure_step = step.to_MeasureStep.get
+        
+        measure_name = measure_step.measureDirName
+        if measure_step.name.is_initialized
+          measure_name = measure_step.name.get # this is instance name in PAT
+        end
+        if measure_step.result.is_initialized
+          result = measure_step.result.get
+          result.stepValues.each do |arg|
+            name = arg.name
+            value = arg.valueAsVariant.to_s
+            if name == arg_name
+              arg_name_value[:value] = value
+              arg_name_value[:measure_name] = measure_name
+              return arg_name_value # stop after find first one
+            end
+          end
+        else
+          #puts "No result for #{measure_name}"
+        end
+      else
+        #puts "This step is not a measure"
+      end
+    end
+
+    return arg_name_value
+
   end
 
   # populate choice argument from model objects. areaType should be string like "floorArea" or "exteriorArea"
