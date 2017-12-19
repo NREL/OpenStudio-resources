@@ -127,8 +127,9 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
     result << OpenStudio::Measure::OSOutput.makeDoubleOutput('electricity_ip') # kWh
     result << OpenStudio::Measure::OSOutput.makeDoubleOutput('natural_gas_ip') # MBtu
     result << OpenStudio::Measure::OSOutput.makeDoubleOutput('additional_fuel_ip') # MBtu
-    result << OpenStudio::Measure::OSOutput.makeDoubleOutput('district_cooling_heating_ip') # MBtu
-    result << OpenStudio::Measure::OSOutput.makeDoubleOutput('district_cooling_cooling_ip') # MBtu
+    result << OpenStudio::Measure::OSOutput.makeDoubleOutput('district_heating_ip') # MBtu
+    result << OpenStudio::Measure::OSOutput.makeDoubleOutput('district_cooling_ip') # MBtu
+    result << OpenStudio::Measure::OSOutput.makeDoubleOutput('total_site_eui') # kBtu/ft^2
     result << OpenStudio::Measure::OSOutput.makeDoubleOutput('eui') # kBtu/ft^2
     result << OpenStudio::Measure::OSOutput.makeDoubleOutput('net_site_energy') # kBtu
     result << OpenStudio::Measure::OSOutput.makeDoubleOutput('annual_peak_electric_demand') # kW
@@ -218,6 +219,8 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
 
           # add in section heading with message if section fails
           section = {}
+          section[:title] = "#{display_name}"
+          section[:tables] = []
           section[:messages] = []
           section[:messages] << "#{display_name} section failed and was skipped because: #{e}. Detail on error follows."
           section[:messages] << ["#{e.backtrace.join("\n")}"]
