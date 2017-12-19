@@ -1,7 +1,7 @@
 
 require 'openstudio'
 require 'lib/baseline_model'
-require 'JSON'
+require 'json'
 
 model = BaselineModel.new
   
