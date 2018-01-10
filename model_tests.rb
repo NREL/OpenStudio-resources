@@ -695,6 +695,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('ems.osm')
   end
   
+  def test_ems_scott_osm
+    result = sim_test('ems_scott.osm')
+  end
+  
+  def test_ems_1floor_SpaceType_1space
+    result = sim_test('ems_1floor_SpaceType_1space.osm')
+  end
+  
   def test_ems_rb
     result = sim_test('ems.rb')
   end
