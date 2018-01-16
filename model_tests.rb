@@ -974,6 +974,14 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_photovoltaics_rb
     result = sim_test('photovoltaics.rb')
   end
+
+  def test_foundation_kiva_osm
+    result = sim_test('foundation_kiva.osm')
+  end
+  
+  def test_foundation_kiva_rb
+    result = sim_test('foundation_kiva.rb')
+  end
   
   # intersection tests
 
