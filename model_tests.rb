@@ -974,6 +974,10 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_photovoltaics_rb
     result = sim_test('photovoltaics.rb')
   end
+
+  def test_afn_single_zone_nv_rb
+    result = sim_test('afn_single_zone_nv.rb')
+  end
   
   # intersection tests
 
