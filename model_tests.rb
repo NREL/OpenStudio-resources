@@ -647,6 +647,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('baseline_sys10.rb')
   end
 
+  def test_centralheatpumpsystem_osm
+    result = sim_test('centralheatpumpsystem.osm')
+  end
+
+  def test_centralheatpumpsystem_rb
+    result = sim_test('centralheatpumpsystem.rb')
+  end
+
   def test_coolingtowers_osm
     result = sim_test('coolingtowers.osm')
   end
@@ -690,11 +698,11 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_ducts_and_pipes_rb
     result = sim_test('ducts_and_pipes.rb')
   end
-  
+
   def test_ems_osm
     result = sim_test('ems.osm')
   end
-  
+
   def test_ems_rb
     result = sim_test('ems.rb')
   end
@@ -726,11 +734,11 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_fuelcell_osm
     result = sim_test('fuelcell.osm')
   end
-  
+
   def test_fuelcell_rb
     result = sim_test('fuelcell.rb')
   end
-  
+
   def test_headered_pumps_osm
     result = sim_test('headered_pumps.osm')
   end
@@ -866,7 +874,7 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_unitary_system_rb
     result = sim_test('unitary_system.rb')
   end
-  
+
   def test_unitary_system_performance_multispeed_rb
     result = sim_test('unitary_system_performance_multispeed.rb')
   end
@@ -946,11 +954,11 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_zone_mixing_rb
     result = sim_test('zone_mixing.rb')
   end
-  
+
   def test_moisture_settings_osm
     result = sim_test('moisture_settings.osm')
   end
-  
+
   def test_moisture_settings_rb
     result = sim_test('moisture_settings.rb')
   end
@@ -958,11 +966,11 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_airloop_and_zonehvac_rb
     result = sim_test('airloop_and_zonehvac.rb')
   end
-  
+
   def test_airloop_and_zonehvac_osm
     result = sim_test('airloop_and_zonehvac.osm')
   end
-  
+
   def test_airloop_avms_rb
     result = sim_test('airloop_avms.rb')
   end
@@ -970,7 +978,7 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_plantloop_avms_rb
     result = sim_test('plantloop_avms.rb')
   end
-  
+
   def test_photovoltaics_rb
     result = sim_test('photovoltaics.rb')
   end
