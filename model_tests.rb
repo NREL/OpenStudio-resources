@@ -983,6 +983,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('foundation_kiva.rb')
   end
   
+  def test_additional_props_rb
+    result = sim_test('additional_props.rb')
+  end
+  
+  def test_additional_props_osm
+    result = sim_test('additional_props.osm')
+  end
+  
   # intersection tests
 
   def test_intersect_22_osm
