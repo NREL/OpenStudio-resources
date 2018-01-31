@@ -222,6 +222,62 @@ central_hp.demandOutletModelObject.get.setName("#{central_hp.sourcePlantLoop.get
 central_hp.tertiaryInletModelObject.get.setName("#{central_hp.heatingPlantLoop.get.name} Supply Side #{central_hp.name} Inlet Node")
 central_hp.tertiaryOutletModelObject.get.setName("#{central_hp.heatingPlantLoop.get.name} Supply Side #{central_hp.name} Outlet Node")
 
+
+
+########################### Request output variables ##########################
+
+freq = 'Detailed'
+
+# CentralHeatPumpSystem outputs, implemented in the class
+central_hp.outputVariableNames.each do |varname|
+  outvar = OpenStudio::Model::OutputVariable.new(varname, m)
+  outvar.setReportingFrequency(freq)
+end
+
+
+# ChillerHeaterPerformance:Electric:EIR Outputs: one for each Unit, not
+# implemented in class (can't be static really...)
+
+n_chiller_heater = central_hp.modules.inject(0){|sum, mod| sum += mod.numberofChillerHeaterModules}
+
+chiller_heater_perf_vars = ['Chiller Heater Operation Mode Unit',
+ 'Chiller Heater Part Load Ratio Unit',
+ 'Chiller Heater Cycling Ratio Unit',
+ 'Chiller Heater Cooling Electric Power Unit',
+ 'Chiller Heater Heating Electric Power Unit',
+ 'Chiller Heater Cooling Electric Energy Unit',
+ 'Chiller Heater Heating Electric Energy Unit',
+ 'Chiller Heater Cooling Rate Unit',
+ 'Chiller Heater Cooling Energy Unit',
+ 'Chiller Heater False Load Heat Transfer Rate Unit',
+ 'Chiller Heater False Load Heat Transfer Energy Unit',
+ 'Chiller Heater Evaporator Inlet Temperature Unit',
+ 'Chiller Heater Evaporator Outlet Temperature Unit',
+ 'Chiller Heater Evaporator Mass Flow Rate Unit',
+ 'Chiller Heater Condenser Heat Transfer Rate Unit',
+ 'Chiller Heater Condenser Heat Transfer Energy Unit',
+ 'Chiller Heater COP Unit',
+ 'Chiller Heater Capacity Temperature Modifier Multiplier Unit',
+ 'Chiller Heater EIR Temperature Modifier Multiplier Unit',
+ 'Chiller Heater EIR Part Load Modifier Multiplier Unit',
+ 'Chiller Heater Condenser Inlet Temperature Unit',
+ 'Chiller Heater Condenser Outlet Temperature Unit',
+ 'Chiller Heater Condenser Mass Flow Rate Unit']
+
+
+n_chiller_heater.times do |i|
+  chiller_heater_perf_vars.each do |varname|
+    outvar = OpenStudio::Model::OutputVariable.new("#{varname} #{i+1}", m)
+    outvar.setReportingFrequency(freq)
+  end
+end
+
+
+# Due to this bug: https://github.com/NREL/EnergyPlus/issues/6445
+# Need to hardsize the Reference capacity of the
+# chillerHeaterPerformanceElectricEIR objects
+m.getChillerHeaterPerformanceElectricEIRs.each{|comp| comp.setReferenceCoolingModeEvaporatorCapacity(600000)}
+
 # save the OpenStudio model (.osm)
 m.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                        "osm_name" => "in.osm"})
