@@ -19,7 +19,9 @@ model.add_windows({"wwr" => 0.4,
 
 schedule = model.alwaysOnDiscreteSchedule()
 
-zones = model.getThermalZones()
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 
 cooling_curve_1 = OpenStudio::Model::CurveBiquadratic.new(model)
 cooling_curve_1.setCoefficient1Constant(0.766956)
@@ -112,9 +114,8 @@ airLoop_2_supplyNode = airLoop_2.supplyOutletNode()
 unitary_2 = unitary_1.clone(model).to_AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.get
 unitary_2.addToNode(airLoop_2_supplyNode)
 
-i = 1
-zones.each do |zone|
-  if i < 3 
+zones.each_with_index do |zone, i|
+  if i < 2
     reheat_coil = OpenStudio::Model::CoilHeatingGas.new(model, schedule)
     terminal = OpenStudio::Model::AirTerminalSingleDuctVAVHeatAndCoolReheat.new(model, reheat_coil)
     airLoop_1.addBranchForZone(zone, terminal)
@@ -122,9 +123,8 @@ zones.each do |zone|
     terminal = OpenStudio::Model::AirTerminalSingleDuctVAVHeatAndCoolNoReheat.new(model)
     airLoop_2.addBranchForZone(zone, terminal)
   end
-  i = i + 1
 end
-   
+
 # Request timeseries data for debugging
 =begin
 reporting_frequency = "hourly"
@@ -136,24 +136,24 @@ var_names << "System Node Mass Flow Rate"
 var_names.each do |var_name|
   outputVariable = OpenStudio::Model::OutputVariable.new(var_name,model)
   outputVariable.setReportingFrequency(reporting_frequency)
-end          
+end
 =end
 
-   
+
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
-              
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #add design days to the model (Chicago)
 model.add_design_days()
-       
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})
-                           
+

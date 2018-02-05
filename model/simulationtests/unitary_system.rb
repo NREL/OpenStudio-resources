@@ -169,7 +169,9 @@ condenserDemandInlet.addToNode(condenserDemandInletNode)
 spm = OpenStudio::Model::SetpointManagerFollowOutdoorAirTemperature.new(model)
 spm.addToNode(condenserSupplyOutletNode)
 
-zones = model.getThermalZones()
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 
 heating_curve_1 = OpenStudio::Model::CurveCubic.new(model)
 heating_curve_1.setCoefficient1Constant(0.758746)
