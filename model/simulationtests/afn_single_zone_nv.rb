@@ -4,8 +4,9 @@ require 'lib/surface_visitor'
 
 class SurfaceNetworkBuilder < SurfaceVisitor
   def initialize(model)
-    @interiorCrack = OpenStudio::Model::AirflowNetworkCrack.new(model, 0.050, 0.65)
-    @exteriorCrack = OpenStudio::Model::AirflowNetworkCrack.new(model, 0.025, 0.65)
+    refcond = OpenStudio::Model::AirflowNetworkReferenceCrackConditions.new(model, 20.0, 101325.0, 0.0)
+    @interiorCrack = OpenStudio::Model::AirflowNetworkCrack.new(model, 0.050, 0.65, refcond)
+    @exteriorCrack = OpenStudio::Model::AirflowNetworkCrack.new(model, 0.025, 0.65, refcond)
     super(model)
   end
 
