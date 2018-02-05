@@ -1,0 +1,38 @@
+# Do not run with --pull=true to try to use any local image first
+# sudo docker build -t custom/openstudio:$os_version .
+
+FROM nrel/openstudio:${os_version}
+
+
+# Install MongoDB.
+#RUN \
+  #apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 && \
+  #echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' > /etc/apt/sources.list.d/mongodb.list && \
+  #apt-get update && \
+  #apt-get install -y mongodb-org && \
+#rm -rf /var/lib/apt/lists/*
+
+
+# Add an environement variable with the version, one for mongo ip
+ENV OSVERSION=${os_version} MONGOIP=${mongo_ip}
+
+# Allow execution of the docker_container_script.sh
+# This won't work because it's on a volume
+# RUN chmod +x ./docker_container_script.sh
+
+
+# Create directory, Configure the prompt
+# Chained into a single run statement to mimize the number of image layers
+RUN mkdir -p /var/simdata/openstudio/OpenStudio-resources &&\
+    echo 'COLOR_0="0:37m" # Light Gray' >> ~/.bashrc &&\
+    echo 'COLOR_1="38;5;167m" # Some light red' >> ~/.bashrc &&\
+    echo 'COLOR_2="38;5;33m" # Some light blue' >> ~/.bashrc &&\
+    echo 'PS1="\[\033[$COLOR_0\](${OSVERSION})\[\033[$COLOR_1\]\u\[\033[0m\]@\[\033[$COLOR_2\]\W\[\033[0m\]$ "' >> ~/.bashrc
+
+# Set the workdir
+WORKDIR /var/simdata/openstudio/OpenStudio-resources
+
+# Given that I have used a .dockerignore file, I don't need to specify which files to add, I can add the entire current directory
+# And given that I have already set the WORKDIR, I can use relative path
+ADD . .
+
