@@ -32,9 +32,27 @@ model.set_space_type()
 #add design days to the model (Chicago)
 model.add_design_days()
 
+#create 8in concrete construction
+material = OpenStudio::Model::StandardOpaqueMaterial.new(model)
+material.setThickness(0.2032)
+material.setConductivity(1.3114056)
+material.setDensity(2242.8)
+material.setSpecificHeat(837.4)
 construction = OpenStudio::Model::Construction.new(model)
+construction.insertLayer(0, material)
+
+#create the additional properties object
 additional_properties = construction.additionalProperties
-additional_properties.setFeature("isNicePlace", true)
+additional_properties.setFeature("isNiceConstruction", true)
+
+#update all additional properties objects
+model.getAdditionalPropertiess.each do |additional_properties|
+  additional_properties.setFeature("newFeature", 1)
+end
+
+#retrieve the construction object
+# construction2 = additional_properties.modelObject()
+# construction2.insertLayer(1, material)
        
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})
