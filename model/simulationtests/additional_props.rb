@@ -32,12 +32,18 @@ model.set_space_type()
 #add design days to the model (Chicago)
 model.add_design_days()
 
-#create 8in concrete construction
+#create 8in concrete material
 material = OpenStudio::Model::StandardOpaqueMaterial.new(model)
 material.setThickness(0.2032)
 material.setConductivity(1.3114056)
 material.setDensity(2242.8)
 material.setSpecificHeat(837.4)
+
+#create the additional properties object
+additional_properties = material.additionalProperties
+additional_properties.setFeature("isNiceMaterial", true)
+
+#create construction with the material
 construction = OpenStudio::Model::Construction.new(model)
 construction.insertLayer(0, material)
 
@@ -47,12 +53,27 @@ additional_properties.setFeature("isNiceConstruction", true)
 
 #update all additional properties objects
 model.getAdditionalPropertiess.each do |additional_properties|
-  additional_properties.setFeature("newFeature", 1)
-end
 
-#retrieve the construction object
-# construction2 = additional_properties.modelObject()
-# construction2.insertLayer(1, material)
+  #retrieve an additional properties object and set a new feature
+  additional_properties.setFeature("newFeature", 1)
+  
+  #retrieve the parent object from the additional properties object
+  model_object = additional_properties.modelObject
+  if model_object.to_StandardOpaqueMaterial.is_initialized
+    material = model_object.to_StandardOpaqueMaterial.get
+    material.setThickness(0.3)
+  end
+  if model_object.to_Construction.is_initialized
+    material = OpenStudio::Model::StandardOpaqueMaterial.new(model)
+    material.setThickness(0.2032)
+    material.setConductivity(1.3114056)
+    material.setDensity(2242.8)
+    material.setSpecificHeat(837.4)
+    construction = model_object.to_Construction.get
+    construction.insertLayer(1, material)
+  end
+
+end
        
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})
