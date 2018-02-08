@@ -1,17 +1,17 @@
 {
-   "completed_at" : "20180206T085528Z",
+   "completed_at" : "20180208T115947Z",
    "completed_status" : "Fail",
    "current_step" : 1,
-   "eplusout_err" : "Program Version,EnergyPlus, Version 8.6.0-198c6a3cff, YMD=2018.02.06 08:54,IDD_Version 8.6.0\n   ************* Beginning Zone Sizing Calculations\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 2\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 3\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 4\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 5\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 6\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 7\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** CheckUsedConstructions: There are 6 nominally unused constructions in input.\n   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;\n   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"STORY 1 CORE THERMAL ZONE BASELINE MODEL INFILTRATION\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Surface Area = 0.  0 Infiltration will result.\n   ** Warning ** Calculated design cooling load for zone=STORY 1 CORE THERMAL ZONE is zero.\n   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.\n   ************* Beginning Plant Sizing Calculations\n   ** Warning ** Output:Meter: invalid Name=\"DISTRICTCOOLING:FACILITY\" - not found.\n   ** Warning ** Output:Meter: invalid Name=\"DISTRICTHEATING:FACILITY\" - not found.\n   ** Warning ** Output:Meter:MeterFileOnly requested for \"Electricity:Facility\" (TimeStep), already on \"Output:Meter\". Will report to both eplusout.eso and eplusout.mtr\n   ************* Testing Individual Branch Integrity\n   ************* All Branches passed integrity testing\n   ************* Testing Individual Supply Air Path Integrity\n   ************* All Supply Air Paths passed integrity testing\n   ************* Testing Individual Return Air Path Integrity\n   ************* All Return Air Paths passed integrity testing\n   ************* No node connection errors were found.\n   ************* Beginning Simulation\n   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 9\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -8.35\n   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 09:10 - 09:15\n   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.\n   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 9\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -8.17 C.\n   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 09:10 - 09:15\n   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil\n   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 15.805 C.\n   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.\n   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.\n   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 8\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -5.00\n   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 10:53 - 11:00\n   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.\n   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 1\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -4.58\n   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 11:08 - 11:15\n   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.\n   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 5\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -4.75\n   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/05 14:25 - 14:30\n   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.\n   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 6\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -1.28\n   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/23 10:00 - 10:05\n   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.\n   ************* Simulation Error Summary *************\n   ************* There are 2 unused schedules in input.\n   ************* There are 2 unused week schedules in input.\n   ************* There are 8 unused day schedules in input.\n   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.\n   *************\n   ************* ===== Recurring Error Summary =====\n   ************* The following recurring error messages occurred.\n   *************\n   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 9\" - Low condenser dry-bulb temperature error continues...\n   *************  **   ~~~   **   This error occurred 2409 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-18.35 [C]\n   *************\n   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 9\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:\n   *************  **   ~~~   **   This error occurred 6673 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=1.998084  Min=-11.989702\n   *************\n   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 8\" - Low condenser dry-bulb temperature error continues...\n   *************  **   ~~~   **   This error occurred 1272 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-17.2 [C]\n   *************\n   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 1\" - Low condenser dry-bulb temperature error continues...\n   *************  **   ~~~   **   This error occurred 652 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-0.15 [C]  Min=-16.4 [C]\n   *************\n   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 5\" - Low condenser dry-bulb temperature error continues...\n   *************  **   ~~~   **   This error occurred 171 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-15.6 [C]\n   *************\n   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 6\" - Low condenser dry-bulb temperature error continues...\n   *************  **   ~~~   **   This error occurred 136 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-14.125 [C]\n   *************\n   *************\n   ************* ===== Final Error Summary =====\n   ************* The following error categories occurred.  Consider correcting or noting.\n   ************* Nominally Unused Constructions\n   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause\n   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm\n   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).\n   *************\n   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.\n   ************* EnergyPlus Sizing Error Summary. During Sizing: 11 Warning; 0 Severe Errors.\n   ************* EnergyPlus Completed Successfully-- 11327 Warning; 0 Severe Errors; Elapsed Time=00hr 00min 45.53sec\n",
+   "eplusout_err" : "Program Version,EnergyPlus, Version 8.6.0-198c6a3cff, YMD=2018.02.08 11:59,IDD_Version 8.6.0\n   ************* Beginning Zone Sizing Calculations\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 2\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 3\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 4\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 5\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 6\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 7\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** CheckUsedConstructions: There are 6 nominally unused constructions in input.\n   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;\n   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"STORY 1 CORE THERMAL ZONE BASELINE MODEL INFILTRATION\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Surface Area = 0.  0 Infiltration will result.\n   ** Warning ** Calculated design cooling load for zone=STORY 1 CORE THERMAL ZONE is zero.\n   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.\n   ************* Beginning Plant Sizing Calculations\n   ** Warning ** Output:Meter: invalid Name=\"DISTRICTCOOLING:FACILITY\" - not found.\n   ** Warning ** Output:Meter: invalid Name=\"DISTRICTHEATING:FACILITY\" - not found.\n   ** Warning ** Output:Meter:MeterFileOnly requested for \"Electricity:Facility\" (TimeStep), already on \"Output:Meter\". Will report to both eplusout.eso and eplusout.mtr\n   ************* Testing Individual Branch Integrity\n   ************* All Branches passed integrity testing\n   ************* Testing Individual Supply Air Path Integrity\n   ************* All Supply Air Paths passed integrity testing\n   ************* Testing Individual Return Air Path Integrity\n   ************* All Return Air Paths passed integrity testing\n   ************* No node connection errors were found.\n   ************* Beginning Simulation\n   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 5\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -7.80\n   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 09:15 - 09:20\n   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.\n   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 5\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -8.08 C.\n   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 09:15 - 09:20\n   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil\n   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 15.916 C.\n   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.\n   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.\n   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 2\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -5.00\n   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 10:53 - 11:00\n   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.\n   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 4\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -4.58\n   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 11:08 - 11:15\n   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.\n   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 7\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -1.28\n   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/23 10:00 - 10:05\n   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.\n   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 3\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -3.30\n   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 02/16 14:55 - 15:00\n   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.\n   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 10\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -3.30\n   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 02/16 15:23 - 15:30\n   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.\n   ************* Simulation Error Summary *************\n   ************* There are 2 unused schedules in input.\n   ************* There are 2 unused week schedules in input.\n   ************* There are 8 unused day schedules in input.\n   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.\n   *************\n   ************* ===== Recurring Error Summary =====\n   ************* The following recurring error messages occurred.\n   *************\n   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 5\" - Low condenser dry-bulb temperature error continues...\n   *************  **   ~~~   **   This error occurred 2188 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-17.8 [C]\n   *************\n   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 5\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:\n   *************  **   ~~~   **   This error occurred 5561 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=1.99931  Min=-10.999936\n   *************\n   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 2\" - Low condenser dry-bulb temperature error continues...\n   *************  **   ~~~   **   This error occurred 1157 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-17.2 [C]\n   *************\n   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 4\" - Low condenser dry-bulb temperature error continues...\n   *************  **   ~~~   **   This error occurred 583 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-0.15 [C]  Min=-16.4 [C]\n   *************\n   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 7\" - Low condenser dry-bulb temperature error continues...\n   *************  **   ~~~   **   This error occurred 140 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-14.125 [C]\n   *************\n   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 3\" - Low condenser dry-bulb temperature error continues...\n   *************  **   ~~~   **   This error occurred 30 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-0.55 [C]  Min=-4.825 [C]\n   *************\n   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 10\" - Low condenser dry-bulb temperature error continues...\n   *************  **   ~~~   **   This error occurred 10 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-0.55 [C]  Min=-4.125 [C]\n   *************\n   *************\n   ************* ===== Final Error Summary =====\n   ************* The following error categories occurred.  Consider correcting or noting.\n   ************* Nominally Unused Constructions\n   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause\n   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm\n   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).\n   *************\n   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.\n   ************* EnergyPlus Sizing Error Summary. During Sizing: 11 Warning; 0 Severe Errors.\n   ************* EnergyPlus Completed Successfully-- 9683 Warning; 0 Severe Errors; Elapsed Time=00hr 00min 26.95sec\n",
    "seed_file" : "in.osm",
-   "started_at" : "20180206T085418Z",
+   "started_at" : "20180208T115859Z",
    "steps" : [
       {
          "arguments" : {},
          "measure_dir_name" : "openstudio_results",
          "result" : {
-            "completed_at" : "20180206T085525Z",
-            "started_at" : "20180206T085517Z",
+            "completed_at" : "20180208T115945Z",
+            "started_at" : "20180208T115939Z",
             "stderr" : "",
             "stdout" : "",
             "step_errors" : [],
@@ -115,12 +115,12 @@
                {
                   "name" : "total_site_energy",
                   "units" : "kBtu",
-                  "value" : 7550747.1762912292
+                  "value" : 7434677.491737661
                },
                {
                   "name" : "net_site_energy",
                   "units" : "kBtu",
-                  "value" : 7550747.1762912292
+                  "value" : 7434677.491737661
                },
                {
                   "name" : "total_building_area",
@@ -130,17 +130,17 @@
                {
                   "name" : "total_site_eui",
                   "units" : "kBtu/ft^2",
-                  "value" : 70.14873669488712
+                  "value" : 69.070414040200362
                },
                {
                   "name" : "eui",
                   "units" : "kBtu/ft^2",
-                  "value" : 70.14873669488712
+                  "value" : 69.070414040200362
                },
                {
                   "name" : "unmet_hours_during_heating",
                   "units" : "hr",
-                  "value" : 226.75
+                  "value" : 238.75
                },
                {
                   "name" : "unmet_hours_during_cooling",
@@ -150,7 +150,7 @@
                {
                   "name" : "unmet_hours_during_occupied_heating",
                   "units" : "hr",
-                  "value" : 34.5
+                  "value" : 38.5
                },
                {
                   "name" : "unmet_hours_during_occupied_cooling",
@@ -170,12 +170,12 @@
                {
                   "name" : "end_use_heating",
                   "units" : "kBtu",
-                  "value" : 4965850.8476015469
+                  "value" : 4876917.1672025491
                },
                {
                   "name" : "end_use_cooling",
                   "units" : "kBtu",
-                  "value" : 197970.56191984258
+                  "value" : 176673.11122640234
                },
                {
                   "name" : "end_use_interior_lighting",
@@ -200,12 +200,12 @@
                {
                   "name" : "end_use_fans",
                   "units" : "kBtu",
-                  "value" : 195165.02324371517
+                  "value" : 189383.33880980394
                },
                {
                   "name" : "end_use_pumps",
                   "units" : "kBtu",
-                  "value" : 102534.85607549467
+                  "value" : 102468.50887707273
                },
                {
                   "name" : "end_use_heat_rejection",
@@ -240,12 +240,12 @@
                {
                   "name" : "fuel_electricity",
                   "units" : "kBtu",
-                  "value" : 2584905.8068608851
+                  "value" : 2557760.3245351114
                },
                {
                   "name" : "fuel_natural_gas",
                   "units" : "kBtu",
-                  "value" : 4965850.8476015469
+                  "value" : 4876917.1672025491
                },
                {
                   "name" : "fuel_additional_fuel",
@@ -270,7 +270,7 @@
                {
                   "name" : "end_use_electricity_cooling",
                   "units" : "kWh",
-                  "value" : 58019.444444444453
+                  "value" : 51777.777777777774
                },
                {
                   "name" : "end_use_electricity_interior_lighting",
@@ -295,12 +295,12 @@
                {
                   "name" : "end_use_electricity_fans",
                   "units" : "kWh",
-                  "value" : 57197.222222222226
+                  "value" : 55502.777777777774
                },
                {
                   "name" : "end_use_electricity_pumps",
                   "units" : "kWh",
-                  "value" : 30050
+                  "value" : 30030.555555555558
                },
                {
                   "name" : "end_use_electricity_heat_rejection",
@@ -335,7 +335,7 @@
                {
                   "name" : "end_use_natural_gas_heating",
                   "units" : "therms",
-                  "value" : 49668.090000000004
+                  "value" : 48778.581600000005
                },
                {
                   "name" : "end_use_natural_gas_cooling",
@@ -410,7 +410,7 @@
                {
                   "name" : "electricity_cooling_ip",
                   "units" : "kWh",
-                  "value" : 58018.766666666663
+                  "value" : 51777.03333333334
                },
                {
                   "name" : "electricity_interior_lighting_ip",
@@ -435,12 +435,12 @@
                {
                   "name" : "electricity_fans_ip",
                   "units" : "kWh",
-                  "value" : 57197.75
+                  "value" : 55502.333333333336
                },
                {
                   "name" : "electricity_pumps_ip",
                   "units" : "kWh",
-                  "value" : 30049.222222222226
+                  "value" : 30031.655555555557
                },
                {
                   "name" : "electricity_heat_rejection_ip",
@@ -475,12 +475,12 @@
                {
                   "name" : "electricity_ip",
                   "units" : "kWh",
-                  "value" : 757560.0166666666
+                  "value" : 749605.30000000005
                },
                {
                   "name" : "natural_gas_heating_ip",
                   "units" : "MBtu",
-                  "value" : 4965.8498997844263
+                  "value" : 4876.914323751188
                },
                {
                   "name" : "natural_gas_cooling_ip",
@@ -550,7 +550,7 @@
                {
                   "name" : "natural_gas_ip",
                   "units" : "MBtu",
-                  "value" : 4965.8498997844263
+                  "value" : 4876.914323751188
                },
                {
                   "name" : "additional_fuel_heating_ip",
@@ -890,7 +890,7 @@
                {
                   "name" : "exterior_lighting_total_consumption",
                   "units" : "kWh",
-                  "value" : 2212905.5555555555
+                  "value" : 2178888.888888889
                },
                {
                   "name" : "inflation_approach",
@@ -904,7 +904,7 @@
                {
                   "name" : "annual_peak_electric_demand",
                   "units" : "kW",
-                  "value" : 291.22712999999999
+                  "value" : 288.50673
                },
                {
                   "name" : "first_year_capital_cost",
@@ -926,6 +926,6 @@
          }
       }
    ],
-   "updated_at" : "20180206T085528Z",
+   "updated_at" : "20180208T115947Z",
    "weather_file" : "../../weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"
 }
