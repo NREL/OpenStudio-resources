@@ -27,7 +27,16 @@ RUN mkdir -p /var/simdata/openstudio/OpenStudio-resources &&\
     echo 'COLOR_0="0:37m" # Light Gray' >> ~/.bashrc &&\
     echo 'COLOR_1="38;5;167m" # Some light red' >> ~/.bashrc &&\
     echo 'COLOR_2="38;5;33m" # Some light blue' >> ~/.bashrc &&\
-    echo 'PS1="\[\033[$COLOR_0\](${OSVERSION})\[\033[$COLOR_1\]\u\[\033[0m\]@\[\033[$COLOR_2\]\W\[\033[0m\]$ "' >> ~/.bashrc
+    echo 'PS1="\[\033[$COLOR_0\](${OSVERSION})\[\033[$COLOR_1\]\u\[\033[0m\]@\[\033[$COLOR_2\]\W\[\033[0m\]$ "' >> ~/.bashrc &&\
+    echo 'export long_os_version=$(openstudio openstudio_version)' >> ~/.bashrc &&\
+    echo 'export short_os_version=${long_os_version%.*}' >> ~/.bashrc
+
+    # &&\
+    # ~/.rbenv/shims/gem install minitest-reporters
+
+    # For OS 2.0.4 only
+    # &&\
+    # sudo apt update && apt install -y libglu1 libjpeg8 libfreetype6 libdbus-glib-1-2 libfontconfig1 libSM6 libXi6
 
 # Set the workdir
 WORKDIR /var/simdata/openstudio/OpenStudio-resources

@@ -1,4 +1,6 @@
-require 'openstudio'
+#p = File.join(ENV["HOME"], "Software/Others/OS-build/Products/ruby/openstudio")
+#require p
+require 'openstudio' unless defined?(OpenStudio)
 
 require 'fileutils'
 require 'json'
@@ -11,6 +13,14 @@ ENV['N'] = [1, Etc.nprocessors - 1].max.to_s
 
 require 'minitest/autorun'
 
+begin
+  require "minitest/reporters"
+  Minitest::Reporters.use!
+rescue LoadError
+  puts "Minitest Reporters not installed"
+end
+
+
 # config stuff
 $OpenstudioCli = OpenStudio::getOpenStudioCLI
 $RootDir = File.absolute_path(File.dirname(__FILE__))
@@ -19,6 +29,19 @@ $ModelDir = File.join($RootDir, 'model/simulationtests/')
 $IntersectDir = File.join($RootDir, 'model/intersectiontests/')
 $IntersectFile = File.join($RootDir, 'intersect.rb.erb')
 $TestDir = File.join($RootDir, 'testruns')
+$SdkVersion = OpenStudio.openStudioVersion
+
+# Were to cp the out.osw for regression
+# Depends on whether you are in a docker env or not
+proc_file = '/proc/1/cgroup'
+is_docker = File.file?(proc_file) && (File.readlines(proc_file).grep(/docker/).size > 0)
+if is_docker
+  # Mounted directory is at /root/test
+  $OutOSWDir = File.join(ENV['HOME'], 'test')
+else
+  # Directly in here
+  $OutOSWDir = File.join($RootDir, 'test')
+end
 
 $:.unshift($ModelDir)
 ENV['RUBYLIB'] = $ModelDir
@@ -40,7 +63,7 @@ def run_command(command, dir, timeout = Float::INFINITY)
         end
         until e.eof? do
           out += e.read_nonblock(100)
-      end
+        end
       end
 
       result = w.value.exitstatus
@@ -76,7 +99,20 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
 
   ext = File.extname(filename)
   if (ext == '.osm')
-    FileUtils.cp(File.join($ModelDir,filename), in_osm)
+    # Check that version of OSM is inferior or equal to the current
+    # openstudio sdk used (only for docker...)
+    ori_file_path = File.join($ModelDir,filename)
+    v = OpenStudio::IdfFile.loadVersionOnly(ori_file_path)
+    if not v
+      fail "Cannot find versionString in #{filename}"
+    end
+    model_version = v.get.str
+
+    if Gem::Version.new(model_version) > Gem::Version.new($SdkVersion)
+      fail "Model version is newer than the SDK version used (#{model_version} versus #{$SdkVersion})"
+    end
+
+    FileUtils.cp(ori_file_path, in_osm)
   elsif (ext == '.rb')
     command = "\"#{$OpenstudioCli}\" \"#{File.join($ModelDir,filename)}\""
     run_command(command, dir, 3600)
@@ -84,7 +120,7 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
     # tests used to write out.osm
     out_osm = File.join(dir, 'out.osm')
     if File.exists?(out_osm)
-      puts "moving #{out_osm} to #{in_osm}"
+      # puts "moving #{out_osm} to #{in_osm}"
       FileUtils.mv(out_osm, in_osm)
     end
 
@@ -101,6 +137,29 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
   result_osw = nil
   File.open(out_osw, 'r') do |f|
     result_osw = JSON::parse(f.read, :symbolize_names=>true)
+  end
+
+  # Cp to the OutOSW directory
+  cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out.osw")
+
+  # FileUtils.cp(out_osw, cp_out_osw)
+  # Instead of just copying, we clean up the osw then export that to a file
+  # Remove timestamps and hash
+  result_osw[:eplusout_err].gsub!(/YMD=.*?,/, '')
+  result_osw[:eplusout_err].gsub!(/Elapsed Time=.*?\n/, '')
+  result_osw.delete(:completed_at)
+  result_osw.delete(:hash)
+  result_osw.delete(:started_at)
+  result_osw.delete(:updated_at)
+
+  # Should always be true
+  if (result_osw[:steps].size == 1) && (result_osw[:steps].select{|s| s[:measure_dir_name] == 'openstudio_results'}.size == 1)
+    result_osw[:steps][0][:result].delete(:completed_at)
+    result_osw[:steps][0][:result].delete(:started_at)
+    result_osw[:steps][0][:result].delete(:step_files)
+  end
+  File.open(cp_out_osw,"w") do |f|
+    f.write(JSON.pretty_generate(result_osw))
   end
 
   # standard checks
@@ -166,7 +225,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       # tests used to write out.osm
       out_osm = File.join(dir, 'out.osm')
       if File.exists?(out_osm)
-        puts "moving #{out_osm} to #{in_osm}"
+        # puts "moving #{out_osm} to #{in_osm}"
         FileUtils.mv(out_osm, in_osm)
       end
 
@@ -535,6 +594,10 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('absorption_chillers.rb')
   end
 
+  def test_absorption_chillers_osm
+    result = sim_test('absorption_chillers.osm')
+  end
+
   def test_airterminal_cooledbeam_osm
     result = sim_test('airterminal_cooledbeam.osm')
   end
@@ -559,12 +622,32 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('air_terminals.rb')
   end
 
+  def test_airloop_and_zonehvac_rb
+    result = sim_test('airloop_and_zonehvac.rb')
+  end
+
+  def test_airloop_and_zonehvac_osm
+    result = sim_test('airloop_and_zonehvac.osm')
+  end
+
+  def test_airloop_avms_rb
+    result = sim_test('airloop_avms.rb')
+  end
+
+  def test_airloop_avms_osm
+    result = sim_test('airloop_avms.osm')
+  end
+
   def test_asymmetric_interior_constructions_osm
     result = sim_test('asymmetric_interior_constructions.osm')
   end
 
   def test_availability_managers_rb
     result = sim_test('availability_managers.rb')
+  end
+
+  def test_availability_managers_osm
+    result = sim_test('availability_managers.osm')
   end
 
   def test_baseline_sys01_osm
@@ -659,12 +742,24 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('cooling_coils.rb')
   end
 
+  def test_cooling_coils_osm
+    result = sim_test('cooling_coils.osm')
+  end
+
   def test_daylighting_no_shades_rb
     result = sim_test('daylighting_no_shades.rb')
   end
 
+  def test_daylighting_no_shades_osm
+    result = sim_test('daylighting_no_shades.osm')
+  end
+
   def test_daylighting_shades_rb
     result = sim_test('daylighting_shades.rb')
+  end
+
+  def test_daylighting_shades_osm
+    result = sim_test('daylighting_shades.osm')
   end
 
   def test_dist_ht_cl_osm
@@ -687,14 +782,22 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('dual_duct.rb')
   end
 
+  def test_dual_duct_osm
+    result = sim_test('dual_duct.osm')
+  end
+
   def test_ducts_and_pipes_rb
     result = sim_test('ducts_and_pipes.rb')
   end
-  
+
+  def test_ducts_and_pipes_osm
+    result = sim_test('ducts_and_pipes.osm')
+  end
+
   def test_ems_osm
     result = sim_test('ems.osm')
   end
-  
+
   def test_ems_rb
     result = sim_test('ems.rb')
   end
@@ -723,14 +826,26 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('fluid_coolers.rb')
   end
 
+  def test_fluid_coolers_osm
+    result = sim_test('fluid_coolers.osm')
+  end
+
+  def test_foundation_kiva_osm
+    result = sim_test('foundation_kiva.osm')
+  end
+
+  def test_foundation_kiva_rb
+    result = sim_test('foundation_kiva.rb')
+  end
+
   def test_fuelcell_osm
     result = sim_test('fuelcell.osm')
   end
-  
+
   def test_fuelcell_rb
     result = sim_test('fuelcell.rb')
   end
-  
+
   def test_headered_pumps_osm
     result = sim_test('headered_pumps.osm')
   end
@@ -751,24 +866,48 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('heatpump_hot_water.rb')
   end
 
+  def test_heatpump_hot_water_osm
+    result = sim_test('heatpump_hot_water.osm')
+  end
+
   def test_hightemprad_rb
     result = sim_test('hightemprad.rb')
+  end
+
+  def test_hightemprad_osm
+    result = sim_test('hightemprad.osm')
   end
 
   def test_hot_water_rb
     result = sim_test('hot_water.rb')
   end
 
+  def test_hot_water_osm
+    result = sim_test('hot_water.osm')
+  end
+
   def test_humidity_control_rb
     result = sim_test('humidity_control.rb')
+  end
+
+  def test_humidity_control_osm
+    result = sim_test('humidity_control.osm')
   end
 
   def test_ideal_plant_rb
     result = sim_test('ideal_plant.rb')
   end
 
+  def test_ideal_plant_osm
+    result = sim_test('ideal_plant.osm')
+  end
+
   def test_interior_partitions_rb
     result = sim_test('interior_partitions.rb')
+  end
+
+  def test_interior_partitions_osm
+    result = sim_test('interior_partitions.osm')
   end
 
   def test_lifecyclecostparameters_osm
@@ -803,16 +942,52 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('lowtemprad_varflow.rb')
   end
 
+  def test_moisture_settings_osm
+    result = sim_test('moisture_settings.osm')
+  end
+
+  def test_moisture_settings_rb
+    result = sim_test('moisture_settings.rb')
+  end
+
   def test_multi_stage_rb
     result = sim_test('multi_stage.rb')
+  end
+
+  def test_multi_stage_osm
+    result = sim_test('multi_stage.osm')
+  end
+
+  def test_photovoltaics_rb
+    result = sim_test('photovoltaics.rb')
+  end
+
+  def test_photovoltaics_osm
+    result = sim_test('photovoltaics.osm')
   end
 
   def test_plant_op_schemes_rb
     result = sim_test('plant_op_schemes.rb')
   end
 
+  def test_plant_op_schemes_osm
+    result = sim_test('plant_op_schemes.osm')
+  end
+
+  def test_plantloop_avms_rb
+    result = sim_test('plantloop_avms.rb')
+  end
+
+  def test_plantloop_avms_osm
+    result = sim_test('plantloop_avms.osm')
+  end
+
   def test_plenums_rb
     result = sim_test('plenums.rb')
+  end
+
+  def test_plenums_osm
+    result = sim_test('plenums.osm')
   end
 
   def test_refrigeration_system_osm
@@ -831,20 +1006,40 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('schedule_ruleset_2012_LeapYear.rb')
   end
 
+  def test_schedule_ruleset_2012_LeapYear_osm
+    result = sim_test('schedule_ruleset_2012_LeapYear.osm')
+  end
+
   def test_schedule_ruleset_2012_NonLeapYear_rb
     result = sim_test('schedule_ruleset_2012_NonLeapYear.rb')
+  end
+
+  def test_schedule_ruleset_2012_NonLeapYear_osm
+    result = sim_test('schedule_ruleset_2012_NonLeapYear.osm')
   end
 
   def test_schedule_ruleset_2013_rb
     result = sim_test('schedule_ruleset_2013.rb')
   end
 
+  def test_schedule_ruleset_2013_osm
+    result = sim_test('schedule_ruleset_2013.osm')
+  end
+
   def test_setpoint_managers_rb
     result = sim_test('setpoint_managers.rb')
   end
 
+  def test_setpoint_managers_osm
+    result = sim_test('setpoint_managers.osm')
+  end
+
   def test_solar_collector_flat_plate_water_rb
     result = sim_test('solar_collector_flat_plate_water.rb')
+  end
+
+  def test_solar_collector_flat_plate_water_osm
+    result = sim_test('solar_collector_flat_plate_water.osm')
   end
 
   def test_surface_properties_osm
@@ -859,6 +1054,10 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('thermal_storage.rb')
   end
 
+  def test_thermal_storage_osm
+    result = sim_test('thermal_storage.osm')
+  end
+
   def test_unitary_system_osm
     result = sim_test('unitary_system.osm')
   end
@@ -866,7 +1065,7 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_unitary_system_rb
     result = sim_test('unitary_system.rb')
   end
-  
+
   def test_unitary_system_performance_multispeed_rb
     result = sim_test('unitary_system_performance_multispeed.rb')
   end
@@ -879,16 +1078,32 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('unitary_test.rb')
   end
 
+  def test_unitary_test_osm
+    result = sim_test('unitary_test.osm')
+  end
+
   def test_unitary_vav_bypass_rb
     result = sim_test('unitary_vav_bypass.rb')
+  end
+
+  def test_unitary_vav_bypass_osm
+    result = sim_test('unitary_vav_bypass.osm')
   end
 
   def test_utility_bill01_rb
     result = sim_test('utility_bill01.rb')
   end
 
+  def test_utility_bill01_osm
+    result = sim_test('utility_bill01.osm')
+  end
+
   def test_utility_bill02_rb
     result = sim_test('utility_bill02.rb')
+  end
+
+  def test_utility_bill02_osm
+    result = sim_test('utility_bill02.osm')
   end
 
   def test_vrf_osm
@@ -911,12 +1126,24 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('water_heaters.rb')
   end
 
+  def test_water_heaters_osm
+    result = sim_test('water_heaters.osm')
+  end
+
   def test_zone_air_movement_rb
     result = sim_test('zone_air_movement.rb')
   end
 
+  def test_zone_air_movement_osm
+    result = sim_test('zone_air_movement.osm')
+  end
+
   def test_zone_control_contaminant_controller_rb
     result = sim_test('zone_control_contaminant_controller.rb')
+  end
+
+  def test_zone_control_contaminant_controller_osm
+    result = sim_test('zone_control_contaminant_controller.osm')
   end
 
   def test_zone_fan_exhaust_osm
@@ -939,6 +1166,10 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('zone_hvac2.rb')
   end
 
+  def test_zone_hvac2_osm
+    result = sim_test('zone_hvac2.osm')
+  end
+
   def test_zone_mixing_osm
     result = sim_test('zone_mixing.osm')
   end
@@ -946,43 +1177,9 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_zone_mixing_rb
     result = sim_test('zone_mixing.rb')
   end
-  
-  def test_moisture_settings_osm
-    result = sim_test('moisture_settings.osm')
-  end
-  
-  def test_moisture_settings_rb
-    result = sim_test('moisture_settings.rb')
-  end
 
-  def test_airloop_and_zonehvac_rb
-    result = sim_test('airloop_and_zonehvac.rb')
-  end
-  
-  def test_airloop_and_zonehvac_osm
-    result = sim_test('airloop_and_zonehvac.osm')
-  end
-  
-  def test_airloop_avms_rb
-    result = sim_test('airloop_avms.rb')
-  end
 
-  def test_plantloop_avms_rb
-    result = sim_test('plantloop_avms.rb')
-  end
-  
-  def test_photovoltaics_rb
-    result = sim_test('photovoltaics.rb')
-  end
 
-  def test_foundation_kiva_osm
-    result = sim_test('foundation_kiva.osm')
-  end
-  
-  def test_foundation_kiva_rb
-    result = sim_test('foundation_kiva.rb')
-  end
-  
   # intersection tests
 
   def test_intersect_22_osm

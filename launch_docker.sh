@@ -327,7 +327,7 @@ if [ -z $(docker images -q $os_image_name) ]; then
   # If the docker base nrel/openstudio:tag image doesn't already exists
   # Make sure the user wants to actually download it
   if [ -z $(docker images -q $base_os_image_name) ]; then
-    echo -e "The docker base $base_os_image_str isn't on your disk. This will require downloading 1+ GB of data"
+    echo -e "The docker base $base_os_image_str isn't on your disk. This may require downloading 1+ GB of data"
     echo -e -n "Are you sure you want to continue? [y/${URed}N${Color_Off}] "
     read -n 1 -r
     echo
@@ -384,7 +384,6 @@ if [[ ! $REPLY =~ ^[Nn]$ ]]; then
   echo "-----------------"
   docker exec $os_container_name /bin/bash ./docker_container_script.sh $filter
 fi
-
 
 
 # Attach to the container
