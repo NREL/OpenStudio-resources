@@ -453,7 +453,7 @@ def parse_end_use(out_osw_path, throw_if_path_none=True):
     return cleaned_end_use
 
 
-def success_sheet(df_files, model_test_cases=None):
+def success_sheet(df_files, model_test_cases=None, add_missing=True):
     """
     High-level method to construct a dataframe of Success
 
@@ -478,9 +478,24 @@ def success_sheet(df_files, model_test_cases=None):
             row[filt1 & filt2] = "N/A"
 
     # Create n_fail and order by that
-    success['n_fail'] = (success == 'Fail').sum(axis=1)
-    order_n_fail = (success.groupby(level='Test')['n_fail']
-                           .sum().sort_values(ascending=False))
+    n_fail = (success == 'Fail').sum(axis=1)
+    n_missing = (success == '').sum(axis=1)
+    n_fail_miss = n_fail + n_missing
+
+    success['n_fail'] = n_fail
+
+    if add_missing:
+        success['n_missing'] = n_missing
+        success['n_fail+missing'] = n_fail_miss
+        # Order by n_fail, then by n_fail+missing
+        order_n_fail = (success.groupby(level='Test').sum()
+                               .sort_values(by=['n_fail', 'n_fail+missing'],
+                                            ascending=False))
+    else:
+        order_n_fail = (success.groupby(level='Test')['n_fail']
+                               .sum().sort_values(ascending=False))
+
+
     success = success.reindex(index=order_n_fail.index, level=0)
 
     return success
@@ -533,5 +548,52 @@ def test_implemented_sheet(df_files, success=None, model_test_cases=None,
 
     return test_impl
 
-#compat_matrix = parse_compatibility_matrix()
-#df_files = find_info_osws(compat_matrix=None, test_dir='./test/')
+
+def update_and_upload():
+    compat_matrix = parse_compatibility_matrix()
+    df_files = find_info_osws(compat_matrix=compat_matrix, test_dir='./test/')
+
+    model_test_cases = find_osm_test_versions()
+
+    # Test Status
+    success = success_sheet(df_files=df_files,
+                            model_test_cases=model_test_cases)
+    spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
+    wks_name = 'Test_Status'
+    d2g.upload(success.T.reset_index().T.reset_index(),
+               gfile=spreadsheet, wks_name=wks_name,
+               row_names=False, col_names=False)
+
+    # Missing / Implemented test
+    test_impl = test_implemented_sheet(df_files=df_files,
+                                       success=success,
+                                       only_for_mising_osm=False)
+
+    spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
+    wks_name = 'Tests_Implemented'
+    d2g.upload(test_impl,
+               gfile=spreadsheet, wks_name=wks_name,
+               row_names=True, col_names=True)
+
+    # Site kbtu
+    site_kbtu = df_files.applymap(parse_total_site_energy)
+    spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
+    wks_name = 'SiteKBTU'
+    d2g.upload(site_kbtu.T.reset_index().T.reset_index().fillna(''),
+               gfile=spreadsheet, wks_name=wks_name,
+               # Skip first row
+               start_cell='A1',
+               row_names=False, col_names=False)
+
+    # Rolling percent difference of total kBTU from one version to the next
+    spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
+    wks_name = 'SiteKBTU_Percent_Change'
+    d2g.upload((site_kbtu.pct_change(axis=1).T.reset_index().T
+                         .reset_index().fillna('')),
+               gfile=spreadsheet, wks_name=wks_name,
+               row_names=False, col_names=False)
+
+
+# If run from command line rather than imported
+if __name__ == "__main__":
+    update_and_upload()
