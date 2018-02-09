@@ -192,6 +192,12 @@ function cleanup() {
   # Stop mongo? Defaults to No
   stop_running_container "$mongo_container_name" "$mongo_container_str" N
 
+
+  echo
+  echo -e "${On_Blue}Fixing ownership: setting it to user=$USER and chmod=664 (requires sudo)${Color_Off}"
+  sudo chown -R $USER *
+  sudo find ./test/ -type f -exec chmod 664 {} \;
+
   exit $1
 
 }

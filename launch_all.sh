@@ -212,6 +212,11 @@ for os_version in "${all_versions[@]}"; do
 
 done
 
+echo
+echo -e "${On_Blue}Fixing ownership: setting it to user=$USER and chmod=664 (requires sudo)${Color_Off}"
+sudo chown -R $USER *
+sudo find ./test/ -type f -exec chmod 664 {} \;
+
 # Stop the mongo one
 docker stop $mongo_container_name &> /dev/null
 echo -e "* Stopped the $mongo_container_str"
