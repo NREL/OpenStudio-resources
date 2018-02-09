@@ -139,27 +139,57 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
     result_osw = JSON::parse(f.read, :symbolize_names=>true)
   end
 
-  # Cp to the OutOSW directory
-  cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out.osw")
+  if !result_osw.nil?
+    # Cp to the OutOSW directory
+    cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out.osw")
 
-  # FileUtils.cp(out_osw, cp_out_osw)
-  # Instead of just copying, we clean up the osw then export that to a file
-  # Remove timestamps and hash
-  result_osw[:eplusout_err].gsub!(/YMD=.*?,/, '')
-  result_osw[:eplusout_err].gsub!(/Elapsed Time=.*?\n/, '')
-  result_osw.delete(:completed_at)
-  result_osw.delete(:hash)
-  result_osw.delete(:started_at)
-  result_osw.delete(:updated_at)
+    # FileUtils.cp(out_osw, cp_out_osw)
+    # Instead of just copying, we clean up the osw then export that to a file
+    # Remove timestamps and hash
+    if result_osw.keys.include?(:eplusout_err)
+      result_osw[:eplusout_err].gsub!(/YMD=.*?,/, '')
+      result_osw[:eplusout_err].gsub!(/Elapsed Time=.*?\n/, '')
+      # Replace eplusout_err by a list of lines instead of a big string
+      # Will make git diffing easier
+      result_osw[:eplusout_err] = result_osw[:eplusout_err].split("\n")
+    end
 
-  # Should always be true
-  if (result_osw[:steps].size == 1) && (result_osw[:steps].select{|s| s[:measure_dir_name] == 'openstudio_results'}.size == 1)
-    result_osw[:steps][0][:result].delete(:completed_at)
-    result_osw[:steps][0][:result].delete(:started_at)
-    result_osw[:steps][0][:result].delete(:step_files)
-  end
-  File.open(cp_out_osw,"w") do |f|
-    f.write(JSON.pretty_generate(result_osw))
+    result_osw.delete(:completed_at)
+    result_osw.delete(:hash)
+    result_osw.delete(:started_at)
+    result_osw.delete(:updated_at)
+
+    # Should always be true
+    if (result_osw[:steps].size == 1) && (result_osw[:steps].select{|s| s[:measure_dir_name] == 'openstudio_results'}.size == 1)
+      # If something went wrong, there wouldn't be results
+      if result_osw[:steps][0].keys.include?(:result)
+        result_osw[:steps][0][:result].delete(:completed_at)
+        result_osw[:steps][0][:result].delete(:started_at)
+        result_osw[:steps][0][:result].delete(:step_files)
+
+        # Round all numbers to 2 digits to avoid excessive diffs
+        # result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
+        result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
+          if h[:value].is_a? Float
+            result_osw[:steps][0][:result][:step_values][i][:value] = h[:value].round(2)
+          end
+        end
+      end
+    end
+
+
+    # The fuel cell tests produce out.osw files that are about 800 MB
+    # because E+ throws a warning in the Regula Falsi routine (an E+ bug)
+    # which results in about 7.5 Million times the same warning
+    # So if the file size is bigger than 100 KiB, we throw out the eplusout_err
+    if File.size(out_osw) > 100000
+      result_osw.delete(:eplusout_err)
+    end
+
+    File.open(cp_out_osw,"w") do |f|
+      f.write(JSON.pretty_generate(result_osw))
+    end
+
   end
 
   # standard checks
