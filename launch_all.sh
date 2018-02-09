@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source colors.sh
+
 # This script will run regression tests for many earlier OpenStudio versions
 # For a single & more interactive version use the CLI ./launch_docker.sh
 

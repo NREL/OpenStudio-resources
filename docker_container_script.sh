@@ -40,6 +40,14 @@ if [ -d "testruns" ]; then
   #  outname="${test}_${OSVERSION}_out.osw"
   #  cp $f ~/test/$outname
   #done
+
+  #for f in $(ls **/in.osm)
+  #do
+    #test=$(dirname $f) # ${f////_}
+    #outname="${test}_${OSVERSION}.osm"
+    #cp $f ~/test/$outname
+  #done
+
 else
   echo
   echo "/!\\ Warning: testruns/ directory doesn't exist, tests probably didn't run. Check the pattern you supplied or error messages"
@@ -53,4 +61,6 @@ fi
 
 # From within a testruns/modelxxx/ directory:
 # cp in.osm ~/test/`basename ${PWD%.*}`.osm
+
+
 
