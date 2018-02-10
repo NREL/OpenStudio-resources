@@ -10,7 +10,7 @@ model.add_geometry({"length" => 100,
                     "floor_to_floor_height" => 4,
                     "plenum_height" => 1,
                     "perimeter_zone_depth" => 3})
-                    
+
 #add windows at a 40% window-to-wall ratio
 model.add_windows({"wwr" => 0.4,
                    "offset" => 1,
@@ -22,7 +22,7 @@ model.add_hvac({"ashrae_sys_num" => '01'})
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                        "cooling_setpoint" => 28})
-                       
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
@@ -56,7 +56,7 @@ model.getAdditionalPropertiess.each do |additional_properties|
 
   #retrieve an additional properties object and set a new feature
   additional_properties.setFeature("newFeature", 1)
-  
+
   #retrieve the parent object from the additional properties object
   model_object = additional_properties.modelObject
   if model_object.to_StandardOpaqueMaterial.is_initialized
@@ -74,6 +74,22 @@ model.getAdditionalPropertiess.each do |additional_properties|
   end
 
 end
-       
+
+unit = OpenStudio::Model::BuildingUnit.new(model)
+model.getSpaces.each do |space|
+  space.setBuildingUnit(unit)
+end
+
+additional_properties = unit.additionalProperties
+additional_properties.setFeature("isNiceUnit", true)
+
+if unit.suggestedFeatures.include? "isNiceUnit" # check backwards compatibility
+  unit.setFeature("hasSuggestedFeature1", true)
+end
+
+if unit.additionalProperties.suggestedFeatureNames.include? "isNiceUnit"
+  additional_properties.setFeature("hasSuggestedFeature2", true)
+end
+
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})
