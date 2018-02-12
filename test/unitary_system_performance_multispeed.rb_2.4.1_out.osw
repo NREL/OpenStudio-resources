@@ -1,7 +1,100 @@
 {
   "completed_status": "Success",
   "current_step": 1,
-  "eplusout_err": "Program Version,EnergyPlus, Version 8.8.0-7c3bbe4830, IDD_Version 8.8.0\n   ************* Beginning Zone Sizing Calculations\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 4\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 5\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 6\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 7\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** GetHTSurfaceData: Surfaces with interface to Ground found but no \"Ground Temperatures\" were input.\n   **   ~~~   ** Found first in surface=SURFACE 25\n   **   ~~~   ** Defaults, constant throughout the year of (18.0) will be used.\n   ** Warning ** CheckUsedConstructions: There are 6 nominally unused constructions in input.\n   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;\n   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"STORY 1 CORE THERMAL ZONE BASELINE MODEL INFILTRATION\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Surface Area = 0.  0 Infiltration will result.\n   ************* Beginning System Sizing Calculations\n   ************* Beginning Plant Sizing Calculations\n   ** Warning ** GetElectricEIRChillerInput: Chiller:Electric:EIR=\"CHILLER ELECTRIC EIR 1\"\n   **   ~~~   ** Adding OutdoorAir:Node=CHILLER ELECTRIC EIR 1 INLET NODE FOR CONDENSER\n   ** Warning ** GetElectricEIRChillerInput: Chiller:Electric:EIR=\"CHILLER ELECTRIC EIR 1\"\n   **   ~~~   ** Energy input ratio as a function of temperature curve output is not equal to 1.0 (+ or - 10%) at reference conditions.\n   **   ~~~   ** Curve output at reference conditions = 0.861\n   ** Warning ** SizePlantLoop: Calculated Plant Sizing Design Volume Flow Rate=[0.00] is too small. Set to 0.0\n   **   ~~~   ** ..occurs for PlantLoop=PLANT LOOP 1\n   ** Warning ** SizePump: Calculated Pump Nominal Volume Flow Rate=[0.00] is too small. Set to 0.0\n   **   ~~~   ** ..occurs for Pump=PUMP VARIABLE SPEED 1\n   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=PUMP VARIABLE SPEED 1\n   ** Warning ** Check input. Pump nominal flow rate is set or calculated = 0, for pump=PUMP VARIABLE SPEED 1\n   ** Warning ** SizePlantLoop: Calculated Plant Sizing Design Volume Flow Rate=[0.00] is too small. Set to 0.0\n   **   ~~~   ** ..occurs for PlantLoop=PLANT LOOP 2\n   ** Warning ** SizePump: Calculated Pump Nominal Volume Flow Rate=[0.00] is too small. Set to 0.0\n   **   ~~~   ** ..occurs for Pump=PUMP VARIABLE SPEED 2\n   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=PUMP VARIABLE SPEED 2\n   ** Warning ** Check input. Pump nominal flow rate is set or calculated = 0, for pump=PUMP VARIABLE SPEED 2\n   ** Warning ** Chiller:Electric:EIR = CHILLER ELECTRIC EIR 1:  Integrated Part Load Value (IPLV) cannot be calculated.\n   **   ~~~   **  Check the chiller autosized or user specified capacity. Autosized or specified chiller capacity = 0.00\n   ** Warning ** SizePlantLoop: Calculated Plant Sizing Design Volume Flow Rate=[0.00] is too small. Set to 0.0\n   **   ~~~   ** ..occurs for PlantLoop=PLANT LOOP 3\n   ** Warning ** SizePump: Calculated Pump Nominal Volume Flow Rate=[0.00] is too small. Set to 0.0\n   **   ~~~   ** ..occurs for Pump=PUMP VARIABLE SPEED 3\n   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=PUMP VARIABLE SPEED 3\n   ** Warning ** Check input. Pump nominal flow rate is set or calculated = 0, for pump=PUMP VARIABLE SPEED 3\n   ** Warning ** Output:Meter:MeterFileOnly requested for \"Electricity:Facility\" (TimeStep), already on \"Output:Meter\". Will report to both eplusout.eso and eplusout.mtr\n   ************* Testing Individual Branch Integrity\n   ************* All Branches passed integrity testing\n   ************* Testing Individual Supply Air Path Integrity\n   ************* All Supply Air Paths passed integrity testing\n   ************* Testing Individual Return Air Path Integrity\n   ************* All Return Air Paths passed integrity testing\n   ************* No node connection errors were found.\n   ************* Beginning Simulation\n   ** Warning ** Processing Monthly Tabular Reports: Variable names not valid for this simulation\n   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual variables.\n   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-ELECTRICITY\" has no energy cost. \n   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.\n   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-DISTILLATE OIL\" has no energy cost. \n   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.\n   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-RESIDUAL OIL\" has no energy cost. \n   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.\n   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-NATURAL GAS\" has no energy cost. \n   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.\n   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-COAL\" has no energy cost. \n   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.\n   ************* Simulation Error Summary *************\n   ************* There are 2 unused schedules in input.\n   ************* There are 2 unused week schedules in input.\n   ************* There are 6 unused day schedules in input.\n   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.\n   *************\n   ************* ===== Final Error Summary =====\n   ************* The following error categories occurred.  Consider correcting or noting.\n   ************* Nominally Unused Constructions\n   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause\n   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm\n   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).\n   *************\n   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.\n   ************* EnergyPlus Sizing Error Summary. During Sizing: 9 Warning; 0 Severe Errors.\n   ************* EnergyPlus Completed Successfully-- 31 Warning; 0 Severe Errors; ",
+  "eplusout_err": [
+    "Program Version,EnergyPlus, Version 8.8.0-7c3bbe4830, IDD_Version 8.8.0",
+    "   ************* Beginning Zone Sizing Calculations",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 4\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 5\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 6\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 7\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** GetHTSurfaceData: Surfaces with interface to Ground found but no \"Ground Temperatures\" were input.",
+    "   **   ~~~   ** Found first in surface=SURFACE 25",
+    "   **   ~~~   ** Defaults, constant throughout the year of (18.0) will be used.",
+    "   ** Warning ** CheckUsedConstructions: There are 6 nominally unused constructions in input.",
+    "   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;",
+    "   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"STORY 1 CORE THERMAL ZONE BASELINE MODEL INFILTRATION\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Surface Area = 0.  0 Infiltration will result.",
+    "   ************* Beginning System Sizing Calculations",
+    "   ************* Beginning Plant Sizing Calculations",
+    "   ** Warning ** GetElectricEIRChillerInput: Chiller:Electric:EIR=\"CHILLER ELECTRIC EIR 1\"",
+    "   **   ~~~   ** Adding OutdoorAir:Node=CHILLER ELECTRIC EIR 1 INLET NODE FOR CONDENSER",
+    "   ** Warning ** GetElectricEIRChillerInput: Chiller:Electric:EIR=\"CHILLER ELECTRIC EIR 1\"",
+    "   **   ~~~   ** Energy input ratio as a function of temperature curve output is not equal to 1.0 (+ or - 10%) at reference conditions.",
+    "   **   ~~~   ** Curve output at reference conditions = 0.861",
+    "   ** Warning ** SizePlantLoop: Calculated Plant Sizing Design Volume Flow Rate=[0.00] is too small. Set to 0.0",
+    "   **   ~~~   ** ..occurs for PlantLoop=PLANT LOOP 1",
+    "   ** Warning ** SizePump: Calculated Pump Nominal Volume Flow Rate=[0.00] is too small. Set to 0.0",
+    "   **   ~~~   ** ..occurs for Pump=PUMP VARIABLE SPEED 1",
+    "   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=PUMP VARIABLE SPEED 1",
+    "   ** Warning ** Check input. Pump nominal flow rate is set or calculated = 0, for pump=PUMP VARIABLE SPEED 1",
+    "   ** Warning ** SizePlantLoop: Calculated Plant Sizing Design Volume Flow Rate=[0.00] is too small. Set to 0.0",
+    "   **   ~~~   ** ..occurs for PlantLoop=PLANT LOOP 2",
+    "   ** Warning ** SizePump: Calculated Pump Nominal Volume Flow Rate=[0.00] is too small. Set to 0.0",
+    "   **   ~~~   ** ..occurs for Pump=PUMP VARIABLE SPEED 2",
+    "   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=PUMP VARIABLE SPEED 2",
+    "   ** Warning ** Check input. Pump nominal flow rate is set or calculated = 0, for pump=PUMP VARIABLE SPEED 2",
+    "   ** Warning ** Chiller:Electric:EIR = CHILLER ELECTRIC EIR 1:  Integrated Part Load Value (IPLV) cannot be calculated.",
+    "   **   ~~~   **  Check the chiller autosized or user specified capacity. Autosized or specified chiller capacity = 0.00",
+    "   ** Warning ** SizePlantLoop: Calculated Plant Sizing Design Volume Flow Rate=[0.00] is too small. Set to 0.0",
+    "   **   ~~~   ** ..occurs for PlantLoop=PLANT LOOP 3",
+    "   ** Warning ** SizePump: Calculated Pump Nominal Volume Flow Rate=[0.00] is too small. Set to 0.0",
+    "   **   ~~~   ** ..occurs for Pump=PUMP VARIABLE SPEED 3",
+    "   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=PUMP VARIABLE SPEED 3",
+    "   ** Warning ** Check input. Pump nominal flow rate is set or calculated = 0, for pump=PUMP VARIABLE SPEED 3",
+    "   ** Warning ** Output:Meter:MeterFileOnly requested for \"Electricity:Facility\" (TimeStep), already on \"Output:Meter\". Will report to both eplusout.eso and eplusout.mtr",
+    "   ************* Testing Individual Branch Integrity",
+    "   ************* All Branches passed integrity testing",
+    "   ************* Testing Individual Supply Air Path Integrity",
+    "   ************* All Supply Air Paths passed integrity testing",
+    "   ************* Testing Individual Return Air Path Integrity",
+    "   ************* All Return Air Paths passed integrity testing",
+    "   ************* No node connection errors were found.",
+    "   ************* Beginning Simulation",
+    "   ** Warning ** Processing Monthly Tabular Reports: Variable names not valid for this simulation",
+    "   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual variables.",
+    "   ** Warning ** Coil control failed for AirLoopHVAC:UnitarySystem:AIR LOOP HVAC UNITARY SYSTEM 1",
+    "   **   ~~~   **   sensible part-load ratio determined to be outside the range of 0-1.",
+    "   **   ~~~   ** Sensible load to be met = 805.06 (watts), and the simulation continues.",
+    "   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/07 14:40 - 14:45",
+    "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-ELECTRICITY\" has no energy cost. ",
+    "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
+    "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-DISTILLATE OIL\" has no energy cost. ",
+    "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
+    "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-RESIDUAL OIL\" has no energy cost. ",
+    "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
+    "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-NATURAL GAS\" has no energy cost. ",
+    "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
+    "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-COAL\" has no energy cost. ",
+    "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
+    "   ************* Simulation Error Summary *************",
+    "   ************* There are 2 unused schedules in input.",
+    "   ************* There are 2 unused week schedules in input.",
+    "   ************* There are 6 unused day schedules in input.",
+    "   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.",
+    "   *************",
+    "   ************* ===== Recurring Error Summary =====",
+    "   ************* The following recurring error messages occurred.",
+    "   *************",
+    "   *************  ** Warning ** AirLoopHVAC:UnitarySystem \"AIR LOOP HVAC UNITARY SYSTEM 1\" - sensible part-load ratio out of range error continues. Sensible load statistics:",
+    "   *************  **   ~~~   **   This error occurred 31 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=2254.95979  Min=555.217438",
+    "   *************",
+    "   *************",
+    "   ************* ===== Final Error Summary =====",
+    "   ************* The following error categories occurred.  Consider correcting or noting.",
+    "   ************* Nominally Unused Constructions",
+    "   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause",
+    "   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm",
+    "   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).",
+    "   *************",
+    "   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 9 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Completed Successfully-- 62 Warning; 0 Severe Errors; "
+  ],
   "seed_file": "in.osm",
   "steps": [
     {
@@ -122,32 +215,32 @@
           {
             "name": "total_site_energy",
             "units": "kBtu",
-            "value": 2215105.4791994416
+            "value": 2209560.75
           },
           {
             "name": "net_site_energy",
             "units": "kBtu",
-            "value": 2215105.4791994416
+            "value": 2209560.75
           },
           {
             "name": "total_building_area",
             "units": "ft^2",
-            "value": 107639.10416709722
+            "value": 107639.1
           },
           {
             "name": "total_site_eui",
             "units": "kBtu/ft^2",
-            "value": 20.57900329382849
+            "value": 20.53
           },
           {
             "name": "eui",
             "units": "kBtu/ft^2",
-            "value": 20.57900329382849
+            "value": 20.53
           },
           {
             "name": "unmet_hours_during_heating",
             "units": "hr",
-            "value": 601
+            "value": 568.25
           },
           {
             "name": "unmet_hours_during_cooling",
@@ -157,7 +250,7 @@
           {
             "name": "unmet_hours_during_occupied_heating",
             "units": "hr",
-            "value": 335.5
+            "value": 311
           },
           {
             "name": "unmet_hours_during_occupied_cooling",
@@ -177,17 +270,17 @@
           {
             "name": "end_use_heating",
             "units": "kBtu",
-            "value": 94658.495805691
+            "value": 73778.08
           },
           {
             "name": "end_use_cooling",
             "units": "kBtu",
-            "value": 16871.14474157705
+            "value": 32519.61
           },
           {
             "name": "end_use_interior_lighting",
             "units": "kBtu",
-            "value": 1044617.6828109163
+            "value": 1044617.68
           },
           {
             "name": "end_use_exterior_lighting",
@@ -197,7 +290,7 @@
           {
             "name": "end_use_interior_equipment",
             "units": "kBtu",
-            "value": 1044617.6828109163
+            "value": 1044617.68
           },
           {
             "name": "end_use_exterior_equipment",
@@ -207,7 +300,7 @@
           {
             "name": "end_use_fans",
             "units": "kBtu",
-            "value": 14340.47303034049
+            "value": 14037.17
           },
           {
             "name": "end_use_pumps",
@@ -247,12 +340,12 @@
           {
             "name": "fuel_electricity",
             "units": "kBtu",
-            "value": 2114437.822850964
+            "value": 2112580.1
           },
           {
             "name": "fuel_natural_gas",
             "units": "kBtu",
-            "value": 100667.65634847742
+            "value": 96971.17
           },
           {
             "name": "fuel_additional_fuel",
@@ -272,7 +365,7 @@
           {
             "name": "end_use_electricity_heating",
             "units": "kWh",
-            "value": 3183.3333333333335
+            "value": 2730.56
           },
           {
             "name": "end_use_electricity_cooling",
@@ -282,7 +375,7 @@
           {
             "name": "end_use_electricity_interior_lighting",
             "units": "kWh",
-            "value": 306147.2222222222
+            "value": 306147.22
           },
           {
             "name": "end_use_electricity_exterior_lighting",
@@ -292,7 +385,7 @@
           {
             "name": "end_use_electricity_interior_equipment",
             "units": "kWh",
-            "value": 306147.2222222222
+            "value": 306147.22
           },
           {
             "name": "end_use_electricity_exterior_equipment",
@@ -302,7 +395,7 @@
           {
             "name": "end_use_electricity_fans",
             "units": "kWh",
-            "value": 4202.777777777778
+            "value": 4113.89
           },
           {
             "name": "end_use_electricity_pumps",
@@ -342,12 +435,12 @@
           {
             "name": "end_use_natural_gas_heating",
             "units": "therms",
-            "value": 838.1268
+            "value": 644.73
           },
           {
             "name": "end_use_natural_gas_cooling",
             "units": "therms",
-            "value": 168.74400000000003
+            "value": 325.26
           },
           {
             "name": "end_use_natural_gas_interior_lighting",
@@ -412,7 +505,7 @@
           {
             "name": "electricity_heating_ip",
             "units": "kWh",
-            "value": 3183.7174311638887
+            "value": 2730.35
           },
           {
             "name": "electricity_cooling_ip",
@@ -422,7 +515,7 @@
           {
             "name": "electricity_interior_lighting_ip",
             "units": "kWh",
-            "value": 306147.1388888889
+            "value": 306147.14
           },
           {
             "name": "electricity_exterior_lighting_ip",
@@ -432,7 +525,7 @@
           {
             "name": "electricity_interior_equipment_ip",
             "units": "kWh",
-            "value": 306147.1388888889
+            "value": 306147.14
           },
           {
             "name": "electricity_exterior_equipment_ip",
@@ -442,7 +535,7 @@
           {
             "name": "electricity_fans_ip",
             "units": "kWh",
-            "value": 4202.510277777778
+            "value": 4112.81
           },
           {
             "name": "electricity_pumps_ip",
@@ -482,17 +575,17 @@
           {
             "name": "electricity_ip",
             "units": "kWh",
-            "value": 619680.5054867194
+            "value": 619137.44
           },
           {
             "name": "natural_gas_heating_ip",
             "units": "MBtu",
-            "value": 83.79683119011406
+            "value": 64.46
           },
           {
             "name": "natural_gas_cooling_ip",
             "units": "MBtu",
-            "value": 16.872513147151416
+            "value": 32.51
           },
           {
             "name": "natural_gas_interior_lighting_ip",
@@ -557,7 +650,7 @@
           {
             "name": "natural_gas_ip",
             "units": "MBtu",
-            "value": 100.66934433726547
+            "value": 96.97
           },
           {
             "name": "additional_fuel_heating_ip",
@@ -862,17 +955,17 @@
           {
             "name": "ashrae_189_1_2009_ext_roof_iead_climate_zone_2_5",
             "units": "ft^2",
-            "value": 53819.55208354861
+            "value": 53819.55
           },
           {
             "name": "ashrae_189_1_2009_ext_wall_steel_frame_climate_zone_4_8",
             "units": "ft^2",
-            "value": 15500.03100006201
+            "value": 15500.03
           },
           {
             "name": "ashrae_189_1_2009_ext_window_climate_zone_4_5",
             "units": "ft^2",
-            "value": 10333.354000041323
+            "value": 10333.35
           },
           {
             "name": "gross_window_wall_ratio",
@@ -892,7 +985,7 @@
           {
             "name": "space_type_baseline_model_space_type",
             "units": "ft^2",
-            "value": 107639.10416709722
+            "value": 107639.1
           },
           {
             "name": "exterior_lighting_total_power",
@@ -902,7 +995,7 @@
           {
             "name": "exterior_lighting_total_consumption",
             "units": "kWh",
-            "value": 649183.3333333334
+            "value": 647558.33
           },
           {
             "name": "inflation_approach",
@@ -916,7 +1009,7 @@
           {
             "name": "annual_peak_electric_demand",
             "units": "kW",
-            "value": 207.71088
+            "value": 207.56
           },
           {
             "name": "first_year_capital_cost",

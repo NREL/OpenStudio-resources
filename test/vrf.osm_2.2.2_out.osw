@@ -1,7 +1,72 @@
 {
   "completed_status": "Success",
   "current_step": 1,
-  "eplusout_err": "Program Version,EnergyPlus, Version 8.8.0-d5f2442b35, IDD_Version 8.8.0\n   ** Warning ** No Timestep object found.  Number of TimeSteps in Hour defaulted to 4.\n   ************* Beginning Zone Sizing Calculations\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 2\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 3\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 4\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 5\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** GetHTSurfaceData: Surfaces with interface to Ground found but no \"Ground Temperatures\" were input.\n   **   ~~~   ** Found first in surface=SURFACE 1\n   **   ~~~   ** Defaults, constant throughout the year of (18.0) will be used.\n   ** Warning ** CheckUsedConstructions: There are 6 nominally unused constructions in input.\n   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;\n   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"THERMAL ZONE 8 BASELINE MODEL INFILTRATION\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Surface Area = 0.  0 Infiltration will result.\n   ** Warning ** GetVRFInput: AirConditioner:VariableRefrigerantFlow=\"AIR CONDITIONER VARIABLE REFRIGERANT FLOW 1\" curve values\n   **   ~~~   ** ... Cooling Capacity Ratio Modifier Function of Low Temperature Curve Name = AIR CONDITIONER VARIABLE REFRIGERANT FLOW 1 VRFCOOLCAPFT output is not equal to 1.0 (+ or - 10%) at rated conditions.\n   **   ~~~   ** ... Curve output at rated conditions = 1.136\n   ** Warning ** Output:Meter: invalid Key Name=\"GAS:FACILITY\" - not found.\n   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTCOOLING:FACILITY\" - not found.\n   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTHEATING:FACILITY\" - not found.\n   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"GAS:FACILITY\" - not found.\n   ** Warning ** Output:Meter:MeterFileOnly requested for \"Electricity:Facility\" (TimeStep), already on \"Output:Meter\". Will report to both eplusout.eso and eplusout.mtr\n   ************* Testing Individual Branch Integrity\n   ************* All Branches passed integrity testing\n   ************* Testing Individual Supply Air Path Integrity\n   ************* All Supply Air Paths passed integrity testing\n   ************* Testing Individual Return Air Path Integrity\n   ************* All Return Air Paths passed integrity testing\n   ************* No node connection errors were found.\n   ************* Beginning Simulation\n   ** Warning ** AirConditioner:VariableRefrigerantFlow \"AIR CONDITIONER VARIABLE REFRIGERANT FLOW 1\".\n   **   ~~~   ** ...InitVRF: VRF Heat Pump Min/Max Operating Temperature in Heating Mode Limits have been exceeded and VRF system is disabled.\n   **   ~~~   ** ... Outdoor Unit Inlet Air Temperature             = -20.150\n   **   ~~~   ** ... Heating Minimum Outdoor Unit Inlet Temperature = -20.000\n   **   ~~~   ** ... Heating Maximum Outdoor Unit Inlet Temperature = 30.000\n   **   ~~~   ** ... Check VRF Heat Pump Min/Max Outdoor Temperature in Heating Mode limits.\n   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/07 03:00 - 03:15\n   ************* Simulation Error Summary *************\n   ************* There are 2 unused schedules in input.\n   ************* There are 2 unused week schedules in input.\n   ************* There are 6 unused day schedules in input.\n   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.\n   *************\n   ************* ===== Recurring Error Summary =====\n   ************* The following recurring error messages occurred.\n   *************\n   *************  ** Warning ** AirConditioner:VariableRefrigerantFlow \"AIR CONDITIONER VARIABLE REFRIGERANT FLOW 1\" -- Exceeded VRF Heat Pump min/max heating temperature limit error continues...\n   *************  **   ~~~   **   This error occurred 940 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-20.125  Min=-22.8\n   *************\n   *************\n   ************* ===== Final Error Summary =====\n   ************* The following error categories occurred.  Consider correcting or noting.\n   ************* Nominally Unused Constructions\n   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause\n   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm\n   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).\n   *************\n   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.\n   ************* EnergyPlus Sizing Error Summary. During Sizing: 9 Warning; 0 Severe Errors.\n   ************* EnergyPlus Completed Successfully-- 956 Warning; 0 Severe Errors; ",
+  "eplusout_err": [
+    "Program Version,EnergyPlus, Version 8.8.0-d5f2442b35, IDD_Version 8.8.0",
+    "   ** Warning ** No Timestep object found.  Number of TimeSteps in Hour defaulted to 4.",
+    "   ************* Beginning Zone Sizing Calculations",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 2\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 3\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 4\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 5\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** GetHTSurfaceData: Surfaces with interface to Ground found but no \"Ground Temperatures\" were input.",
+    "   **   ~~~   ** Found first in surface=SURFACE 1",
+    "   **   ~~~   ** Defaults, constant throughout the year of (18.0) will be used.",
+    "   ** Warning ** CheckUsedConstructions: There are 6 nominally unused constructions in input.",
+    "   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;",
+    "   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"THERMAL ZONE 8 BASELINE MODEL INFILTRATION\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Surface Area = 0.  0 Infiltration will result.",
+    "   ** Warning ** GetVRFInput: AirConditioner:VariableRefrigerantFlow=\"AIR CONDITIONER VARIABLE REFRIGERANT FLOW 1\" curve values",
+    "   **   ~~~   ** ... Cooling Capacity Ratio Modifier Function of Low Temperature Curve Name = AIR CONDITIONER VARIABLE REFRIGERANT FLOW 1 VRFCOOLCAPFT output is not equal to 1.0 (+ or - 10%) at rated conditions.",
+    "   **   ~~~   ** ... Curve output at rated conditions = 1.136",
+    "   ** Warning ** Output:Meter: invalid Key Name=\"GAS:FACILITY\" - not found.",
+    "   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTCOOLING:FACILITY\" - not found.",
+    "   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTHEATING:FACILITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"GAS:FACILITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly requested for \"Electricity:Facility\" (TimeStep), already on \"Output:Meter\". Will report to both eplusout.eso and eplusout.mtr",
+    "   ************* Testing Individual Branch Integrity",
+    "   ************* All Branches passed integrity testing",
+    "   ************* Testing Individual Supply Air Path Integrity",
+    "   ************* All Supply Air Paths passed integrity testing",
+    "   ************* Testing Individual Return Air Path Integrity",
+    "   ************* All Return Air Paths passed integrity testing",
+    "   ************* No node connection errors were found.",
+    "   ************* Beginning Simulation",
+    "   ** Warning ** AirConditioner:VariableRefrigerantFlow \"AIR CONDITIONER VARIABLE REFRIGERANT FLOW 1\".",
+    "   **   ~~~   ** ...InitVRF: VRF Heat Pump Min/Max Operating Temperature in Heating Mode Limits have been exceeded and VRF system is disabled.",
+    "   **   ~~~   ** ... Outdoor Unit Inlet Air Temperature             = -20.150",
+    "   **   ~~~   ** ... Heating Minimum Outdoor Unit Inlet Temperature = -20.000",
+    "   **   ~~~   ** ... Heating Maximum Outdoor Unit Inlet Temperature = 30.000",
+    "   **   ~~~   ** ... Check VRF Heat Pump Min/Max Outdoor Temperature in Heating Mode limits.",
+    "   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/07 03:00 - 03:15",
+    "   ************* Simulation Error Summary *************",
+    "   ************* There are 2 unused schedules in input.",
+    "   ************* There are 2 unused week schedules in input.",
+    "   ************* There are 6 unused day schedules in input.",
+    "   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.",
+    "   *************",
+    "   ************* ===== Recurring Error Summary =====",
+    "   ************* The following recurring error messages occurred.",
+    "   *************",
+    "   *************  ** Warning ** AirConditioner:VariableRefrigerantFlow \"AIR CONDITIONER VARIABLE REFRIGERANT FLOW 1\" -- Exceeded VRF Heat Pump min/max heating temperature limit error continues...",
+    "   *************  **   ~~~   **   This error occurred 940 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=-20.125  Min=-22.8",
+    "   *************",
+    "   *************",
+    "   ************* ===== Final Error Summary =====",
+    "   ************* The following error categories occurred.  Consider correcting or noting.",
+    "   ************* Nominally Unused Constructions",
+    "   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause",
+    "   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm",
+    "   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).",
+    "   *************",
+    "   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 9 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Completed Successfully-- 956 Warning; 0 Severe Errors; "
+  ],
   "seed_file": "in.osm",
   "steps": [
     {
@@ -122,27 +187,27 @@
           {
             "name": "total_site_energy",
             "units": "kBtu",
-            "value": 3934711.1242414867
+            "value": 3934711.12
           },
           {
             "name": "net_site_energy",
             "units": "kBtu",
-            "value": 3934711.1242414867
+            "value": 3934711.12
           },
           {
             "name": "total_building_area",
             "units": "ft^2",
-            "value": 107639.10416709722
+            "value": 107639.1
           },
           {
             "name": "total_site_eui",
             "units": "kBtu/ft^2",
-            "value": 36.55466249638518
+            "value": 36.55
           },
           {
             "name": "eui",
             "units": "kBtu/ft^2",
-            "value": 36.55466249638518
+            "value": 36.55
           },
           {
             "name": "unmet_hours_during_heating",
@@ -177,17 +242,17 @@
           {
             "name": "end_use_heating",
             "units": "kBtu",
-            "value": 1575717.5280072805
+            "value": 1575717.53
           },
           {
             "name": "end_use_cooling",
             "units": "kBtu",
-            "value": 266611.477772933
+            "value": 266611.48
           },
           {
             "name": "end_use_interior_lighting",
             "units": "kBtu",
-            "value": 1044617.6828109163
+            "value": 1044617.68
           },
           {
             "name": "end_use_exterior_lighting",
@@ -197,7 +262,7 @@
           {
             "name": "end_use_interior_equipment",
             "units": "kBtu",
-            "value": 1044617.6828109163
+            "value": 1044617.68
           },
           {
             "name": "end_use_exterior_equipment",
@@ -207,7 +272,7 @@
           {
             "name": "end_use_fans",
             "units": "kBtu",
-            "value": 3146.752839440213
+            "value": 3146.75
           },
           {
             "name": "end_use_pumps",
@@ -247,7 +312,7 @@
           {
             "name": "fuel_electricity",
             "units": "kBtu",
-            "value": 3934711.1242414867
+            "value": 3934711.12
           },
           {
             "name": "fuel_natural_gas",
@@ -272,17 +337,17 @@
           {
             "name": "end_use_electricity_heating",
             "units": "kWh",
-            "value": 461797.2222222222
+            "value": 461797.22
           },
           {
             "name": "end_use_electricity_cooling",
             "units": "kWh",
-            "value": 78136.11111111111
+            "value": 78136.11
           },
           {
             "name": "end_use_electricity_interior_lighting",
             "units": "kWh",
-            "value": 306147.2222222222
+            "value": 306147.22
           },
           {
             "name": "end_use_electricity_exterior_lighting",
@@ -292,7 +357,7 @@
           {
             "name": "end_use_electricity_interior_equipment",
             "units": "kWh",
-            "value": 306147.2222222222
+            "value": 306147.22
           },
           {
             "name": "end_use_electricity_exterior_equipment",
@@ -302,7 +367,7 @@
           {
             "name": "end_use_electricity_fans",
             "units": "kWh",
-            "value": 922.2222222222223
+            "value": 922.22
           },
           {
             "name": "end_use_electricity_pumps",
@@ -412,17 +477,17 @@
           {
             "name": "electricity_heating_ip",
             "units": "kWh",
-            "value": 461797.8611111111
+            "value": 461797.86
           },
           {
             "name": "electricity_cooling_ip",
             "units": "kWh",
-            "value": 78134.8511111111
+            "value": 78134.85
           },
           {
             "name": "electricity_interior_lighting_ip",
             "units": "kWh",
-            "value": 306147.1388888889
+            "value": 306147.14
           },
           {
             "name": "electricity_exterior_lighting_ip",
@@ -432,7 +497,7 @@
           {
             "name": "electricity_interior_equipment_ip",
             "units": "kWh",
-            "value": 306147.1388888889
+            "value": 306147.14
           },
           {
             "name": "electricity_exterior_equipment_ip",
@@ -442,7 +507,7 @@
           {
             "name": "electricity_fans_ip",
             "units": "kWh",
-            "value": 921.6063888888889
+            "value": 921.61
           },
           {
             "name": "electricity_pumps_ip",
@@ -482,7 +547,7 @@
           {
             "name": "electricity_ip",
             "units": "kWh",
-            "value": 1153148.5963888888
+            "value": 1153148.6
           },
           {
             "name": "natural_gas_heating_ip",
@@ -862,17 +927,17 @@
           {
             "name": "ashrae_189_1_2009_ext_roof_iead_climate_zone_2_5",
             "units": "ft^2",
-            "value": 53819.55208354861
+            "value": 53819.55
           },
           {
             "name": "ashrae_189_1_2009_ext_wall_steel_frame_climate_zone_4_8",
             "units": "ft^2",
-            "value": 15500.03100006201
+            "value": 15500.03
           },
           {
             "name": "ashrae_189_1_2009_ext_window_climate_zone_4_5",
             "units": "ft^2",
-            "value": 10333.354000041323
+            "value": 10333.35
           },
           {
             "name": "gross_window_wall_ratio",
@@ -892,7 +957,7 @@
           {
             "name": "space_type_baseline_model_space_type",
             "units": "ft^2",
-            "value": 107639.10416709722
+            "value": 107639.1
           },
           {
             "name": "exterior_lighting_total_power",
@@ -916,7 +981,7 @@
           {
             "name": "annual_peak_electric_demand",
             "units": "kW",
-            "value": 322.83149
+            "value": 322.83
           },
           {
             "name": "first_year_capital_cost",

@@ -1,7 +1,85 @@
 {
   "completed_status": "Success",
   "current_step": 1,
-  "eplusout_err": "Program Version,EnergyPlus, Version 8.7.0-ae053cab77, IDD_Version 8.7.0\n   ************* Beginning Zone Sizing Calculations\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 2\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 3\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 4\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 5\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** GetHTSurfaceData: Surfaces with interface to Ground found but no \"Ground Temperatures\" were input.\n   **   ~~~   ** Found first in surface=SURFACE 25\n   **   ~~~   ** Defaults, constant throughout the year of (18.0) will be used.\n   ** Warning ** CheckUsedConstructions: There are 6 nominally unused constructions in input.\n   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;\n   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"STORY 1 CORE THERMAL ZONE BASELINE MODEL INFILTRATION\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Surface Area = 0.  0 Infiltration will result.\n   ************* Beginning System Sizing Calculations\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 5\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 8\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 4\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 2\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 3\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 1\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 7\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 6\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 9\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 10\n   ************* Beginning Plant Sizing Calculations\n   ** Warning ** Output:Meter: invalid Name=\"DISTRICTCOOLING:FACILITY\" - not found.\n   ** Warning ** Output:Meter: invalid Name=\"DISTRICTHEATING:FACILITY\" - not found.\n   ** Warning ** Output:Meter:MeterFileOnly requested for \"Electricity:Facility\" (TimeStep), already on \"Output:Meter\". Will report to both eplusout.eso and eplusout.mtr\n   ************* Testing Individual Branch Integrity\n   ************* All Branches passed integrity testing\n   ************* Testing Individual Supply Air Path Integrity\n   ************* All Supply Air Paths passed integrity testing\n   ************* Testing Individual Return Air Path Integrity\n   ************* All Return Air Paths passed integrity testing\n   ************* No node connection errors were found.\n   ************* Beginning Simulation\n   ** Warning ** Chiller:Absorption:Indirect \"CHILLER ABSORPTION INDIRECT 1\"\n   **   ~~~   ** ...Entering condenser water temperature below specified minimum (10.000 C).\n   **   ~~~   ** ...Entering condenser water temperature = 5.013 C.\n   **   ~~~   ** ...simulation continues. Environment=RUN PERIOD 1, at Simulation time=01/01 00:00 - 00:15\n   ************* Simulation Error Summary *************\n   ************* There are 2 unused schedules in input.\n   ************* There are 2 unused week schedules in input.\n   ************* There are 6 unused day schedules in input.\n   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.\n   *************\n   ************* ===== Recurring Error Summary =====\n   ************* The following recurring error messages occurred.\n   *************\n   *************  ** Warning ** Entering condenser water temperature below specified minimum error continues.\n   *************  **   ~~~   **   This error occurred 40153 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=9.999332  Min=3.790936\n   *************\n   *************\n   ************* ===== Final Error Summary =====\n   ************* The following error categories occurred.  Consider correcting or noting.\n   ************* Nominally Unused Constructions\n   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause\n   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm\n   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).\n   *************\n   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.\n   ************* EnergyPlus Sizing Error Summary. During Sizing: 19 Warning; 0 Severe Errors.\n   ************* EnergyPlus Completed Successfully-- 40176 Warning; 0 Severe Errors; ",
+  "eplusout_err": [
+    "Program Version,EnergyPlus, Version 8.7.0-ae053cab77, IDD_Version 8.7.0",
+    "   ************* Beginning Zone Sizing Calculations",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 2\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 3\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 4\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 5\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** GetHTSurfaceData: Surfaces with interface to Ground found but no \"Ground Temperatures\" were input.",
+    "   **   ~~~   ** Found first in surface=SURFACE 25",
+    "   **   ~~~   ** Defaults, constant throughout the year of (18.0) will be used.",
+    "   ** Warning ** CheckUsedConstructions: There are 6 nominally unused constructions in input.",
+    "   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;",
+    "   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"STORY 1 CORE THERMAL ZONE BASELINE MODEL INFILTRATION\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Surface Area = 0.  0 Infiltration will result.",
+    "   ************* Beginning System Sizing Calculations",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 7",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 10",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 3",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 5",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 2",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 8",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 6",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 1",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 4",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 9",
+    "   ************* Beginning Plant Sizing Calculations",
+    "   ** Warning ** Output:Meter: invalid Name=\"DISTRICTCOOLING:FACILITY\" - not found.",
+    "   ** Warning ** Output:Meter: invalid Name=\"DISTRICTHEATING:FACILITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly requested for \"Electricity:Facility\" (TimeStep), already on \"Output:Meter\". Will report to both eplusout.eso and eplusout.mtr",
+    "   ************* Testing Individual Branch Integrity",
+    "   ************* All Branches passed integrity testing",
+    "   ************* Testing Individual Supply Air Path Integrity",
+    "   ************* All Supply Air Paths passed integrity testing",
+    "   ************* Testing Individual Return Air Path Integrity",
+    "   ************* All Return Air Paths passed integrity testing",
+    "   ************* No node connection errors were found.",
+    "   ************* Beginning Simulation",
+    "   ** Warning ** Chiller:Absorption:Indirect \"CHILLER ABSORPTION INDIRECT 1\"",
+    "   **   ~~~   ** ...Entering condenser water temperature below specified minimum (10.000 C).",
+    "   **   ~~~   ** ...Entering condenser water temperature = 5.013 C.",
+    "   **   ~~~   ** ...simulation continues. Environment=RUN PERIOD 1, at Simulation time=01/01 00:00 - 00:15",
+    "   ************* Simulation Error Summary *************",
+    "   ************* There are 2 unused schedules in input.",
+    "   ************* There are 2 unused week schedules in input.",
+    "   ************* There are 6 unused day schedules in input.",
+    "   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.",
+    "   *************",
+    "   ************* ===== Recurring Error Summary =====",
+    "   ************* The following recurring error messages occurred.",
+    "   *************",
+    "   *************  ** Warning ** Entering condenser water temperature below specified minimum error continues.",
+    "   *************  **   ~~~   **   This error occurred 40147 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=9.999332  Min=3.790936",
+    "   *************",
+    "   *************",
+    "   ************* ===== Final Error Summary =====",
+    "   ************* The following error categories occurred.  Consider correcting or noting.",
+    "   ************* Nominally Unused Constructions",
+    "   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause",
+    "   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm",
+    "   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).",
+    "   *************",
+    "   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 19 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Completed Successfully-- 40170 Warning; 0 Severe Errors; "
+  ],
   "seed_file": "in.osm",
   "steps": [
     {
@@ -122,27 +200,27 @@
           {
             "name": "total_site_energy",
             "units": "kBtu",
-            "value": 9150946.820516203
+            "value": 9150956.3
           },
           {
             "name": "net_site_energy",
             "units": "kBtu",
-            "value": 9150946.820516203
+            "value": 9150956.3
           },
           {
             "name": "total_building_area",
             "units": "ft^2",
-            "value": 107639.10416709722
+            "value": 107639.1
           },
           {
             "name": "total_site_eui",
             "units": "kBtu/ft^2",
-            "value": 85.01507785042898
+            "value": 85.02
           },
           {
             "name": "eui",
             "units": "kBtu/ft^2",
-            "value": 85.01507785042898
+            "value": 85.02
           },
           {
             "name": "unmet_hours_during_heating",
@@ -177,17 +255,17 @@
           {
             "name": "end_use_heating",
             "units": "kBtu",
-            "value": 5640061.59979402
+            "value": 5640061.6
           },
           {
             "name": "end_use_cooling",
             "units": "kBtu",
-            "value": 692560.4916417379
+            "value": 692569.97
           },
           {
             "name": "end_use_interior_lighting",
             "units": "kBtu",
-            "value": 1044617.6828109163
+            "value": 1044617.68
           },
           {
             "name": "end_use_exterior_lighting",
@@ -197,7 +275,7 @@
           {
             "name": "end_use_interior_equipment",
             "units": "kBtu",
-            "value": 1044617.6828109163
+            "value": 1044617.68
           },
           {
             "name": "end_use_exterior_equipment",
@@ -207,17 +285,17 @@
           {
             "name": "end_use_fans",
             "units": "kBtu",
-            "value": 80735.06230828837
+            "value": 80735.06
           },
           {
             "name": "end_use_pumps",
             "units": "kBtu",
-            "value": 429920.36760291754
+            "value": 429920.37
           },
           {
             "name": "end_use_heat_rejection",
             "units": "kBtu",
-            "value": 218433.9335474071
+            "value": 218433.93
           },
           {
             "name": "end_use_humidification",
@@ -247,12 +325,12 @@
           {
             "name": "fuel_electricity",
             "units": "kBtu",
-            "value": 3510885.2207221836
+            "value": 3510885.22
           },
           {
             "name": "fuel_natural_gas",
             "units": "kBtu",
-            "value": 5640061.59979402
+            "value": 5640061.6
           },
           {
             "name": "fuel_additional_fuel",
@@ -277,12 +355,12 @@
           {
             "name": "end_use_electricity_cooling",
             "units": "kWh",
-            "value": 202969.44444444444
+            "value": 202972.22
           },
           {
             "name": "end_use_electricity_interior_lighting",
             "units": "kWh",
-            "value": 306147.2222222222
+            "value": 306147.22
           },
           {
             "name": "end_use_electricity_exterior_lighting",
@@ -292,7 +370,7 @@
           {
             "name": "end_use_electricity_interior_equipment",
             "units": "kWh",
-            "value": 306147.2222222222
+            "value": 306147.22
           },
           {
             "name": "end_use_electricity_exterior_equipment",
@@ -302,17 +380,17 @@
           {
             "name": "end_use_electricity_fans",
             "units": "kWh",
-            "value": 23661.111111111113
+            "value": 23661.11
           },
           {
             "name": "end_use_electricity_pumps",
             "units": "kWh",
-            "value": 125997.22222222223
+            "value": 125997.22
           },
           {
             "name": "end_use_electricity_heat_rejection",
             "units": "kWh",
-            "value": 64016.666666666664
+            "value": 64016.67
           },
           {
             "name": "end_use_electricity_humidification",
@@ -342,7 +420,7 @@
           {
             "name": "end_use_natural_gas_heating",
             "units": "therms",
-            "value": 56411.498400000004
+            "value": 56411.5
           },
           {
             "name": "end_use_natural_gas_cooling",
@@ -417,12 +495,12 @@
           {
             "name": "electricity_cooling_ip",
             "units": "kWh",
-            "value": 202970.94444444444
+            "value": 202971.11
           },
           {
             "name": "electricity_interior_lighting_ip",
             "units": "kWh",
-            "value": 306147.1388888889
+            "value": 306147.14
           },
           {
             "name": "electricity_exterior_lighting_ip",
@@ -432,7 +510,7 @@
           {
             "name": "electricity_interior_equipment_ip",
             "units": "kWh",
-            "value": 306147.1388888889
+            "value": 306147.14
           },
           {
             "name": "electricity_exterior_equipment_ip",
@@ -442,17 +520,17 @@
           {
             "name": "electricity_fans_ip",
             "units": "kWh",
-            "value": 23659.830555555556
+            "value": 23659.87
           },
           {
             "name": "electricity_pumps_ip",
             "units": "kWh",
-            "value": 125998.47222222223
+            "value": 125998.5
           },
           {
             "name": "electricity_heat_rejection_ip",
             "units": "kWh",
-            "value": 64015.815833333334
+            "value": 64016
           },
           {
             "name": "electricity_humidification_ip",
@@ -482,12 +560,12 @@
           {
             "name": "electricity_ip",
             "units": "kWh",
-            "value": 1028939.3408333334
+            "value": 1028939.76
           },
           {
             "name": "natural_gas_heating_ip",
             "units": "MBtu",
-            "value": 5640.06444324538
+            "value": 5640.06
           },
           {
             "name": "natural_gas_cooling_ip",
@@ -557,7 +635,7 @@
           {
             "name": "natural_gas_ip",
             "units": "MBtu",
-            "value": 5640.06444324538
+            "value": 5640.06
           },
           {
             "name": "additional_fuel_heating_ip",
@@ -862,17 +940,17 @@
           {
             "name": "ashrae_189_1_2009_ext_roof_iead_climate_zone_2_5",
             "units": "ft^2",
-            "value": 53819.55208354861
+            "value": 53819.55
           },
           {
             "name": "ashrae_189_1_2009_ext_wall_steel_frame_climate_zone_4_8",
             "units": "ft^2",
-            "value": 15500.03100006201
+            "value": 15500.03
           },
           {
             "name": "ashrae_189_1_2009_ext_window_climate_zone_4_5",
             "units": "ft^2",
-            "value": 10333.354000041323
+            "value": 10333.35
           },
           {
             "name": "gross_window_wall_ratio",
@@ -892,7 +970,7 @@
           {
             "name": "space_type_baseline_model_space_type",
             "units": "ft^2",
-            "value": 107639.10416709722
+            "value": 107639.1
           },
           {
             "name": "exterior_lighting_total_power",
@@ -902,7 +980,7 @@
           {
             "name": "exterior_lighting_total_consumption",
             "units": "kWh",
-            "value": 2681877.7777777775
+            "value": 2681880.56
           },
           {
             "name": "inflation_approach",
@@ -916,7 +994,7 @@
           {
             "name": "annual_peak_electric_demand",
             "units": "kW",
-            "value": 323.48419
+            "value": 323.48
           },
           {
             "name": "first_year_capital_cost",

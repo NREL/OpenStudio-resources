@@ -1,7 +1,161 @@
 {
   "completed_status": "Success",
   "current_step": 1,
-  "eplusout_err": "Program Version,EnergyPlus, Version 8.8.0-7c3bbe4830, IDD_Version 8.8.0\n   ** Warning ** No Timestep object found.  Number of TimeSteps in Hour defaulted to 4.\n   ************* Beginning Zone Sizing Calculations\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 2\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 3\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 4\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 5\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** GetHTSurfaceData: Surfaces with interface to Ground found but no \"Ground Temperatures\" were input.\n   **   ~~~   ** Found first in surface=SURFACE 25\n   **   ~~~   ** Defaults, constant throughout the year of (18.0) will be used.\n   ** Warning ** CheckUsedConstructions: There are 6 nominally unused constructions in input.\n   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;\n   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"STORY 1 CORE THERMAL ZONE BASELINE MODEL INFILTRATION\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Surface Area = 0.  0 Infiltration will result.\n   ************* Beginning System Sizing Calculations\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 9\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 3\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 10\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 6\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 5\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 2\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 4\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 8\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 7\n   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.\n   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 1\n   ************* Beginning Plant Sizing Calculations\n   ** Warning ** GetElectricEIRChillerInput: Chiller:Electric:EIR=\"CHILLER ELECTRIC EIR 1\"\n   **   ~~~   ** Energy input ratio as a function of temperature curve output is not equal to 1.0 (+ or - 10%) at reference conditions.\n   **   ~~~   ** Curve output at reference conditions = 0.861\n   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTCOOLING:FACILITY\" - not found.\n   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTHEATING:FACILITY\" - not found.\n   ** Warning ** Output:Meter:MeterFileOnly requested for \"Electricity:Facility\" (TimeStep), already on \"Output:Meter\". Will report to both eplusout.eso and eplusout.mtr\n   ************* Testing Individual Branch Integrity\n   ************* All Branches passed integrity testing\n   ************* Testing Individual Supply Air Path Integrity\n   ************* All Supply Air Paths passed integrity testing\n   ************* Testing Individual Return Air Path Integrity\n   ************* All Return Air Paths passed integrity testing\n   ************* No node connection errors were found.\n   ************* Beginning Simulation\n   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Tower range temperature is outside model boundaries at -10.81.\n   **   ~~~   **  ...Valid range = 1.11 to 11.11. Occurrence info = CHICAGO OHARE INTL AP ANN CLG .4% CONDNS DB=>MWB, 07/21 00:00 - 00:15\n   **   ~~~   **  ...Tower range temperature passed to the model = -10.81064\n   **   ~~~   **  ...Range temperatures outside model boundaries may not adversely affect tower performance.\n   **   ~~~   **  ...This is not an unexpected occurrence when simulating actual conditions.\n   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Tower approach temperature is outside model boundaries at 1.08.\n   **   ~~~   **  ...Valid range = 1.11 to 11.11. Occurrence info = CHICAGO OHARE INTL AP ANN CLG .4% CONDNS DP=>MDB, 07/21 12:30 - 12:38\n   **   ~~~   **  ...Tower approach temperature passed to the model = 1.07714\n   **   ~~~   **  ...Approach temperatures outside model boundaries may not adversely affect tower performance.\n   **   ~~~   **  ...This is not an unexpected occurrence when simulating actual conditions.\n   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is outside model boundaries at 26.96.\n   **   ~~~   **  ...Valid range = -1.00 to 26.67. Occurrence info = CHICAGO OHARE INTL AP ANN CLG .4% CONDNS ENTH=>MDB, 07/21 09:30 - 09:38\n   **   ~~~   **  ...Inlet air wet-bulb temperature passed to the model = 26.666700\n   **   ~~~   **  ...Wet-bulb temperatures outside model boundaries may not adversely affect tower performance.\n   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is outside model boundaries at 26.96.\n   **   ~~~   **  ...Valid range = -1.00 to 26.67. Occurrence info = CHICAGO OHARE INTL AP ANN CLG .4% CONDNS ENTH=>MDB, 07/21 09:38 - 09:45\n   **   ~~~   **  ...Inlet air wet-bulb temperature passed to the model = 26.666700\n   **   ~~~   **  ...Wet-bulb temperatures outside model boundaries may not adversely affect tower performance.\n   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is outside model boundaries at 27.41.\n   **   ~~~   **  ...Valid range = -1.00 to 26.67. Occurrence info = CHICAGO OHARE INTL AP ANN CLG .4% CONDNS ENTH=>MDB, 07/21 09:45 - 09:52\n   **   ~~~   **  ...Inlet air wet-bulb temperature passed to the model = 26.666700\n   **   ~~~   **  ...Wet-bulb temperatures outside model boundaries may not adversely affect tower performance.\n   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is outside model boundaries at 27.41.\n   **   ~~~   **  ...Valid range = -1.00 to 26.67. Occurrence info = CHICAGO OHARE INTL AP ANN CLG .4% CONDNS ENTH=>MDB, 07/21 09:53 - 10:00\n   **   ~~~   **  ...Inlet air wet-bulb temperature passed to the model = 26.666700\n   **   ~~~   **  ...Wet-bulb temperatures outside model boundaries may not adversely affect tower performance.\n   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is outside model boundaries at 27.80.\n   **   ~~~   **  ...Valid range = -1.00 to 26.67. Occurrence info = CHICAGO OHARE INTL AP ANN CLG .4% CONDNS ENTH=>MDB, 07/21 10:00 - 10:08\n   **   ~~~   **  ...Inlet air wet-bulb temperature passed to the model = 26.666700\n   **   ~~~   **  ...Wet-bulb temperatures outside model boundaries may not adversely affect tower performance.\n   ** Warning ** GetSpecificHeatGlycol: Temperature is out of range (too low) for fluid [WATER] specific heat supplied values **\n   **   ~~~   ** ..Called From:PlantLoopSolver::UpdateAnyLoopDemandAlterations,Temperature=[-0.74], supplied data range=[0.00,125.00]\n   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/01 08:00 - 08:15\n   ** Warning ** GetDensityGlycol: Temperature is out of range (too low) for fluid [WATER] density **\n   **   ~~~   ** ..Called From:NodeReportingCalc:NODE 48,Temperature=[-0.74], supplied data range=[0.00,100.00]\n   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/01 08:00 - 08:05\n   ** Warning ** Plant Loop: CHILLED WATER LOOP Demand Side is storing excess heat the majority of the time.\n   ** Warning ** Plant Loop: CHILLED WATER LOOP Supply Side is storing excess heat the majority of the time.\n   ** Warning ** Plant Loop: CONDENSER WATER LOOP Demand Side is storing excess heat the majority of the time.\n   ** Warning ** Plant Loop: CONDENSER WATER LOOP Supply Side is storing excess heat the majority of the time.\n   ** Warning ** Plant Loop: ECONOMIZING PLANT Demand Side is storing excess heat the majority of the time.\n   ** Warning ** Plant Loop: ECONOMIZING PLANT Supply Side is storing excess heat the majority of the time.\n   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-ELECTRICITY\" has no energy cost. \n   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.\n   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-DISTILLATE OIL\" has no energy cost. \n   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.\n   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-RESIDUAL OIL\" has no energy cost. \n   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.\n   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-NATURAL GAS\" has no energy cost. \n   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.\n   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-COAL\" has no energy cost. \n   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.\n   ************* Simulation Error Summary *************\n   ************* There are 2 unused schedules in input.\n   ************* There are 2 unused week schedules in input.\n   ************* There are 6 unused day schedules in input.\n   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.\n   *************\n   ************* ===== Recurring Error Summary =====\n   ************* The following recurring error messages occurred.\n   *************\n   *************  ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Tower range temperature is out of range error continues...\n   *************  **   ~~~   **   This error occurred 49213 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-8.246864  Min=-22.747195\n   *************\n   *************  ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Tower approach temperature is out of range error continues...\n   *************  **   ~~~   **   This error occurred 33892 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=49.19826  Min=-5.399993\n   *************\n   *************  ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is out of range error continues...\n   *************  **   ~~~   **   This error occurred 10446 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=31.399993  Min=-23.19826\n   *************\n   *************  ** Warning ** GetSpecificHeatGlycol: Temperature out of range (too low) for fluid [WATER] specific heat **\n   *************  **   ~~~   **   This error occurred 6600 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-3.261466E-003 {C}  Min=-4.041753 {C}\n   *************\n   *************  ** Warning ** GetDensityGlycol: Temperature out of range (too low) for fluid [WATER] density **\n   *************  **   ~~~   **   This error occurred 4242 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-3.261466E-003 {C}  Min=-4.041753 {C}\n   *************\n   *************\n   ************* ===== Final Error Summary =====\n   ************* The following error categories occurred.  Consider correcting or noting.\n   ************* Nominally Unused Constructions\n   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause\n   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm\n   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).\n   *************\n   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.\n   ************* EnergyPlus Sizing Error Summary. During Sizing: 19 Warning; 0 Severe Errors.\n   ************* EnergyPlus Completed Successfully-- 104435 Warning; 0 Severe Errors; ",
+  "eplusout_err": [
+    "Program Version,EnergyPlus, Version 8.8.0-7c3bbe4830, IDD_Version 8.8.0",
+    "   ** Warning ** No Timestep object found.  Number of TimeSteps in Hour defaulted to 4.",
+    "   ************* Beginning Zone Sizing Calculations",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 2\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 3\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 4\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 5\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** GetHTSurfaceData: Surfaces with interface to Ground found but no \"Ground Temperatures\" were input.",
+    "   **   ~~~   ** Found first in surface=SURFACE 25",
+    "   **   ~~~   ** Defaults, constant throughout the year of (18.0) will be used.",
+    "   ** Warning ** CheckUsedConstructions: There are 6 nominally unused constructions in input.",
+    "   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;",
+    "   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"STORY 1 CORE THERMAL ZONE BASELINE MODEL INFILTRATION\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Surface Area = 0.  0 Infiltration will result.",
+    "   ************* Beginning System Sizing Calculations",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 9",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 3",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 10",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 6",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 5",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 2",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 4",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 8",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 7",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 1",
+    "   ************* Beginning Plant Sizing Calculations",
+    "   ** Warning ** GetElectricEIRChillerInput: Chiller:Electric:EIR=\"CHILLER ELECTRIC EIR 1\"",
+    "   **   ~~~   ** Energy input ratio as a function of temperature curve output is not equal to 1.0 (+ or - 10%) at reference conditions.",
+    "   **   ~~~   ** Curve output at reference conditions = 0.861",
+    "   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTCOOLING:FACILITY\" - not found.",
+    "   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTHEATING:FACILITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly requested for \"Electricity:Facility\" (TimeStep), already on \"Output:Meter\". Will report to both eplusout.eso and eplusout.mtr",
+    "   ************* Testing Individual Branch Integrity",
+    "   ************* All Branches passed integrity testing",
+    "   ************* Testing Individual Supply Air Path Integrity",
+    "   ************* All Supply Air Paths passed integrity testing",
+    "   ************* Testing Individual Return Air Path Integrity",
+    "   ************* All Return Air Paths passed integrity testing",
+    "   ************* No node connection errors were found.",
+    "   ************* Beginning Simulation",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Tower range temperature is outside model boundaries at -10.81.",
+    "   **   ~~~   **  ...Valid range = 1.11 to 11.11. Occurrence info = CHICAGO OHARE INTL AP ANN CLG .4% CONDNS DB=>MWB, 07/21 00:00 - 00:15",
+    "   **   ~~~   **  ...Tower range temperature passed to the model = -10.81064",
+    "   **   ~~~   **  ...Range temperatures outside model boundaries may not adversely affect tower performance.",
+    "   **   ~~~   **  ...This is not an unexpected occurrence when simulating actual conditions.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Tower approach temperature is outside model boundaries at 1.08.",
+    "   **   ~~~   **  ...Valid range = 1.11 to 11.11. Occurrence info = CHICAGO OHARE INTL AP ANN CLG .4% CONDNS DP=>MDB, 07/21 12:30 - 12:38",
+    "   **   ~~~   **  ...Tower approach temperature passed to the model = 1.07714",
+    "   **   ~~~   **  ...Approach temperatures outside model boundaries may not adversely affect tower performance.",
+    "   **   ~~~   **  ...This is not an unexpected occurrence when simulating actual conditions.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is outside model boundaries at 26.96.",
+    "   **   ~~~   **  ...Valid range = -1.00 to 26.67. Occurrence info = CHICAGO OHARE INTL AP ANN CLG .4% CONDNS ENTH=>MDB, 07/21 09:30 - 09:38",
+    "   **   ~~~   **  ...Inlet air wet-bulb temperature passed to the model = 26.666700",
+    "   **   ~~~   **  ...Wet-bulb temperatures outside model boundaries may not adversely affect tower performance.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is outside model boundaries at 26.96.",
+    "   **   ~~~   **  ...Valid range = -1.00 to 26.67. Occurrence info = CHICAGO OHARE INTL AP ANN CLG .4% CONDNS ENTH=>MDB, 07/21 09:38 - 09:45",
+    "   **   ~~~   **  ...Inlet air wet-bulb temperature passed to the model = 26.666700",
+    "   **   ~~~   **  ...Wet-bulb temperatures outside model boundaries may not adversely affect tower performance.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is outside model boundaries at 27.41.",
+    "   **   ~~~   **  ...Valid range = -1.00 to 26.67. Occurrence info = CHICAGO OHARE INTL AP ANN CLG .4% CONDNS ENTH=>MDB, 07/21 09:45 - 09:52",
+    "   **   ~~~   **  ...Inlet air wet-bulb temperature passed to the model = 26.666700",
+    "   **   ~~~   **  ...Wet-bulb temperatures outside model boundaries may not adversely affect tower performance.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is outside model boundaries at 27.41.",
+    "   **   ~~~   **  ...Valid range = -1.00 to 26.67. Occurrence info = CHICAGO OHARE INTL AP ANN CLG .4% CONDNS ENTH=>MDB, 07/21 09:53 - 10:00",
+    "   **   ~~~   **  ...Inlet air wet-bulb temperature passed to the model = 26.666700",
+    "   **   ~~~   **  ...Wet-bulb temperatures outside model boundaries may not adversely affect tower performance.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is outside model boundaries at 27.80.",
+    "   **   ~~~   **  ...Valid range = -1.00 to 26.67. Occurrence info = CHICAGO OHARE INTL AP ANN CLG .4% CONDNS ENTH=>MDB, 07/21 10:00 - 10:08",
+    "   **   ~~~   **  ...Inlet air wet-bulb temperature passed to the model = 26.666700",
+    "   **   ~~~   **  ...Wet-bulb temperatures outside model boundaries may not adversely affect tower performance.",
+    "   ** Warning ** GetSpecificHeatGlycol: Temperature is out of range (too low) for fluid [WATER] specific heat supplied values **",
+    "   **   ~~~   ** ..Called From:PlantLoopSolver::UpdateAnyLoopDemandAlterations,Temperature=[-0.74], supplied data range=[0.00,125.00]",
+    "   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/01 08:00 - 08:15",
+    "   ** Warning ** GetDensityGlycol: Temperature is out of range (too low) for fluid [WATER] density **",
+    "   **   ~~~   ** ..Called From:NodeReportingCalc:NODE 48,Temperature=[-0.74], supplied data range=[0.00,100.00]",
+    "   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/01 08:00 - 08:05",
+    "   ** Warning ** Plant Loop: CHILLED WATER LOOP Demand Side is storing excess heat the majority of the time.",
+    "   ** Warning ** Plant Loop: CHILLED WATER LOOP Supply Side is storing excess heat the majority of the time.",
+    "   ** Warning ** Plant Loop: CONDENSER WATER LOOP Demand Side is storing excess heat the majority of the time.",
+    "   ** Warning ** Plant Loop: CONDENSER WATER LOOP Supply Side is storing excess heat the majority of the time.",
+    "   ** Warning ** Plant Loop: ECONOMIZING PLANT Demand Side is storing excess heat the majority of the time.",
+    "   ** Warning ** Plant Loop: ECONOMIZING PLANT Supply Side is storing excess heat the majority of the time.",
+    "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-ELECTRICITY\" has no energy cost. ",
+    "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
+    "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-DISTILLATE OIL\" has no energy cost. ",
+    "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
+    "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-RESIDUAL OIL\" has no energy cost. ",
+    "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
+    "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-NATURAL GAS\" has no energy cost. ",
+    "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
+    "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-COAL\" has no energy cost. ",
+    "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
+    "   ************* Simulation Error Summary *************",
+    "   ************* There are 2 unused schedules in input.",
+    "   ************* There are 2 unused week schedules in input.",
+    "   ************* There are 6 unused day schedules in input.",
+    "   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.",
+    "   *************",
+    "   ************* ===== Recurring Error Summary =====",
+    "   ************* The following recurring error messages occurred.",
+    "   *************",
+    "   *************  ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Tower range temperature is out of range error continues...",
+    "   *************  **   ~~~   **   This error occurred 49213 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=-8.246864  Min=-22.747195",
+    "   *************",
+    "   *************  ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Tower approach temperature is out of range error continues...",
+    "   *************  **   ~~~   **   This error occurred 33892 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=49.19826  Min=-5.399993",
+    "   *************",
+    "   *************  ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is out of range error continues...",
+    "   *************  **   ~~~   **   This error occurred 10446 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=31.399993  Min=-23.19826",
+    "   *************",
+    "   *************  ** Warning ** GetSpecificHeatGlycol: Temperature out of range (too low) for fluid [WATER] specific heat **",
+    "   *************  **   ~~~   **   This error occurred 6600 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=-3.261466E-003 {C}  Min=-4.041753 {C}",
+    "   *************",
+    "   *************  ** Warning ** GetDensityGlycol: Temperature out of range (too low) for fluid [WATER] density **",
+    "   *************  **   ~~~   **   This error occurred 4242 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=-3.261466E-003 {C}  Min=-4.041753 {C}",
+    "   *************",
+    "   *************",
+    "   ************* ===== Final Error Summary =====",
+    "   ************* The following error categories occurred.  Consider correcting or noting.",
+    "   ************* Nominally Unused Constructions",
+    "   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause",
+    "   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm",
+    "   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).",
+    "   *************",
+    "   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 19 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Completed Successfully-- 104435 Warning; 0 Severe Errors; "
+  ],
   "seed_file": "in.osm",
   "steps": [
     {
@@ -122,27 +276,27 @@
           {
             "name": "total_site_energy",
             "units": "kBtu",
-            "value": 9091167.994738042
+            "value": 9091167.99
           },
           {
             "name": "net_site_energy",
             "units": "kBtu",
-            "value": 9091167.994738042
+            "value": 9091167.99
           },
           {
             "name": "total_building_area",
             "units": "ft^2",
-            "value": 107639.10416709722
+            "value": 107639.1
           },
           {
             "name": "total_site_eui",
             "units": "kBtu/ft^2",
-            "value": 84.45971438618682
+            "value": 84.46
           },
           {
             "name": "eui",
             "units": "kBtu/ft^2",
-            "value": 84.45971438618682
+            "value": 84.46
           },
           {
             "name": "unmet_hours_during_heating",
@@ -177,17 +331,17 @@
           {
             "name": "end_use_heating",
             "units": "kBtu",
-            "value": 5640450.204813348
+            "value": 5640450.2
           },
           {
             "name": "end_use_cooling",
             "units": "kBtu",
-            "value": 364255.597507611
+            "value": 364255.6
           },
           {
             "name": "end_use_interior_lighting",
             "units": "kBtu",
-            "value": 1044617.6828109163
+            "value": 1044617.68
           },
           {
             "name": "end_use_exterior_lighting",
@@ -197,7 +351,7 @@
           {
             "name": "end_use_interior_equipment",
             "units": "kBtu",
-            "value": 1044617.6828109163
+            "value": 1044617.68
           },
           {
             "name": "end_use_exterior_equipment",
@@ -207,17 +361,17 @@
           {
             "name": "end_use_fans",
             "units": "kBtu",
-            "value": 80763.49682189776
+            "value": 80763.5
           },
           {
             "name": "end_use_pumps",
             "units": "kBtu",
-            "value": 738254.7550120428
+            "value": 738254.76
           },
           {
             "name": "end_use_heat_rejection",
             "units": "kBtu",
-            "value": 178208.5749613099
+            "value": 178208.57
           },
           {
             "name": "end_use_humidification",
@@ -247,12 +401,12 @@
           {
             "name": "fuel_electricity",
             "units": "kBtu",
-            "value": 3450717.789924694
+            "value": 3450717.79
           },
           {
             "name": "fuel_natural_gas",
             "units": "kBtu",
-            "value": 5640450.204813348
+            "value": 5640450.2
           },
           {
             "name": "fuel_additional_fuel",
@@ -277,12 +431,12 @@
           {
             "name": "end_use_electricity_cooling",
             "units": "kWh",
-            "value": 106752.77777777778
+            "value": 106752.78
           },
           {
             "name": "end_use_electricity_interior_lighting",
             "units": "kWh",
-            "value": 306147.2222222222
+            "value": 306147.22
           },
           {
             "name": "end_use_electricity_exterior_lighting",
@@ -292,7 +446,7 @@
           {
             "name": "end_use_electricity_interior_equipment",
             "units": "kWh",
-            "value": 306147.2222222222
+            "value": 306147.22
           },
           {
             "name": "end_use_electricity_exterior_equipment",
@@ -302,17 +456,17 @@
           {
             "name": "end_use_electricity_fans",
             "units": "kWh",
-            "value": 23669.444444444445
+            "value": 23669.44
           },
           {
             "name": "end_use_electricity_pumps",
             "units": "kWh",
-            "value": 216361.1111111111
+            "value": 216361.11
           },
           {
             "name": "end_use_electricity_heat_rejection",
             "units": "kWh",
-            "value": 52227.777777777774
+            "value": 52227.78
           },
           {
             "name": "end_use_electricity_humidification",
@@ -342,7 +496,7 @@
           {
             "name": "end_use_natural_gas_heating",
             "units": "therms",
-            "value": 56415.3852
+            "value": 56415.39
           },
           {
             "name": "end_use_natural_gas_cooling",
@@ -417,12 +571,12 @@
           {
             "name": "electricity_cooling_ip",
             "units": "kWh",
-            "value": 106753.15555555555
+            "value": 106753.16
           },
           {
             "name": "electricity_interior_lighting_ip",
             "units": "kWh",
-            "value": 306147.1388888889
+            "value": 306147.14
           },
           {
             "name": "electricity_exterior_lighting_ip",
@@ -432,7 +586,7 @@
           {
             "name": "electricity_interior_equipment_ip",
             "units": "kWh",
-            "value": 306147.1388888889
+            "value": 306147.14
           },
           {
             "name": "electricity_exterior_equipment_ip",
@@ -447,12 +601,12 @@
           {
             "name": "electricity_pumps_ip",
             "units": "kWh",
-            "value": 216360.58333333334
+            "value": 216360.58
           },
           {
             "name": "electricity_heat_rejection_ip",
             "units": "kWh",
-            "value": 52226.70722222223
+            "value": 52226.71
           },
           {
             "name": "electricity_humidification_ip",
@@ -482,12 +636,12 @@
           {
             "name": "electricity_ip",
             "units": "kWh",
-            "value": 1011304.4238888889
+            "value": 1011304.42
           },
           {
             "name": "natural_gas_heating_ip",
             "units": "MBtu",
-            "value": 5640.451152630468
+            "value": 5640.45
           },
           {
             "name": "natural_gas_cooling_ip",
@@ -557,7 +711,7 @@
           {
             "name": "natural_gas_ip",
             "units": "MBtu",
-            "value": 5640.451152630468
+            "value": 5640.45
           },
           {
             "name": "additional_fuel_heating_ip",
@@ -862,17 +1016,17 @@
           {
             "name": "ashrae_189_1_2009_ext_roof_iead_climate_zone_2_5",
             "units": "ft^2",
-            "value": 53819.55208354861
+            "value": 53819.55
           },
           {
             "name": "ashrae_189_1_2009_ext_wall_steel_frame_climate_zone_4_8",
             "units": "ft^2",
-            "value": 15500.03100006201
+            "value": 15500.03
           },
           {
             "name": "ashrae_189_1_2009_ext_window_climate_zone_4_5",
             "units": "ft^2",
-            "value": 10333.354000041323
+            "value": 10333.35
           },
           {
             "name": "gross_window_wall_ratio",
@@ -892,7 +1046,7 @@
           {
             "name": "space_type_baseline_model_space_type",
             "units": "ft^2",
-            "value": 107639.10416709722
+            "value": 107639.1
           },
           {
             "name": "exterior_lighting_total_power",
@@ -902,7 +1056,7 @@
           {
             "name": "exterior_lighting_total_consumption",
             "units": "kWh",
-            "value": 2664358.3333333335
+            "value": 2664358.33
           },
           {
             "name": "inflation_approach",
@@ -916,7 +1070,7 @@
           {
             "name": "annual_peak_electric_demand",
             "units": "kW",
-            "value": 296.28466
+            "value": 296.28
           },
           {
             "name": "first_year_capital_cost",

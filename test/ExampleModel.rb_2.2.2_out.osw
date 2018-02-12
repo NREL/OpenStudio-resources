@@ -1,7 +1,83 @@
 {
   "completed_status": "Success",
   "current_step": 1,
-  "eplusout_err": "Program Version,EnergyPlus, Version 8.8.0-d5f2442b35, IDD_Version 8.8.0\n   ************* Beginning Zone Sizing Calculations\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE ELECTRIC EQUIPMENT SUMMER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE ELECTRIC EQUIPMENT WINTER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE GAS EQUIPMENT SUMMER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE GAS EQUIPMENT WINTER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE HOT WATER EQUIPMENT SUMMER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE HOT WATER EQUIPMENT WINTER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE INFILTRATION SUMMER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE INFILTRATION WINTER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE LIGHTING SUMMER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE LIGHTING WINTER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE NUMBER OF PEOPLE SUMMER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.\n   ** Warning ** CheckUsedConstructions: There are 5 nominally unused constructions in input.\n   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;\n   ** Warning ** GetDaylightingControls: Fraction of Zone controlled by the Daylighting reference points is < 1.0.\n   **   ~~~   ** ..discovered in \"Daylighting:Controls\" for Zone=\"THERMAL ZONE 1\", only 0.25 of the zone is controlled.\n   ************* Beginning System Sizing Calculations\n   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTCOOLING:FACILITY\" - not found.\n   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTHEATING:FACILITY\" - not found.\n   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"PROPANE:FACILITY\" - not found.\n   ** Warning ** Output:Meter:MeterFileOnly requested for \"Electricity:Facility\" (TimeStep), already on \"Output:Meter\". Will report to both eplusout.eso and eplusout.mtr\n   ************* Testing Individual Branch Integrity\n   ************* All Branches passed integrity testing\n   ************* Testing Individual Supply Air Path Integrity\n   ************* All Supply Air Paths passed integrity testing\n   ************* Testing Individual Return Air Path Integrity\n   ************* All Return Air Paths passed integrity testing\n   ************* No node connection errors were found.\n   ************* Beginning Simulation\n   ** Warning ** Processing Monthly Tabular Reports: Variable names not valid for this simulation\n   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual variables.\n   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 1\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -1.30\n   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 22:10 - 22:12\n   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.\n   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 1\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = 1.57 C.\n   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 05/03 08:00 - 08:10\n   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil\n   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 18.215 C.\n   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.\n   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.\n   ************* Simulation Error Summary *************\n   ************* There are 5 unused schedules in input.\n   ************* There are 8 unused week schedules in input.\n   ************* There are 30 unused day schedules in input.\n   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.\n   *************\n   ************* ===== Recurring Error Summary =====\n   ************* The following recurring error messages occurred.\n   *************\n   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 1\" - Low condenser dry-bulb temperature error continues...\n   *************  **   ~~~   **   This error occurred 371 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=-3.333333E-002 [C]  Min=-19.8 [C]\n   *************\n   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 1\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:\n   *************  **   ~~~   **   This error occurred 12 total times;\n   *************  **   ~~~   **   during Warmup 0 times;\n   *************  **   ~~~   **   during Sizing 0 times.\n   *************  **   ~~~   **   Max=1.990495  Min=1.565956\n   *************\n   *************\n   ************* ===== Final Error Summary =====\n   ************* The following error categories occurred.  Consider correcting or noting.\n   ************* Nominally Unused Constructions\n   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause\n   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm\n   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).\n   *************\n   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.\n   ************* EnergyPlus Sizing Error Summary. During Sizing: 15 Warning; 0 Severe Errors.\n   ************* EnergyPlus Completed Successfully-- 403 Warning; 0 Severe Errors; ",
+  "eplusout_err": [
+    "Program Version,EnergyPlus, Version 8.8.0-d5f2442b35, IDD_Version 8.8.0",
+    "   ************* Beginning Zone Sizing Calculations",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE ELECTRIC EQUIPMENT SUMMER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE ELECTRIC EQUIPMENT WINTER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE GAS EQUIPMENT SUMMER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE GAS EQUIPMENT WINTER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE HOT WATER EQUIPMENT SUMMER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE HOT WATER EQUIPMENT WINTER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE INFILTRATION SUMMER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE INFILTRATION WINTER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE LIGHTING SUMMER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE LIGHTING WINTER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"MEDIUM OFFICE NUMBER OF PEOPLE SUMMER DESIGN DAY SCHEDULE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** CheckUsedConstructions: There are 5 nominally unused constructions in input.",
+    "   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;",
+    "   ** Warning ** GetDaylightingControls: Fraction of Zone controlled by the Daylighting reference points is < 1.0.",
+    "   **   ~~~   ** ..discovered in \"Daylighting:Controls\" for Zone=\"THERMAL ZONE 1\", only 0.25 of the zone is controlled.",
+    "   ************* Beginning System Sizing Calculations",
+    "   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTCOOLING:FACILITY\" - not found.",
+    "   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTHEATING:FACILITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"PROPANE:FACILITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly requested for \"Electricity:Facility\" (TimeStep), already on \"Output:Meter\". Will report to both eplusout.eso and eplusout.mtr",
+    "   ************* Testing Individual Branch Integrity",
+    "   ************* All Branches passed integrity testing",
+    "   ************* Testing Individual Supply Air Path Integrity",
+    "   ************* All Supply Air Paths passed integrity testing",
+    "   ************* Testing Individual Return Air Path Integrity",
+    "   ************* All Return Air Paths passed integrity testing",
+    "   ************* No node connection errors were found.",
+    "   ************* Beginning Simulation",
+    "   ** Warning ** Processing Monthly Tabular Reports: Variable names not valid for this simulation",
+    "   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual variables.",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 1\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -1.30",
+    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 22:10 - 22:12",
+    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 1\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = 1.57 C.",
+    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 05/03 08:00 - 08:10",
+    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
+    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 18.215 C.",
+    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
+    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
+    "   ************* Simulation Error Summary *************",
+    "   ************* There are 5 unused schedules in input.",
+    "   ************* There are 8 unused week schedules in input.",
+    "   ************* There are 30 unused day schedules in input.",
+    "   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.",
+    "   *************",
+    "   ************* ===== Recurring Error Summary =====",
+    "   ************* The following recurring error messages occurred.",
+    "   *************",
+    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 1\" - Low condenser dry-bulb temperature error continues...",
+    "   *************  **   ~~~   **   This error occurred 371 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=-3.333333E-002 [C]  Min=-19.8 [C]",
+    "   *************",
+    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 1\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
+    "   *************  **   ~~~   **   This error occurred 12 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=1.990495  Min=1.565956",
+    "   *************",
+    "   *************",
+    "   ************* ===== Final Error Summary =====",
+    "   ************* The following error categories occurred.  Consider correcting or noting.",
+    "   ************* Nominally Unused Constructions",
+    "   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause",
+    "   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm",
+    "   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).",
+    "   *************",
+    "   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 15 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Completed Successfully-- 403 Warning; 0 Severe Errors; "
+  ],
   "seed_file": "in.osm",
   "steps": [
     {
@@ -122,27 +198,27 @@
           {
             "name": "total_site_energy",
             "units": "kBtu",
-            "value": 166370.3391285966
+            "value": 166370.34
           },
           {
             "name": "net_site_energy",
             "units": "kBtu",
-            "value": 166370.3391285966
+            "value": 166370.34
           },
           {
             "name": "total_building_area",
             "units": "ft^2",
-            "value": 4305.564166683889
+            "value": 4305.56
           },
           {
             "name": "total_site_eui",
             "units": "kBtu/ft^2",
-            "value": 38.64077567719393
+            "value": 38.64
           },
           {
             "name": "eui",
             "units": "kBtu/ft^2",
-            "value": 38.64077567719393
+            "value": 38.64
           },
           {
             "name": "unmet_hours_during_heating",
@@ -177,17 +253,17 @@
           {
             "name": "end_use_heating",
             "units": "kBtu",
-            "value": 58167.53667362828
+            "value": 58167.54
           },
           {
             "name": "end_use_cooling",
             "units": "kBtu",
-            "value": 18084.35065557809
+            "value": 18084.35
           },
           {
             "name": "end_use_interior_lighting",
             "units": "kBtu",
-            "value": 42936.11555019327
+            "value": 42936.12
           },
           {
             "name": "end_use_exterior_lighting",
@@ -197,7 +273,7 @@
           {
             "name": "end_use_interior_equipment",
             "units": "kBtu",
-            "value": 35618.96738137447
+            "value": 35618.97
           },
           {
             "name": "end_use_exterior_equipment",
@@ -207,7 +283,7 @@
           {
             "name": "end_use_fans",
             "units": "kBtu",
-            "value": 11572.847039025602
+            "value": 11572.85
           },
           {
             "name": "end_use_pumps",
@@ -247,12 +323,12 @@
           {
             "name": "fuel_electricity",
             "units": "kBtu",
-            "value": 108202.8024549683
+            "value": 108202.8
           },
           {
             "name": "fuel_natural_gas",
             "units": "kBtu",
-            "value": 58167.53667362828
+            "value": 58167.54
           },
           {
             "name": "fuel_additional_fuel",
@@ -282,7 +358,7 @@
           {
             "name": "end_use_electricity_interior_lighting",
             "units": "kWh",
-            "value": 12583.333333333334
+            "value": 12583.33
           },
           {
             "name": "end_use_electricity_exterior_lighting",
@@ -292,7 +368,7 @@
           {
             "name": "end_use_electricity_interior_equipment",
             "units": "kWh",
-            "value": 10438.888888888889
+            "value": 10438.89
           },
           {
             "name": "end_use_electricity_exterior_equipment",
@@ -302,7 +378,7 @@
           {
             "name": "end_use_electricity_fans",
             "units": "kWh",
-            "value": 3391.6666666666665
+            "value": 3391.67
           },
           {
             "name": "end_use_electricity_pumps",
@@ -342,7 +418,7 @@
           {
             "name": "end_use_natural_gas_heating",
             "units": "therms",
-            "value": 581.7876
+            "value": 581.79
           },
           {
             "name": "end_use_natural_gas_cooling",
@@ -417,12 +493,12 @@
           {
             "name": "electricity_cooling_ip",
             "units": "kWh",
-            "value": 5300.019458691667
+            "value": 5300.02
           },
           {
             "name": "electricity_interior_lighting_ip",
             "units": "kWh",
-            "value": 12582.905555555557
+            "value": 12582.91
           },
           {
             "name": "electricity_exterior_lighting_ip",
@@ -432,7 +508,7 @@
           {
             "name": "electricity_interior_equipment_ip",
             "units": "kWh",
-            "value": 10437.688888888888
+            "value": 10437.69
           },
           {
             "name": "electricity_exterior_equipment_ip",
@@ -442,7 +518,7 @@
           {
             "name": "electricity_fans_ip",
             "units": "kWh",
-            "value": 3391.2605555555556
+            "value": 3391.26
           },
           {
             "name": "electricity_pumps_ip",
@@ -482,12 +558,12 @@
           {
             "name": "electricity_ip",
             "units": "kWh",
-            "value": 31711.87445869167
+            "value": 31711.87
           },
           {
             "name": "natural_gas_heating_ip",
             "units": "MBtu",
-            "value": 58.16424270854447
+            "value": 58.16
           },
           {
             "name": "natural_gas_cooling_ip",
@@ -557,7 +633,7 @@
           {
             "name": "natural_gas_ip",
             "units": "MBtu",
-            "value": 58.16424270854447
+            "value": 58.16
           },
           {
             "name": "additional_fuel_heating_ip",
@@ -862,22 +938,22 @@
           {
             "name": "exterior_roof",
             "units": "ft^2",
-            "value": 4305.564166683889
+            "value": 4305.56
           },
           {
             "name": "exterior_wall",
             "units": "ft^2",
-            "value": 2475.699395843236
+            "value": 2475.7
           },
           {
             "name": "exterior_door",
             "units": "ft^2",
-            "value": 43.05564166683889
+            "value": 43.06
           },
           {
             "name": "exterior_window",
             "units": "ft^2",
-            "value": 64.58346250025834
+            "value": 64.58
           },
           {
             "name": "gross_window_wall_ratio",
@@ -897,7 +973,7 @@
           {
             "name": "space_type_space_type_1",
             "units": "ft^2",
-            "value": 4305.564166683889
+            "value": 4305.56
           },
           {
             "name": "exterior_lighting_total_power",
@@ -907,7 +983,7 @@
           {
             "name": "exterior_lighting_total_consumption",
             "units": "kWh",
-            "value": 48758.333333333336
+            "value": 48758.33
           },
           {
             "name": "inflation_approach",
@@ -921,7 +997,7 @@
           {
             "name": "annual_peak_electric_demand",
             "units": "kW",
-            "value": 11.68231
+            "value": 11.68
           },
           {
             "name": "first_year_capital_cost",
