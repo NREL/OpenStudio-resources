@@ -31,6 +31,7 @@ To run specific test(s):
 
 ```
 -n /test_name*regex/
+-n "/(test_name_1|test_name_2)/"
 ```
 
 ## TODO
