@@ -1,3 +1,6 @@
+# This file aims to test the PlantEquipmentOperation based on outdoor
+# conditions: OutdoorDryBulb, OutdoorDewpoint and OutdoorRelativeHumidity
+# (OutdoorWetBulb is tested in plant_op_schemes.rb)
 
 require 'openstudio'
 require 'lib/baseline_model'
@@ -26,47 +29,43 @@ model.add_thermostats({"heating_setpoint" => 24,
 
 #manually add op schemes instead of depending on os defaults
 
+
+# Test the OA RH one, between 0 and 50 percent, one chiller, above two
 chiller = model.getChillerElectricEIRs.first
 chilled_plant = chiller.plantLoop.get
 chiller2 = OpenStudio::Model::ChillerElectricEIR.new(model)
 chilled_plant.addSupplyBranchForComponent(chiller2)
-# A default constructed load scheme has a single large load range
-cooling_op_scheme = OpenStudio::Model::PlantEquipmentOperationCoolingLoad.new(model)
-# This method adds the equipment to the existing load range
-cooling_op_scheme.addEquipment(chiller)
-cooling_op_scheme.addEquipment(chiller2)
-# This cuts the load range into two pieces with only chiller2 operating on the lower end of the range
-# See PlantEquipmentOperationRangeBasedScheme for details about this api
-lower_range_equipment = []
-lower_range_equipment.push(chiller2)
-cooling_op_scheme.addLoadRange(25000.0,lower_range_equipment)
-chilled_plant.setPlantEquipmentOperationCoolingLoad(cooling_op_scheme)
 
+# A default constructed load scheme has a single large load range
+plant_op_oa_rh = OpenStudio::Model::PlantEquipmentOperationOutdoorRelativeHumidity.new(model)
+plant_op_oa_rh.addEquipment(chiller)
+plant_op_oa_rh.addEquipment(chiller2)
+# This cuts the load range into two pieces with only chiller operating on the lower end of the range
+# See PlantEquipmentOperationRangeBasedScheme for details about this api
+plant_op_oa_rh.addLoadRange(50, [chiller])
+chilled_plant.setPrimaryPlantEquipmentOperationScheme(plant_op_oa_rh)
+
+
+# Test the plant OA Db one: below 0C, two boilers, above only one
 boiler = model.getBoilerHotWaters.first
 heating_plant = boiler.plantLoop.get
 boiler2 = OpenStudio::Model::BoilerHotWater.new(model)
 heating_plant.addSupplyBranchForComponent(boiler2)
 
-heating_op_scheme = OpenStudio::Model::PlantEquipmentOperationHeatingLoad.new(model)
-heating_op_scheme.addEquipment(boiler)
-heating_op_scheme.addEquipment(boiler2)
-heating_plant.setPlantEquipmentOperationHeatingLoad(heating_op_scheme)
+plant_op_oa_db = OpenStudio::Model::PlantEquipmentOperationOutdoorDryBulb.new(model)
+plant_op_oa_db.addEquipment(boiler)
+plant_op_oa_db.addLoadRange(0, [boiler, boiler2])
+heating_plant.setPrimaryPlantEquipmentOperationScheme(plant_op_oa_db)
 
-lower_heating_range_equipment = []
-lower_heating_range_equipment.push(boiler2)
-heating_op_scheme.addLoadRange(25000.0,lower_heating_range_equipment)
-heating_plant.setPlantEquipmentOperationHeatingLoad(heating_op_scheme)
 
+# Test the Plant OA Dewpoint, if the dewpoint is below 18C, no towers, above one
 tower = model.getCoolingTowerSingleSpeeds.first
 cond = tower.plantLoop.get
 
-tower_scheme = OpenStudio::Model::PlantEquipmentOperationOutdoorWetBulb.new(model)
-cond.setPrimaryPlantEquipmentOperationScheme(tower_scheme)
-#tower_scheme.addEquipment(tower)
-tower_equipment = []
-tower_scheme.addLoadRange(-50.0,tower_equipment)
-tower_equipment.push(tower)
-tower_scheme.addLoadRange(23.0,tower_equipment)
+plant_op_oa_dew = OpenStudio::Model::PlantEquipmentOperationOutdoorDewpoint.new(model)
+plant_op_oa_dew.addEquipment(tower)
+plant_op_oa_dew.addLoadRange(18.0, [])
+cond.setPrimaryPlantEquipmentOperationScheme(plant_op_oa_dew)
 
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
