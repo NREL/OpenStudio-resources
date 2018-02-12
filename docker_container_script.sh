@@ -25,7 +25,13 @@ fi
 # Launch tests
 echo
 echo "Launching command: 'ruby model_tests.rb $test_filter'"
-~/.rbenv/shims/ruby -I /usr/Ruby/openstudio.so model_tests.rb $test_filter
+
+if [ "$OSVERSION" = 2.0.4 ]; then
+  # This version is weird, I directly require /usr/Ruby/openstudio.so in the model_tests.rb, done in docker exec via sed
+  ~/.rbenv/shims/ruby model_tests.rb $test_filter
+else
+  ~/.rbenv/shims/ruby -I /usr/Ruby/openstudio.so model_tests.rb $test_filter
+fi
 
 # Test if directory exists
 if [ -d "testruns" ]; then

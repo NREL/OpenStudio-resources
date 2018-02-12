@@ -323,7 +323,10 @@ def _parse_success(data, extra_check=False, verbose=False):
     # OS 2.0.4 has a bug, it reports "Fail" when really it worked
     if status == "Fail":
         if "eplusout_err" in data.keys():
-            if "EnergyPlus Completed Successfully" in data['eplusout_err']:
+            # if "EnergyPlus Completed Successfully" in data['eplusout_err']:
+            # This is now a list:
+            if any("EnergyPlus Completed Successfully" in x for x in
+                   data['eplusout_err']):
                 if verbose:
                     print("OSW status is 'Fail' but E+ completed successfully")
                 status = "Success"
