@@ -1113,6 +1113,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('solar_collector_flat_plate_water.osm')
   end
 
+  def test_space_load_instances_rb
+    result = sim_test('space_load_instances.rb')
+  end
+
+  def test_space_load_instances_osm
+    result = sim_test('space_load_instances.osm')
+  end
+
   def test_surface_properties_osm
     result = sim_test('surface_properties.osm')
   end
