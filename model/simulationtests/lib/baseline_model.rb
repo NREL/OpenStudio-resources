@@ -1,5 +1,6 @@
-
-require 'openstudio'
+# This allows importing this file into an irb session even if you don't have
+# a global install of openstudio - useful for writing a test
+require 'openstudio' unless defined?(OpenStudio)
 
 class BaselineModel < OpenStudio::Model::Model
 
@@ -10,62 +11,62 @@ class BaselineModel < OpenStudio::Model::Model
     floor_to_floor_height = params["floor_to_floor_height"]
     plenum_height = params["plenum_height"]
     perimeter_zone_depth = params["perimeter_zone_depth"]
-    
+
     #input error checking
     if length <= 1e-4
       return false
     end
-    
+
     if width <= 1e-4
       return false
     end
-    
+
     if num_floors <= 1e-4
       return false
     end
-    
+
     if floor_to_floor_height <= 1e-4
       return false
     end
-    
+
     if plenum_height < 0
       return false
     end
-    
+
     shortest_side = [length,width].min
     if perimeter_zone_depth < 0 or 2*perimeter_zone_depth >= (shortest_side - 1e-4)
       return false
     end
-        
+
     #Loop through the number of floors
     for floor in (0..num_floors-1)
-      
+
       z = floor_to_floor_height * floor
-      
+
       #Create a new story within the building
       story = OpenStudio::Model::BuildingStory.new(self)
       story.setNominalFloortoFloorHeight(floor_to_floor_height)
       story.setName("Story #{floor+1}")
-      
+
       nw_point = OpenStudio::Point3d.new(0,width,z)
       ne_point = OpenStudio::Point3d.new(length,width,z)
       se_point = OpenStudio::Point3d.new(length,0,z)
       sw_point = OpenStudio::Point3d.new(0,0,z)
-      
+
       # Identity matrix for setting space origins
       m = OpenStudio::Matrix.new(4,4,0)
         m[0,0] = 1
         m[1,1] = 1
         m[2,2] = 1
         m[3,3] = 1
-      
+
       #Define polygons for a rectangular building
       if perimeter_zone_depth > 0
         perimeter_nw_point = nw_point + OpenStudio::Vector3d.new(perimeter_zone_depth,-perimeter_zone_depth,0)
         perimeter_ne_point = ne_point + OpenStudio::Vector3d.new(-perimeter_zone_depth,-perimeter_zone_depth,0)
         perimeter_se_point = se_point + OpenStudio::Vector3d.new(-perimeter_zone_depth,perimeter_zone_depth,0)
         perimeter_sw_point = sw_point + OpenStudio::Vector3d.new(perimeter_zone_depth,perimeter_zone_depth,0)
-      
+
         west_polygon = OpenStudio::Point3dVector.new
           west_polygon << sw_point
           west_polygon << nw_point
@@ -79,7 +80,7 @@ class BaselineModel < OpenStudio::Model::Model
         west_space.changeTransformation(OpenStudio::Transformation.new(m))
         west_space.setBuildingStory(story)
         west_space.setName("Story #{floor+1} West Perimeter Space")
-  
+
         north_polygon = OpenStudio::Point3dVector.new
           north_polygon << nw_point
           north_polygon << ne_point
@@ -93,7 +94,7 @@ class BaselineModel < OpenStudio::Model::Model
         north_space.changeTransformation(OpenStudio::Transformation.new(m))
         north_space.setBuildingStory(story)
         north_space.setName("Story #{floor+1} North Perimeter Space")
-        
+
         east_polygon = OpenStudio::Point3dVector.new
           east_polygon << ne_point
           east_polygon << se_point
@@ -107,7 +108,7 @@ class BaselineModel < OpenStudio::Model::Model
         east_space.changeTransformation(OpenStudio::Transformation.new(m))
         east_space.setBuildingStory(story)
         east_space.setName("Story #{floor+1} East Perimeter Space")
-        
+
         south_polygon = OpenStudio::Point3dVector.new
           south_polygon << se_point
           south_polygon << sw_point
@@ -121,7 +122,7 @@ class BaselineModel < OpenStudio::Model::Model
         south_space.changeTransformation(OpenStudio::Transformation.new(m))
         south_space.setBuildingStory(story)
         south_space.setName("Story #{floor+1} South Perimeter Space")
-        
+
         core_polygon = OpenStudio::Point3dVector.new
           core_polygon << perimeter_sw_point
           core_polygon << perimeter_nw_point
@@ -135,7 +136,7 @@ class BaselineModel < OpenStudio::Model::Model
         core_space.changeTransformation(OpenStudio::Transformation.new(m))
         core_space.setBuildingStory(story)
         core_space.setName("Story #{floor+1} Core Space")
-        
+
       # Minimal zones
       else
         core_polygon = OpenStudio::Point3dVector.new
@@ -151,21 +152,21 @@ class BaselineModel < OpenStudio::Model::Model
         core_space.changeTransformation(OpenStudio::Transformation.new(m))
         core_space.setBuildingStory(story)
         core_space.setName("Story #{floor+1} Core Space")
-        
+
       end
-      
+
       #Set vertical story position
       story.setNominalZCoordinate(z)
-      
+
     end #End of floor loop
-    
+
     #Put all of the spaces in the model into a vector
     spaces = OpenStudio::Model::SpaceVector.new
     self.getSpaces.each { |space| spaces << space }
 
     #Match surfaces for each space in the vector
-    OpenStudio::Model.matchSurfaces(spaces) 
-    
+    OpenStudio::Model.matchSurfaces(spaces)
+
     #Apply a thermal zone to each space in the model if that space has no thermal zone already
     self.getSpaces.each do |space|
       if space.thermalZone.empty?
@@ -174,14 +175,14 @@ class BaselineModel < OpenStudio::Model::Model
         new_thermal_zone.setName(space.name.get.sub('Space','Thermal Zone'))
       end
     end
-    
+
   end
-  
+
   def add_windows(params)
     wwr = params["wwr"]
     offset = params["offset"]
     application_type = params["application_type"]
-    
+
     #input checking
     if not wwr or not offset or not application_type
       return false
@@ -201,30 +202,30 @@ class BaselineModel < OpenStudio::Model::Model
     else
       heightOffsetFromFloor = false
     end
-    
+
     self.getSurfaces.each do |s|
       next if not s.outsideBoundaryCondition == "Outdoors"
       new_window = s.setWindowToWallRatio(wwr, offset, heightOffsetFromFloor)
     end
-  
+
   end
-  
+
   def add_daylighting(params)
     shades = params["shades"]
-    
+
     shading_control_hash = Hash.new
-    
+
     self.getThermalZones.each do |zone|
       biggestWindow = nil
       zone.spaces.each do |space|
         space.surfaces.each do |surface|
-          if surface.surfaceType == "Wall" and surface.outsideBoundaryCondition == "Outdoors" 
+          if surface.surfaceType == "Wall" and surface.outsideBoundaryCondition == "Outdoors"
             surface.subSurfaces.each do |subSurface|
               if subSurface.subSurfaceType == "FixedWindow" or subSurface.subSurfaceType == "OperableWindow"
                 if biggestWindow.nil? or subSurface.netArea > biggestWindow.netArea
                   biggestWindow = subSurface
-                end 
-                
+                end
+
                 if shades
                   construction = subSurface.construction.get
                   shading_control = shading_control_hash[construction.handle.to_s]
@@ -234,14 +235,14 @@ class BaselineModel < OpenStudio::Model::Model
                     shading_control_hash[construction.handle.to_s] = shading_control
                   end
                   subSurface.setShadingControl(shading_control)
-                  
+
                 end
               end
             end
           end
         end
       end
-      
+
       if biggestWindow
         vertices = biggestWindow.vertices
         centroid = OpenStudio::getCentroid(vertices).get
@@ -251,20 +252,20 @@ class BaselineModel < OpenStudio::Model::Model
         offsetX = 0.0
         offsetY = 0.0
         offsetZ = -1.0
-        
+
         dc = OpenStudio::Model::DaylightingControl.new(self)
         dc.setSpace(biggestWindow.surface.get.space.get)
         dc.setPositionXCoordinate(position.x + offsetX)
         dc.setPositionYCoordinate(position.y + offsetY)
         dc.setPositionZCoordinate(position.z + offsetZ)
         zone.setPrimaryDaylightingControl(dc)
-        
+
         glr = OpenStudio::Model::GlareSensor.new(self)
         glr.setSpace(biggestWindow.surface.get.space.get)
         glr.setPositionXCoordinate(position.x + offsetX)
         glr.setPositionYCoordinate(position.y + offsetY)
         glr.setPositionZCoordinate(position.z + offsetZ)
-        
+
         ill = OpenStudio::Model::IlluminanceMap.new(self)
         ill.setSpace(biggestWindow.surface.get.space.get)
         ill.setOriginXCoordinate(position.x + offsetX - 0.5)
@@ -275,15 +276,15 @@ class BaselineModel < OpenStudio::Model::Model
         ill.setNumberofXGridPoints(5)
         ill.setNumberofYGridPoints(5)
         zone.setIlluminanceMap(ill)
- 
+
       end
     end
-    
+
   end
 
   def add_hvac(params)
     sys_num = params["ashrae_sys_num"]
-    
+
     sys_num_array = ['01','02','03','04','05','06','07','08','09','10']
 
     #check the requested system number
@@ -291,7 +292,7 @@ class BaselineModel < OpenStudio::Model::Model
       puts "System type: #{sys_num} is not a valid choice"
       exit
     end
-    
+
     #get the thermal zones in the self
     zones = self.getThermalZones
 
@@ -300,16 +301,16 @@ class BaselineModel < OpenStudio::Model::Model
         #1: PTAC, Residential
         when '01' then hvac = OpenStudio::Model::addSystemType1(self, zones)
         #2: PTHP, Residential
-        when '02' then 
+        when '02' then
           hvac = OpenStudio::Model::addSystemType2(self, zones)
         #3: PSZ-AC
         when '03' then
           zones.each do|zone|
             hvac = OpenStudio::Model::addSystemType3(self)
             hvac = hvac.to_AirLoopHVAC.get
-            hvac.addBranchForZone(zone)      
+            hvac.addBranchForZone(zone)
             outlet_node = hvac.supplyOutletNode
-            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
+            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get
             setpoint_manager.setControlZone(zone)
           end
         #4: PSZ-HP
@@ -319,61 +320,61 @@ class BaselineModel < OpenStudio::Model::Model
             hvac = hvac.to_AirLoopHVAC.get
             hvac.addBranchForZone(zone)
             outlet_node = hvac.supplyOutletNode
-            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
+            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get
             setpoint_manager.setControlZone(zone)
           end
         #5: Packaged VAV w/ Reheat
         when '05' then
           hvac = OpenStudio::Model::addSystemType5(self)
-          hvac = hvac.to_AirLoopHVAC.get      
+          hvac = hvac.to_AirLoopHVAC.get
           zones.each do|zone|
-            hvac.addBranchForZone(zone)      
+            hvac.addBranchForZone(zone)
           end
         #6: Packaged VAV w/ PFP Boxes
         when '06' then
           hvac = OpenStudio::Model::addSystemType6(self)
-          hvac = hvac.to_AirLoopHVAC.get      
+          hvac = hvac.to_AirLoopHVAC.get
           zones.each do|zone|
-            hvac.addBranchForZone(zone)      
+            hvac.addBranchForZone(zone)
           end
         #7: VAV w/ Reheat
         when '07' then
           hvac = OpenStudio::Model::addSystemType7(self)
-          hvac = hvac.to_AirLoopHVAC.get      
+          hvac = hvac.to_AirLoopHVAC.get
           zones.each do|zone|
-            hvac.addBranchForZone(zone)      
+            hvac.addBranchForZone(zone)
           end
         #8: VAV w/ PFP Boxes
         when '08' then
           hvac = OpenStudio::Model::addSystemType8(self)
-          hvac = hvac.to_AirLoopHVAC.get      
+          hvac = hvac.to_AirLoopHVAC.get
           zones.each do|zone|
-            hvac.addBranchForZone(zone)      
+            hvac.addBranchForZone(zone)
           end
         #9: Warm air furnace, gas fired
         when '09' then
           zones.each do|zone|
-            hvac = OpenStudio::Model::addSystemType9(self)  
+            hvac = OpenStudio::Model::addSystemType9(self)
             hvac = hvac.to_AirLoopHVAC.get
-            hvac.addBranchForZone(zone)      
+            hvac.addBranchForZone(zone)
             outlet_node = hvac.supplyOutletNode
-            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
+            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get
             setpoint_manager.setControlZone(zone)
           end
         #10: Warm air furnace, electric
         when '10' then
           zones.each do|zone|
-            hvac = OpenStudio::Model::addSystemType10(self)  
+            hvac = OpenStudio::Model::addSystemType10(self)
             hvac = hvac.to_AirLoopHVAC.get
-            hvac.addBranchForZone(zone)      
+            hvac.addBranchForZone(zone)
             outlet_node = hvac.supplyOutletNode
-            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
+            setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get
             setpoint_manager.setControlZone(zone)
           end
-        #if system number is not recognized  
+        #if system number is not recognized
         else puts 'cannot find system number ' + sys_num
-      end    
-    
+      end
+
   end
 
   def set_constructions()
@@ -382,7 +383,7 @@ class BaselineModel < OpenStudio::Model::Model
     #make sure the file exists on the filesystem; if it does, open it
     construction_library_path = OpenStudio::Path.new(construction_library_path)
     if OpenStudio::exists(construction_library_path)
-      versionTranslator = OpenStudio::OSVersion::VersionTranslator.new 
+      versionTranslator = OpenStudio::OSVersion::VersionTranslator.new
       construction_library = versionTranslator.loadModel(construction_library_path).get
     else
       puts "#{construction_library_path} couldn't be found"
@@ -391,7 +392,7 @@ class BaselineModel < OpenStudio::Model::Model
     #add the objects in the construction library to the model
     sets = construction_library.to_Model.getDefaultConstructionSets
     sets.first.clone(self)
-    
+
     #apply the newly-added construction set to the model
     building = self.getBuilding
     default_construction_set = OpenStudio::Model::getDefaultConstructionSets(self)[0]
@@ -404,36 +405,36 @@ class BaselineModel < OpenStudio::Model::Model
         break
       end
     end
-  
+
   end
-  
+
   def set_space_type()
-  
+
     #method for converting from IP to SI if you know the strings of the input and the output
-    def ip_to_si(number, ip_unit_string, si_unit_string)     
+    def ip_to_si(number, ip_unit_string, si_unit_string)
       ip_unit = OpenStudio::createUnit(ip_unit_string, "IP".to_UnitSystem).get
       si_unit = OpenStudio::createUnit(si_unit_string, "SI".to_UnitSystem).get
       #puts "#{ip_unit} --> #{si_unit}"
       ip_quantity = OpenStudio::Quantity.new(number, ip_unit)
       si_quantity = OpenStudio::convert(ip_quantity, si_unit).get
-      #puts "#{ip_quantity} = #{si_quantity}" 
+      #puts "#{ip_quantity} = #{si_quantity}"
       return si_quantity.value
     end
-  
+
     #baseline space type taken from 90.1-2004 Large Office, Whole Building on-demand space type generator
     space_type = OpenStudio::Model::SpaceType.new(self)
     space_type.setName("Baseline Model Space Type")
-    
+
     #create the schedule set for the space type
     default_sch_set = OpenStudio::Model::DefaultScheduleSet.new(self)
     default_sch_set.setName("Baseline Model Schedule Set")
-    space_type.setDefaultScheduleSet(default_sch_set)   
-    
+    space_type.setDefaultScheduleSet(default_sch_set)
+
     #schedule for infiltration
     sch_ruleset = OpenStudio::Model::ScheduleRuleset.new(self)
-    sch_ruleset.setName("Baseline Model Infiltration Schedule")  
+    sch_ruleset.setName("Baseline Model Infiltration Schedule")
     #Winter Design Day
-    winter_dsn_day = OpenStudio::Model::ScheduleDay.new(self)  
+    winter_dsn_day = OpenStudio::Model::ScheduleDay.new(self)
     sch_ruleset.setWinterDesignDaySchedule(winter_dsn_day)
     winter_dsn_day = sch_ruleset.winterDesignDaySchedule
     winter_dsn_day.setName("Baseline Model Infiltration Schedule Winter Design Day")
@@ -445,19 +446,19 @@ class BaselineModel < OpenStudio::Model::Model
     summer_dsn_day.setName("Baseline Model Infiltration Schedule Summer Design Day")
     summer_dsn_day.addValue(OpenStudio::Time.new(0, 24, 0, 0), 1 )
     #Weekdays
-    week_day = sch_ruleset.defaultDaySchedule  
+    week_day = sch_ruleset.defaultDaySchedule
     week_day.setName("Baseline Model Infiltration Schedule Schedule All Days")
-    week_day.addValue(OpenStudio::Time.new(0, 6, 0, 0), 1 )     
-    week_day.addValue(OpenStudio::Time.new(0, 22, 0, 0), 0.25 )     
-    week_day.addValue(OpenStudio::Time.new(0, 24, 0, 0), 1 )     
+    week_day.addValue(OpenStudio::Time.new(0, 6, 0, 0), 1 )
+    week_day.addValue(OpenStudio::Time.new(0, 22, 0, 0), 0.25 )
+    week_day.addValue(OpenStudio::Time.new(0, 24, 0, 0), 1 )
     #set the infiltration schedule
     infiltration_sch = default_sch_set.setInfiltrationSchedule(sch_ruleset)
-  
+
     #schedule for occupancy, lights, electric equipment
     sch_ruleset = OpenStudio::Model::ScheduleRuleset.new(self)
-    sch_ruleset.setName("Baseline Model People Lights and Equipment Schedule")  
+    sch_ruleset.setName("Baseline Model People Lights and Equipment Schedule")
     #Winter Design Day
-    winter_dsn_day = OpenStudio::Model::ScheduleDay.new(self)  
+    winter_dsn_day = OpenStudio::Model::ScheduleDay.new(self)
     sch_ruleset.setWinterDesignDaySchedule(winter_dsn_day)
     winter_dsn_day = sch_ruleset.winterDesignDaySchedule
     winter_dsn_day.setName("Baseline Model People Lights and Equipment Schedule Winter Design Day")
@@ -469,23 +470,23 @@ class BaselineModel < OpenStudio::Model::Model
     summer_dsn_day.setName("Baseline Model People Lights and Equipment Schedule Summer Design Day")
     summer_dsn_day.addValue(OpenStudio::Time.new(0, 24, 0, 0), 1 )
     #Weekdays
-    week_day = sch_ruleset.defaultDaySchedule  
+    week_day = sch_ruleset.defaultDaySchedule
     week_day.setName("Baseline Model People Lights and Equipment Schedule Schedule Week Day")
-    week_day.addValue(OpenStudio::Time.new(0, 6, 0, 0), 0 )     
-    week_day.addValue(OpenStudio::Time.new(0, 7, 0, 0), 0.1 )     
-    week_day.addValue(OpenStudio::Time.new(0, 8, 0, 0), 0.2 )     
-    week_day.addValue(OpenStudio::Time.new(0, 12, 0, 0), 0.95 )     
-    week_day.addValue(OpenStudio::Time.new(0, 13, 0, 0), 0.5 )     
-    week_day.addValue(OpenStudio::Time.new(0, 17, 0, 0), 0.95 )     
-    week_day.addValue(OpenStudio::Time.new(0, 18, 0, 0), 0.7 )     
-    week_day.addValue(OpenStudio::Time.new(0, 20, 0, 0), 0.4 )     
-    week_day.addValue(OpenStudio::Time.new(0, 22, 0, 0), 0.1 )     
+    week_day.addValue(OpenStudio::Time.new(0, 6, 0, 0), 0 )
+    week_day.addValue(OpenStudio::Time.new(0, 7, 0, 0), 0.1 )
+    week_day.addValue(OpenStudio::Time.new(0, 8, 0, 0), 0.2 )
+    week_day.addValue(OpenStudio::Time.new(0, 12, 0, 0), 0.95 )
+    week_day.addValue(OpenStudio::Time.new(0, 13, 0, 0), 0.5 )
+    week_day.addValue(OpenStudio::Time.new(0, 17, 0, 0), 0.95 )
+    week_day.addValue(OpenStudio::Time.new(0, 18, 0, 0), 0.7 )
+    week_day.addValue(OpenStudio::Time.new(0, 20, 0, 0), 0.4 )
+    week_day.addValue(OpenStudio::Time.new(0, 22, 0, 0), 0.1 )
     week_day.addValue(OpenStudio::Time.new(0, 24, 0, 0), 0.05 )
     #Saturdays
     saturday_rule = OpenStudio::Model::ScheduleRule.new(sch_ruleset)
     saturday_rule.setName("Baseline Model People Lights and Equipment Schedule Saturday Rule")
-    saturday_rule.setApplySaturday(true)   
-    saturday = saturday_rule.daySchedule  
+    saturday_rule.setApplySaturday(true)
+    saturday = saturday_rule.daySchedule
     saturday.setName("Baseline Model People Lights and Equipment Schedule Saturday")
     saturday.addValue(OpenStudio::Time.new(0, 6, 0, 0), 0 )
     saturday.addValue(OpenStudio::Time.new(0, 8, 0, 0), 0.1 )
@@ -495,36 +496,36 @@ class BaselineModel < OpenStudio::Model::Model
     #Sundays
     sunday_rule = OpenStudio::Model::ScheduleRule.new(sch_ruleset)
     sunday_rule.setName("Baseline Model People Lights and Equipment Schedule Sunday Rule")
-    sunday_rule.setApplySunday(true)   
-    sunday = sunday_rule.daySchedule  
+    sunday_rule.setApplySunday(true)
+    sunday = sunday_rule.daySchedule
     sunday.setName("Baseline Model People Lights and Equipment Schedule Schedule Sunday")
     sunday.addValue(OpenStudio::Time.new(0, 24, 0, 0), 0 )
     #assign the schedule to the ruleset
     default_sch_set.setNumberofPeopleSchedule(sch_ruleset)
     default_sch_set.setLightingSchedule(sch_ruleset)
     default_sch_set.setElectricEquipmentSchedule(sch_ruleset)
-    
+
     #schedule for occupant activity level = 120 W constant
     occ_activity_sch = OpenStudio::Model::ScheduleRuleset.new(self)
     occ_activity_sch.setName("Baseline Model People Activity Schedule")
     occ_activity_sch.defaultDaySchedule.setName("Baseline Model People Activity Schedule Default")
     occ_activity_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 120 )
     default_sch_set.setPeopleActivityLevelSchedule(occ_activity_sch)
-        
+
     #outdoor air = 0.0094 m^3/s*person (20 cfm/person)
     ventilation = OpenStudio::Model::DesignSpecificationOutdoorAir.new(self)
     ventilation.setName("Baseline Model OA")
     space_type.setDesignSpecificationOutdoorAir(ventilation)
     ventilation.setOutdoorAirMethod("Sum")
     ventilation.setOutdoorAirFlowperPerson(ip_to_si(20,"ft^3/min*person","m^3/s*person"))
-    
+
     #infiltration = 0.00030226 m^3/s*m^2 exterior (0.06 cfm/ft^2 exterior)
     make_infiltration = false
     infiltration = OpenStudio::Model::SpaceInfiltrationDesignFlowRate.new(self)
     infiltration.setName("Baseline Model Infiltration")
     infiltration.setSpaceType(space_type)
     infiltration.setFlowperExteriorSurfaceArea(ip_to_si(0.06,"ft^3/min*ft^2","m^3/s*m^2"))
-    
+
     #people = 0.053820 people/m^2 (0.005 people/ft^2)
     #create the people definition
     people_def = OpenStudio::Model::PeopleDefinition.new(self)
@@ -534,37 +535,37 @@ class BaselineModel < OpenStudio::Model::Model
     people = OpenStudio::Model::People.new(people_def)
     people.setName("Baseline Model People")
     people.setSpaceType(space_type)
-    
+
     #lights = 10.763910 W/m^2 (1 W/ft^2)
-    #create the lighting definition 
+    #create the lighting definition
     lights_def = OpenStudio::Model::LightsDefinition.new(self)
     lights_def.setName("Baseline Model Lights Definition")
     lights_def.setWattsperSpaceFloorArea(ip_to_si(1,"W/ft^2","W/m^2"))
     #create the lighting instance and hook it up to the space type
     lights = OpenStudio::Model::Lights.new(lights_def)
     lights.setName("Baseline Model Lights")
-    lights.setSpaceType(space_type)  
-    
+    lights.setSpaceType(space_type)
+
     #equipment = 10.763910 W/m^2 (1 W/ft^2)
     #create the electric equipment definition
     elec_equip_def = OpenStudio::Model::ElectricEquipmentDefinition.new(self)
-    elec_equip_def.setName("Baseline Model Electric Equipment Definition")  
+    elec_equip_def.setName("Baseline Model Electric Equipment Definition")
     elec_equip_def.setWattsperSpaceFloorArea(ip_to_si(1,"W/ft^2","W/m^2"))
     #create the electric equipment instance and hook it up to the space type
     elec_equip = OpenStudio::Model::ElectricEquipment.new(elec_equip_def)
     elec_equip.setName("Baseline Model Electric Equipment")
     elec_equip.setSpaceType(space_type)
-           
+
     #set the space type of all spaces by setting it at the building level
     self.getBuilding.setSpaceType(space_type)
 
   end
 
   def add_thermostats(params)
-    
+
     heating_setpoint = params["heating_setpoint"]
     cooling_setpoint = params["cooling_setpoint"]
-    
+
     time_24hrs = OpenStudio::Time.new(0,24,0,0)
 
     cooling_sch = OpenStudio::Model::ScheduleRuleset.new(self)
@@ -575,33 +576,33 @@ class BaselineModel < OpenStudio::Model::Model
     heating_sch = OpenStudio::Model::ScheduleRuleset.new(self)
     heating_sch.setName("Heating Sch")
     heating_sch.defaultDaySchedule.setName("Heating Sch Default")
-    heating_sch.defaultDaySchedule.addValue(time_24hrs,heating_setpoint)      
-    
+    heating_sch.defaultDaySchedule.addValue(time_24hrs,heating_setpoint)
+
     self.getThermalZones.each do |zone|
       new_thermostat = OpenStudio::Model::ThermostatSetpointDualSetpoint.new(self)
-      
+
       new_thermostat.setHeatingSchedule(heating_sch)
       new_thermostat.setCoolingSchedule(cooling_sch)
 
       zone.setThermostatSetpointDualSetpoint(new_thermostat)
     end
 
-  end  
-  
+  end
+
   def save_openstudio_osm(params)
-  
+
     osm_save_directory = params["osm_save_directory"]
     osm_name = params["osm_name"]
-  
+
     save_path = OpenStudio::Path.new("#{osm_save_directory}/#{osm_name}")
     self.save(save_path,true)
-    
+
   end
-  
+
   def add_design_days()
-     
+
     ddy_path = nil
-    
+
     workflow = OpenStudio::WorkflowJSON.load(OpenStudio::Path.new('in.osw'))
     if !workflow.empty?
       weather = workflow.get.weatherFile
@@ -624,10 +625,10 @@ class BaselineModel < OpenStudio::Model::Model
       self.addObjects(ddy_objects)
     else
       puts "#{ddy_path} couldn't be found"
-    end  
+    end
 
   end
-  
+
   attr_accessor :standards
 
   def add_standards(input_hash)
@@ -642,11 +643,11 @@ class BaselineModel < OpenStudio::Model::Model
   # the minimum_capacity and maximum_capacity values.
   # Returns an Array (empty if nothing found) of matching objects.
   def find_objects(hash_of_objects, search_criteria, capacity = nil)
-    
+
     desired_object = nil
     search_criteria_matching_objects = []
     matching_objects = []
-    
+
     # Compare each of the objects against the search criteria
     hash_of_objects.each do |object|
       meets_all_search_criteria = true
@@ -654,7 +655,7 @@ class BaselineModel < OpenStudio::Model::Model
         # Don't check non-existent search criteria
         next unless object.has_key?(key)
         # Stop as soon as one of the search criteria is not met
-        if object[key] != value 
+        if object[key] != value
           meets_all_search_criteria = false
           break
         end
@@ -664,7 +665,7 @@ class BaselineModel < OpenStudio::Model::Model
       # If made it here, object matches all search criteria
       search_criteria_matching_objects << object
     end
-   
+
     # If capacity was specified, narrow down the matching objects
     if capacity.nil?
       matching_objects = search_criteria_matching_objects
@@ -672,17 +673,17 @@ class BaselineModel < OpenStudio::Model::Model
       # Round up if capacity is an integer
       if capacity = capacity.round
         capacity = capacity + (capacity * 0.01)
-      end    
+      end
       search_criteria_matching_objects.each do |object|
         # Skip objects that don't have fields for minimum_capacity and maximum_capacity
-        next if !object.has_key?('minimum_capacity') || !object.has_key?('maximum_capacity') 
+        next if !object.has_key?('minimum_capacity') || !object.has_key?('maximum_capacity')
         # Skip objects that don't have values specified for minimum_capacity and maximum_capacity
         next if object['minimum_capacity'].nil? || object['maximum_capacity'].nil?
         # Skip objects whose the minimum capacity is below the specified capacity
         next if capacity <= object['minimum_capacity']
         # Skip objects whose max
         next if capacity > object['maximum_capacity']
-        # Found a matching object      
+        # Found a matching object
         matching_objects << object
       end
     end
@@ -692,9 +693,9 @@ class BaselineModel < OpenStudio::Model::Model
       desired_object = nil
       #OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Find objects search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}.")
     end
-    
+
     return matching_objects
-   
+
   end
 
   # Create a schedule from the openstudio standards dataset.
@@ -708,18 +709,18 @@ class BaselineModel < OpenStudio::Model::Model
         return schedule
       end
     end
- 
+
     require 'date'
 
-    #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding schedule: #{schedule_name}")   
-    
+    #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding schedule: #{schedule_name}")
+
     # Find all the schedule rules that match the name
     rules = self.find_objects(self.standards['schedules'], {'name'=>schedule_name})
     if rules.size == 0
       # OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Cannot find data for schedule: #{schedule_name}, will not be created.")
       return false #TODO change to return empty optional schedule:ruleset?
     end
-    
+
     # Helper method to fill in hourly values
     def add_vals_to_sch(day_sch, sch_type, values)
       if sch_type == "Constant"
@@ -727,16 +728,16 @@ class BaselineModel < OpenStudio::Model::Model
       elsif sch_type == "Hourly"
         for i in 0..23
           next if values[i] == values[i + 1]
-          day_sch.addValue(OpenStudio::Time.new(0, i + 1, 0, 0), values[i])     
-        end 
+          day_sch.addValue(OpenStudio::Time.new(0, i + 1, 0, 0), values[i])
+        end
       else
         #OpenStudio::logFree(OpenStudio::Info, "Adding space type: #{template}-#{clim}-#{building_type}-#{spc_type}")
       end
     end
-    
+
     # Make a schedule ruleset
     sch_ruleset = OpenStudio::Model::ScheduleRuleset.new(self)
-    sch_ruleset.setName("#{schedule_name}")  
+    sch_ruleset.setName("#{schedule_name}")
 
     # Loop through the rules, making one for each row in the spreadsheet
     rules.each do |rule|
@@ -745,34 +746,34 @@ class BaselineModel < OpenStudio::Model::Model
       end_date = DateTime.parse(rule['end_date'])
       sch_type = rule['type']
       values = rule['values']
-      
+
       #Day Type choices: Wkdy, Wknd, Mon, Tue, Wed, Thu, Fri, Sat, Sun, WntrDsn, SmrDsn, Hol
-      
+
       # Default
       if day_types.include?('Default')
         day_sch = sch_ruleset.defaultDaySchedule
         day_sch.setName("#{schedule_name} Default")
-        add_vals_to_sch(day_sch, sch_type, values) 
+        add_vals_to_sch(day_sch, sch_type, values)
       end
-      
+
       # Winter Design Day
       if day_types.include?('WntrDsn')
-        day_sch = OpenStudio::Model::ScheduleDay.new(self)  
+        day_sch = OpenStudio::Model::ScheduleDay.new(self)
         sch_ruleset.setWinterDesignDaySchedule(day_sch)
         day_sch = sch_ruleset.winterDesignDaySchedule
         day_sch.setName("#{schedule_name} Winter Design Day")
-        add_vals_to_sch(day_sch, sch_type, values) 
-      end    
-      
+        add_vals_to_sch(day_sch, sch_type, values)
+      end
+
       # Summer Design Day
       if day_types.include?('SmrDsn')
-        day_sch = OpenStudio::Model::ScheduleDay.new(self)  
+        day_sch = OpenStudio::Model::ScheduleDay.new(self)
         sch_ruleset.setSummerDesignDaySchedule(day_sch)
         day_sch = sch_ruleset.summerDesignDaySchedule
         day_sch.setName("#{schedule_name} Summer Design Day")
         add_vals_to_sch(day_sch, sch_type, values)
       end
-      
+
       # Other days (weekdays, weekends, etc)
       if day_types.include?('Wknd') ||
         day_types.include?('Wkdy') ||
@@ -783,17 +784,17 @@ class BaselineModel < OpenStudio::Model::Model
         day_types.include?('Wed') ||
         day_types.include?('Thu') ||
         day_types.include?('Fri')
-      
+
         # Make the Rule
         sch_rule = OpenStudio::Model::ScheduleRule.new(sch_ruleset)
         day_sch = sch_rule.daySchedule
         day_sch.setName("#{schedule_name} Summer Design Day")
         add_vals_to_sch(day_sch, sch_type, values)
-        
+
         # Set the dates when the rule applies
         sch_rule.setStartDate(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(start_date.month.to_i), start_date.day.to_i))
         sch_rule.setEndDate(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(end_date.month.to_i), end_date.day.to_i))
-        
+
         # Set the days when the rule applies
         # Weekends
         if day_types.include?('Wknd')
@@ -818,18 +819,18 @@ class BaselineModel < OpenStudio::Model::Model
         sch_rule.setApplySunday(true) if day_types.include?('Sun')
 
       end
-      
-    end # Next rule  
-    
+
+    end # Next rule
+
     return sch_ruleset
-    
+
   end
 
-  def add_swh_end_uses(swh_loop, flow_rate_fraction_schedule ) 
-    
+  def add_swh_end_uses(swh_loop, flow_rate_fraction_schedule )
+
     # Water use connection
     swh_connection = OpenStudio::Model::WaterUseConnections.new(self)
-    
+
     # Water fixture definition
     water_fixture_def = OpenStudio::Model::WaterUseEquipmentDefinition.new(self)
     rated_flow_rate_gal_per_min = 1
@@ -841,7 +842,7 @@ class BaselineModel < OpenStudio::Model::Model
     mixed_water_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
     mixed_water_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),OpenStudio.convert(mixed_water_temp_f,'F','C').get)
     water_fixture_def.setTargetTemperatureSchedule(mixed_water_temp_sch)
-    
+
     # Water use equipment
     water_fixture = OpenStudio::Model::WaterUseEquipment.new(water_fixture_def)
     schedule = self.add_schedule(flow_rate_fraction_schedule)
@@ -851,11 +852,11 @@ class BaselineModel < OpenStudio::Model::Model
 
     # Connect the water use connection to the SWH loop
     swh_loop.addDemandBranchForComponent(swh_connection)
-    
+
   end
 
   def add_swh_loop(water_heater_type, ambient_temperature_thermal_zone=nil)
-  
+
     # Service water heating loop
     service_water_loop = OpenStudio::Model::PlantLoop.new(self)
     service_water_loop.setName("Service Water Loop")
@@ -869,10 +870,10 @@ class BaselineModel < OpenStudio::Model::Model
     temp_sch_type_limits.setUpperLimitValue(100.0)
     temp_sch_type_limits.setNumericType('Continuous')
     temp_sch_type_limits.setUnitType('Temperature')
-    
+
     # Service water heating loop controls
     swh_temp_f = 140
-    swh_delta_t_r = 9 #9F delta-T    
+    swh_delta_t_r = 9 #9F delta-T
     swh_temp_c = OpenStudio.convert(swh_temp_f,'F','C').get
     swh_delta_t_k = OpenStudio.convert(swh_delta_t_r,'R','K').get
     swh_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
@@ -880,13 +881,13 @@ class BaselineModel < OpenStudio::Model::Model
     swh_temp_sch.defaultDaySchedule().setName("Hot Water Loop Temp - #{swh_temp_f}F Default")
     swh_temp_sch.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),swh_temp_c)
     swh_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
-    swh_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,swh_temp_sch)    
+    swh_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,swh_temp_sch)
     swh_stpt_manager.addToNode(service_water_loop.supplyOutletNode)
     sizing_plant = service_water_loop.sizingPlant
     sizing_plant.setLoopType('Heating')
     sizing_plant.setDesignLoopExitTemperature(swh_temp_c)
-    sizing_plant.setLoopDesignTemperatureDifference(swh_delta_t_k)         
-    
+    sizing_plant.setLoopDesignTemperatureDifference(swh_delta_t_k)
+
     # Service water heating pump
     swh_pump_head_press_pa = 0.001
     swh_pump_motor_efficiency = 1
@@ -897,7 +898,7 @@ class BaselineModel < OpenStudio::Model::Model
     swh_pump.setMotorEfficiency(swh_pump_motor_efficiency)
     swh_pump.setPumpControlType('Intermittent')
     swh_pump.addToNode(service_water_loop.supplyInletNode)
-    
+
     water_heater = add_water_heater(water_heater_type, "Natural Gas", temp_sch_type_limits, swh_temp_sch, ambient_temperature_thermal_zone)
     service_water_loop.addSupplyBranchForComponent(water_heater)
 
@@ -907,11 +908,11 @@ class BaselineModel < OpenStudio::Model::Model
     coil_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
     service_water_loop.addDemandBranchForComponent(coil_bypass_pipe)
     supply_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
-    supply_outlet_pipe.addToNode(service_water_loop.supplyOutletNode)    
+    supply_outlet_pipe.addToNode(service_water_loop.supplyOutletNode)
     demand_inlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
-    demand_inlet_pipe.addToNode(service_water_loop.demandInletNode) 
+    demand_inlet_pipe.addToNode(service_water_loop.demandInletNode)
     demand_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
-    demand_outlet_pipe.addToNode(service_water_loop.demandOutletNode) 
+    demand_outlet_pipe.addToNode(service_water_loop.demandOutletNode)
 
     return service_water_loop
   end
@@ -937,7 +938,7 @@ class BaselineModel < OpenStudio::Model::Model
     if swh_temp_sch.nil?
       # Service water heating loop controls
       swh_temp_f = 140
-      swh_delta_t_r = 9 #9F delta-T    
+      swh_delta_t_r = 9 #9F delta-T
       swh_temp_c = OpenStudio.convert(swh_temp_f,'F','C').get
       swh_delta_t_k = OpenStudio.convert(swh_delta_t_r,'R','K').get
       swh_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
@@ -946,7 +947,7 @@ class BaselineModel < OpenStudio::Model::Model
       swh_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),swh_temp_c)
       swh_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
     end
-    
+
     # Water heater depends on the fuel type
     if water_heater_type == "Stratified"
       water_heater = OpenStudio::Model::WaterHeaterStratified.new(self)
@@ -957,7 +958,7 @@ class BaselineModel < OpenStudio::Model::Model
       water_heater.setDeadbandTemperatureDifference(OpenStudio.convert(3.6,'R','K').get)
       water_heater.setHeaterControlType('Cycle')
     end
-      
+
     water_heater.setName("#{water_heater_vol_gal}gal #{water_heater_fuel} Water Heater - #{water_heater_capacity_kbtu_per_hr.round}kBtu/hr")
     water_heater.setTankVolume(OpenStudio.convert(water_heater_vol_gal,'gal','m^3').get)
 
@@ -1017,5 +1018,5 @@ class BaselineModel < OpenStudio::Model::Model
 
     return water_heater
   end
-  
+
 end
