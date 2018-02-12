@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
-"""Support functions to cleanup and analyse the collections of out.osw
-produced when running the regression tests
+"""Support functions to cleanup and analyze the collections of out.osw
+produced when running the regression tests.
+If run from the command line rather than imported, will do the parsing and
+upload results to the google spreasheet
 
     use help(function) to load the docstring for this function.
 
@@ -10,6 +12,7 @@ produced when running the regression tests
 # Python 2.x / 3.x compatibility
 from __future__ import division, print_function
 
+import sys
 import os
 import requests
 import json
@@ -27,6 +30,8 @@ __status__ = "Production"
 
 # Folder in which the out.osw are stored
 TEST_DIR = './test/'
+SHEET_URL = ('https://docs.google.com/spreadsheets/d/1gL8KSwRPtMPYj-'
+             'QrTwlCwHJvNRP7llQyEinfM1-1Usg/edit?usp=sharing')
 
 # Used to pretty the fuel by end use dataframe
 PRETTY_NAMES = {'cooling': 'Cooling',
@@ -56,7 +61,10 @@ def cleanup_bloated_osws():
     which results in about 7.5 Million times the same warning
 
     So if the result.osw is bigger than 100 KB, we remove the eplusout_err
-    key and save in place
+    key and save in place.
+
+    Note: this is now handled in model_tests.rb directly so you shouldn't
+    really need to use this function
     """
     for out_osw_path in gb.glob(os.path.join(TEST_DIR, '*.osw')):
         # If bigger than 100 KB
@@ -560,9 +568,11 @@ def update_and_upload():
                             model_test_cases=model_test_cases)
     spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
     wks_name = 'Test_Status'
+    print("Uploading to '{}'".format(wks_name), end="", flush=True)
     d2g.upload(success.T.reset_index().T.reset_index(),
                gfile=spreadsheet, wks_name=wks_name,
                row_names=False, col_names=False)
+    print("... Done")
 
     # Missing / Implemented test
     test_impl = test_implemented_sheet(df_files=df_files,
@@ -571,29 +581,47 @@ def update_and_upload():
 
     spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
     wks_name = 'Tests_Implemented'
+    print("Uploading to '{}'".format(wks_name), end="", flush=True)
     d2g.upload(test_impl,
                gfile=spreadsheet, wks_name=wks_name,
                row_names=True, col_names=True)
+    print("... Done")
 
     # Site kbtu
     site_kbtu = df_files.applymap(parse_total_site_energy)
     spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
     wks_name = 'SiteKBTU'
+    print("Uploading to '{}'".format(wks_name), end="", flush=True)
     d2g.upload(site_kbtu.T.reset_index().T.reset_index().fillna(''),
                gfile=spreadsheet, wks_name=wks_name,
                # Skip first row
                start_cell='A1',
                row_names=False, col_names=False)
+    print("... Done")
 
     # Rolling percent difference of total kBTU from one version to the next
     spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
     wks_name = 'SiteKBTU_Percent_Change'
+    print("Uploading to '{}'".format(wks_name), end="", flush=True)
     d2g.upload((site_kbtu.pct_change(axis=1).T.reset_index().T
                          .reset_index().fillna('')),
                gfile=spreadsheet, wks_name=wks_name,
                row_names=False, col_names=False)
+    print("... Done")
 
 
 # If run from command line rather than imported
 if __name__ == "__main__":
+
+    question = ("Do you want to parse the regression OSWs from '{}' and upload"
+                " to Google Sheets?".format(TEST_DIR))
+
+    reply = str(input(question+' [Y/n]: ')).lower().strip()
+    if reply[:1] == 'n':
+        print("In this case, you can import this python file in an interactive"
+              " environment to play with the results")
+        sys.exit(0)
+
     update_and_upload()
+
+    print("All results uploaded to {}".format(SHEET_URL))

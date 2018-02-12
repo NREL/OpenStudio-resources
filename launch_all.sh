@@ -183,8 +183,8 @@ for os_version in "${all_versions[@]}"; do
     docker exec $os_container_name sudo apt install -y libglu1 libjpeg8 libfreetype6 libdbus-glib-1-2 libfontconfig1 libSM6 libXi6
     # Need to specifically require /usr/Ruby/openstudio instead of just openstudio
     docker exec $os_container_name sed -i "s:require 'openstudio':require '/usr/Ruby/openstudio':" model_tests.rb
-    # Etc.nprocessor unknown
-    docker exec $os_container_name sed -i "s/Etc.nprocessors/16/" model_tests.rb
+    # Etc.nprocessor unknown, replace with bash nproc
+    docker exec $os_container_name sed -i "s/Etc.nprocessors/$(nproc)/" model_tests.rb
   fi
   # Execute it
   # Launch the regression tests

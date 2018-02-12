@@ -1,5 +1,3 @@
-#p = File.join(ENV["HOME"], "Software/Others/OS-build/Products/ruby/openstudio")
-#require p
 require 'openstudio' unless defined?(OpenStudio)
 
 require 'fileutils'
@@ -9,6 +7,7 @@ require 'timeout'
 require 'open3'
 
 require 'etc'
+# Number of parallel runs caps to nproc - 1
 ENV['N'] = [1, Etc.nprocessors - 1].max.to_s
 
 require 'minitest/autorun'
@@ -84,6 +83,7 @@ end
 
 # run a simulation test
 def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measures = [], reporting_measures = [])
+
   dir = File.join($TestDir, filename)
   osw = File.join(dir, 'in.osw')
   out_osw = File.join(dir, 'out.osw')
@@ -109,7 +109,8 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
     model_version = v.get.str
 
     if Gem::Version.new(model_version) > Gem::Version.new($SdkVersion)
-      fail "Model version is newer than the SDK version used (#{model_version} versus #{$SdkVersion})"
+      # Skip instead of fail
+      skip "Model version is newer than the SDK version used (#{model_version} versus #{$SdkVersion})"
     end
 
     FileUtils.cp(ori_file_path, in_osm)
@@ -844,6 +845,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('ExampleModel.rb')
   end
 
+  def test_exterior_equipment_rb
+    result = sim_test('exterior_equipment.rb')
+  end
+
+  def test_exterior_equipment_osm
+    result = sim_test('exterior_equipment.osm')
+  end
+
   def test_fan_on_off_osm
     result = sim_test('fan_on_off.osm')
   end
@@ -972,6 +981,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('lowtemprad_varflow.rb')
   end
 
+  def test_meters_rb
+    result = sim_test('meters.rb')
+  end
+
+  def test_meters_osm
+    result = sim_test('meters.osm')
+  end
+
   def test_moisture_settings_osm
     result = sim_test('moisture_settings.osm')
   end
@@ -1004,12 +1021,36 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('plant_op_schemes.osm')
   end
 
+  def test_plant_op_schemes_temp_rb
+    result = sim_test('plant_op_schemes_temp.rb')
+  end
+
+  def test_plant_op_schemes_temp_osm
+    result = sim_test('plant_op_schemes_temp.osm')
+  end
+
+  def test_plant_op_schemes_deltatemp_rb
+    result = sim_test('plant_op_schemes_deltatemp.rb')
+  end
+
+  def test_plant_op_schemes_deltatemp_osm
+    result = sim_test('plant_op_schemes_deltatemp.osm')
+  end
+
   def test_plantloop_avms_rb
     result = sim_test('plantloop_avms.rb')
   end
 
   def test_plantloop_avms_osm
     result = sim_test('plantloop_avms.osm')
+  end
+
+  def test_plantloop_avms_temp_rb
+    result = sim_test('plantloop_avms_temp.rb')
+  end
+
+  def test_plantloop_avms_temp_rb
+    result = sim_test('plantloop_avms_temp.osm')
   end
 
   def test_plenums_rb

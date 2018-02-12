@@ -312,7 +312,21 @@ docker run --name $os_container_name --link openstudio-mongo:mongo -v `pwd`/test
 # Chmod execute the script
 docker exec $os_container_name chmod +x docker_container_script.sh
 
+
+if [ "$os_version" = 2.0.4 ]; then
+  echo -e "${On_Red}CUSTOM WORKAROUND FOR BROKEN 2.0.4${Color_Off}"
+  # This one has missing dependencies
+  docker exec $os_container_name sudo apt update
+  docker exec $os_container_name sudo apt install -y libglu1 libjpeg8 libfreetype6 libdbus-glib-1-2 libfontconfig1 libSM6 libXi6
+  # Need to specifically require /usr/Ruby/openstudio instead of just openstudio
+  docker exec $os_container_name sed -i "s:require 'openstudio':require '/usr/Ruby/openstudio':" model_tests.rb
+  # Etc.nprocessor unknown, so replace with bash nproc
+  docker exec $os_container_name sed -i "s/Etc.nprocessors/$(nproc)/" model_tests.rb
+fi
+  
+  
 # Execute it
+# Launch the regression tests
 echo -e -n "Do you want to launch the regression tests? [${URed}Y${Color_Off}/n] "
 read -n 1 -r
 echo    # (optional) move to a new line
