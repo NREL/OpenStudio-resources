@@ -14,12 +14,19 @@ from __future__ import division, print_function
 
 import sys
 import os
-import requests
 import json
+import re
+import subprocess
+import glob as gb
+
+import requests
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-import re
-import glob as gb
+import seaborn as sns
+
 from df2gspread import df2gspread as d2g
 
 __author__ = "Julien Marrec"
@@ -80,7 +87,7 @@ def cleanup_bloated_osws():
             try:
                 with open(out_osw_path, 'w') as jsonoutfile:
                     jsonoutfile.write(json.dumps(data))
-            except:
+            except IOError:
                 print('cannot write to {}'.format(out_osw_path))
 
 
@@ -115,7 +122,7 @@ def get_all_openstudio_docker_versions(latest=None):
     page_url = 'repositories/nrel/openstudio/tags?page={i}'
 
     all_tags = []
-    while (status_code == 200):
+    while status_code == 200:
         response = requests.get(os.path.join(base_url,
                                              page_url.format(i=i)))
         status_code = response.status_code
@@ -193,7 +200,7 @@ def find_osm_test_versions():
     """
 
     # Reconstruct by parsing file itself
-    v_regex = re.compile('\s+(\d+\.\d+\.\d+);\s+!-? Version Identifier')
+    v_regex = re.compile(r'\s+(\d+\.\d+\.\d+);\s+!-? Version Identifier')
 
     model_version_lists = []
     osms = gb.glob('model/simulationtests/*.osm')
@@ -257,8 +264,8 @@ def find_info_osws(compat_matrix=None, test_dir=None):
 
     df_files = pd.DataFrame(files, columns=['path'])
     filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb)_'
-                   '(?P<version>\d+\.\d+\.\d+)_out\.osw')
-    version = (df_files['path'].apply(lambda p: os.path.relpath(p,  test_dir))
+                   r'(?P<version>\d+\.\d+\.\d+)_out\.osw')
+    version = (df_files['path'].apply(lambda p: os.path.relpath(p, test_dir))
                                .str.extract(pat=filepattern, expand=True))
     df_files = pd.concat([df_files,
                           version],
@@ -295,7 +302,7 @@ def load_osw(out_osw_path):
     """
     if out_osw_path is None:
         return None
-    with open(out_osw_path,'r') as jsonfile:
+    with open(out_osw_path, 'r') as jsonfile:
         json_text = jsonfile.read()
     data = json.loads(json_text)
     return data
@@ -321,7 +328,7 @@ def _parse_success(data, extra_check=False, verbose=False):
     status = data['completed_status']
 
     # OS 2.0.4 has a bug, it reports "Fail" when really it worked
-    if status == "Fail":
+    if status == "Fail" and extra_check:
         if "eplusout_err" in data.keys():
             # if "EnergyPlus Completed Successfully" in data['eplusout_err']:
             # This is now a list:
@@ -331,6 +338,7 @@ def _parse_success(data, extra_check=False, verbose=False):
                     print("OSW status is 'Fail' but E+ completed successfully")
                 status = "Success"
     return status
+
 
 def parse_success(out_osw_path):
     """
@@ -360,6 +368,7 @@ def parse_success(out_osw_path):
     # print("{} - {}".format(out_osw_path, status))
     return status
 
+
 def _get_os_results(data, out_osw_path):
     """
     Helper function that finds the openstudio_result data in the dict
@@ -372,20 +381,21 @@ def _get_os_results(data, out_osw_path):
     """
     if '2.0.4' in out_osw_path:
         os_results = [x for x in data['steps']
-                      if x['measure_dir_name']=='openstudio_results']
+                      if x['measure_dir_name'] == 'openstudio_results']
     else:
         # This works from 2.0.5 onward...
         os_results = [x for x in data['steps']
-                      if x['result']['measure_name']=='openstudio_results']
+                      if x['result']['measure_name'] == 'openstudio_results']
 
     if len(os_results) == 0:
         print("There are no OpenStudio results for {}".format(out_osw_path))
         return None
-    if len(os_results) != 1:
+    elif len(os_results) != 1:
         print("Warning: there are more than one openstudio_results measure "
               "for {}".format(out_osw_path))
     os_result = os_results[0]['result']
     return os_result
+
 
 def parse_total_site_energy(out_osw_path):
     """
@@ -414,6 +424,7 @@ def parse_total_site_energy(out_osw_path):
     site_kbtu = [x for x in os_result['step_values']
                  if x['name'] == 'total_site_energy'][0]['value']
     return site_kbtu
+
 
 def parse_end_use(out_osw_path, throw_if_path_none=True):
     """
@@ -506,7 +517,6 @@ def success_sheet(df_files, model_test_cases=None, add_missing=True):
         order_n_fail = (success.groupby(level='Test')['n_fail']
                                .sum().sort_values(ascending=False))
 
-
     success = success.reindex(index=order_n_fail.index, level=0)
 
     return success
@@ -530,7 +540,7 @@ def test_implemented_sheet(df_files, success=None, model_test_cases=None,
     if model_test_cases is None:
         model_test_cases = find_osm_test_versions()
     if success is None:
-        success = success_sheet()
+        success = success_sheet(df_files)
 
     test_impl = pd.DataFrame(df_files.index.tolist(), columns=['Test', 'Type'])
     test_impl['Has_Test'] = True
@@ -561,6 +571,20 @@ def test_implemented_sheet(df_files, success=None, model_test_cases=None,
 
 
 def update_and_upload():
+    """
+    High level function to generate all needed dataframes and upload them
+    to the google spreadsheet
+
+    Args:
+    ------
+    None
+
+    Returns:
+    --------
+    site_kbtu (pd.DataFrame): the dataframe with all parsed total_site_energy
+    for use in post processing
+
+    """
     compat_matrix = parse_compatibility_matrix()
     df_files = find_info_osws(compat_matrix=compat_matrix, test_dir='./test/')
 
@@ -612,9 +636,130 @@ def update_and_upload():
                row_names=False, col_names=False)
     print("... Done")
 
+    return site_kbtu
+
+
+def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
+                                display_threshold=0.001,
+                                show_plot=True, savefig=False):
+    """
+    Plots a heatmap to show difference in site kbtu from one version to the
+    next for each test. It has options to display more or less variations
+    to emphasis meaningful differences
+
+    Args
+    -----
+    * site_kbtu_change (pd.DataFrame): typically gotten from
+    `df_files.applymap(regression_analysis.parse_total_site_energy)`
+
+    * row_threshold (float): only display tests where there is at least one
+    cell that has a change greater than this. This value is a percentage,
+    eg: 0.005 means at least 0.5% change
+
+    * display_threshold (float): apply the colorscale to the cells that are
+    above this threshold, otherwise they get greyed out
+
+    * savefig (boolean): whether to save the figure or not.
+
+    Returns:
+    --------
+    None, draws the plot
+    """
+
+    # Prepare two custom cmaps with one single color
+    grey_cmap = mpl.colors.ListedColormap('#f7f7f7')
+    green_cmap = mpl.colors.ListedColormap('#f0f7d9')
+
+    site_kbtu_change = site_kbtu.pct_change(axis=1)
+    toplot = site_kbtu_change[(site_kbtu_change.abs() >
+                               row_threshold).any(axis=1)]
+    toplot.index = [".".join(x) for x in toplot.index]
+    toplot.columns = ["\n".join(x) for x in toplot.columns]
+    toplot.columns.names = ['E+\nOS']
+
+    w = 16
+    h = w * toplot.shape[0] / (3 * toplot.shape[1])
+
+    fig, ax = plt.subplots(figsize=(w, h))
+
+    # Reserve 1.5 inches at bottom for explanation
+    fig.subplots_adjust(bottom=1.5/h)
+
+    # Same as: fmt = lambda x,pos: '{:.1%}'.format(x)
+    def fmt(x, pos): return '{:.1%}'.format(x)
+
+    # Plot with colors, for those that are above the display_threshold
+    sns.heatmap(toplot.abs(), mask=toplot.abs() <= display_threshold,
+                ax=ax, cmap='YlOrRd',  # cmap='Reds', 'RdYlGn_r'
+                vmin=0, vmax=0.5,
+                cbar_kws={'format': mpl.ticker.FuncFormatter(fmt)},
+                annot=toplot, fmt='.2%', linewidths=.5)
+
+    # Plot a second heatmap on top, for those are below the display threshold,
+    # but not zero: these you print the value
+
+    # Plot a second heatmap on top, only for those that are below
+    sns.heatmap(toplot, mask=((toplot.abs() > display_threshold) |
+                              (toplot.abs() == 0)),
+                cbar=False,
+                annot=True, fmt=".3%", annot_kws={"style": "italic"},
+                ax=ax, cmap=grey_cmap)
+
+    # Plot a third heatmap on top, only for those that are zero,
+    # no annot just green
+    sns.heatmap(toplot, mask=(toplot.abs() != 0),
+                cbar=False,  # linewidths=.5, linecolor='#cecccc',
+                annot=False,
+                ax=ax, cmap=green_cmap)
+
+    # If the format is more high than wide (based on 16/9), display xticks on
+    # top too.
+    if h > 9:
+        ax.xaxis.set_tick_params(labeltop='on')
+
+    title = "Percent difference total site kBTU from one version to the next"
+
+    ax.annotate(s=title, xy=(0.5, 1.0), xycoords='axes fraction',
+                ha='center', va='top',
+                xytext=(0, 60), textcoords='offset points',
+                weight='bold', fontsize=16)
+
+    ann = ("Rows (Tests) have been filtered and are only displayed if there "
+           "is at least one cell with more than {:.2%} change.\n"
+           "Colorscale applies to cells that are above a display threshold "
+           "of {:.2%}.\n"
+           "Cells in grey are below the display threshold. "
+           "Cells in green are zero.\n"
+           "White cells indicate a missing/failed test "
+           "(except for 2.0.4, it's a rolling pct_change)"
+           "".format(row_threshold, display_threshold))
+
+    # Some hardcoded options
+    annotate_in_axes_coord = False
+    style = 'italic'
+    style = None
+    if annotate_in_axes_coord:
+        ax.annotate(s=ann, xy=(0.0, 0.0), xycoords='axes fraction',
+                    ha='left', va='top',
+                    xytext=(0, -80), textcoords='offset points',
+                    style=style)
+    else:
+        ax.annotate(s=ann, xy=(0.0, 0.0), xycoords='figure fraction',
+                    ha='left', va='bottom', style=style)
+
+    if savefig:
+        figname = 'site_kbtu_pct_change.png'
+        plt.savefig(figname, dpi=150, bbox_inches='tight')
+        print("Saved to {}".format(os.path.abspath(figname)))
+    if show_plot:
+        fig.tight_layout()
+        plt.show()
+
 
 # If run from command line rather than imported
 if __name__ == "__main__":
+
+    site_kbtu = None
 
     question = ("Do you want to parse the regression OSWs from '{}' and upload"
                 " to Google Sheets?".format(TEST_DIR))
@@ -623,8 +768,36 @@ if __name__ == "__main__":
     if reply[:1] == 'n':
         print("In this case, you can import this python file in an interactive"
               " environment to play with the results")
-        sys.exit(0)
+    else:
+        site_kbtu = update_and_upload()
+        print("All results uploaded to {}".format(SHEET_URL))
 
-    update_and_upload()
+    question = ("Do you want to plot the site kbtu percentage change?")
 
-    print("All results uploaded to {}".format(SHEET_URL))
+    reply = str(input(question+' [Y/n]: ')).lower().strip()
+    if not reply[:1] == 'n':
+        question = ("Input a row threshold, suggested values are "
+                    "0.01 (>1% change) or 0.005 (>0.5% change\n")
+        threshold = None
+        while not threshold:
+            try:
+                threshold = float(input(question))
+            except ValueError:
+                print("Please input a float")
+
+        # Plot the heatmap. On Ubuntu you will need to do:
+        #    $ sudo apt-get install python-tk python3-tk tk-dev
+        if not site_kbtu:
+            df_files = find_info_osws()
+            site_kbtu = df_files.applymap(parse_total_site_energy)
+        heatmap_sitekbtu_pct_change(site_kbtu=site_kbtu,
+                                    row_threshold=threshold,
+                                    savefig=True,
+                                    show_plot=False)
+        filepath = 'site_kbtu_pct_change.png'
+        if sys.platform.startswith('darwin'):
+            subprocess.call(('open', filepath))
+        elif os.name == 'nt':
+            os.startfile(filepath)
+        elif os.name == 'posix':
+            subprocess.call(('xdg-open', filepath))
