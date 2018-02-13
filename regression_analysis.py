@@ -308,7 +308,7 @@ def load_osw(out_osw_path):
     return data
 
 
-def _parse_success(data, extra_check=False, verbose=False):
+def _parse_success(data, extra_check=True, verbose=False):
     """
     2.0.4 has a bug, it reports "Fail" when really it worked
     so if extra_check is True (for 2.0.4 only),
@@ -413,7 +413,11 @@ def parse_total_site_energy(out_osw_path):
     data = load_osw(out_osw_path)
     if data is None:
         return np.nan
-    status = _parse_success(data)
+    extra_check = False
+    if '2.0.4' in out_osw_path:
+        extra_check = True
+
+    status = _parse_success(data, extra_check=extra_check)
     if status != 'Success':
         return np.nan
 
@@ -752,7 +756,7 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
         plt.savefig(figname, dpi=150, bbox_inches='tight')
         print("Saved to {}".format(os.path.abspath(figname)))
     if show_plot:
-        fig.tight_layout()
+        # fig.tight_layout()
         plt.show()
 
 
