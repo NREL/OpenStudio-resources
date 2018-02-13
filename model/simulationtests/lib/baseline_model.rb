@@ -1,5 +1,6 @@
-
-require 'openstudio'
+# This allows importing this file into an irb session even if you don't have
+# a global install of openstudio - useful for writing a test
+require 'openstudio' unless defined?(OpenStudio)
 
 class BaselineModel < OpenStudio::Model::Model
 

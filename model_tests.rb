@@ -761,6 +761,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('baseline_sys10.rb')
   end
 
+  def test_centralheatpumpsystem_osm
+    result = sim_test('centralheatpumpsystem.osm')
+  end
+
+  def test_centralheatpumpsystem_rb
+    result = sim_test('centralheatpumpsystem.rb')
+  end
+
   def test_coolingtowers_osm
     result = sim_test('coolingtowers.osm')
   end
