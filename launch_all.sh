@@ -198,10 +198,17 @@ for os_version in "${all_versions[@]}"; do
     docker stop $os_container_name &> /dev/null
     echo -e "* Stopped the $os_container_str"
   fi
+  # if the container still exists but it is stopped, delete
+  if [ ! "$(docker ps -q -f name=$1)" ]; then
+    if [ "$(docker ps -aq -f status=exited -f name=$1)" ]; then
+      docker rm $os_container_name &> /dev/null
+      echo -e "* Deleted the $os_container_str"
+    fi
+  fi
 
   # Delete custom/openstudio:$os_version image?
   if [ "$delete_custom_image" = true ]; then
-    docker rm $os_image_name &> /dev/null
+    docker rmi $os_image_name &> /dev/null
     echo -e "* Deleted the $os_image_str"
   fi
 
