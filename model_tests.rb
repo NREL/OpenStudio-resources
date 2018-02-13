@@ -1029,20 +1029,20 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('plant_op_schemes.osm')
   end
 
-  def test_plant_op_schemes_temp_rb
-    result = sim_test('plant_op_schemes_temp.rb')
+  def test_plant_op_temp_schemes_rb
+    result = sim_test('plant_op_temp_schemes.rb')
   end
 
-  def test_plant_op_schemes_temp_osm
-    result = sim_test('plant_op_schemes_temp.osm')
+  def test_plant_op_temp_schemes_osm
+    result = sim_test('plant_op_temp_schemes.osm')
   end
 
-  def test_plant_op_schemes_deltatemp_rb
-    result = sim_test('plant_op_schemes_deltatemp.rb')
+  def test_plant_op_deltatemp_schemes_rb
+    result = sim_test('plant_op_deltatemp_schemes.rb')
   end
 
-  def test_plant_op_schemes_deltatemp_osm
-    result = sim_test('plant_op_schemes_deltatemp.osm')
+  def test_plant_op_deltatemp_schemes_osm
+    result = sim_test('plant_op_deltatemp_schemes.osm')
   end
 
   def test_plantloop_avms_rb
@@ -1075,6 +1075,14 @@ class ModelTests < MiniTest::Unit::TestCase
 
   def test_refrigeration_system_rb
     result = sim_test('refrigeration_system.rb')
+  end
+
+  def test_roof_vegetation_rb
+    result = sim_test('roof_vegetation.rb')
+  end
+
+  def test_roof_vegetation_osm
+    result = sim_test('roof_vegetation.osm')
   end
 
   def test_scheduled_infiltration_osm
