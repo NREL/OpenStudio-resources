@@ -805,7 +805,7 @@ if __name__ == "__main__":
     reply = str(input(question+' [Y/n]: ')).lower().strip()
     if not reply[:1] == 'n':
         question = ("Input a row threshold, suggested values are "
-                    "0.01 (>1% change) or 0.005 (>0.5% change\n")
+                    "0.01 (>1% change) or 0.005 (>0.5% change)\n")
         threshold = None
         while not threshold:
             try:
@@ -815,7 +815,7 @@ if __name__ == "__main__":
 
         # Plot the heatmap. On Ubuntu you will need to do:
         #    $ sudo apt-get install python-tk python3-tk tk-dev
-        if not site_kbtu:
+        if site_kbtu is None:
             df_files = find_info_osws()
             site_kbtu = df_files.applymap(parse_total_site_energy)
         heatmap_sitekbtu_pct_change(site_kbtu=site_kbtu,
