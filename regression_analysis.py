@@ -29,6 +29,10 @@ import seaborn as sns
 
 from df2gspread import df2gspread as d2g
 
+if sys.version_info < (3, 0):
+    input = raw_input
+
+
 __author__ = "Julien Marrec"
 __license__ = "Standard OpenStudio License"
 __maintainer__ = "Julien Marrec"
@@ -599,7 +603,12 @@ def update_and_upload():
                             model_test_cases=model_test_cases)
     spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
     wks_name = 'Test_Status'
-    print("Uploading to '{}'".format(wks_name), end="", flush=True)
+    msg = "Uploading to '{}'".format(wks_name)
+    if sys.version_info >= (3, 3):
+        print(msg, end="", flush=True)
+    else:
+        print(msg, end="")
+
     d2g.upload(success.T.reset_index().T.reset_index(),
                gfile=spreadsheet, wks_name=wks_name,
                row_names=False, col_names=False)
@@ -612,7 +621,12 @@ def update_and_upload():
 
     spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
     wks_name = 'Tests_Implemented'
-    print("Uploading to '{}'".format(wks_name), end="", flush=True)
+    msg = "Uploading to '{}'".format(wks_name)
+    if sys.version_info >= (3, 3):
+        print(msg, end="", flush=True)
+    else:
+        print(msg, end="")
+
     d2g.upload(test_impl,
                gfile=spreadsheet, wks_name=wks_name,
                row_names=True, col_names=True)
@@ -622,7 +636,12 @@ def update_and_upload():
     site_kbtu = df_files.applymap(parse_total_site_energy)
     spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
     wks_name = 'SiteKBTU'
-    print("Uploading to '{}'".format(wks_name), end="", flush=True)
+    msg = "Uploading to '{}'".format(wks_name)
+    if sys.version_info >= (3, 3):
+        print(msg, end="", flush=True)
+    else:
+        print(msg, end="")
+
     d2g.upload(site_kbtu.T.reset_index().T.reset_index().fillna(''),
                gfile=spreadsheet, wks_name=wks_name,
                # Skip first row
@@ -633,7 +652,12 @@ def update_and_upload():
     # Rolling percent difference of total kBTU from one version to the next
     spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
     wks_name = 'SiteKBTU_Percent_Change'
-    print("Uploading to '{}'".format(wks_name), end="", flush=True)
+    msg = "Uploading to '{}'".format(wks_name)
+    if sys.version_info >= (3, 3):
+        print(msg, end="", flush=True)
+    else:
+        print(msg, end="")
+
     d2g.upload((site_kbtu.pct_change(axis=1).T.reset_index().T
                          .reset_index().fillna('')),
                gfile=spreadsheet, wks_name=wks_name,
