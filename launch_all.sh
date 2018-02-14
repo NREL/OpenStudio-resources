@@ -214,7 +214,7 @@ for os_version in "${all_versions[@]}"; do
 
   # Delete base nrel/openstudio:$os_version image?
   if [ "$delete_base_image" = true ]; then
-    docker rm $base_os_image_name &> /dev/null
+    docker rmi $base_os_image_name &> /dev/null
     echo -e "* Deleted the $base_os_image_str"
   fi
 
