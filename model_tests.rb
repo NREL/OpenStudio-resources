@@ -893,6 +893,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('fuelcell.rb')
   end
 
+  def test_generator_microturbine_rb
+    result = sim_test('generator_microturbine.rb')
+  end
+
+  def test_generator_microturbine_osm
+    result = sim_test('generator_microturbine.osm')
+  end
+
   def test_headered_pumps_osm
     result = sim_test('headered_pumps.osm')
   end
