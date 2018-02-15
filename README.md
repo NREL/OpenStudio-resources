@@ -133,4 +133,4 @@ Launch all versions (you can modify the harcoded arguments atop the script `laun
 ./launch_all.sh
 ```
 
-Please refer to the [Instructions for Running Docker](doc/Instructions_Docker.md) for more info, especially if you use Windows.
+**Please refer to the [Instructions for Running Docker](doc/Instructions_Docker.md) for more info, especially if you use Windows.**
