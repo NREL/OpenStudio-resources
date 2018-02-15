@@ -43,8 +43,7 @@ Here is a snippet that will allow you to copy the resulting OSM to the `test` di
 After running the test in question, eg with the filter `test_my_object_rb`, attach to the container:
 
 ```bash
-cd testruns/my_object_rb/
-# From within a testruns/my_object_rb/ directory:
+cd testruns/my_object.rb/
 cp in.osm ~/test/`basename ${PWD%.*}`.osm
 ```
 
