@@ -10,6 +10,32 @@
 # Import colors
 source colors.sh
 
+# Switch this to true to debug.
+verbose=false
+
+########################################################################################
+
+# Verbosity
+if [ "$verbose" = true ]; then
+  OUT=/dev/stdout
+else
+  # Pipe output of docker commands to /dev/null to supress them
+  OUT=/dev/null
+fi
+
+# For msys (mingw), do not do path conversions '/' -> windows path
+if [[ "$(uname)" = MINGW* ]]; then
+  if [ "$verbose" = true ]; then
+    echo
+    echo "Note: Windows workaround: setting MSYS_NO_PATHCONV to True when calling docker"
+  fi
+  docker()
+  {
+	export MSYS_NO_PATHCONV=1
+	("docker.exe" "$@")
+	export MSYS_NO_PATHCONV=0
+  }
+fi
 
 ########################################################################################
 #                               A R G U M E N T S
@@ -75,7 +101,7 @@ function stop_running_container() {
       # Default is No
       if [[ $REPLY =~ ^[Yy]$ ]]
       then
-        docker stop $1 &> /dev/null
+        docker stop $1> $OUT
         echo -e "* Stopped the $2"
       else
         echo -e "* You can attach to the running container by typing '${Green}docker attach $1'${Color_Off}"
@@ -88,7 +114,7 @@ function stop_running_container() {
       # Default is yes
       if [[ ! $REPLY =~ ^[Nn]$ ]]
       then
-        docker stop $1 &> /dev/null
+        docker stop $1> $OUT
         echo -e "* Stopped the $2"
       else
         echo -e "* You can attach to the running container by typing '${Green}docker attach $1'${Color_Off}"
@@ -114,7 +140,7 @@ function delete_stopped_container() {
       # Default is yes
       if [[ ! $REPLY =~ ^[Nn]$ ]]
       then
-        docker rm $1 &> /dev/null
+        docker rm $1> $OUT
         echo -e "* Deleted the $2"
       fi
     fi
@@ -138,7 +164,7 @@ function delete_image() {
       # Default is yes
       if [[ ! $REPLY =~ ^[Nn]$ ]]
       then
-        docker rmi $1 &> /dev/null
+        docker rmi $1> $OUT
         echo -e "* Deleted the $2"
       fi
     else
@@ -148,7 +174,7 @@ function delete_image() {
       # Default is no
       if [[ $REPLY =~ ^[Yy]$ ]]
       then
-        docker rmi $1 &> /dev/null
+        docker rmi $1> $OUT
         echo -e "* Deleted the $2"
       fi
 
@@ -193,10 +219,12 @@ function cleanup() {
   stop_running_container "$mongo_container_name" "$mongo_container_str" N
 
 
-  echo
-  echo -e "${On_Blue}Fixing ownership: setting it to user=$USER and chmod=664 (requires sudo)${Color_Off}"
-  sudo chown -R $USER *
-  sudo find ./test/ -type f -exec chmod 664 {} \;
+  if [[ "$(uname)" != MINGW* ]]; then
+	echo
+	echo -e "${On_Blue}Fixing ownership: setting it to user=$USER and chmod=664 (requires sudo)${Color_Off}"
+	sudo chown -R $USER *
+	sudo find ./test/ -type f -exec chmod 664 {} \;
+  fi
 
   exit $1
 
@@ -217,12 +245,15 @@ if [ ! "$(docker ps -q -f name=$mongo_container_name)" ]; then
   if [ "$(docker ps -aq -f status=exited -f name=$mongo_container_name)" ]; then
     # cleanup
     echo -e "* Deleting existing mongo $mongo_container_str"
-    docker rm $mongo_container_name &> /dev/null
+    docker rm $mongo_container_name> $OUT
   fi
   # run your container
   # Have the mongo docker write to the local directory with -v
   echo -e "* Running mongo $mongo_container_str"
-  docker run --name $mongo_container_name -v "$(pwd)/database":/data/db -d $mongo_image_name &> /dev/null
+  # On Unix it seems to keep running with the -d option only
+  # docker run --name $mongo_container_name -v "$(pwd)/database":/data/db -d $mongo_image_name > $OUT
+  # On windows it doesn't because it doesn't run in the foreground, so here's a workaround
+  docker run --name $mongo_container_name -v "$(pwd)/database":/data/db -d $mongo_image_name tail -f /dev/null > $OUT
 fi
 
 
@@ -290,7 +321,7 @@ else
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
     echo -e "* Rebuilding the image $os_image_str from Dockerfile"
-    docker rmi $os_image_name
+    docker rmi $os_image_name > $OUT
     docker build -t $os_image_name .
   fi
   echo
@@ -307,7 +338,7 @@ if [ "$(docker ps -aq -f name=$os_container_name)" ]; then
 fi
 # Launch, with link to the mongo one
 echo -e "* Launching the $os_container_str"
-docker run --name $os_container_name --link openstudio-mongo:mongo -v `pwd`/test:/root/test -d -it --rm $os_image_name /bin/bash # &> /dev/null
+docker run --name $os_container_name --link $mongo_container_name:mongo -v `pwd`/test:/root/test -d -it --rm $os_image_name /bin/bash > $OUT
 
 # Chmod execute the script
 docker exec $os_container_name chmod +x docker_container_script.sh
@@ -335,9 +366,10 @@ if [[ ! $REPLY =~ ^[Nn]$ ]]; then
   echo "Do you want to pass a filter 'pattern' passed to 'model_tests.rb -n /pattern/'"
   echo "Leave empty for all tests, or input a pattern. Follow by [ENTER] in both cases"
   read filter
-  echo -e "\nRunning test.sh:"
-  echo "-----------------"
+  echo -e "\nRunning docker_container_script.sh:"
+  echo "------------------------------------"
   docker exec $os_container_name /bin/bash ./docker_container_script.sh $filter
+
 fi
 
 
@@ -348,7 +380,11 @@ echo    # (optional) move to a new line
 # Default is yes
 if [[ ! $REPLY =~ ^[Nn]$ ]]
 then
-  docker attach $os_container_name
+  if [[ "$(uname)" = MINGW* ]]; then
+	winpty docker attach $os_container_name
+  else
+	docker attach $os_container_name
+  fi
 fi
 
 

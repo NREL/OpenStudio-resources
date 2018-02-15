@@ -1,7 +1,15 @@
 OpenStudio Resources
 ==========
 
-This repository includes a suite of simulation tests that can be used to validate new OpenStudio model objects as well as ensure that objects continue to work after they are added.  Each new OpenStudio Model object should ideally have two simulation tests associated with it; a Ruby one which verifies the Ruby API and an OSM one that verifies the OSM file can be loaded with future versions of OpenStudio.  Both tests should result in a simulation ready OpenStudio Model that can be simulated using EnergyPlus.  Both of these tests are located in the `\model\simulationtests` directory, the easiest way to add a new test is to find a related existing test and modify it.  When new tests are added they must be added to the `model_tests.rb` file.  
+This repository includes a suite of simulation tests that can be used to validate new OpenStudio model objects as well as ensure that objects continue to work after they are added. 
+Each new OpenStudio Model object should ideally have two simulation tests associated with it:
+
+* a Ruby one which verifies the Ruby API and,
+* an OSM one that verifies the OSM file can be loaded with future versions of OpenStudio.  
+
+Both tests should result in a simulation-ready OpenStudio Model that can be simulated using EnergyPlus. 
+Both of these tests are located in the `\model\simulationtests` directory, the easiest way to add a new test is to find a related existing test and modify it. 
+When new tests are added they must be added to the `model_tests.rb` file.
 
 ## Running the tests
 
@@ -94,7 +102,7 @@ You will be asked two questions:
     * Install and configure the python module df2gspread. This requires setting credentials in the google console API, see [here](https://df2gspread.readthedocs.io/en/latest/overview.html#access-credentials) for how to do it.
 * Whether you want to plot a heatmap of the major deviations, and if so, what is your row (test threshold). In order to limit the size of the heatmap, the threshold is used to filter out tests where none of the individual versions have shown a deviation that is bigger. Suggested values are 0.01 (for 1%) and 0.005 (0.5%). Here is an example with a threshold of 0.01
 
-![Percentage difference in total site kBTU](site_kbtu_pct_change.png)
+![Percentage difference in total site kBTU](doc/images/site_kbtu_pct_change.png)
 
 **Exploring data**
 
@@ -125,10 +133,4 @@ Launch all versions (you can modify the harcoded arguments atop the script `laun
 ./launch_all.sh
 ```
 
-Currently these are in bash, so they will not run on windows without the unix utilities (and untested in that case too)
-They rely on the `Dockerfile.in` template and associated `.dockerignore` file, and the script that is run inside the container is `docker_container_script.sh`
-
-
-## TODO
-- Port the docker bash scripts to an Operating system agnostic utility (in ruby for eg) later if it happens to be an actual need. I assume it is not, the need to run past history should almost disappear once said history is built
-
+**Please refer to the [Instructions for Running Docker](doc/Instructions_Docker.md) for more info, especially if you use Windows.**
