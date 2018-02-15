@@ -81,8 +81,13 @@ Install Hyper-V and Containers if you are prompted for it (restart needed).
 
 2. We will use mysys to be able to use bash. The easiest is to just rely on Git bash (mysysGit) since you probably already have it. If you have Git bash (MinGW), open that.
 If not go to [git-scm](https://git-scm.com/downloads) and install it. Make sure you install command line utilities.
+Search for "Git Bash" and launch the application:
+
+![Git bash](images/git_bash.png)
+
 cd to your directory, then you can launch either of the scripts like above and it should work.
 
+![First run](images/git_bash_cd_launch.png)
 
 ### Optional: Configuring MinTTY on Windows
 
