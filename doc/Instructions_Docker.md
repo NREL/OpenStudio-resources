@@ -91,13 +91,13 @@ cd to your directory, then you can start by launching a single docker version:
 
 Launch the bash script `./launch_docker.sh 2.4.0`. 
 
-You may be prompted by docker to share your C: Drive if you haven't used docker yet. It'll ask for your user password.
+You may be prompted by docker to share your `C:` Drive if you haven't used docker yet. It'll ask for your user password.
 **You must have a user password set up for this to work**: if you don't have one, add one. Sharing the drive will not work unless you do.
-Type Windows+R and enter `compmgmt.msc``. Left pane, click on "Local users and Groups".
-Find your user name in the mid pane, right click > Set Password, enter password twice. Confirm.
+Type Windows+R and enter `compmgmt.msc`. Left pane, click on "Local users and Groups".
+Find your user name in the mid pane, right click > Set Password, enter your password twice. Confirm.
 
-If you get problems, such as " /bin/bash^M: bad interpreter", you'll need to convert the line endings of the `docker_container_script.sh` to be Unix (LF) and not Windows (CRLF).
-(This shouldn't happen since there is a `.gitattributes` file that should preserve Unix line endings for all `.sh` scripts.)
+Note: If you get problems, such as " /bin/bash^M: bad interpreter", you'll need to convert the line endings of the `docker_container_script.sh` to be Unix (LF) and not Windows (CRLF).
+This shouldn't happen since there is a `.gitattributes` file that should preserve Unix line endings for all `.sh` scripts.
 
 ### Optional: Configuring MinTTY on Windows
 
