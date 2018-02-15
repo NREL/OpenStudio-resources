@@ -410,7 +410,23 @@ if !base_case
 
 end
 
+
 ###############################################################################
 
+add_out_vars = false
+if add_out_vars
+  # output variables
+  mchp.outputVariableNames.each do |var|
+    OpenStudio::Model::OutputVariable.new(var, model)
+  end
+  mchpHR.outputVariableNames.each do |var|
+    OpenStudio::Model::OutputVariable.new(var, model)
+  end
+  elcd.outputVariableNames.each do |var|
+    OpenStudio::Model::OutputVariable.new(var, model)
+  end
+end
+
+###############################################################################
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})

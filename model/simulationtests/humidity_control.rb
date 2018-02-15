@@ -16,7 +16,7 @@ model.add_geometry({"length" => 100,
 model.add_windows({"wwr" => 0.4,
                   "offset" => 1,
                   "application_type" => "Above Floor"})
-        
+
 #add ASHRAE System type 03, PSZ-AC
 model.add_hvac({"ashrae_sys_num" => '03'})
 
@@ -30,16 +30,16 @@ zones = model.getThermalZones.sort
 # Try out all 3 different types of humidity setpoint managers
 # on three different airloops in the same model.
 for i in 0..2
-  
+
   zone = zones[i]
-  
+
   # Add a humidistat at 50% RH to the zone
   dehumidify_sch = OpenStudio::Model::ScheduleConstant.new(model)
   dehumidify_sch.setValue(50)
   humidistat = OpenStudio::Model::ZoneControlHumidistat.new(model)
   humidistat.setHumidifyingRelativeHumiditySetpointSchedule(dehumidify_sch)
   zone.setZoneControlHumidistat(humidistat)
-  
+
   air_system = zone.airLoopHVAC.get
   humidifier_outlet_node = nil
 
@@ -56,7 +56,7 @@ for i in 0..2
     humidifier.addToNode(air_system.supplyOutletNode())
     humidifier_outlet_node = humidifier.outletModelObject.get.to_Node.get
   end
-  
+
   # Try out all 3 different types of humidity setpoint managers
   # by adding them to the humidifier outlet node.
   case i
@@ -70,7 +70,7 @@ for i in 0..2
     spm = OpenStudio::Model::SetpointManagerMultiZoneMinimumHumidityAverage.new(model)
     spm.addToNode(humidifier_outlet_node)
   end
-  
+
 end
 
 # Request timeseries data for debugging
@@ -86,19 +86,19 @@ var_names << "Humidifier Water Volume Flow Rate"
 var_names.each do |var_name|
   outputVariable = OpenStudio::Model::OutputVariable.new(var_name,model)
   outputVariable.setReportingFrequency(reporting_frequency)
-end          
+end
 =end
-           
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #add design days to the model (Chicago)
 model.add_design_days()
-       
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})
-                           
+
