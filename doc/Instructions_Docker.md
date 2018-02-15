@@ -37,9 +37,9 @@ if you want to not run all tests (if blank = all tests are run).
 
 ![Docker attach](images/docker_attach.png)
 
-This is useful to investigate why a given test has failed, or to copy the resulting OSM created by running a new ruby measure back to the host (your physical machine).
-Here is a snippet that will allow you to copy the resulting OSM to the `test` directory, which is shared with the host machine.
+**This is useful to investigate why a given test has failed, or to copy the resulting OSM created by running a new ruby measure back to the host** (your physical machine).
 
+Here is a snippet that will allow you to copy the resulting OSM to the `test` directory, which is shared with the host machine.
 After running the test in question, eg with the filter `test_my_object_rb`, attach to the container:
 
 ```bash
