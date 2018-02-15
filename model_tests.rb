@@ -7,8 +7,11 @@ require 'timeout'
 require 'open3'
 
 require 'etc'
-# Number of parallel runs caps to nproc - 1
-ENV['N'] = [1, Etc.nprocessors - 1].max.to_s
+
+if ENV['N'].nil?
+  # Number of parallel runs caps to nproc - 1
+  ENV['N'] = [1, Etc.nprocessors - 1].max.to_s
+end
 
 require 'minitest/autorun'
 
@@ -1075,6 +1078,22 @@ class ModelTests < MiniTest::Unit::TestCase
 
   def test_plenums_osm
     result = sim_test('plenums.osm')
+  end
+
+  def test_pv_and_storage_facilityexcess_rb
+    result = sim_test('pv_and_storage_facilityexcess.rb')
+  end
+
+  def test_pv_and_storage_facilityexcess_osm
+    result = sim_test('pv_and_storage_facilityexcess.osm')
+  end
+
+  def test_pv_and_storage_demandleveling_rb
+    result = sim_test('pv_and_storage_demandleveling.rb')
+  end
+
+  def test_pv_and_storage_demandleveling_osm
+    result = sim_test('pv_and_storage_demandleveling.osm')
   end
 
   def test_refrigeration_system_osm
