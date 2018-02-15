@@ -280,6 +280,36 @@ def find_info_osws(compat_matrix=None, test_dir=None):
 
     version_dict = compat_matrix.set_index('OpenStudio')['E+'].to_dict()
 
+    # Handle the case where you're working on a develop branch that is ahead
+    # of the compatibility matrix
+    all_versions = df_files.columns.unique()
+    unknown_versions = set(all_versions) - set(version_dict.keys())
+
+    latest_eplus = compat_matrix.iloc[0]['E+']
+
+    if unknown_versions:
+        msg = ("OpenStudio Version {} is not in the compatibility matrix\n"
+               "Please input the corresponding E+ version (default='{}'):\n")
+        for v in unknown_versions:
+            is_correct = False
+            while not is_correct:
+                # Ask user. If blank, then default to latest eplus known
+                eplus = input(msg.format(v, latest_eplus))
+                if not eplus:
+                    eplus = latest_eplus
+
+                # Sanitize: it should be in the form "X.Y.Z"
+                if len(eplus.split('.')) == 3:
+                    try:
+                        [float(x) for x in eplus.split('.')]
+                        is_correct = True
+                    except ValueError:
+                        pass
+            print("Mapping OS '{}' to '{}'".format(v, eplus))
+            # Add to the version_dict
+            version_dict[v] = eplus
+
+    # Prepend a column level for E+ version
     df_files.columns = pd.MultiIndex.from_tuples([(version_dict[x], x)
                                                   for x in df_files.columns],
                                                  names=['E+', 'OS'])
