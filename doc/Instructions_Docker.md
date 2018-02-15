@@ -31,8 +31,11 @@ This script expects one and one only argument: the OS version you want to run fo
 A few questions will be asked: whether you want to force rebuild an existing image, whether you want to run the regression tests directly, if so which filter pattern, etc.
 They all have sensible defaults so if you don't know what to respond, just press ENTER. Obviously, the one question that is the most interesting is the filter pattern, so don't skip this one
 if you want to not run all tests (if blank = all tests are run).
-You will also be asked whether you want to attach to the container, after you have run or not the regression test, and will enter an interactive session inside the container
-(the prompt may appear blank, just press enter). 
+
+**You will also be asked whether you want to attach to the container**, after you have run or not the regression tests, and will enter an interactive session inside the container
+(the prompt may appear blank at first, just press enter). The prompt will change, indicating you are now in the docker container:
+
+![Docker attach](images/docker_attach.png)
 
 This is useful to investigate why a given test has failed, or to copy the resulting OSM created by running a new ruby measure back to the host (your physical machine).
 Here is a snippet that will allow you to copy the resulting OSM to the `test` directory, which is shared with the host machine.
@@ -45,7 +48,7 @@ cd testruns/my_object_rb/
 cp in.osm ~/test/`basename ${PWD%.*}`.osm
 ```
 
-This would have added a `my_object.osm` in your `test` directory that you can just cut and paste to `model/simulationtest` and add it to the `model_tests.rb` file too.
+This would have added a `my_object.osm` in your `test` directory that you can just cut and paste to `model/simulationtests` (remember to add this new test in the `model_tests.rb` file too).
 
 
 
@@ -79,7 +82,7 @@ Install Hyper-V and Containers if you are prompted for it (restart needed).
 
 2. We will use mysys to be able to use bash. The easiest is to just rely on Git bash (mysysGit) since you probably already have it. If you have Git bash (MinGW), open that.
 If not go to [git-scm](https://git-scm.com/downloads) and install it. Make sure you install command line utilities.
-cd to your directory, then you can launch either of the scripts like above and it should hopefully work.
+cd to your directory, then you can launch either of the scripts like above and it should work.
 
 
 ### Optional: Configuring MinTTY on Windows
@@ -89,6 +92,10 @@ The default appearance of MinTTY isn't great. We're going to change the colors u
 The goal is to obtain a terminal that looks like this:
 
 ![MinTTY after config](images/Mintty_config.png)
+
+The colors are changed, the prompt is clearer and shows the openstudio version on your system, your username, and the current directory name, 
+and not the full path which is in the title bar instead.
+
 
 in `~./minttyrc` place the following lines:
 
