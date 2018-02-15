@@ -96,6 +96,8 @@ You may be prompted by docker to share your `C:` Drive if you haven't used docke
 Type Windows+R and enter `compmgmt.msc`. Left pane, click on "Local users and Groups".
 Find your user name in the mid pane, right click > Set Password, enter your password twice. Confirm.
 
+![Set a User Password](images/Set_password.png)
+
 Note: If you get problems, such as " /bin/bash^M: bad interpreter", you'll need to convert the line endings of the `docker_container_script.sh` to be Unix (LF) and not Windows (CRLF).
 This shouldn't happen since there is a `.gitattributes` file that should preserve Unix line endings for all `.sh` scripts.
 
