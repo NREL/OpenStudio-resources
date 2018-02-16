@@ -173,8 +173,26 @@ collector = OpenStudio::Model::SolarCollectorFlatPlateWater.new(model)
 storage_water_loop.addSupplyBranchForComponent(collector)
 collector.setSurface(shade)
 
-collector.outputVariableNames.each do |var|
-  OpenStudio::Model::OutputVariable.new(var, model)
+# Modify the Performance object
+# (Here I hardset them exactly like the constructor does)
+perf = collector.solarCollectorPerformance
+perf.setName("Solar Collector Performance FlatPlate")
+perf.setGrossArea(2.9646)
+perf.setTestFluid("Water") # Only accepted answer
+perf.setTestFlowRate(3.88e-05)
+perf.setTestCorrelationType("Inlet") # ["Inlet", "Average", "Outlet"]
+perf.setCoefficient1ofEfficiencyEquation(0.691)
+perf.setCoefficient2ofEfficiencyEquation(-0.00193)
+# This one is optional
+# perf.setCoefficient3ofEfficiencyEquation()
+perf.setCoefficient2ofIncidentAngleModifier(-0.1939)
+perf.setCoefficient3ofIncidentAngleModifier(-0.0055)
+
+add_out_vars = false
+if add_out_vars
+  collector.outputVariableNames.each do |var|
+    OpenStudio::Model::OutputVariable.new(var, model)
+  end
 end
 
 # add a storage tank to the swh loop
