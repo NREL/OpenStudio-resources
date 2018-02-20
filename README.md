@@ -90,6 +90,12 @@ To ensure you have the necessary dependencies you can type this pip install comm
 pip install requests matplotlib numpy pandas seaborn jupyter df2gspread lxml bs4
 ```
 
+On Windows, you may have to manually install `numpy+mkl`.  You can do this by downloading the correct `numpy+mkl` wheel file for your platform from https://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy and then running:
+
+```
+pip install numpy-1.14.0+mkl-cp37-cp37m-win_amd64.whl
+```
+
 **Running the script**:
 
 This script can be run as a command line utility:
