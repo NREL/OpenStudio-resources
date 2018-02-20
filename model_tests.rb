@@ -978,7 +978,11 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_afn_single_zone_nv_rb
     result = sim_test('afn_single_zone_nv.rb')
   end
-
+  
+  def test_afn_single_zone_nv_osm
+    result = sim_test('afn_single_zone_nv.osm')
+  end
+  
   #def test_afn_single_zone_ac_rb
   #  result = sim_test('afn_single_zone_ac.rb')
   #end
