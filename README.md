@@ -78,6 +78,7 @@ a given user can run the regression suite against his OpenStudio version exactly
 ### Parsing and analyzing
 
 The `regression_analysis.py` script is provided with functions to update the [google sheet](https://docs.google.com/spreadsheets/d/1gL8KSwRPtMPYj-QrTwlCwHJvNRP7llQyEinfM1-1Usg/edit#gid=1548402386) centralizing the test results, and visualize deviations.
+This script is parsing all the out.osw (for all versions) in the `test` folder and creating table representation for export to google spreadsheet, or for visualization as heatmaps.
 
 **Setting up a suitable python environment**
 
@@ -115,10 +116,13 @@ Please refer to the [Jupyter/IPython Quick Start Guide](https://jupyter-notebook
 
 ## Running tests in past history
 
-**Note:** The past history has been built already, so you shouldn't need to run tests in previous versions unless you are adding a missing test
-for an object that has been in OpenStudio for quite some time.
+**Note:** The past history has been built already: **all previous version files are stored in the `test` folder already**.
+So you shouldn't need to run tests in previous versions unless you are adding a missing test for an object that has been in OpenStudio for quite some time.
 
 Running past versions is achieved using docker, and the relies on the images stored on DockerHub at [nrel/openstudio](https://hub.docker.com/r/nrel/openstudio/).
+
+**Note:** If you only want to run for a single specific past version, you can definitely use your old installed OpenStudio version, you don't need docker.
+Docker is useful to run multiple past version (12 as of writing this for example).
 
 Two high-level command line utilities are provided, one for running a single version, the other to run all.
 They ask a couple of questions that all have sensible defaults to begin with, and should abstract all docker complexities.
