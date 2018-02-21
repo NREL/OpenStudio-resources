@@ -979,6 +979,7 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('afn_single_zone_nv.rb')
   end
   
+
   def test_afn_single_zone_nv_osm
     result = sim_test('afn_single_zone_nv.osm')
   end
@@ -987,6 +988,13 @@ class ModelTests < MiniTest::Unit::TestCase
   #  result = sim_test('afn_single_zone_ac.rb')
   #end
   
+
+  def test_foundation_kiva_osm
+    result = sim_test('foundation_kiva.osm')
+  end
+    def test_foundation_kiva_rb
+    result = sim_test('foundation_kiva.rb')
+  end
   # intersection tests
 
   def test_intersect_22_osm
