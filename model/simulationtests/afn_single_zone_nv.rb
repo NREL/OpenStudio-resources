@@ -13,25 +13,25 @@ class SurfaceNetworkBuilder < SurfaceVisitor
   def interiorFloor(model, surface, adjacentSurface)
     if !surface.outsideBoundaryCondition().start_with?('Ground') then
       # Create a surface linkage
-      link = surface.airflowNetworkSurface(@interiorCrack)
+      link = surface.getAirflowNetworkSurface(@interiorCrack)
     end
   end
 
   def interiorRoofCeiling(model, surface, adjacentSurface)
     # Create a surface linkage
-    link = surface.airflowNetworkSurface.new(@interiorCrack)
+    link = surface.getAirflowNetworkSurface.new(@interiorCrack)
   end
 
   def interiorWall(model, surface, adjacentSurface)
     # Create a surface linkage
-    link = surface.airflowNetworkSurface(@interiorCrack)
+    link = surface.getAirflowNetworkSurface(@interiorCrack)
   end
 
   def exteriorSurface(model, surface)
     # Create an external node?
     if !surface.outsideBoundaryCondition().start_with?('Ground') then
       # Create a surface linkage
-      link = surface.airflowNetworkSurface(@exteriorCrack)
+      link = surface.getAirflowNetworkSurface(@exteriorCrack)
     end
   end
 end
@@ -82,7 +82,7 @@ afn_control.setAirflowNetworkControl("MultizoneWithoutDistribution")
 
 #make an afn zone
 zone = model.getThermalZones()[0] # There should only be one...
-afnzone = zone.airflowNetworkZone
+afnzone = zone.getAirflowNetworkZone
 
 #connect up
 visitor = SurfaceNetworkBuilder.new(model)
