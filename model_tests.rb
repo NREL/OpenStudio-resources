@@ -43,6 +43,14 @@ if is_docker
 else
   # Directly in here
   $OutOSWDir = File.join($RootDir, 'test')
+  # Ask user if he wants to append a custom tag to the result out.osw
+  # We don't do it in docker so it can just run without user input
+  prompt = "If you want to append a custom tag to the result out.osw(s), enter it now, leave empty if not desired\n> "
+  $Custom_tag = [(print prompt), STDIN.gets.chomp][1]
+  if not $Custom_tag.empty?
+    $Custom_tag = "_#{$Custom_tag}"
+    puts "Custom tag will be appended, files will be named like 'testname_X.Y.Z_out#{$Custom_tag}.osw'\n"
+  end
 end
 
 $:.unshift($ModelDir)
@@ -145,7 +153,7 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
 
   if !result_osw.nil?
     # Cp to the OutOSW directory
-    cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out.osw")
+    cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.osw")
 
     # FileUtils.cp(out_osw, cp_out_osw)
     # Instead of just copying, we clean up the osw then export that to a file
