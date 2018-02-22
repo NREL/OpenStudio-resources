@@ -315,6 +315,89 @@ def find_info_osws(compat_matrix=None, test_dir=None):
                                                  names=['E+', 'OS'])
     return df_files
 
+
+def find_info_osws_with_tags(compat_matrix=None, test_dir=None):
+    """
+    Looks for files in the test/ folder, and parses version and type (rb, osm)
+    Constructs a dataframe that has E+/OS versions in column (by looking E+
+    version in compat_matrix)
+
+    Args:
+    ------
+    * compat_matrix (pd.DataFrame or None)
+        if None, calls parse_compatibility_matrix. Otherwise you can supply it
+    * test_dir (str path or None): if None uses the global TEST_DIR constant
+    Returns:
+    ---------
+    * df_files (pd.DataFrame): A multi indexed dataframe in rows and columns
+        Levels are as follows:
+        index: ['Test', 'Type'], eg ('absorption_chiller', 'rb')
+        columns: ['E+', 'OS'], the versions eg ('8.6.0', '2.4.0')
+
+        values are the path of the corresponding out.osw,
+        eg: 'absorption_chillers.rb_2.0.4_out.osw'
+
+    """
+
+    if test_dir is None:
+        test_dir = TEST_DIR
+
+    if compat_matrix is None:
+        compat_matrix = parse_compatibility_matrix()
+
+    files = gb.glob(os.path.join(test_dir, '*out*.osw'))
+
+    df_files = pd.DataFrame(files, columns=['path'])
+    filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb)_'
+                   r'(?P<version>\d+\.\d+\.\d+)_out_?(?P<Tag>.*?)?\.osw')
+    version = (df_files['path'].apply(lambda p: os.path.relpath(p, test_dir))
+                               .str.extract(pat=filepattern, expand=True))
+    df_files = pd.concat([df_files,
+                          version],
+                         axis=1)
+    df_files = (df_files.set_index(['Test', 'Type', 'Tag', 'version'])['path']
+                        .unstack(['version', 'Tag'])
+                        .sort_index(axis=1))
+
+    version_dict = compat_matrix.set_index('OpenStudio')['E+'].to_dict()
+
+    # Handle the case where you're working on a develop branch that is ahead
+    # of the compatibility matrix
+    all_versions = df_files.columns.get_level_values(0).unique()
+    unknown_versions = set(all_versions) - set(version_dict.keys())
+
+    latest_eplus = compat_matrix.iloc[0]['E+']
+
+    if unknown_versions:
+        msg = ("OpenStudio Version {} is not in the compatibility matrix\n"
+               "Please input the corresponding E+ version (default='{}'):\n")
+        for v in unknown_versions:
+            is_correct = False
+            while not is_correct:
+                # Ask user. If blank, then default to latest eplus known
+                eplus = input(msg.format(v, latest_eplus))
+                if not eplus:
+                    eplus = latest_eplus
+
+                # Sanitize: it should be in the form "X.Y.Z"
+                if len(eplus.split('.')) == 3:
+                    try:
+                        [float(x) for x in eplus.split('.')]
+                        is_correct = True
+                    except ValueError:
+                        pass
+            print("Mapping OS '{}' to '{}'".format(v, eplus))
+            # Add to the version_dict
+            version_dict[v] = eplus
+
+    # Prepend a column level for E+ version
+    df_files.columns = pd.MultiIndex.from_tuples([(version_dict[x[0]],
+                                                   x[0], x[1])
+                                                  for x in df_files.columns],
+                                                 names=['E+', 'OS', 'Tag'])
+    return df_files
+
+
 ###############################################################################
 #                P A R S I N G    F U N C T I O N S
 ###############################################################################
@@ -699,7 +782,8 @@ def update_and_upload():
 
 def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
                                 display_threshold=0.001,
-                                show_plot=True, savefig=False):
+                                show_plot=True, savefig=False,
+                                figsize=None):
     """
     Plots a heatmap to show difference in site kbtu from one version to the
     next for each test. It has options to display more or less variations
@@ -719,6 +803,7 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
 
     * savefig (boolean): whether to save the figure or not.
 
+    * figsize (tuple, optional): the figure size, if None it is calculated
     Returns:
     --------
     None, draws the plot
@@ -735,9 +820,12 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     toplot.columns = ["\n".join(x) for x in toplot.columns]
     toplot.columns.names = ['E+\nOS']
 
-    w = 16
-    h = w * toplot.shape[0] / (3 * toplot.shape[1])
-
+    if figsize is None:
+        w = 16
+        h = w * toplot.shape[0] / (3 * toplot.shape[1])
+    else:
+        w = figsize[0]
+        h = figsize[1]
     fig, ax = plt.subplots(figsize=(w, h))
 
     # Reserve 1.5 inches at bottom for explanation
