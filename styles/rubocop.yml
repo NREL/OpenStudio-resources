@@ -29,7 +29,7 @@ Lint/UnusedMethodArgument:
 
 # ==================== Metrics ====================
 Metrics/BlockNesting:
-  Max: 4
+  Max: 5
 
 Metrics/BlockLength:
   Max: 50
@@ -37,9 +37,10 @@ Metrics/BlockLength:
 # Configuration parameters: CountComments.
 Metrics/ClassLength:
   Max: 500
+  CountComments: false
 
 Metrics/CyclomaticComplexity:
-  Max: 48
+  Max: 60
 
 Metrics/LineLength:
   Max: 1200
@@ -47,10 +48,14 @@ Metrics/LineLength:
 # Configuration parameters: CountComments.
 Metrics/MethodLength:
   Max: 350
+  CountComments: false
 
 # Configuration parameters: CountKeywordArgs.
 Metrics/ParameterLists:
-  Max: 8
+  Max: 12
+
+Metrics/PerceivedComplexity:
+  Max: 60
 
 # ==================== Styles, Layouts, and Naming ====================
 # Configuration parameters: EnforcedStyle, SupportedStyles.
