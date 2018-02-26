@@ -28,6 +28,9 @@ Lint/UnusedMethodArgument:
   Enabled: false
 
 # ==================== Metrics ====================
+Metrics/AbcSize:
+  Max: 50
+
 Metrics/BlockNesting:
   Max: 5
 
@@ -90,6 +93,11 @@ Style/GuardClause:
 
 # Configuration parameters: MaxLineLength.
 Style/IfUnlessModifier:
+  Enabled: false
+
+# Allow negatives
+# https://rubocop.readthedocs.io/en/latest/cops_style/#stylenegatedif
+Style/NegatedIf:
   Enabled: false
 
 # Do NOT enable.  For some reason this is catching any next which I feel are okay.
