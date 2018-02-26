@@ -45,9 +45,12 @@ else
   $OutOSWDir = File.join($RootDir, 'test')
   # Ask user if he wants to append a custom tag to the result out.osw
   # We don't do it in docker so it can just run without user input
-  prompt = "If you want to append a custom tag to the result out.osw(s) (eg: 'Windows_run3'), enter it now, leave empty if not desired\n> "
+  prompt = "If you want to append a custom tag to the result out.osw(s) (eg: 'Windows_run3'), enter it now,\nor type 'SHA' to append the build sha, or leave empty if not desired\n> "
   $Custom_tag = [(print prompt), STDIN.gets.chomp][1]
   if not $Custom_tag.empty?
+    if $Custom_tag.downcase == 'sha'
+        $Custom_tag = OpenStudio::openStudioLongVersion.split('.')[-1]
+    end
     $Custom_tag = "_#{$Custom_tag}"
     puts "Custom tag will be appended, files will be named like 'testname_X.Y.Z_out#{$Custom_tag}.osw'\n"
   end
