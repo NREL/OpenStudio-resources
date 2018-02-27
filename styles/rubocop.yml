@@ -1,3 +1,15 @@
+# Define the error reporting for each category
+Layout:
+  Severity: error
+Lint:
+  Severity: error
+Metrics:
+  Severity: error
+Naming:
+  Severity: warning  
+Style:
+  Severity: error
+  
 # ==================== Linters ====================
 Lint/AmbiguousOperator:
   Enabled: true
@@ -30,35 +42,43 @@ Lint/UnusedMethodArgument:
 # ==================== Metrics ====================
 Metrics/AbcSize:
   Max: 50
+  Severity: warning
 
 Metrics/BlockNesting:
   Max: 5
 
 Metrics/BlockLength:
   Max: 50
+  Severity: warning
 
 # Configuration parameters: CountComments.
 Metrics/ClassLength:
   Max: 500
   CountComments: false
+  Severity: warning
 
 Metrics/CyclomaticComplexity:
   Max: 60
+  Severity: warning
 
 Metrics/LineLength:
   Max: 1200
+  Severity: warning
 
 # Configuration parameters: CountComments.
 Metrics/MethodLength:
   Max: 350
   CountComments: false
+  Severity: warning
 
 # Configuration parameters: CountKeywordArgs.
 Metrics/ParameterLists:
   Max: 12
+  Severity: warning
 
 Metrics/PerceivedComplexity:
   Max: 60
+  Severity: warning
 
 # ==================== Styles, Layouts, and Naming ====================
 # Configuration parameters: EnforcedStyle, SupportedStyles.
