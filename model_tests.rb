@@ -32,6 +32,11 @@ $IntersectDir = File.join($RootDir, 'model/intersectiontests/')
 $IntersectFile = File.join($RootDir, 'intersect.rb.erb')
 $TestDir = File.join($RootDir, 'testruns')
 $SdkVersion = OpenStudio.openStudioVersion
+$SdkLongVersion = OpenStudio::openStudioLongVersion
+$Build_Sha = $SdkLongVersion.split('.')[-1]
+$Custom_tag=''
+
+puts "Running for OpenStudio #{$SdkLongVersion}"
 
 # Were to cp the out.osw for regression
 # Depends on whether you are in a docker env or not
@@ -43,13 +48,21 @@ if is_docker
 else
   # Directly in here
   $OutOSWDir = File.join($RootDir, 'test')
-  # Ask user if he wants to append a custom tag to the result out.osw
-  # We don't do it in docker so it can just run without user input
-  prompt = "If you want to append a custom tag to the result out.osw(s) (eg: 'Windows_run3'), enter it now,\nor type 'SHA' to append the build sha, or leave empty if not desired\n> "
-  $Custom_tag = [(print prompt), STDIN.gets.chomp][1]
+
+  # if the user uses env CUSTOMTAG=whatever, we use that and we don't ask for the tag
+  if ENV["CUSTOMTAG"].nil?
+    # Ask user if he wants to append a custom tag to the result out.osw
+    # We don't do it in docker so it can just run without user input
+    prompt = ("If you want to append a custom tag to the result out.osw(s) (eg: 'Windows_run3'), enter it now,\n"\
+              "or type 'SHA' to append the build sha (#{$Build_Sha}), or leave empty if not desired\n> ")
+    $Custom_tag = [(print prompt), STDIN.gets.chomp][1]
+  else
+    $Custom_tag = ENV['CUSTOMTAG']
+  end
+
   if not $Custom_tag.empty?
     if $Custom_tag.downcase == 'sha'
-        $Custom_tag = OpenStudio::openStudioLongVersion.split('.')[-1]
+        $Custom_tag = $Build_Sha
     end
     $Custom_tag = "_#{$Custom_tag}"
     puts "Custom tag will be appended, files will be named like 'testname_X.Y.Z_out#{$Custom_tag}.osw'\n"
