@@ -241,6 +241,9 @@ def find_info_osws(compat_matrix=None, test_dir=None):
     Constructs a dataframe that has E+/OS versions in column (by looking E+
     version in compat_matrix)
 
+    IMPORTANT: this WILL NOT parse the custom-tagged out.osws
+    (see `find_info_osws_with_tags`)
+
     Args:
     ------
     * compat_matrix (pd.DataFrame or None)
@@ -267,6 +270,7 @@ def find_info_osws(compat_matrix=None, test_dir=None):
     files = gb.glob(os.path.join(test_dir, '*out.osw'))
 
     df_files = pd.DataFrame(files, columns=['path'])
+    # With this pattern, we exclude the custom-tagged out.osw files
     filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb)_'
                    r'(?P<version>\d+\.\d+\.\d+)_out\.osw')
     version = (df_files['path'].apply(lambda p: os.path.relpath(p, test_dir))
@@ -321,6 +325,9 @@ def find_info_osws_with_tags(compat_matrix=None, test_dir=None):
     Looks for files in the test/ folder, and parses version and type (rb, osm)
     Constructs a dataframe that has E+/OS versions in column (by looking E+
     version in compat_matrix)
+
+    IMPORTANT: this WILL parse the custom-tagged out.osws
+    (see `find_info_osws`)
 
     Args:
     ------
@@ -783,6 +790,7 @@ def update_and_upload():
 def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
                                 display_threshold=0.001,
                                 show_plot=True, savefig=False,
+                                figname=None,
                                 figsize=None):
     """
     Plots a heatmap to show difference in site kbtu from one version to the
@@ -802,6 +810,9 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     above this threshold, otherwise they get greyed out
 
     * savefig (boolean): whether to save the figure or not.
+    * figname (str): if savefig is true, you can force a .png name
+        if None, defaults to 'site_kbtu_pct_change.png'.
+        You must pass the .png with it.
 
     * figsize (tuple, optional): the figure size, if None it is calculated
     Returns:
@@ -894,7 +905,8 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
                     ha='left', va='bottom', style=style)
 
     if savefig:
-        figname = 'site_kbtu_pct_change.png'
+        if figname is None:
+            figname = 'site_kbtu_pct_change.png'
         plt.savefig(figname, dpi=150, bbox_inches='tight')
         print("Saved to {}".format(os.path.abspath(figname)))
     if show_plot:
