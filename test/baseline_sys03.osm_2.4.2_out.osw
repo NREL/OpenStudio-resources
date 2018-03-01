@@ -8,8 +8,6 @@
     "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 3\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 4\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 5\", Blank Schedule Type Limits Name input -- will not be validated.",
-    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 6\", Blank Schedule Type Limits Name input -- will not be validated.",
-    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 7\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** GetHTSurfaceData: Surfaces with interface to Ground found but no \"Ground Temperatures\" were input.",
@@ -17,8 +15,158 @@
     "   **   ~~~   ** Defaults, constant throughout the year of (18.0) will be used.",
     "   ** Warning ** CheckUsedConstructions: There are 6 nominally unused constructions in input.",
     "   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;",
-    "   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"STORY 1 CORE THERMAL ZONE WITH BATTERY BASELINE MODEL INFILTRATION\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Surface Area = 0.  0 Infiltration will result.",
-    "   ************* Beginning Plant Sizing Calculations",
+    "   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"THERMAL ZONE 10 BASELINE MODEL INFILTRATION\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Surface Area = 0.  0 Infiltration will result.",
+    "   ************* Beginning System Sizing Calculations",
+    "   ** Warning ** SetpointManager:MixedAir=\"SETPOINT MANAGER MIXED AIR 3\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"NODE 18 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 18",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"SETPOINT MANAGER MIXED AIR 2\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"NODE 19 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 19",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"SETPOINT MANAGER MIXED AIR 1\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"NODE 20 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 20",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 117 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 30\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 117",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 118 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 29\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 118",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 119 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 28\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 119",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 29 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 6\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 29",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 30 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 5\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 30",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 31 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 4\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 31",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 40 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 9\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 40",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 41 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 8\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 41",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 42 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 7\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 42",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 51 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 12\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 51",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 52 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 11\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 52",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 53 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 10\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 53",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 62 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 15\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 62",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 63 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 14\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 63",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 64 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 13\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 64",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 73 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 18\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 73",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 74 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 17\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 74",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 75 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 16\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 75",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 84 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 21\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 84",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 85 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 20\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 85",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 86 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 19\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 86",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"SETPOINT MANAGER MIXED AIR 24\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"NODE 95 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 95",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"SETPOINT MANAGER MIXED AIR 23\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"NODE 96 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 96",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"NODE 97 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"SETPOINT MANAGER MIXED AIR 22\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 97",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"SETPOINT MANAGER MIXED AIR 27\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"NODE 106 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 106",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"SETPOINT MANAGER MIXED AIR 26\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"NODE 107 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 107",
+    "   **   ~~~   ** ...control type variable = Temperature",
+    "   ** Warning ** SetpointManager:MixedAir=\"SETPOINT MANAGER MIXED AIR 25\"",
+    "   **   ~~~   ** ...setpoint node conflicts with another setpoint manager.",
+    "   **   ~~~   ** ...conflicting setpoint manager = SetpointManager:MixedAir:\"NODE 108 OS DEFAULT SPM\"",
+    "   **   ~~~   ** ...conflicting node name = NODE 108",
+    "   **   ~~~   ** ...control type variable = Temperature",
     "   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTCOOLING:FACILITY\" - not found.",
     "   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTHEATING:FACILITY\" - not found.",
     "   ** Warning ** Output:Meter:MeterFileOnly requested for \"Electricity:Facility\" (TimeStep), already on \"Output:Meter\". Will report to both eplusout.eso and eplusout.mtr",
@@ -30,44 +178,87 @@
     "   ************* All Return Air Paths passed integrity testing",
     "   ************* No node connection errors were found.",
     "   ************* Beginning Simulation",
-    "   ** Warning ** Processing Monthly Tabular Reports: Variable names not valid for this simulation",
-    "   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual variables.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 6\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -7.80",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 09:15 - 09:20",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 6\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -9.73 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 09:15 - 09:20",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 4\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -2.47 C.",
+    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/02 13:10 - 13:20",
     "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 11.371 C.",
+    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 18.006 C.",
     "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
     "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 7\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -6.28",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 10:08 - 10:15",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 2\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -11.70",
+    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/05 09:50 - 10:00",
     "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 9\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -5.85",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 10:20 - 10:25",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 9\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -5.23 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 10:20 - 10:25",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 2\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -0.78 C.",
+    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/05 09:50 - 10:00",
     "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 18.939 C.",
+    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 21.108 C.",
     "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
     "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 5\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -4.15",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 11:15 - 11:30",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 7\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -10.17",
+    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/05 10:35 - 10:40",
     "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 8\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -10.30",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 02/06 15:15 - 15:30",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 7\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -1.92E-002 C.",
+    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/05 10:35 - 10:40",
+    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
+    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 21.862 C.",
+    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
+    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 6\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -4.47",
+    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/05 14:30 - 14:40",
     "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 1\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -5.88",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 02/16 10:40 - 10:45",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 6\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = 2.30E-002 C.",
+    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/05 14:30 - 14:40",
+    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
+    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 21.879 C.",
+    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
+    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 3\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -0.92",
+    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/10 09:00 - 09:10",
     "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 4\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -3.30",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 02/16 15:15 - 15:22",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 3\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = 0.25 C.",
+    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/10 09:00 - 09:10",
+    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
+    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 22.076 C.",
+    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
+    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 8\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -0.18",
+    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/10 09:45 - 09:50",
     "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 10\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -2.50E-002",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 03/18 09:05 - 09:10",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 8\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = 0.77 C.",
+    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/10 09:45 - 09:50",
+    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
+    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 22.591 C.",
+    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
+    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 10\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = 0.95 C.",
+    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/10 13:40 - 13:50",
+    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
+    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 22.756 C.",
+    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
+    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 4\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -1.67",
+    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/10 17:10 - 17:13",
     "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 1\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -4.47 C.",
+    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/16 13:13 - 13:17",
+    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
+    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 13.836 C.",
+    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
+    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 10\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -1.13",
+    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/20 17:10 - 17:15",
+    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 5\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = 1.51 C.",
+    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 02/22 13:05 - 13:10",
+    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
+    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 23.298 C.",
+    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
+    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 9\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = 1.25 C.",
+    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 02/22 13:05 - 13:10",
+    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
+    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 23.029 C.",
+    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
+    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
     "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-ELECTRICITY\" has no energy cost. ",
     "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
     "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-DISTILLATE OIL\" has no energy cost. ",
@@ -79,79 +270,115 @@
     "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-COAL\" has no energy cost. ",
     "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
     "   ************* Simulation Error Summary *************",
-    "   ** Warning ** The following Report Variables were requested but not generated -- check.rdd file",
-    "   **   ~~~   ** Either the IDF did not contain these elements, the variable name is misspelled,",
-    "   **   ~~~   ** or the requested variable is an advanced output which requires Output : Diagnostics, DisplayAdvancedReportVariables;",
-    "   ************* Key=*, VarName=GENERATOR PV CELL TEMPERATURE, Frequency=Hourly",
-    "   ************* Key=*, VarName=GENERATOR PV SHORT CIRCUIT CURRENT, Frequency=Hourly",
-    "   ************* Key=*, VarName=GENERATOR PV OPEN CIRCUIT VOLTAGE, Frequency=Hourly",
     "   ************* There are 2 unused schedules in input.",
     "   ************* There are 2 unused week schedules in input.",
-    "   ************* There are 8 unused day schedules in input.",
+    "   ************* There are 6 unused day schedules in input.",
     "   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.",
     "   *************",
     "   ************* ===== Recurring Error Summary =====",
     "   ************* The following recurring error messages occurred.",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 6\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 1854 total times;",
+    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 4\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
+    "   *************  **   ~~~   **   This error occurred 580 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-18.9 [C]",
+    "   *************  **   ~~~   **   Max=1.999818  Min=-4.144054",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 6\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 4408 total times;",
+    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 2\" - Low condenser dry-bulb temperature error continues...",
+    "   *************  **   ~~~   **   This error occurred 850 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.998389  Min=-15.348387",
+    "   *************  **   ~~~   **   Max=-3.333333E-002 [C]  Min=-17.433333 [C]",
+    "   *************",
+    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 2\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
+    "   *************  **   ~~~   **   This error occurred 678 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=1.99514  Min=-1.398181",
     "   *************",
     "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 7\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 1072 total times;",
+    "   *************  **   ~~~   **   This error occurred 633 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-0.15 [C]  Min=-17.25 [C]",
+    "   *************  **   ~~~   **   Max=-3.333333E-002 [C]  Min=-16.5 [C]",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 9\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 1447 total times;",
+    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 7\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
+    "   *************  **   ~~~   **   This error occurred 530 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-17.2 [C]",
+    "   *************  **   ~~~   **   Max=1.998592  Min=-0.564567",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 9\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 3971 total times;",
+    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 6\" - Low condenser dry-bulb temperature error continues...",
+    "   *************  **   ~~~   **   This error occurred 94 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.998722  Min=-6.897793",
+    "   *************  **   ~~~   **   Max=-0.216667 [C]  Min=-10.2 [C]",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 5\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 813 total times;",
+    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 6\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
+    "   *************  **   ~~~   **   This error occurred 285 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-0.1 [C]  Min=-16.4 [C]",
+    "   *************  **   ~~~   **   Max=1.99819  Min=-0.426501",
+    "   *************",
+    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 3\" - Low condenser dry-bulb temperature error continues...",
+    "   *************  **   ~~~   **   This error occurred 74 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=-3.333333E-002 [C]  Min=-9.266667 [C]",
+    "   *************",
+    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 3\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
+    "   *************  **   ~~~   **   This error occurred 246 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=1.997902  Min=-0.677622",
     "   *************",
     "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 8\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 43 total times;",
+    "   *************  **   ~~~   **   This error occurred 34 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-0.275 [C]  Min=-10.45 [C]",
+    "   *************  **   ~~~   **   Max=-5.000000E-002 [C]  Min=-7.483333 [C]",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 1\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 33 total times;",
+    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 8\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
+    "   *************  **   ~~~   **   This error occurred 223 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-5.875 [C]",
+    "   *************  **   ~~~   **   Max=1.999933  Min=0.148947",
+    "   *************",
+    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 10\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
+    "   *************  **   ~~~   **   This error occurred 188 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=1.993171  Min=0.501104",
     "   *************",
     "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 4\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 19 total times;",
+    "   *************  **   ~~~   **   This error occurred 5 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-0.55 [C]  Min=-4.4 [C]",
+    "   *************  **   ~~~   **   Max=-3.333333E-002 [C]  Min=-1.866667 [C]",
+    "   *************",
+    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 1\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
+    "   *************  **   ~~~   **   This error occurred 154 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=1.903614  Min=-7.736934",
     "   *************",
     "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 10\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 2 total times;",
+    "   *************  **   ~~~   **   This error occurred 49 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-2.500000E-002 [C]",
+    "   *************  **   ~~~   **   Max=-0.183333 [C]  Min=-6.666667 [C]",
+    "   *************",
+    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 5\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
+    "   *************  **   ~~~   **   This error occurred 23 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=1.978522  Min=1.394806",
+    "   *************",
+    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 9\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
+    "   *************  **   ~~~   **   This error occurred 26 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=1.968771  Min=1.018227",
     "   *************",
     "   *************",
     "   ************* ===== Final Error Summary =====",
@@ -162,8 +389,8 @@
     "   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).",
     "   *************",
     "   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.",
-    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 11 Warning; 0 Severe Errors.",
-    "   ************* EnergyPlus Completed Successfully-- 13683 Warning; 0 Severe Errors; "
+    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 9 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Completed Successfully-- 4719 Warning; 0 Severe Errors; "
   ],
   "seed_file": "in.osm",
   "steps": [
@@ -278,19 +505,19 @@
             "value": true
           },
           {
-            "display_name": "Building 1",
+            "display_name": "OS:Building 1",
             "name": "building_name",
             "value": "building_name"
           },
           {
             "name": "total_site_energy",
             "units": "kBtu",
-            "value": 5547924.3
+            "value": 7136873.35
           },
           {
             "name": "net_site_energy",
             "units": "kBtu",
-            "value": 5505357.83
+            "value": 7136873.35
           },
           {
             "name": "total_building_area",
@@ -300,32 +527,32 @@
           {
             "name": "total_site_eui",
             "units": "kBtu/ft^2",
-            "value": 51.54
+            "value": 66.3
           },
           {
             "name": "eui",
             "units": "kBtu/ft^2",
-            "value": 51.15
+            "value": 66.3
           },
           {
             "name": "unmet_hours_during_heating",
             "units": "hr",
-            "value": 38.5
+            "value": 0
           },
           {
             "name": "unmet_hours_during_cooling",
             "units": "hr",
-            "value": 0
+            "value": 6.83
           },
           {
             "name": "unmet_hours_during_occupied_heating",
             "units": "hr",
-            "value": 4.5
+            "value": 0
           },
           {
             "name": "unmet_hours_during_occupied_cooling",
             "units": "hr",
-            "value": 0
+            "value": 6.83
           },
           {
             "name": "unmet_hours_tolerance_heating",
@@ -340,17 +567,17 @@
           {
             "name": "end_use_heating",
             "units": "kBtu",
-            "value": 2940090.79
+            "value": 4328415.4
           },
           {
             "name": "end_use_cooling",
             "units": "kBtu",
-            "value": 283075.06
+            "value": 247607.74
           },
           {
             "name": "end_use_interior_lighting",
             "units": "kBtu",
-            "value": 1044617.68
+            "value": 1040873.81
           },
           {
             "name": "end_use_exterior_lighting",
@@ -360,7 +587,7 @@
           {
             "name": "end_use_interior_equipment",
             "units": "kBtu",
-            "value": 1044617.68
+            "value": 1040873.81
           },
           {
             "name": "end_use_exterior_equipment",
@@ -370,12 +597,12 @@
           {
             "name": "end_use_fans",
             "units": "kBtu",
-            "value": 145034.98
+            "value": 479112.08
           },
           {
             "name": "end_use_pumps",
             "units": "kBtu",
-            "value": 86791.61
+            "value": 0
           },
           {
             "name": "end_use_heat_rejection",
@@ -405,17 +632,17 @@
           {
             "name": "end_use_generators",
             "units": "kBtu",
-            "value": 3687.01
+            "value": 0
           },
           {
             "name": "fuel_electricity",
             "units": "kBtu",
-            "value": 2607833.5
+            "value": 2808457.95
           },
           {
             "name": "fuel_natural_gas",
             "units": "kBtu",
-            "value": 2940090.79
+            "value": 4328415.4
           },
           {
             "name": "fuel_additional_fuel",
@@ -440,12 +667,12 @@
           {
             "name": "end_use_electricity_cooling",
             "units": "kWh",
-            "value": 82961.11
+            "value": 72566.67
           },
           {
             "name": "end_use_electricity_interior_lighting",
             "units": "kWh",
-            "value": 306147.22
+            "value": 305050.0
           },
           {
             "name": "end_use_electricity_exterior_lighting",
@@ -455,7 +682,7 @@
           {
             "name": "end_use_electricity_interior_equipment",
             "units": "kWh",
-            "value": 306147.22
+            "value": 305050.0
           },
           {
             "name": "end_use_electricity_exterior_equipment",
@@ -465,12 +692,12 @@
           {
             "name": "end_use_electricity_fans",
             "units": "kWh",
-            "value": 42505.56
+            "value": 140413.89
           },
           {
             "name": "end_use_electricity_pumps",
             "units": "kWh",
-            "value": 25436.11
+            "value": 0
           },
           {
             "name": "end_use_electricity_heat_rejection",
@@ -500,12 +727,12 @@
           {
             "name": "end_use_electricity_generators",
             "units": "kWh",
-            "value": 1080.56
+            "value": 0
           },
           {
             "name": "end_use_natural_gas_heating",
             "units": "therms",
-            "value": 29406.58
+            "value": 43292.51
           },
           {
             "name": "end_use_natural_gas_cooling",
@@ -580,12 +807,12 @@
           {
             "name": "electricity_cooling_ip",
             "units": "kWh",
-            "value": 82961.68
+            "value": 72565.27
           },
           {
             "name": "electricity_interior_lighting_ip",
             "units": "kWh",
-            "value": 306147.14
+            "value": 305049.22
           },
           {
             "name": "electricity_exterior_lighting_ip",
@@ -595,7 +822,7 @@
           {
             "name": "electricity_interior_equipment_ip",
             "units": "kWh",
-            "value": 306147.14
+            "value": 305049.22
           },
           {
             "name": "electricity_exterior_equipment_ip",
@@ -605,12 +832,12 @@
           {
             "name": "electricity_fans_ip",
             "units": "kWh",
-            "value": 42505.63
+            "value": 140414.44
           },
           {
             "name": "electricity_pumps_ip",
             "units": "kWh",
-            "value": 25437.41
+            "value": 0
           },
           {
             "name": "electricity_heat_rejection_ip",
@@ -645,12 +872,12 @@
           {
             "name": "electricity_ip",
             "units": "kWh",
-            "value": 763199.0
+            "value": 823078.16
           },
           {
             "name": "natural_gas_heating_ip",
             "units": "MBtu",
-            "value": 2940.09
+            "value": 4328.41
           },
           {
             "name": "natural_gas_cooling_ip",
@@ -720,7 +947,7 @@
           {
             "name": "natural_gas_ip",
             "units": "MBtu",
-            "value": 2940.09
+            "value": 4328.41
           },
           {
             "name": "additional_fuel_heating_ip",
@@ -1065,7 +1292,7 @@
           {
             "name": "exterior_lighting_total_consumption",
             "units": "kWh",
-            "value": 1613461.11
+            "value": 2091611.11
           },
           {
             "name": "inflation_approach",
@@ -1079,7 +1306,7 @@
           {
             "name": "annual_peak_electric_demand",
             "units": "kW",
-            "value": 340.18
+            "value": 352.29
           },
           {
             "name": "first_year_capital_cost",
