@@ -85,7 +85,7 @@ model.add_design_days()
 add_pv = true
 add_storage = true
 # Add output variables?
-add_out_vars = true
+add_out_vars = false
 
 # Need the PV section because we use a storage converter...
 # there isn't a buss type with DC buss and no inverter...
@@ -93,6 +93,10 @@ if add_storage && !add_pv
   add_pv = true
 end
 ###############################################################################
+
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 
 if add_pv
 
@@ -179,7 +183,7 @@ if add_pv
 end
 
 # We get a zone (sort by name to ensure consistency)
-z = model.getThermalZones.sort_by{|zone| zone.name.to_s}[0]
+z = zones[0]
 
 if add_storage
   # We need a storage object (Battery or Simple)

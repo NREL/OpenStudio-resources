@@ -4,7 +4,7 @@ require 'lib/baseline_model'
 require 'json'
 
 model = BaselineModel.new
-  
+
 	model.add_standards( JSON.parse('{
   "schedules": [
     {
@@ -61,19 +61,19 @@ model.add_geometry({"length" => 100,
 model.add_windows({"wwr" => 0.4,
                   "offset" => 1,
                   "application_type" => "Above Floor"})
-        
+
 #add ASHRAE System type 01, PTAC, Residential
 model.add_hvac({"ashrae_sys_num" => '01'})
 
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
-              
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #add design days to the model (Chicago)
 model.add_design_days()
@@ -81,18 +81,19 @@ model.add_design_days()
 mixed_swh_loop = model.add_swh_loop("Mixed")
 stratified_swh_loop = model.add_swh_loop("Stratified")
 
-zones = model.getThermalZones
-i = 0
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 
-zones.each do |thermal_zone|
+zones.each_with_index do |thermal_zone, i|
 
-	if i % 2 == 0
-		model.add_swh_end_uses(mixed_swh_loop, "Medium Office Bldg Swh")
-	else
-		model.add_swh_end_uses(stratified_swh_loop, "Medium Office Bldg Swh")
-	end
+  if i % 2 == 0
+    model.add_swh_end_uses(mixed_swh_loop, "Medium Office Bldg Swh")
+  else
+    model.add_swh_end_uses(stratified_swh_loop, "Medium Office Bldg Swh")
+  end
 
 end
-       
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})

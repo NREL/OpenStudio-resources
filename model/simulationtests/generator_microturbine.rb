@@ -325,11 +325,15 @@ model.set_space_type()
 model.add_design_days()
 
 
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+
 # We are going to artificially put more than enough electrical and service hot
 # water loads (the goal isn't to produce a realistic office building...)
 
 # We transform our building into a 10 story one
-model.getThermalZones.each {|z| z.setMultiplier(10)}
+zones.each {|z| z.setMultiplier(10)}
 
 # Add a shw loop with one water use connections + water use equipment
 mixed_swh_loop = model.add_swh_loop("Mixed")

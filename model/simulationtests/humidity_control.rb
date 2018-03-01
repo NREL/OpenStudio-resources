@@ -25,7 +25,9 @@ model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
 
 #pick out on of the zone/system pairs and add a humidifier
-zones = model.getThermalZones.sort
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 
 # Try out all 3 different types of humidity setpoint managers
 # on three different airloops in the same model.

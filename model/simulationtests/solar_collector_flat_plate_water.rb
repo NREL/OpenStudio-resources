@@ -81,7 +81,9 @@ model.add_design_days()
 # create the swh loop and uses
 mixed_swh_loop = model.add_swh_loop("Mixed")
 
-zones = model.getThermalZones
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 zones.each do |thermal_zone|
   model.add_swh_end_uses(mixed_swh_loop, "Medium Office Bldg Swh")
 end

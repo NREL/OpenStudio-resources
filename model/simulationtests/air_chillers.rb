@@ -51,14 +51,14 @@ air_chiller2 = OpenStudio::Model::RefrigerationAirChiller.new(model, defrost_sch
 
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
-zones_test= model.getThermalZones.sort_by{|z| z.name.to_s}
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 
 
 heating_coil1 = nil
 heating_coil3 = nil
 cooling_coil1 = nil
 cooling_coil3 = nil
-zones_test.each_with_index do |z, i|
+zones.each_with_index do |z, i|
     if i == 0
         schedule = model.alwaysOnDiscreteSchedule()
         fan = OpenStudio::Model::FanOnOff.new(model,schedule)
@@ -85,14 +85,19 @@ model.add_hvac({"ashrae_sys_num" => '07'})
 model.add_thermostats({"heating_setpoint" => 18,
                       "cooling_setpoint" => 32})
 
-boiler = model.getBoilerHotWaters.first
-plant1 = boiler.plantLoop.get
-chiller = model.getChillerElectricEIRs.first
-plant2 = chiller.plantLoop.get
-plant1.addDemandBranchForComponent(heating_coil1)
-plant2.addDemandBranchForComponent(cooling_coil1)
-plant1.addDemandBranchForComponent(heating_coil3)
-plant2.addDemandBranchForComponent(cooling_coil3)
+# In order to produce more consistent results between different runs,
+# We ensure we do get the same object each time
+chillers = model.getChillerElectricEIRs.sort_by{|c| c.name.to_s}
+boilers = model.getBoilerHotWaters.sort_by{|c| c.name.to_s}
+
+cooling_loop = chillers.first.plantLoop.get
+heating_loop = boilers.first.plantLoop.get
+
+
+heating_loop.addDemandBranchForComponent(heating_coil1)
+cooling_loop.addDemandBranchForComponent(cooling_coil1)
+heating_loop.addDemandBranchForComponent(heating_coil3)
+cooling_loop.addDemandBranchForComponent(cooling_coil3)
 
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
@@ -103,7 +108,7 @@ model.set_space_type()
 #add design days to the model (Chicago)
 model.add_design_days()
 
-zones_test.each_with_index do |z, i|
+zones.each_with_index do |z, i|
   if i == 0
     new_thermostat = OpenStudio::Model::ThermostatSetpointDualSetpoint.new(model)
 
@@ -136,12 +141,8 @@ zones_test.each_with_index do |z, i|
     cooling_coil2 = OpenStudio::Model::CoilCoolingWater.new(model, schedule)
     four_pipe_fan_coil = OpenStudio::Model::ZoneHVACFourPipeFanCoil.new(model, schedule, fan, cooling_coil2, heating_coil2)
     four_pipe_fan_coil.addToThermalZone(z)
-    boiler = model.getBoilerHotWaters.first
-    plant1 = boiler.plantLoop.get
-    chiller = model.getChillerElectricEIRs.first
-    plant2 = chiller.plantLoop.get
-    plant1.addDemandBranchForComponent(heating_coil2)
-    plant2.addDemandBranchForComponent(cooling_coil2)
+    heating_loop.addDemandBranchForComponent(heating_coil2)
+    cooling_loop.addDemandBranchForComponent(cooling_coil2)
   elsif i == 1
     new_thermostat = OpenStudio::Model::ThermostatSetpointDualSetpoint.new(model)
 

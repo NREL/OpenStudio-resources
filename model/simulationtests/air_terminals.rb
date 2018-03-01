@@ -24,6 +24,14 @@ model.add_hvac({"ashrae_sys_num" => '07'})
 # we sort the zones by names
 zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 
+# In order to produce more consistent results between different runs,
+# We ensure we do get the same object each time
+chillers = model.getChillerElectricEIRs.sort_by{|c| c.name.to_s}
+boilers = model.getBoilerHotWaters.sort_by{|c| c.name.to_s}
+
+cooling_loop = chillers.first.plantLoop.get
+heating_loop = boilers.first.plantLoop.get
+
 zones.each_with_index do |z, i|
   if i == 0
     puts z.name.get
@@ -42,10 +50,7 @@ zones.each_with_index do |z, i|
     new_terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeReheat.new(model,schedule,coil)
     air_loop.addBranchForZone(z,new_terminal.to_StraightComponent)
 
-    boiler = model.getBoilerHotWaters.first
-    plant = boiler.plantLoop.get
-
-    plant.addDemandBranchForComponent(coil)
+    heating_loop.addDemandBranchForComponent(coil)
   elsif i == 2
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
@@ -72,10 +77,7 @@ zones.each_with_index do |z, i|
     new_terminal = OpenStudio::Model::AirTerminalSingleDuctParallelPIUReheat.new(model,schedule,fan,coil)
     air_loop.addBranchForZone(z,new_terminal.to_StraightComponent)
 
-    boiler = model.getBoilerHotWaters.first
-    plant = boiler.plantLoop.get
-
-    plant.addDemandBranchForComponent(coil)
+    heating_loop.addDemandBranchForComponent(coil)
   elsif i == 5
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
@@ -86,10 +88,7 @@ zones.each_with_index do |z, i|
     new_terminal = OpenStudio::Model::AirTerminalSingleDuctSeriesPIUReheat.new(model,fan,coil)
     air_loop.addBranchForZone(z,new_terminal.to_StraightComponent)
 
-    boiler = model.getBoilerHotWaters.first
-    plant = boiler.plantLoop.get
-
-    plant.addDemandBranchForComponent(coil)
+    heating_loop.addDemandBranchForComponent(coil)
   elsif i == 6
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
@@ -101,13 +100,8 @@ zones.each_with_index do |z, i|
     new_terminal.setCoolingCoil(cool_coil)
     air_loop.addBranchForZone(z,new_terminal.to_StraightComponent)
 
-    boiler = model.getBoilerHotWaters.first
-    plant = boiler.plantLoop.get
-    plant.addDemandBranchForComponent(heat_coil)
-
-    chiller = model.getChillerElectricEIRs.first
-    plant = chiller.plantLoop.get
-    plant.addDemandBranchForComponent(cool_coil)
+    heating_loop.addDemandBranchForComponent(heat_coil)
+    cooling_loop.addDemandBranchForComponent(cool_coil)
   end
 
 end

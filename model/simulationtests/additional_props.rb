@@ -32,6 +32,9 @@ model.set_space_type()
 #add design days to the model (Chicago)
 model.add_design_days()
 
+# Get spaces, ordered by name to ensure consistency
+spaces = model.getSpaces.sort_by{|s| s.name.to_s}
+
 #create 8in concrete material
 material = OpenStudio::Model::StandardOpaqueMaterial.new(model)
 material.setThickness(0.2032)
@@ -76,7 +79,7 @@ model.getAdditionalPropertiess.each do |additional_properties|
 end
 
 unit = OpenStudio::Model::BuildingUnit.new(model)
-model.getSpaces.each do |space|
+spaces.each do |space|
   space.setBuildingUnit(unit)
 end
 

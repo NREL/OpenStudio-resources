@@ -10,14 +10,18 @@ model.add_geometry({"length" => 100,
               "floor_to_floor_height" => 4,
               "plenum_height" => 0,
               "perimeter_zone_depth" => 3})
-            
+
 #add windows at a 40% window-to-wall ratio
 model.add_windows({"wwr" => 0.4,
                   "offset" => 1,
                   "application_type" => "Above Floor"})
-        
+
 #add ASHRAE System type 08, VAV w/ PFP Boxes
 model.add_hvac({"ashrae_sys_num" => '08'})
+
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 
 # find all the zones
 north_zone = nil
@@ -25,7 +29,7 @@ east_zone = nil
 south_zone = nil
 west_zone = nil
 core_zone = nil
-model.getThermalZones.each do |zone|
+zones.each do |zone|
   if /North/.match(zone.name.to_s)
     north_zone = zone
   elsif /East/.match(zone.name.to_s)
@@ -48,7 +52,7 @@ exhaust_rate = 0.17
 exhaust = OpenStudio::Model::FanZoneExhaust.new(model)
 exhaust.addToThermalZone(north_zone)
 exhaust.setAvailabilitySchedule(model.alwaysOnDiscreteSchedule)
-exhaust.setMaximumFlowRate(exhaust_rate) 
+exhaust.setMaximumFlowRate(exhaust_rate)
 exhaust.setFlowFractionSchedule(model.alwaysOnContinuousSchedule)
 exhaust.setBalancedExhaustFractionSchedule(model.alwaysOnContinuousSchedule)
 
@@ -82,31 +86,36 @@ zamfc.setSourceZoneInfiltrationTreatment("AddInfiltrationFlow")
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
-              
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
 # add zone exhaust
-model.getThermalZones.each do |z|
+zones.each do |z|
+  # TODO: given the above comment "add zone exhaust", it looks like it's
+  # missing the actual zone exhaust object...
   puts z
 end
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #add design days to the model (Chicago)
 model.add_design_days()
 
 # add output reports
-OpenStudio::Model::OutputVariable.new("Zone Mixing Volume", model)
-OpenStudio::Model::OutputVariable.new("Zone Supply Air Mass Flow Rate", model)
-OpenStudio::Model::OutputVariable.new("Zone Exhaust Air Mass Flow Rate", model)
-OpenStudio::Model::OutputVariable.new("Zone Return Air Mass Flow Rate", model)
-OpenStudio::Model::OutputVariable.new("Zone Mixing Receiving Air Mass Flow Rate", model)
-OpenStudio::Model::OutputVariable.new("Zone Mixing Source Air Mass Flow Rate", model)
-OpenStudio::Model::OutputVariable.new("Zone Infiltration Air Mass Flow Balance Status", model)
-OpenStudio::Model::OutputVariable.new("Zone Mass Balance Infiltration Air Mass Flow Rate", model)
-OpenStudio::Model::OutputVariable.new("System Node Mass Flow Rate", model)
+add_out_vars = false
+if add_out_vars
+  OpenStudio::Model::OutputVariable.new("Zone Mixing Volume", model)
+  OpenStudio::Model::OutputVariable.new("Zone Supply Air Mass Flow Rate", model)
+  OpenStudio::Model::OutputVariable.new("Zone Exhaust Air Mass Flow Rate", model)
+  OpenStudio::Model::OutputVariable.new("Zone Return Air Mass Flow Rate", model)
+  OpenStudio::Model::OutputVariable.new("Zone Mixing Receiving Air Mass Flow Rate", model)
+  OpenStudio::Model::OutputVariable.new("Zone Mixing Source Air Mass Flow Rate", model)
+  OpenStudio::Model::OutputVariable.new("Zone Infiltration Air Mass Flow Balance Status", model)
+  OpenStudio::Model::OutputVariable.new("Zone Mass Balance Infiltration Air Mass Flow Rate", model)
+  OpenStudio::Model::OutputVariable.new("System Node Mass Flow Rate", model)
+end
 
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,

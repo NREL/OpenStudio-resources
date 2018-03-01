@@ -1,10 +1,10 @@
 require 'openstudio'
 require 'lib/baseline_model'
 
-m = BaselineModel.new
+model = BaselineModel.new
 
 # make a 1 story, 100m X 50m, 5 zone core/perimeter building
-m.add_geometry({"length" => 100,
+model.add_geometry({"length" => 100,
                 "width" => 50,
                 "num_floors" => 1,
                 "floor_to_floor_height" => 3,
@@ -12,88 +12,96 @@ m.add_geometry({"length" => 100,
                 "perimeter_zone_depth" => 3})
 
 # add windows at a 40% window-to-wall ratio
-m.add_windows({"wwr" => 0.4,
+model.add_windows({"wwr" => 0.4,
                "offset" => 1,
                "application_type" => "Above Floor"})
 
 # Add ASHRAE System type 07, VAV w/ Reheat, this creates a ChW, a HW loop and a
 # Condenser Loop
-m.add_hvac({"ashrae_sys_num" => '07'})
+model.add_hvac({"ashrae_sys_num" => '07'})
 
 
 # add thermostats
-m.add_thermostats({"heating_setpoint" => 24,
+model.add_thermostats({"heating_setpoint" => 24,
                    "cooling_setpoint" => 28})
 
 # assign constructions from a local library to the walls/windows/etc. in the model
-m.set_constructions()
+model.set_constructions()
 
 # set whole building space type; simplified 90.1-2004 Large Office Whole Building
-m.set_space_type()
+model.set_space_type()
 
 # add design days to the model (Chicago)
-m.add_design_days()
+model.add_design_days()
 
 
+# In order to produce more consistent results between different runs,
+# We ensure we do get the same object each time
+cts = model.getCoolingTowerSingleSpeeds.sort_by{|c| c.name.to_s}
+chillers = model.getChillerElectricEIRs.sort_by{|c| c.name.to_s}
+boilers = model.getBoilerHotWaters.sort_by{|c| c.name.to_s}
 
-
-ct = m.getCoolingTowerSingleSpeeds.first
-p_cnd = ct.plantLoop.get
-
-b = m.getBoilerHotWaters.first
-p_hw = b.plantLoop.get
-
-ch = m.getChillerElectricEIRs.first
-p_chw = ch.plantLoop.get
+condenser_loop = cts.first.plantLoop.get
+cooling_loop = chillers.first.plantLoop.get
+heating_loop = boilers.first.plantLoop.get
 
 
 # Create a central heat pump system and two modules
-central_hp = OpenStudio::Model::CentralHeatPumpSystem.new(m)
+central_hp = OpenStudio::Model::CentralHeatPumpSystem.new(model)
 central_hp.setName("CentralHeatPumpSystem")
 
-central_hp_module = OpenStudio::Model::CentralHeatPumpSystemModule.new(m)
+central_hp_module = OpenStudio::Model::CentralHeatPumpSystemModule.new(model)
 central_hp.addModule(central_hp_module)
 
-central_hp_module2 = OpenStudio::Model::CentralHeatPumpSystemModule.new(m)
+central_hp_module2 = OpenStudio::Model::CentralHeatPumpSystemModule.new(model)
 central_hp.addModule(central_hp_module2)
 central_hp_module2.setNumberofChillerHeaterModules(2)
 
 # Add to to the demand side of the condenser loop
-p_cnd.addDemandBranchForComponent(central_hp)
+condenser_loop.addDemandBranchForComponent(central_hp)
 
 # Supply side of the chw loop, remove chiller
-ch.remove
-p_chw.addSupplyBranchForComponent(central_hp)
+chillers.each do |ch|
+  ch.remove
+end
+cooling_loop.addSupplyBranchForComponent(central_hp)
 
 # Supply side to HW loop: tertiary. Remove boiler
 # Since we need to use addToTertiaryNode,
 # The trick is to add it to the boiler inlet node first, then remove boiler
-n = b.inletModelObject.get.to_Node.get
-central_hp.addToTertiaryNode(n)
-b.remove
-
+#n = b.inletModelObject.get.to_Node.get
+# central_hp.addToTertiaryNode(n)
+# b.remove
+#
+# This is not true anymore, this will work and add to tertiary node
+# because we have already connected the central_hp to the supply side of the
+# cooling loop, it knows it's trying to connect the tertiary loop
+heating_loop.addSupplyBranchForComponent(central_hp)
+boilers.each do |b|
+  b.remove
+end
 
 
 ###############################################################################
 #         R E N A M E    E Q U I P M E N T    A N D    N O D E S
 ###############################################################################
 # Remove pipes
-m.getPipeAdiabatics.each {|pipe| pipe.remove}
+model.getPipeAdiabatics.each {|pipe| pipe.remove}
 
 # Rename loops
-p_cnd.setName("CndW Loop")
-p_hw.setName("HW Loop")
-p_chw.setName("ChW Loop")
+condenser_loop.setName("CndW Loop")
+heating_loop.setName("HW Loop")
+cooling_loop.setName("ChW Loop")
 
+# There is is only one
+model.getCoilCoolingWaters[0].setName("VAV Central ChW Coil")
 
-m.getCoilCoolingWaters[0].setName("VAV Central ChW Coil")
-
-m.getCoilHeatingWaters.each do |coil|
+model.getCoilHeatingWaters.each do |coil|
   next if !coil.airLoopHVAC.is_initialized
   coil.setName("VAV Central HW Coil")
 end
 
-a = m.getAirLoopHVACs[0]
+a = model.getAirLoopHVACs.sort_by{|al| al.name.to_s}[0]
 a.thermalZones.each do |z|
   atu = z.equipment[0].to_AirTerminalSingleDuctVAVReheat.get
   atu.setName("#{z.name} ATU VAV Reheat")
@@ -103,7 +111,7 @@ end
 
 
 # Rename nodes
-m.getPlantLoops.each do |p|
+model.getPlantLoops.each do |p|
   prefix = p.name.to_s
 
   p.supplyComponents.reverse.each do |c|
@@ -222,53 +230,86 @@ central_hp.demandOutletModelObject.get.setName("#{central_hp.sourcePlantLoop.get
 central_hp.tertiaryInletModelObject.get.setName("#{central_hp.heatingPlantLoop.get.name} Supply Side #{central_hp.name} Inlet Node")
 central_hp.tertiaryOutletModelObject.get.setName("#{central_hp.heatingPlantLoop.get.name} Supply Side #{central_hp.name} Outlet Node")
 
+# Rename Zone Air Nodes
+model.getThermalZones.each {|z| z.zoneAirNode.setName("#{z.name.to_s} Zone Air Node")}
 
+# Rename thermostats
+model.getThermostatSetpointDualSetpoints.each {|t| t.setName("#{t.thermalZone.get.name.to_s} ThermostatSetpointDualSetpoint") }
+
+# Rename ATU "Air Outlet Node Name", not sure how
+nodes = model.getNodes.select{|n| n.name.to_s.start_with?("Node ")}
+nodes.each do |n|
+  next if n.inletModelObject.empty?
+  atu = n.inletModelObject.get.to_AirTerminalSingleDuctVAVReheat
+  if !atu.empty?
+    atu = atu.get
+    n.setName("#{atu.name.to_s} Air Outlet Node")
+  end
+  zone = n.inletModelObject.get.to_ThermalZone
+  if !zone.empty?
+    zone = zone.get
+    n.setName("#{zone.name.to_s} Return Air Node")
+  end
+  next if n.outletModelObject.empty?
+  atu = n.outletModelObject.get.to_AirTerminalSingleDuctVAVReheat
+  if !atu.empty?
+    atu = atu.get
+    n.setName("#{atu.name.to_s} Air Inlet Node")
+  end
+end
+
+model.getFanVariableVolumes.each do |fan|
+  fan.inletModelObject.get.to_Node.get.setName("#{fan.name.to_s} Inlet Node")
+  fan.outletModelObject.get.to_Node.get.setName("#{fan.name.to_s} Outlet Node")
+end
 
 ########################### Request output variables ##########################
 
-freq = 'Detailed'
+add_out_vars = false
+if add_out_vars
+  freq = 'Detailed'
 
-# CentralHeatPumpSystem outputs, implemented in the class
-central_hp.outputVariableNames.each do |varname|
-  outvar = OpenStudio::Model::OutputVariable.new(varname, m)
-  outvar.setReportingFrequency(freq)
-end
-
-
-# ChillerHeaterPerformance:Electric:EIR Outputs: one for each Unit, not
-# implemented in class (can't be static really...)
-
-n_chiller_heater = central_hp.modules.inject(0){|sum, mod| sum += mod.numberofChillerHeaterModules}
-
-chiller_heater_perf_vars = ['Chiller Heater Operation Mode Unit',
- 'Chiller Heater Part Load Ratio Unit',
- 'Chiller Heater Cycling Ratio Unit',
- 'Chiller Heater Cooling Electric Power Unit',
- 'Chiller Heater Heating Electric Power Unit',
- 'Chiller Heater Cooling Electric Energy Unit',
- 'Chiller Heater Heating Electric Energy Unit',
- 'Chiller Heater Cooling Rate Unit',
- 'Chiller Heater Cooling Energy Unit',
- 'Chiller Heater False Load Heat Transfer Rate Unit',
- 'Chiller Heater False Load Heat Transfer Energy Unit',
- 'Chiller Heater Evaporator Inlet Temperature Unit',
- 'Chiller Heater Evaporator Outlet Temperature Unit',
- 'Chiller Heater Evaporator Mass Flow Rate Unit',
- 'Chiller Heater Condenser Heat Transfer Rate Unit',
- 'Chiller Heater Condenser Heat Transfer Energy Unit',
- 'Chiller Heater COP Unit',
- 'Chiller Heater Capacity Temperature Modifier Multiplier Unit',
- 'Chiller Heater EIR Temperature Modifier Multiplier Unit',
- 'Chiller Heater EIR Part Load Modifier Multiplier Unit',
- 'Chiller Heater Condenser Inlet Temperature Unit',
- 'Chiller Heater Condenser Outlet Temperature Unit',
- 'Chiller Heater Condenser Mass Flow Rate Unit']
-
-
-n_chiller_heater.times do |i|
-  chiller_heater_perf_vars.each do |varname|
-    outvar = OpenStudio::Model::OutputVariable.new("#{varname} #{i+1}", m)
+  # CentralHeatPumpSystem outputs, implemented in the class
+  central_hp.outputVariableNames.each do |varname|
+    outvar = OpenStudio::Model::OutputVariable.new(varname, model)
     outvar.setReportingFrequency(freq)
+  end
+
+  # ChillerHeaterPerformance:Electric:EIR Outputs: one for each Unit, not
+  # implemented in class (can't be static really...)
+
+  n_chiller_heater = central_hp.modules.inject(0){|sum, mod| sum += mod.numberofChillerHeaterModules}
+
+  chiller_heater_perf_vars = ['Chiller Heater Operation Mode Unit',
+   'Chiller Heater Part Load Ratio Unit',
+   'Chiller Heater Cycling Ratio Unit',
+   'Chiller Heater Cooling Electric Power Unit',
+   'Chiller Heater Heating Electric Power Unit',
+   'Chiller Heater Cooling Electric Energy Unit',
+   'Chiller Heater Heating Electric Energy Unit',
+   'Chiller Heater Cooling Rate Unit',
+   'Chiller Heater Cooling Energy Unit',
+   'Chiller Heater False Load Heat Transfer Rate Unit',
+   'Chiller Heater False Load Heat Transfer Energy Unit',
+   'Chiller Heater Evaporator Inlet Temperature Unit',
+   'Chiller Heater Evaporator Outlet Temperature Unit',
+   'Chiller Heater Evaporator Mass Flow Rate Unit',
+   'Chiller Heater Condenser Heat Transfer Rate Unit',
+   'Chiller Heater Condenser Heat Transfer Energy Unit',
+   'Chiller Heater COP Unit',
+   'Chiller Heater Capacity Temperature Modifier Multiplier Unit',
+   'Chiller Heater EIR Temperature Modifier Multiplier Unit',
+   'Chiller Heater EIR Part Load Modifier Multiplier Unit',
+   'Chiller Heater Condenser Inlet Temperature Unit',
+   'Chiller Heater Condenser Outlet Temperature Unit',
+   'Chiller Heater Condenser Mass Flow Rate Unit']
+
+
+  n_chiller_heater.times do |i|
+    chiller_heater_perf_vars.each do |varname|
+      outvar = OpenStudio::Model::OutputVariable.new("#{varname} #{i+1}", model)
+      outvar.setReportingFrequency(freq)
+    end
   end
 end
 
@@ -276,9 +317,8 @@ end
 # Due to this bug: https://github.com/NREL/EnergyPlus/issues/6445
 # Need to hardsize the Reference capacity of the
 # chillerHeaterPerformanceElectricEIR objects
-m.getChillerHeaterPerformanceElectricEIRs.each{|comp| comp.setReferenceCoolingModeEvaporatorCapacity(600000)}
+model.getChillerHeaterPerformanceElectricEIRs.each{|comp| comp.setReferenceCoolingModeEvaporatorCapacity(600000)}
 
 # save the OpenStudio model (.osm)
-m.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
+model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                        "osm_name" => "in.osm"})
-

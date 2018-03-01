@@ -20,12 +20,16 @@ model.add_windows({"wwr" => 0.4,
 #add ASHRAE System type 03, PSZ-AC
 model.add_hvac({"ashrae_sys_num" => '03'})
 
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+
 #add electric load center distribution
 eld = OpenStudio::Model::ElectricLoadCenterDistribution.new(model)
-thermal_zone = model.getThermalZones
+
 #add fuel cell
 fuelcell = OpenStudio::Model::GeneratorFuelCell.new(model)
-fuelcell.powerModule.setZone(thermal_zone[0])
+fuelcell.powerModule.setZone(zones[0])
 #add fuel cell to electric load center distribution
 eld.addGenerator(fuelcell)
 eld.setGeneratorOperationSchemeType("Baseload")

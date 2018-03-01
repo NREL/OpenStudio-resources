@@ -20,7 +20,8 @@ model.add_windows({"wwr" => 0.4,
 #add ASHRAE System type 07, VAV w/ Reheat
 model.add_hvac({"ashrae_sys_num" => '07'})
 
-airLoopHVAC = OpenStudio::Model::AirLoopHVAC.new(model)
+unitaryAirLoopHVAC = OpenStudio::Model::AirLoopHVAC.new(model)
+unitaryAirLoopHVAC.setName("Unitary AirLoopHVAC")
 schedule = model.alwaysOnDiscreteSchedule()
 fan = OpenStudio::Model::FanOnOff.new(model,schedule)
 
@@ -113,12 +114,21 @@ cooling_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model, schedule, 
 supp_heating_coil = OpenStudio::Model::CoilHeatingElectric.new(model, schedule)
 unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAir.new(model, schedule, fan, heating_coil, cooling_coil, supp_heating_coil)
 
-supplyOutletNode = airLoopHVAC.supplyOutletNode
+supplyOutletNode = unitaryAirLoopHVAC.supplyOutletNode
 unitary.addToNode(supplyOutletNode)
 
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
 zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+
+
+# In order to produce more consistent results between different runs,
+# We ensure we do get the same object each time
+chillers = model.getChillerElectricEIRs.sort_by{|c| c.name.to_s}
+boilers = model.getBoilerHotWaters.sort_by{|c| c.name.to_s}
+
+cooling_loop = chillers.first.plantLoop.get
+heating_loop = boilers.first.plantLoop.get
 
 zones.each_with_index do |z, i|
   if i == 0
@@ -128,12 +138,8 @@ zones.each_with_index do |z, i|
     cooling_coil = OpenStudio::Model::CoilCoolingWater.new(model, schedule)
     four_pipe_fan_coil = OpenStudio::Model::ZoneHVACFourPipeFanCoil.new(model, schedule, fan, cooling_coil, heating_coil)
     four_pipe_fan_coil.addToThermalZone(z)
-    boiler = model.getBoilerHotWaters.first
-    plant1 = boiler.plantLoop.get
-    chiller = model.getChillerElectricEIRs.first
-    plant2 = chiller.plantLoop.get
-    plant1.addDemandBranchForComponent(heating_coil)
-    plant2.addDemandBranchForComponent(cooling_coil)
+    heating_loop.addDemandBranchForComponent(heating_coil)
+    cooling_loop.addDemandBranchForComponent(cooling_coil)
   elsif i == 1
     schedule = model.alwaysOnDiscreteSchedule()
     fan = OpenStudio::Model::FanOnOff.new(model,schedule)
@@ -142,12 +148,8 @@ zones.each_with_index do |z, i|
     supp_heating_coil = OpenStudio::Model::CoilHeatingElectric.new(model, schedule)
     water_to_air_heat_pump = OpenStudio::Model::ZoneHVACWaterToAirHeatPump.new(model, schedule, fan, heating_coil, cooling_coil, supp_heating_coil)
     water_to_air_heat_pump.addToThermalZone(z)
-    boiler = model.getBoilerHotWaters.first
-    plant1 = boiler.plantLoop.get
-    chiller = model.getChillerElectricEIRs.first
-    plant2 = chiller.plantLoop.get
-    plant1.addDemandBranchForComponent(heating_coil)
-    plant2.addDemandBranchForComponent(cooling_coil)
+    heating_loop.addDemandBranchForComponent(heating_coil)
+    cooling_loop.addDemandBranchForComponent(cooling_coil)
   elsif i == 2
     thermal_zone_vector = OpenStudio::Model::ThermalZoneVector.new()
     thermal_zone_vector << z
@@ -174,7 +176,7 @@ zones.each_with_index do |z, i|
 
     schedule = model.alwaysOnDiscreteSchedule()
     new_terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,schedule)
-    airLoopHVAC.addBranchForZone(z,new_terminal.to_StraightComponent)
+    unitaryAirLoopHVAC.addBranchForZone(z,new_terminal.to_StraightComponent)
     unitary.setControllingZone(z)
   end
 end

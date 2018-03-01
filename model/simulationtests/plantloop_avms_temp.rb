@@ -33,37 +33,42 @@ model.set_space_type()
 model.add_design_days()
 
 
+# In order to produce more consistent results between different runs,
+# We ensure we do get the same object each time
+cts = model.getCoolingTowerSingleSpeeds.sort_by{|c| c.name.to_s}
+chillers = model.getChillerElectricEIRs.sort_by{|c| c.name.to_s}
+boilers = model.getBoilerHotWaters.sort_by{|c| c.name.to_s}
+
+condenser_loop = cts.first.plantLoop.get
+cooling_loop = chillers.first.plantLoop.get
+heating_loop = boilers.first.plantLoop.get
+
+
 # Get the heating loop
 # We turn it off if the OA temp is above 18C, and turn it on, if below 15C
-boiler = model.getBoilerHotWaters.first
-heating_plant = boiler.plantLoop.get
-
 avm_HTOff = OpenStudio::Model::AvailabilityManagerHighTemperatureTurnOff.new(model)
 avm_HTOff.setSensorNode(model.outdoorAirNode)
 avm_HTOff.setTemperature(18)
-heating_plant.addAvailabilityManager(avm_HTOff);
+heating_loop.addAvailabilityManager(avm_HTOff);
 
 avm_LTOn = OpenStudio::Model::AvailabilityManagerLowTemperatureTurnOn.new(model)
 avm_LTOn.setSensorNode(model.outdoorAirNode)
 avm_LTOn.setTemperature(15)
-heating_plant.addAvailabilityManager(avm_LTOn);
+heating_loop.addAvailabilityManager(avm_LTOn);
 
 
 
 # Get the chiller water loop
 # We turn it off if the OA Temp is below 15C, turn if back on if its over 18C
-chiller = model.getChillerElectricEIRs.first
-chilled_plant = chiller.plantLoop.get
-
 avm_LTOff = OpenStudio::Model::AvailabilityManagerLowTemperatureTurnOff.new(model)
 avm_LTOff.setSensorNode(model.outdoorAirNode)
 avm_LTOff.setTemperature(15)
-chilled_plant.addAvailabilityManager(avm_LTOff);
+cooling_loop.addAvailabilityManager(avm_LTOff);
 
 avm_HTOn = OpenStudio::Model::AvailabilityManagerHighTemperatureTurnOn.new(model)
 avm_HTOn.setSensorNode(model.outdoorAirNode)
 avm_HTOn.setTemperature(18)
-chilled_plant.addAvailabilityManager(avm_HTOn);
+cooling_loop.addAvailabilityManager(avm_HTOn);
 
 
 # Get the Condenser loop
@@ -74,15 +79,12 @@ chilled_plant.addAvailabilityManager(avm_HTOn);
 # here. The classical application of this one is for solar collectors on the
 # demand side of a plant loop (temp diffs are reversed, 2 for Off, 10 for On),
 # which OpenStudio doesn't allow right now
-tower = model.getCoolingTowerSingleSpeeds.first
-cond = tower.plantLoop.get
-
-chw_pump = chilled_plant.supplyComponents("OS_Pump_VariableSpeed".to_IddObjectType)[0].to_PumpVariableSpeed.get
+chw_pump = cooling_loop.supplyComponents("OS_Pump_VariableSpeed".to_IddObjectType)[0].to_PumpVariableSpeed.get
 chw_pump_outlet_node = chw_pump.outletModelObject.get.to_Node.get
 
 avm_Diff = OpenStudio::Model::AvailabilityManagerDifferentialThermostat.new(model)
 avm_Diff.setHotNode(chw_pump_outlet_node)
-avm_Diff.setColdNode(cond.supplyOutletNode)
+avm_Diff.setColdNode(condenser_loop.supplyOutletNode)
 avm_Diff.setTemperatureDifferenceOnLimit(2)
 avm_Diff.setTemperatureDifferenceOffLimit(10)
 

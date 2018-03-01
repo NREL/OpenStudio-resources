@@ -18,11 +18,30 @@ model.add_windows({"wwr" => 0.4,
                   "offset" => 1,
                   "application_type" => "Above Floor"})
 
-# Use Ideal Air Loads
-model.getThermalZones.each{|z| z.setUseIdealAirLoads(true)}
+#add thermostats
+model.add_thermostats({"heating_setpoint" => 24,
+                      "cooling_setpoint" => 28})
+
+#assign constructions from a local library to the walls/windows/etc. in the model
+model.set_constructions()
+
+#set whole building space type; simplified 90.1-2004 Large Office Whole Building
+model.set_space_type()
+
+#add design days to the model (Chicago)
+model.add_design_days()
+
+
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 
 # Get spaces, ordered by name to ensure consistency
 spaces = model.getSpaces.sort_by{|s| s.name.to_s}
+
+
+# Use Ideal Air Loads
+zones.each{|z| z.setUseIdealAirLoads(true)}
 
 spaces.each_with_index do |space, i|
   if i == 0
@@ -112,20 +131,6 @@ spaces.each_with_index do |space, i|
 
   end
 end
-
-
-#add thermostats
-model.add_thermostats({"heating_setpoint" => 24,
-                      "cooling_setpoint" => 28})
-
-#assign constructions from a local library to the walls/windows/etc. in the model
-model.set_constructions()
-
-#set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()
-
-#add design days to the model (Chicago)
-model.add_design_days()
 
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,

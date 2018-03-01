@@ -1,17 +1,17 @@
 
 require 'openstudio'
-require 'lib/baseline_model'
+require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 
 #make a 2 story, 100m X 50m, 10 zone core/perimeter building
 model.add_geometry({"length" => 100,
                     "width" => 50,
-                    "num_floors" => 2,
+                    "num_floors" => 1,
                     "floor_to_floor_height" => 4,
                     "plenum_height" => 1,
                     "perimeter_zone_depth" => 3})
-                    
+
 #add windows at a 40% window-to-wall ratio
 model.add_windows({"wwr" => 0.4,
                    "offset" => 1,
@@ -23,7 +23,7 @@ model.add_hvac({"ashrae_sys_num" => '01'})
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                        "cooling_setpoint" => 28})
-                       
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
@@ -33,7 +33,11 @@ model.set_space_type()
 #add design days to the model (Chicago)
 model.add_design_days()
 
-zone = model.getThermalZones[0]
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+
+zone = zones[0]
 
 #add unitary AirLoopHVACUnitarySystem
 air_loop_unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
@@ -64,8 +68,11 @@ zone.setZoneControlHumidistat(humidistat)
 zone_hvac = OpenStudio::Model::ZoneHVACDehumidifierDX.new(model)
 zone_hvac.addToThermalZone(zone)
 
+
+model.save('before.osm', true)
+
 #remove airloop
 air_loop.remove # fails due to this line
-       
+
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})

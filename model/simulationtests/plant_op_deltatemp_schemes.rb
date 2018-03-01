@@ -39,6 +39,9 @@ model.add_thermostats({"heating_setpoint" => 24,
 #manually add op schemes instead of depending on os defaults
 
 
+# Note there are only 3 plant loops (heating/cooling/condenser) so this test is
+# reliable by using model.getCoolingTowerSingleSpeeds.first for eg
+
 # Test the Plant OA Wetbulb Difference, between the pump outlet and OA WB
 # We set reference node to the pump outlet, which is the inlet temp to the cooling
 # towers. So Looking at difference between CT inlet and OA Wetbulb, we are

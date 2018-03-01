@@ -18,8 +18,12 @@ model.add_windows({"wwr" => 0.4,
                   "offset" => 1,
                   "application_type" => "Above Floor"})
 
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+
 # Use Ideal Air Loads
-model.getThermalZones.each{|z| z.setUseIdealAirLoads(true)}
+zones.each{|z| z.setUseIdealAirLoads(true)}
 
 # Exterior Lighting
 ext_light_def = OpenStudio::Model::ExteriorLightsDefinition.new(model)

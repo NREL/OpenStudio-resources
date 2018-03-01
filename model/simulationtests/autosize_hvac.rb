@@ -31,7 +31,9 @@ model.add_design_days()
                   # "offset" => 1,
                   # "application_type" => "Above Floor"})
 
-zones = model.getThermalZones.sort
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 puts "The model has #{zones.size} thermal zones"
 
 # Change the simulation to only run the sizing days

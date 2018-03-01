@@ -58,8 +58,12 @@ puts "initial type of modeling is #{roofConditions.typeOfModeling}."
 roofConditions.setTypeOfModeling("UndergroundPipingSystemSurface")
 puts "final type of modeling is #{roofConditions.typeOfModeling}."
 
+
+# Get spaces, ordered by name to ensure consistency
+spaces = model.getSpaces.sort_by{|s| s.name.to_s}
+
 # have to do this because other side coefficient surfaces do not inherit constructions?
-model.getSpaces.each do |space|
+spaces.each do |space|
   space.hardApplyConstructions
 end
 
