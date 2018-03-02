@@ -4,10 +4,10 @@
   "eplusout_err": [
     "Program Version,EnergyPlus, Version 8.7.0-78a111df4a, IDD_Version 8.7.0",
     "   ************* Beginning Zone Sizing Calculations",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 2\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 3\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 4\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 5\", Blank Schedule Type Limits Name input -- will not be validated.",
-    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 6\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** GetHTSurfaceData: Surfaces with interface to Ground found but no \"Ground Temperatures\" were input.",
@@ -17,6 +17,26 @@
     "   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;",
     "   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"STORY 1 CORE THERMAL ZONE BASELINE MODEL INFILTRATION\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Surface Area = 0.  0 Infiltration will result.",
     "   ************* Beginning System Sizing Calculations",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 3",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 10",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 6",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 1",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 9",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 4",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 5",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 7",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 8",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = AIR TERMINAL SINGLE DUCT VAV REHEAT 2",
     "   ************* Beginning Plant Sizing Calculations",
     "   ** Warning ** Output:Meter: invalid Name=\"DISTRICTCOOLING:FACILITY\" - not found.",
     "   ** Warning ** Output:Meter: invalid Name=\"DISTRICTHEATING:FACILITY\" - not found.",
@@ -29,87 +49,62 @@
     "   ************* All Return Air Paths passed integrity testing",
     "   ************* No node connection errors were found.",
     "   ************* Beginning Simulation",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 1\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -6.70",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 09:53 - 10:00",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 1\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -2.66 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 09:53 - 10:00",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 21.792 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 4\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -5.85",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 10:23 - 10:30",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 4\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -2.29 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 10:23 - 10:30",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 22.158 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 6\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -3.26 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/02 13:23 - 13:30",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 18.121 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 2\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -4.33",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/05 14:30 - 14:45",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 2\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -2.53 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/05 14:30 - 14:45",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 21.896 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 8\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = 0.15 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/16 13:10 - 13:15",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 23.168 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 10\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -5.50 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/16 13:20 - 13:25",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 14.172 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 3\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = 0.73 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/17 09:08 - 09:15",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 22.699 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 5\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = 0.85 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/17 09:25 - 09:30",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 22.888 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 8\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -0.60",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/20 16:45 - 16:50",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 6\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -1.40",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/20 17:15 - 17:20",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 3\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -2.25",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/23 09:38 - 09:45",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 7\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = 1.63 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 02/11 11:45 - 12:00",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 23.119 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 9\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = 1.64 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 02/11 13:05 - 13:10",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 22.943 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 5\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -5.03",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 02/20 09:08 - 09:15",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Cooling tower air flow rate ratio calculation failed ",
+    "   **   ~~~   ** ...with conditions as Twb = -1.00, Trange =  2.06, Tapproach = 11.53, and water flow rate ratio =  0.75",
+    "   **   ~~~   ** ...a solution could not be found within the valid range of air flow rate ratios",
+    "   **   ~~~   **  ...Valid air flow rate ratio range =  0.20 to 1.0.",
+    "   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/01 00:00 - 00:15",
+    "   **   ~~~   ** ...Consider modifying the design approach or design range temperature for this tower.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is outside model boundaries at -5.53.",
+    "   **   ~~~   **  ...Valid range = -1.00 to 26.67. Occurrence info = RUN PERIOD 1, 01/01 00:00 - 00:15",
+    "   **   ~~~   **  ...Inlet air wet-bulb temperature passed to the model = -1.000000",
+    "   **   ~~~   **  ...Wet-bulb temperatures outside model boundaries may not adversely affect tower performance.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Tower approach temperature is outside model boundaries at 11.53.",
+    "   **   ~~~   **  ...Valid range = 1.11 to 11.11. Occurrence info = RUN PERIOD 1, 01/01 00:00 - 00:15",
+    "   **   ~~~   **  ...Tower approach temperature passed to the model = 11.53363",
+    "   **   ~~~   **  ...Approach temperatures outside model boundaries may not adversely affect tower performance.",
+    "   **   ~~~   **  ...This is not an unexpected occurrence when simulating actual conditions.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is outside model boundaries at -7.97.",
+    "   **   ~~~   **  ...Valid range = -1.00 to 26.67. Occurrence info = RUN PERIOD 1, 01/01 00:15 - 00:30",
+    "   **   ~~~   **  ...Inlet air wet-bulb temperature passed to the model = -1.000000",
+    "   **   ~~~   **  ...Wet-bulb temperatures outside model boundaries may not adversely affect tower performance.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is outside model boundaries at -10.43.",
+    "   **   ~~~   **  ...Valid range = -1.00 to 26.67. Occurrence info = RUN PERIOD 1, 01/01 00:30 - 00:45",
+    "   **   ~~~   **  ...Inlet air wet-bulb temperature passed to the model = -1.000000",
+    "   **   ~~~   **  ...Wet-bulb temperatures outside model boundaries may not adversely affect tower performance.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is outside model boundaries at -12.90.",
+    "   **   ~~~   **  ...Valid range = -1.00 to 26.67. Occurrence info = RUN PERIOD 1, 01/01 00:45 - 01:00",
+    "   **   ~~~   **  ...Inlet air wet-bulb temperature passed to the model = -1.000000",
+    "   **   ~~~   **  ...Wet-bulb temperatures outside model boundaries may not adversely affect tower performance.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is outside model boundaries at -12.79.",
+    "   **   ~~~   **  ...Valid range = -1.00 to 26.67. Occurrence info = RUN PERIOD 1, 01/01 01:00 - 01:15",
+    "   **   ~~~   **  ...Inlet air wet-bulb temperature passed to the model = -1.000000",
+    "   **   ~~~   **  ...Wet-bulb temperatures outside model boundaries may not adversely affect tower performance.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Water flow rate ratio is outside model boundaries at 0.75.",
+    "   **   ~~~   **  ...Valid range = 0.75 to 1.25. Occurrence info = RUN PERIOD 1, 01/01 04:30 - 04:45",
+    "   **   ~~~   **  ...Water flow rate ratio passed to the model = 0.75000",
+    "   **   ~~~   **  ...Water flow rate ratios outside model boundaries may not adversely affect tower performance.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Water flow rate ratio is outside model boundaries at 0.75.",
+    "   **   ~~~   **  ...Valid range = 0.75 to 1.25. Occurrence info = RUN PERIOD 1, 01/01 05:30 - 05:45",
+    "   **   ~~~   **  ...Water flow rate ratio passed to the model = 0.75000",
+    "   **   ~~~   **  ...Water flow rate ratios outside model boundaries may not adversely affect tower performance.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Water flow rate ratio is outside model boundaries at 0.75.",
+    "   **   ~~~   **  ...Valid range = 0.75 to 1.25. Occurrence info = RUN PERIOD 1, 01/01 08:10 - 08:15",
+    "   **   ~~~   **  ...Water flow rate ratio passed to the model = 0.75000",
+    "   **   ~~~   **  ...Water flow rate ratios outside model boundaries may not adversely affect tower performance.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Water flow rate ratio is outside model boundaries at 0.75.",
+    "   **   ~~~   **  ...Valid range = 0.75 to 1.25. Occurrence info = RUN PERIOD 1, 01/01 12:00 - 12:04",
+    "   **   ~~~   **  ...Water flow rate ratio passed to the model = 0.75000",
+    "   **   ~~~   **  ...Water flow rate ratios outside model boundaries may not adversely affect tower performance.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Water flow rate ratio is outside model boundaries at 0.75.",
+    "   **   ~~~   **  ...Valid range = 0.75 to 1.25. Occurrence info = RUN PERIOD 1, 01/01 12:04 - 12:08",
+    "   **   ~~~   **  ...Water flow rate ratio passed to the model = 0.75000",
+    "   **   ~~~   **  ...Water flow rate ratios outside model boundaries may not adversely affect tower performance.",
+    "   ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Tower range temperature is outside model boundaries at 0.83.",
+    "   **   ~~~   **  ...Valid range = 1.11 to 11.11. Occurrence info = RUN PERIOD 1, 01/02 22:00 - 22:15",
+    "   **   ~~~   **  ...Tower range temperature passed to the model = 0.82937",
+    "   **   ~~~   **  ...Range temperatures outside model boundaries may not adversely affect tower performance.",
+    "   **   ~~~   **  ...This is not an unexpected occurrence when simulating actual conditions.",
     "   ************* Simulation Error Summary *************",
     "   ************* There are 2 unused schedules in input.",
     "   ************* There are 2 unused week schedules in input.",
@@ -119,107 +114,34 @@
     "   ************* ===== Recurring Error Summary =====",
     "   ************* The following recurring error messages occurred.",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 1\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 787 total times;",
+    "   *************  ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Cooling tower air flow rate ratio calculation failed error continues.",
+    "   *************  **   ~~~   **   This error occurred 14269 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-17.25 [C]",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 1\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 1963 total times;",
+    "   *************  ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Tower approach temperature is out of range error continues...",
+    "   *************  **   ~~~   **   This error occurred 5365 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.996165  Min=-3.820808",
+    "   *************  **   ~~~   **   Max=29.19826  Min=11.123998",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 4\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 591 total times;",
+    "   *************  ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Inlet air wet-bulb temperature is out of range error continues...",
+    "   *************  **   ~~~   **   This error occurred 10112 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-17.2 [C]",
+    "   *************  **   ~~~   **   Max=26.940529  Min=-23.19826",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 4\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 1483 total times;",
+    "   *************  ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Water flow rate ratio is out of range error continues...",
+    "   *************  **   ~~~   **   This error occurred 10251 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.999918  Min=-3.256369",
+    "   *************  **   ~~~   **   Max=0.75  Min=0.748856",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 6\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 926 total times;",
+    "   *************  ** Warning ** CoolingTower:VariableSpeed \"COOLING TOWER VARIABLE SPEED 1\" - Tower range temperature is out of range error continues...",
+    "   *************  **   ~~~   **   This error occurred 4901 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.99764  Min=-4.899012",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 2\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 67 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-0.1 [C]  Min=-12.8 [C]",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 2\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 519 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.998803  Min=-3.242895",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 8\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 443 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.999966  Min=-1.926363",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 10\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 334 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.984168  Min=-6.901946",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 3\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 580 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.991132  Min=-3.072608",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 5\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 492 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.995135  Min=-2.132579",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 8\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 41 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-0.1 [C]  Min=-6.1 [C]",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 6\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 17 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-0.25 [C]  Min=-2.2 [C]",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 3\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 41 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-7.25 [C]",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 7\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 103 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.998992  Min=-0.671869",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 9\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 91 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.989539  Min=3.510723E-002",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 5\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 19 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-5.025 [C]",
+    "   *************  **   ~~~   **   Max=1.11108  Min=6.754133E-003",
     "   *************",
     "   *************",
     "   ************* ===== Final Error Summary =====",
@@ -230,8 +152,8 @@
     "   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).",
     "   *************",
     "   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.",
-    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 9 Warning; 0 Severe Errors.",
-    "   ************* EnergyPlus Completed Successfully-- 8509 Warning; 0 Severe Errors; "
+    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 19 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Completed Successfully-- 44933 Warning; 0 Severe Errors; "
   ],
   "seed_file": "in.osm",
   "steps": [
@@ -353,12 +275,12 @@
           {
             "name": "total_site_energy",
             "units": "kBtu",
-            "value": 7163525.97
+            "value": 9173078.35
           },
           {
             "name": "net_site_energy",
             "units": "kBtu",
-            "value": 7163525.97
+            "value": 9173078.35
           },
           {
             "name": "total_building_area",
@@ -368,32 +290,32 @@
           {
             "name": "total_site_eui",
             "units": "kBtu/ft^2",
-            "value": 66.55
+            "value": 85.22
           },
           {
             "name": "eui",
             "units": "kBtu/ft^2",
-            "value": 66.55
+            "value": 85.22
           },
           {
             "name": "unmet_hours_during_heating",
             "units": "hr",
-            "value": 0
+            "value": 74.75
           },
           {
             "name": "unmet_hours_during_cooling",
             "units": "hr",
-            "value": 7.75
+            "value": 0
           },
           {
             "name": "unmet_hours_during_occupied_heating",
             "units": "hr",
-            "value": 0
+            "value": 12.5
           },
           {
             "name": "unmet_hours_during_occupied_cooling",
             "units": "hr",
-            "value": 7.75
+            "value": 0
           },
           {
             "name": "unmet_hours_tolerance_heating",
@@ -408,12 +330,12 @@
           {
             "name": "end_use_heating",
             "units": "kBtu",
-            "value": 4343296.13
+            "value": 5640061.6
           },
           {
             "name": "end_use_cooling",
             "units": "kBtu",
-            "value": 236650.98
+            "value": 692683.71
           },
           {
             "name": "end_use_interior_lighting",
@@ -438,17 +360,17 @@
           {
             "name": "end_use_fans",
             "units": "kBtu",
-            "value": 479074.16
+            "value": 80735.06
           },
           {
             "name": "end_use_pumps",
             "units": "kBtu",
-            "value": 15269.33
+            "value": 429958.28
           },
           {
             "name": "end_use_heat_rejection",
             "units": "kBtu",
-            "value": 0
+            "value": 240413.81
           },
           {
             "name": "end_use_humidification",
@@ -478,12 +400,12 @@
           {
             "name": "fuel_electricity",
             "units": "kBtu",
-            "value": 2820229.84
+            "value": 3533016.75
           },
           {
             "name": "fuel_natural_gas",
             "units": "kBtu",
-            "value": 4343296.13
+            "value": 5640061.6
           },
           {
             "name": "fuel_additional_fuel",
@@ -508,7 +430,7 @@
           {
             "name": "end_use_electricity_cooling",
             "units": "kWh",
-            "value": 69355.56
+            "value": 203005.56
           },
           {
             "name": "end_use_electricity_interior_lighting",
@@ -533,17 +455,17 @@
           {
             "name": "end_use_electricity_fans",
             "units": "kWh",
-            "value": 140402.78
+            "value": 23661.11
           },
           {
             "name": "end_use_electricity_pumps",
             "units": "kWh",
-            "value": 4475
+            "value": 126008.33
           },
           {
             "name": "end_use_electricity_heat_rejection",
             "units": "kWh",
-            "value": 0
+            "value": 70458.33
           },
           {
             "name": "end_use_electricity_humidification",
@@ -573,7 +495,7 @@
           {
             "name": "end_use_natural_gas_heating",
             "units": "therms",
-            "value": 43441.34
+            "value": 56411.5
           },
           {
             "name": "end_use_natural_gas_cooling",
@@ -648,7 +570,7 @@
           {
             "name": "electricity_cooling_ip",
             "units": "kWh",
-            "value": 69355.39
+            "value": 203005.42
           },
           {
             "name": "electricity_interior_lighting_ip",
@@ -673,17 +595,17 @@
           {
             "name": "electricity_fans_ip",
             "units": "kWh",
-            "value": 140401.36
+            "value": 23659.77
           },
           {
             "name": "electricity_pumps_ip",
             "units": "kWh",
-            "value": 4476.13
+            "value": 126008.17
           },
           {
             "name": "electricity_heat_rejection_ip",
             "units": "kWh",
-            "value": 0
+            "value": 70457.45
           },
           {
             "name": "electricity_humidification_ip",
@@ -713,12 +635,12 @@
           {
             "name": "electricity_ip",
             "units": "kWh",
-            "value": 826527.16
+            "value": 1035425.08
           },
           {
             "name": "natural_gas_heating_ip",
             "units": "MBtu",
-            "value": 4343.29
+            "value": 5640.06
           },
           {
             "name": "natural_gas_cooling_ip",
@@ -788,7 +710,7 @@
           {
             "name": "natural_gas_ip",
             "units": "MBtu",
-            "value": 4343.29
+            "value": 5640.06
           },
           {
             "name": "additional_fuel_heating_ip",
@@ -1133,7 +1055,7 @@
           {
             "name": "exterior_lighting_total_consumption",
             "units": "kWh",
-            "value": 2099422.22
+            "value": 2688363.89
           },
           {
             "name": "inflation_approach",
@@ -1147,7 +1069,7 @@
           {
             "name": "annual_peak_electric_demand",
             "units": "kW",
-            "value": 353.61
+            "value": 308.08
           },
           {
             "name": "first_year_capital_cost",

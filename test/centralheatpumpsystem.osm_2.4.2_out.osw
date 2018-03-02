@@ -4,10 +4,10 @@
   "eplusout_err": [
     "Program Version,EnergyPlus, Version 8.8.0-7c3bbe4830, IDD_Version 8.8.0",
     "   ************* Beginning Zone Sizing Calculations",
-    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 10\", Blank Schedule Type Limits Name input -- will not be validated.",
-    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 11\", Blank Schedule Type Limits Name input -- will not be validated.",
-    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 12\", Blank Schedule Type Limits Name input -- will not be validated.",
-    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 13\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 2\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 3\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 4\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 5\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** GetHTSurfaceData: Surfaces with interface to Ground found but no \"Ground Temperatures\" were input.",
@@ -15,17 +15,55 @@
     "   **   ~~~   ** Defaults, constant throughout the year of (18.0) will be used.",
     "   ** Warning ** CheckUsedConstructions: There are 8 nominally unused constructions in input.",
     "   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;",
-    "   ** Warning ** WaterHeater:Stratified = WATER HEATER STRATIFIED 1:  More Additional Loss Coefficients were entered than the number of nodes; extra coefficients will not be used",
     "   ************* Beginning System Sizing Calculations",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = STORY 1 CORE THERMAL ZONE ATU VAV REHEAT",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = STORY 1 EAST PERIMETER THERMAL ZONE ATU VAV REHEAT",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = STORY 1 NORTH PERIMETER THERMAL ZONE ATU VAV REHEAT",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = STORY 1 SOUTH PERIMETER THERMAL ZONE ATU VAV REHEAT",
+    "   ** Warning ** Since Zone Minimum Air Flow Input Method = CONSTANT, input for Fixed Minimum Air Flow Rate will be ignored.",
+    "   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = STORY 1 WEST PERIMETER THERMAL ZONE ATU VAV REHEAT",
     "   ************* Beginning Plant Sizing Calculations",
-    "   ** Warning ** SizePlantLoop: Calculated Plant Sizing Design Volume Flow Rate=[0.00] is too small. Set to 0.0",
-    "   **   ~~~   ** ..occurs for PlantLoop=PLANT LOOP 1",
-    "   ** Warning ** SizePump: Calculated Pump Nominal Volume Flow Rate=[0.00] is too small. Set to 0.0",
-    "   **   ~~~   ** ..occurs for Pump=PUMP CONSTANT SPEED 1",
-    "   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=PUMP CONSTANT SPEED 1",
-    "   ** Warning ** Check input. Pump nominal flow rate is set or calculated = 0, for pump=PUMP CONSTANT SPEED 1",
+    "   ** Warning ** Capacity ratio as a function of temperature curve output is not equal to 1.0",
+    "   **   ~~~   ** (+ or - 10%) at reference conditions for ChillerHeaterPerformance:Electric:EIR= CHILLER HEATER PERFORMANCE ELECTRIC EIR 1",
+    "   **   ~~~   ** Curve output at reference conditions = 1.202",
+    "   ** Warning ** Energy input ratio as a function of temperature curve output is not equal to 1.0",
+    "   **   ~~~   ** (+ or - 10%) at reference conditions for ChillerHeaterPerformance:Electric:EIR= CHILLER HEATER PERFORMANCE ELECTRIC EIR 1",
+    "   **   ~~~   ** Curve output at reference conditions = 0.656",
+    "   ** Warning ** Capacity ratio as a function of temperature curve output is not equal to 1.0",
+    "   **   ~~~   ** (+ or - 10%) at reference conditions for ChillerHeaterPerformance:Electric:EIR= CHILLER HEATER PERFORMANCE ELECTRIC EIR 2",
+    "   **   ~~~   ** Curve output at reference conditions = 1.202",
+    "   ** Warning ** Energy input ratio as a function of temperature curve output is not equal to 1.0",
+    "   **   ~~~   ** (+ or - 10%) at reference conditions for ChillerHeaterPerformance:Electric:EIR= CHILLER HEATER PERFORMANCE ELECTRIC EIR 2",
+    "   **   ~~~   ** Curve output at reference conditions = 0.656",
+    "   ** Warning ** Missing temperature setpoint on cooling side for CentralHeatPumpSystem named CENTRALHEATPUMPSYSTEM",
+    "   **   ~~~   **   A temperature setpoint is needed at the outlet node of a CentralHeatPumpSystem, use a SetpointManager",
+    "   **   ~~~   **   The overall loop setpoint will be assumed for CentralHeatPumpSystem. The simulation continues ... ",
+    "   ** Warning ** Missing temperature setpoint on heating side for CentralHeatPumpSystem named CENTRALHEATPUMPSYSTEM",
+    "   **   ~~~   **   A temperature setpoint is needed at the outlet node of a CentralHeatPumpSystem, use a SetpointManager",
+    "   **   ~~~   **   The overall loop setpoint will be assumed for CentralHeatPumpSystem. The simulation continues ... ",
+    "   ** Severe  ** CalcChillerHeaterModel: ChillerHeaterPerformance:Electric:EIR=\"CHILLER HEATER PERFORMANCE ELECTRIC EIR 1\", DeltaTemp < 0",
+    "   **   ~~~   **  Reference Simultaneous Cooling-Heating Mode Leaving Condenser Water Temperature [60.0]",
+    "   **   ~~~   ** is below condenser inlet temperature of [60.1].",
+    "   **   ~~~   **  During Warmup, Environment=CHICAGO OHARE INTL AP ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:15",
+    "   **   ~~~   **  Reset reference temperature to one greater than the inlet temperature ",
+    "   ** Severe  ** CalcChillerHeaterModel: ChillerHeaterPerformance:Electric:EIR=\"CHILLER HEATER PERFORMANCE ELECTRIC EIR 2\", DeltaTemp < 0",
+    "   **   ~~~   **  Reference Simultaneous Cooling-Heating Mode Leaving Condenser Water Temperature [60.0]",
+    "   **   ~~~   ** is below condenser inlet temperature of [60.1].",
+    "   **   ~~~   **  During Warmup, Environment=CHICAGO OHARE INTL AP ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:15",
+    "   **   ~~~   **  Reset reference temperature to one greater than the inlet temperature ",
+    "   ** Severe  ** CalcChillerHeaterModel: ChillerHeaterPerformance:Electric:EIR=\"CHILLER HEATER PERFORMANCE ELECTRIC EIR 2\", DeltaTemp < 0",
+    "   **   ~~~   **  Reference Simultaneous Cooling-Heating Mode Leaving Condenser Water Temperature [60.0]",
+    "   **   ~~~   ** is below condenser inlet temperature of [60.1].",
+    "   **   ~~~   **  During Warmup, Environment=CHICAGO OHARE INTL AP ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:15",
+    "   **   ~~~   **  Reset reference temperature to one greater than the inlet temperature ",
+    "   ** Warning ** Output:Meter: invalid Key Name=\"GAS:FACILITY\" - not found.",
     "   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTCOOLING:FACILITY\" - not found.",
     "   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTHEATING:FACILITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"GAS:FACILITY\" - not found.",
     "   ** Warning ** Output:Meter:MeterFileOnly requested for \"Electricity:Facility\" (TimeStep), already on \"Output:Meter\". Will report to both eplusout.eso and eplusout.mtr",
     "   ************* Testing Individual Branch Integrity",
     "   ************* All Branches passed integrity testing",
@@ -35,47 +73,36 @@
     "   ************* All Return Air Paths passed integrity testing",
     "   ************* No node connection errors were found.",
     "   ************* Beginning Simulation",
+    "   ** Warning ** GetDensityGlycol: Temperature is out of range (too low) for fluid [WATER] density **",
+    "   **   ~~~   ** ..Called From:CalcChillerHeaterModel,Temperature=[-1.23], supplied data range=[0.00,100.00]",
+    "   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/01 00:00 - 00:15",
+    "   ** Warning ** GetSpecificHeatGlycol: Temperature is out of range (too low) for fluid [WATER] specific heat supplied values **",
+    "   **   ~~~   ** ..Called From:CalcElectricEIRChillerModel,Temperature=[-1.23], supplied data range=[0.00,125.00]",
+    "   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/01 00:00 - 00:15",
+    "   ** Warning ** CoolingTower:SingleSpeed \"CNDW LOOP COOLINGTOWERSINGLESPEED\"",
+    "   **   ~~~   ** Cooling tower water outlet temperature (-1.34 C) is below the specified minimum condenser loop temp of 0.00 C",
+    "   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/01 00:00 - 00:15",
+    "   ** Warning ** GetDensityGlycol: Temperature is out of range (too high) for fluid [WATER] density **",
+    "   **   ~~~   ** ..Called From:NodeReportingCalc:HW LOOP SUPPLY SIDE CENTRALHEATPUMPSYSTEM OUTLET NODE,Temperature=[120.00], supplied data range=[0.00,100.00]",
+    "   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/01 00:00 - 00:05",
     "   ** Warning ** Processing Monthly Tabular Reports: Variable names not valid for this simulation",
     "   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual variables.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 3\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -6.28",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 10:00 - 10:15",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 3\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -2.33 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 10:00 - 10:15",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 22.125 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 2\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -2.93",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/14 14:30 - 14:45",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 2\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -2.06 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/14 14:30 - 14:45",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 22.352 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 4\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -6.14E-002 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/17 09:08 - 09:15",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 22.856 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 1\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -0.14 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/21 13:08 - 13:15",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 20.928 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 4\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -6.15",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 02/20 08:30 - 08:45",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 5\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = 0.38 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 03/10 10:30 - 10:45",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 23.585 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
+    "   ** Warning ** GetSpecificHeatGlycol: Temperature is out of range (too high) for fluid [WATER] specific heat **",
+    "   **   ~~~   ** ..Called From:PlantLoopSolver::UpdateAnyLoopDemandAlterations,Temperature=[182.87], supplied data range=[0.00,125.00]",
+    "   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/01 20:30 - 20:38",
+    "   ** Severe  ** FindRootSimpleController: Controller error for controller = \"CONTROLLER WATER COIL 1\"",
+    "   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/08 07:30 - 07:35",
+    "   **   ~~~   **   Controller function is inconsistent with user specified controller action = Normal action",
+    "   **   ~~~   **   Actuator will be set to maximum action",
+    "   **   ~~~   ** Controller control type=Temperature",
+    "   **   ~~~   ** Controller temperature setpoint = 12.10 [C]",
+    "   **   ~~~   ** Controller sensed temperature = 0.73 [C]",
+    "   **   ~~~   ** Controller actuator mass flow rate set to 3.70 [kg/s]",
+    "   **   ~~~   ** Controller actuator temperature = 0.65 [C]",
+    "   **   ~~~   **   Note: Chilled water coils should be reverse action and the entering chilled",
+    "   **   ~~~   **         water temperature (controller actuator temperature) should be below the setpoint temperature",
+    "   **   ~~~   **   Note: Hot water coils should be normal action and the entering hot",
+    "   **   ~~~   **         water temperature (controller actuator temperature) should be above the setpoint temperature",
     "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-ELECTRICITY\" has no energy cost. ",
     "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
     "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-DISTILLATE OIL\" has no energy cost. ",
@@ -87,61 +114,78 @@
     "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-COAL\" has no energy cost. ",
     "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
     "   ************* Simulation Error Summary *************",
-    "   ************* There are 6 unused schedules in input.",
-    "   ************* There are 6 unused week schedules in input.",
-    "   ************* There are 10 unused day schedules in input.",
+    "   ************* There are 2 unused schedules in input.",
+    "   ************* There are 2 unused week schedules in input.",
+    "   ************* There are 6 unused day schedules in input.",
     "   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.",
     "   *************",
     "   ************* ===== Recurring Error Summary =====",
     "   ************* The following recurring error messages occurred.",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 3\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 409 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  ** Severe  ** ChillerHeaterPerformance:Electric:EIR=\"CHILLER HEATER PERFORMANCE ELECTRIC EIR 1\": Reference temperature problems continue.",
+    "   *************  **   ~~~   **   This error occurred 63404 total times;",
+    "   *************  **   ~~~   **   during Warmup 314 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-16.7 [C]",
+    "   *************  **   ~~~   **   Max=-7.879830E-006 deltaC  Min=-6.999461 deltaC",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 3\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 1280 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  ** Severe  ** ChillerHeaterPerformance:Electric:EIR=\"CHILLER HEATER PERFORMANCE ELECTRIC EIR 2\": Reference temperature problems continue.",
+    "   *************  **   ~~~   **   This error occurred 63404 total times;",
+    "   *************  **   ~~~   **   during Warmup 314 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.997757  Min=-3.029913",
+    "   *************  **   ~~~   **   Max=-7.879830E-006 deltaC  Min=-6.999461 deltaC",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 2\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 28 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  ** Severe  ** ChillerHeaterPerformance:Electric:EIR=\"CHILLER HEATER PERFORMANCE ELECTRIC EIR 2\": Reference temperature problems continue.",
+    "   *************  **   ~~~   **   This error occurred 63404 total times;",
+    "   *************  **   ~~~   **   during Warmup 314 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-0.1 [C]  Min=-5.25 [C]",
+    "   *************  **   ~~~   **   Max=-7.879830E-006 deltaC  Min=-6.999461 deltaC",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 2\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 497 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  ** Warning ** Plant loop exceeding upper temperature limit, PlantLoop=\"HW LOOP\"",
+    "   *************  **   ~~~   **   This error occurred 13095 total times;",
+    "   *************  **   ~~~   **   during Warmup 633 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.99432  Min=-2.100761",
+    "   *************  **   ~~~   **   Max=186.864867",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 4\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 478 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  ** Warning ** Plant loop falling below lower temperature limit, PlantLoop=\"CNDW LOOP\"",
+    "   *************  **   ~~~   **   This error occurred 21404 total times;",
+    "   *************  **   ~~~   **   during Warmup 1806 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.997184  Min=-2.330891",
+    "   *************  **   ~~~   **   Min=-19.192735",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 1\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 255 total times;",
+    "   *************  ** Warning ** GetDensityGlycol: Temperature out of range (too low) for fluid [WATER] density **",
+    "   *************  **   ~~~   **   This error occurred 1590324 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.987208  Min=-3.382728",
+    "   *************  **   ~~~   **   Max=-9.247678E-006 {C}  Min=-19.192735 {C}",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 4\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 18 total times;",
+    "   *************  ** Warning ** GetSpecificHeatGlycol: Temperature out of range (too low) for fluid [WATER] specific heat **",
+    "   *************  **   ~~~   **   This error occurred 2499743 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-6.15 [C]",
+    "   *************  **   ~~~   **   Max=-6.431976E-005 {C}  Min=-19.192735 {C}",
     "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 5\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 97 total times;",
+    "   *************  ** Warning ** CoolingTower:SingleSpeed \"CNDW LOOP COOLINGTOWERSINGLESPEED\" Cooling tower water outlet temperature is below the specified minimum condenser loop temp error continues...",
+    "   *************  **   ~~~   **   This error occurred 94687 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.994459  Min=-0.371155",
+    "   *************  **   ~~~   **   Max=-9.471268E-005  Min=-19.192735",
+    "   *************",
+    "   *************  ** Warning ** GetDensityGlycol: Temperature out of range (too high) for fluid [WATER] density **",
+    "   *************  **   ~~~   **   This error occurred 145545 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=186.864867 {C}  Min=100.000195 {C}",
+    "   *************",
+    "   *************  ** Warning ** GetSpecificHeatGlycol: Temperature out of range (too high) for fluid [WATER] specific heat **",
+    "   *************  **   ~~~   **   This error occurred 163358 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
+    "   *************  **   ~~~   **   Max=186.988309 {C}  Min=125.003702 {C}",
+    "   *************",
+    "   *************  ** Severe  ** FindRootSimpleController: Previous controller action error continues for controller = CONTROLLER WATER COIL 1",
+    "   *************  **   ~~~   **   This error occurred 4054 total times;",
+    "   *************  **   ~~~   **   during Warmup 0 times;",
+    "   *************  **   ~~~   **   during Sizing 0 times.",
     "   *************",
     "   *************",
     "   ************* ===== Final Error Summary =====",
@@ -152,8 +196,8 @@
     "   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).",
     "   *************",
     "   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.",
-    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 9 Warning; 0 Severe Errors.",
-    "   ************* EnergyPlus Completed Successfully-- 3084 Warning; 0 Severe Errors; "
+    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 13 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Completed Successfully-- 4528187 Warning; 194267 Severe Errors; "
   ],
   "seed_file": "in.osm",
   "steps": [
@@ -275,12 +319,12 @@
           {
             "name": "total_site_energy",
             "units": "kBtu",
-            "value": 4528850.29
+            "value": 7450344.91
           },
           {
             "name": "net_site_energy",
             "units": "kBtu",
-            "value": 4528850.29
+            "value": 7450344.91
           },
           {
             "name": "total_building_area",
@@ -290,17 +334,17 @@
           {
             "name": "total_site_eui",
             "units": "kBtu/ft^2",
-            "value": 84.15
+            "value": 138.43
           },
           {
             "name": "eui",
             "units": "kBtu/ft^2",
-            "value": 84.15
+            "value": 138.43
           },
           {
             "name": "unmet_hours_during_heating",
             "units": "hr",
-            "value": 0
+            "value": 3464.75
           },
           {
             "name": "unmet_hours_during_cooling",
@@ -310,7 +354,7 @@
           {
             "name": "unmet_hours_during_occupied_heating",
             "units": "hr",
-            "value": 0
+            "value": 1771
           },
           {
             "name": "unmet_hours_during_occupied_cooling",
@@ -330,12 +374,12 @@
           {
             "name": "end_use_heating",
             "units": "kBtu",
-            "value": 3079078.7
+            "value": 4530518.44
           },
           {
             "name": "end_use_cooling",
             "units": "kBtu",
-            "value": 65333.03
+            "value": 1041252.93
           },
           {
             "name": "end_use_interior_lighting",
@@ -360,17 +404,17 @@
           {
             "name": "end_use_fans",
             "units": "kBtu",
-            "value": 338617.14
+            "value": 125595.25
           },
           {
             "name": "end_use_pumps",
             "units": "kBtu",
-            "value": 0
+            "value": 604688.37
           },
           {
             "name": "end_use_heat_rejection",
             "units": "kBtu",
-            "value": 0
+            "value": 103681.71
           },
           {
             "name": "end_use_humidification",
@@ -385,7 +429,7 @@
           {
             "name": "end_use_water_systems",
             "units": "kBtu",
-            "value": 1203.73
+            "value": 0
           },
           {
             "name": "end_use_refrigeration",
@@ -400,12 +444,12 @@
           {
             "name": "fuel_electricity",
             "units": "kBtu",
-            "value": 1449771.59
+            "value": 7450344.91
           },
           {
             "name": "fuel_natural_gas",
             "units": "kBtu",
-            "value": 3079078.7
+            "value": 0
           },
           {
             "name": "fuel_additional_fuel",
@@ -425,12 +469,12 @@
           {
             "name": "end_use_electricity_heating",
             "units": "kWh",
-            "value": 0
+            "value": 1327763.89
           },
           {
             "name": "end_use_electricity_cooling",
             "units": "kWh",
-            "value": 19147.22
+            "value": 305161.11
           },
           {
             "name": "end_use_electricity_interior_lighting",
@@ -455,17 +499,17 @@
           {
             "name": "end_use_electricity_fans",
             "units": "kWh",
-            "value": 99238.89
+            "value": 36808.33
           },
           {
             "name": "end_use_electricity_pumps",
             "units": "kWh",
-            "value": 0
+            "value": 177216.67
           },
           {
             "name": "end_use_electricity_heat_rejection",
             "units": "kWh",
-            "value": 0
+            "value": 30386.11
           },
           {
             "name": "end_use_electricity_humidification",
@@ -480,7 +524,7 @@
           {
             "name": "end_use_electricity_water_systems",
             "units": "kWh",
-            "value": 352.78
+            "value": 0
           },
           {
             "name": "end_use_electricity_refrigeration",
@@ -495,7 +539,7 @@
           {
             "name": "end_use_natural_gas_heating",
             "units": "therms",
-            "value": 30796.73
+            "value": 0
           },
           {
             "name": "end_use_natural_gas_cooling",
@@ -565,12 +609,12 @@
           {
             "name": "electricity_heating_ip",
             "units": "kWh",
-            "value": 0
+            "value": 1327762.5
           },
           {
             "name": "electricity_cooling_ip",
             "units": "kWh",
-            "value": 19146.95
+            "value": 305159.69
           },
           {
             "name": "electricity_interior_lighting_ip",
@@ -595,17 +639,17 @@
           {
             "name": "electricity_fans_ip",
             "units": "kWh",
-            "value": 99238.69
+            "value": 36808.6
           },
           {
             "name": "electricity_pumps_ip",
             "units": "kWh",
-            "value": 0
+            "value": 177217.31
           },
           {
             "name": "electricity_heat_rejection_ip",
             "units": "kWh",
-            "value": 0
+            "value": 30386.06
           },
           {
             "name": "electricity_humidification_ip",
@@ -620,7 +664,7 @@
           {
             "name": "electricity_water_systems_ip",
             "units": "kWh",
-            "value": 353.52
+            "value": 0
           },
           {
             "name": "electricity_refrigeration_ip",
@@ -635,12 +679,12 @@
           {
             "name": "electricity_ip",
             "units": "kWh",
-            "value": 424886.28
+            "value": 2183481.26
           },
           {
             "name": "natural_gas_heating_ip",
             "units": "MBtu",
-            "value": 3079.07
+            "value": 0
           },
           {
             "name": "natural_gas_cooling_ip",
@@ -710,7 +754,7 @@
           {
             "name": "natural_gas_ip",
             "units": "MBtu",
-            "value": 3079.07
+            "value": 0
           },
           {
             "name": "additional_fuel_heating_ip",
@@ -1020,12 +1064,12 @@
           {
             "name": "ashrae_189_1_2009_ext_wall_steel_frame_climate_zone_4_8",
             "units": "ft^2",
-            "value": 7750.02
+            "value": 5812.51
           },
           {
             "name": "ashrae_189_1_2009_ext_window_climate_zone_4_5",
             "units": "ft^2",
-            "value": 5166.68
+            "value": 3875.01
           },
           {
             "name": "gross_window_wall_ratio",
@@ -1055,12 +1099,7 @@
           {
             "name": "exterior_lighting_total_consumption",
             "units": "kWh",
-            "value": 1327275
-          },
-          {
-            "name": "water_use_equipment_1",
-            "units": "gal/min",
-            "value": 0
+            "value": 2183480.56
           },
           {
             "name": "inflation_approach",
@@ -1074,7 +1113,7 @@
           {
             "name": "annual_peak_electric_demand",
             "units": "kW",
-            "value": 172.13
+            "value": 1281.2
           },
           {
             "name": "first_year_capital_cost",
