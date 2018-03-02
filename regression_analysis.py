@@ -787,63 +787,56 @@ def update_and_upload():
     return site_kbtu
 
 
-def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
-                                display_threshold=0.001,
-                                show_plot=True, savefig=False,
-                                figname=None,
-                                figsize=None):
+def full_extent(ax, pad=0.0):
+    """Get the full extent of an axes, including axes labels, tick labels, and
+    titles."""
+    # For text objects, we need to draw the figure first, otherwise the extents
+    # are undefined.
+    ax.figure.canvas.draw()
+    items = ax.get_xticklabels() + ax.get_yticklabels()
+    # items += [ax, ax.title, ax.xaxis.label, ax.yaxis.label]
+    items += [ax, ax.title]
+    bbox = mpl.transforms.Bbox.union([item.get_window_extent()
+                                      for item in items])
+
+    return bbox.expanded(1.0 + pad, 1.0 + pad)
+
+
+def heatmap_sitekbtu_pct_change_on_ax(toplot, ax, display_threshold,
+                                      repeat_x_on_top=False):
     """
-    Plots a heatmap to show difference in site kbtu from one version to the
-    next for each test. It has options to display more or less variations
-    to emphasis meaningful differences
+    Plots the heatmap on a given axis
+    Typically this is a helper called from `heatmap_sitekbtu_pct_change`
+    so see this function too.
 
-    Args
+    The principle is to plot 3 seaborn heatmap atop each other so we can give
+    different colors based on the amount of variation experienced based on the
+    display_threshold:
+        * if above: plot with colorscale
+        * if below but non zero: plot in grey italic
+        * if zero: plot in green
+        (if missing: white)
+
+    Args:
     -----
-    * site_kbtu_change (pd.DataFrame): typically gotten from
-    `df_files.applymap(regression_analysis.parse_total_site_energy)`
+    * toplot (pd.DataFrame): the data to be plotted as a heatmap. Typically
+    this is a subset of site_kbtu_change
 
-    * row_threshold (float): only display tests where there is at least one
-    cell that has a change greater than this. This value is a percentage,
-    eg: 0.005 means at least 0.5% change
+    * ax (AxesSubplot): the matplotlib ax on which to plot
 
     * display_threshold (float): apply the colorscale to the cells that are
     above this threshold, otherwise they get greyed out
 
-    * savefig (boolean): whether to save the figure or not.
-    * figname (str): if savefig is true, you can force a .png name
-        if None, defaults to 'site_kbtu_pct_change.png'.
-        You must pass the .png with it.
+    * repeat_x_on_top (bool): the OS/Version labels on the xaxis will be at the
+    bottom anyways, but if this is True, it is repeated above the plot too.
 
-    * figsize (tuple, optional): the figure size, if None it is calculated
-    Returns:
-    --------
-    None, draws the plot
     """
+    # Same as: fmt = lambda x,pos: '{:.1%}'.format(x)
+    def fmt(x, pos): return '{:.1%}'.format(x)
 
     # Prepare two custom cmaps with one single color
     grey_cmap = mpl.colors.ListedColormap('#f7f7f7')
     green_cmap = mpl.colors.ListedColormap('#f0f7d9')
-
-    site_kbtu_change = site_kbtu.pct_change(axis=1)
-    toplot = site_kbtu_change[(site_kbtu_change.abs() >
-                               row_threshold).any(axis=1)]
-    toplot.index = [".".join(x) for x in toplot.index]
-    toplot.columns = ["\n".join(x) for x in toplot.columns]
-    toplot.columns.names = ['E+\nOS']
-
-    if figsize is None:
-        w = 16
-        h = w * toplot.shape[0] / (3 * toplot.shape[1])
-    else:
-        w = figsize[0]
-        h = figsize[1]
-    fig, ax = plt.subplots(figsize=(w, h))
-
-    # Reserve 1.5 inches at bottom for explanation
-    fig.subplots_adjust(bottom=1.5/h)
-
-    # Same as: fmt = lambda x,pos: '{:.1%}'.format(x)
-    def fmt(x, pos): return '{:.1%}'.format(x)
 
     # Plot with colors, for those that are above the display_threshold
     sns.heatmap(toplot.abs(), mask=toplot.abs() <= display_threshold,
@@ -871,12 +864,101 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
 
     # If the format is more high than wide (based on 16/9), display xticks on
     # top too.
-    if h > 9:
+    if repeat_x_on_top:
         ax.xaxis.set_tick_params(labeltop='on')
 
+
+def dataframe_row_chunks(df, n):
+    """Yield successive n-sized chunks (rows) from a dataframe."""
+    for i in range(0, len(df), n):
+        yield df.iloc[i:i + n]
+
+
+def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
+                                display_threshold=0.001,
+                                show_plot=True, savefig=False,
+                                figname=None,
+                                figsize=None, save_indiv_figs_for_ax=False):
+    """
+    Plots a heatmap to show difference in site kbtu from one version to the
+    next for each test. It has options to display more or less variations
+    to emphasis meaningful differences.
+    If the figure becomes too big, it is broken in chunks of maximum 40 rows
+    so we can repeat the version labels every so often so its readable,
+    but it saves a single figure
+
+    Args
+    -----
+    * site_kbtu_change (pd.DataFrame): typically gotten from
+    `df_files.applymap(regression_analysis.parse_total_site_energy)`
+
+    * row_threshold (float): only display tests where there is at least one
+    cell that has a change greater than this. This value is a percentage,
+    eg: 0.005 means at least 0.5% change
+
+    * display_threshold (float): apply the colorscale to the cells that are
+    above this threshold, otherwise they get greyed out
+
+    * savefig (boolean): whether to save the figure or not.
+    * figname (str): if savefig is true, you can force a .png name
+        if None, defaults to 'site_kbtu_pct_change.png'.
+        You must pass the .png with it.
+
+    * figsize (tuple, optional): the figure size, if None it is calculated
+    Returns:
+    --------
+    None, draws the plot
+    """
+
+    site_kbtu_change = site_kbtu.pct_change(axis=1)
+    g_toplot = site_kbtu_change[(site_kbtu_change.abs() >
+                                 row_threshold).any(axis=1)]
+    g_toplot.index = [".".join(x) for x in g_toplot.index]
+    g_toplot.columns = ["\n".join(x) for x in g_toplot.columns]
+    g_toplot.columns.names = ['E+\nOS']
+
+    if figsize is None:
+        w = 16
+        h = w * g_toplot.shape[0] / (3 * g_toplot.shape[1])
+    else:
+        w = figsize[0]
+        h = figsize[1]
+
+    # Maximum rows on a single axis
+    max_rows = 40
+    # Break the global toplot dataframe into chunks of 40 rows max
+    my_chunks = list(dataframe_row_chunks(g_toplot, max_rows))
+    n_chunks = len(my_chunks)
+
+    # If the figure is bigger than height=9in, we repeat the xaxis (E+/OS
+    # versions) on top as well as the bottom
+    if h > 9:
+        repeat_x_on_top = True
+    else:
+        repeat_x_on_top = False
+
+    # Create a figure with dimensions and an appropriate number of rows
+    fig, axes = plt.subplots(figsize=(w, h), nrows=n_chunks)
+    # If n_chunks is 1, we still make an array of a single axis so that
+    # indexing will work in the for loop below
+    if not isinstance(axes, np.ndarray):
+        axes = np.array([axes])
+
+    # Reserve 1.5 inches at bottom for explanation
+    fig.subplots_adjust(bottom=1.5/h)
+
+    # Plot each single chunk as a heatmap
+    for i, toplot in enumerate(my_chunks):
+        ax = axes[i]
+        heatmap_sitekbtu_pct_change_on_ax(toplot=toplot, ax=ax,
+                                      display_threshold=display_threshold,
+                                      repeat_x_on_top=repeat_x_on_top)
+
+    # Figure Annotations: The title on the top axis, and the explanation
+    # on the bottom axis
     title = "Percent difference total site kBTU from one version to the next"
 
-    ax.annotate(s=title, xy=(0.5, 1.0), xycoords='axes fraction',
+    axes[0].annotate(s=title, xy=(0.5, 1.0), xycoords='axes fraction',
                 ha='center', va='top',
                 xytext=(0, 60), textcoords='offset points',
                 weight='bold', fontsize=16)
@@ -896,19 +978,30 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     style = 'italic'
     style = None
     if annotate_in_axes_coord:
-        ax.annotate(s=ann, xy=(0.0, 0.0), xycoords='axes fraction',
+        axes[-1].annotate(s=ann, xy=(0.0, 0.0), xycoords='axes fraction',
                     ha='left', va='top',
                     xytext=(0, -80), textcoords='offset points',
                     style=style)
     else:
-        ax.annotate(s=ann, xy=(0.0, 0.0), xycoords='figure fraction',
+        axes[-1].annotate(s=ann, xy=(0.0, 0.0), xycoords='figure fraction',
                     ha='left', va='bottom', style=style)
-
     if savefig:
         if figname is None:
             figname = 'site_kbtu_pct_change.png'
         plt.savefig(figname, dpi=150, bbox_inches='tight')
         print("Saved to {}".format(os.path.abspath(figname)))
+        if save_indiv_figs_for_ax:
+            for i, ax in enumerate(axes):
+                # Save just the portion _inside_ the second axis's boundaries
+                extent = full_extent(ax).transformed(fig.dpi_scale_trans
+                                                        .inverted())
+                # Alternatively,
+                # extent = (ax.get_tightbbox(fig.canvas.renderer)
+                #             .transformed(fig.dpi_scale_trans.inverted()))
+                fname, fext = os.path.splitext(figname)
+                fig.savefig('{}_ax{}.png'.format(fname, i), dpi=150,
+                            bbox_inches=extent.expanded(1.3, 1.15))
+
     if show_plot:
         # fig.tight_layout()
         plt.show()
