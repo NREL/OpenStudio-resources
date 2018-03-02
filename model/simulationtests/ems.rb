@@ -41,6 +41,10 @@ output_var_oat = OpenStudio::Model::OutputVariable.new(output_var, model)
 oat_sensor = OpenStudio::Model::EnergyManagementSystemSensor.new(model, output_var_oat)
 oat_sensor_name = "OATdb Sensor"
 oat_sensor.setName(oat_sensor_name)
+
+# starting on OS E+ 8.9.0, it Fatals if you don't do this
+oat_sensor.setKeyName("*")
+
 #oat_sensor.setOutputVariable(output_var_oat)
 
 # Assertions for sensor setters and getters
