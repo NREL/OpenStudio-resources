@@ -35,6 +35,8 @@ $SdkVersion = OpenStudio.openStudioVersion
 $SdkLongVersion = OpenStudio::openStudioLongVersion
 $Build_Sha = $SdkLongVersion.split('.')[-1]
 $Custom_tag=''
+# TODO: move as a an ENV variable
+$Save_idf=false
 
 puts "Running for OpenStudio #{$SdkLongVersion}"
 
@@ -53,8 +55,9 @@ else
   if ENV["CUSTOMTAG"].nil?
     # Ask user if he wants to append a custom tag to the result out.osw
     # We don't do it in docker so it can just run without user input
-    prompt = ("If you want to append a custom tag to the result out.osw(s) (eg: 'Windows_run3'), enter it now,\n"\
-              "or type 'SHA' to append the build sha (#{$Build_Sha}), or leave empty if not desired\n> ")
+    prompt = ("If you want to append a custom tag to the result out.osw(s) (eg: 'Windows_run3')\n"\
+              "enter it now, or type 'SHA' to append the build sha (#{$Build_Sha}),\n"\
+              "or leave empty if not desired\n> ")
     $Custom_tag = [(print prompt), STDIN.gets.chomp][1]
   else
     $Custom_tag = ENV['CUSTOMTAG']
@@ -120,6 +123,7 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
 
   # todo, add other measures to the workflow
 
+  # Start by deleting the testruns/test_xxx directory and recreating it
   FileUtils.rm_rf(dir) if File.exists?(dir)
   FileUtils.mkdir_p(dir)
   FileUtils.cp($OswFile, osw)
@@ -216,6 +220,14 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
 
     File.open(cp_out_osw,"w") do |f|
       f.write(JSON.pretty_generate(result_osw))
+    end
+
+    if $Save_idf
+      in_idf = File.join(dir, 'run/in.idf')
+      if File.exists?(in_idf)
+        cp_in_idf = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.idf")
+        FileUtils.cp(in_idf, cp_in_idf)
+      end
     end
 
   end
