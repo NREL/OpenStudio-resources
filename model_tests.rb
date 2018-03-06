@@ -1003,6 +1003,10 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('additional_props.osm')
   end
   
+  def test_unitary_systems_airloop_and_zonehvac_rb
+    result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
+  end
+  
   # intersection tests
 
   def test_intersect_22_osm
