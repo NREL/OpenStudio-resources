@@ -81,6 +81,18 @@ Metrics/PerceivedComplexity:
   Severity: warning
 
 # ==================== Styles, Layouts, and Naming ====================
+# Need to allow indented case statements
+# Configuration parameters: IndentWhenRelativeTo, SupportedStyles, IndentOneStep.
+Layout/CaseIndentation:
+  Enabled: false
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: aligned
+  Enabled: true
+
+Naming/AccessorMethodName:
+  Enabled: true
+
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/ClassAndModuleChildren:
   Enabled: false
@@ -153,15 +165,4 @@ Style/WordArray:
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#percent-w'
   EnforcedStyle: brackets
 
-# Need to allow indented case statements
-# Configuration parameters: IndentWhenRelativeTo, SupportedStyles, IndentOneStep.
-Layout/CaseIndentation:
-  Enabled: false
-
-Layout/MultilineMethodCallIndentation:
-  EnforcedStyle: aligned
-  Enabled: true
-
-Naming/AccessorMethodName:
-  Enabled: true
 
