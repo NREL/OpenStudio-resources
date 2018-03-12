@@ -14,9 +14,6 @@ Style:
 Lint/AmbiguousOperator:
   Enabled: true
 
-Lint/BlockAlignment:
-  Enabled: true
-
 # Allow empty when branches to give
 # a space to clearly document the
 # reason that nothing is happening.
@@ -200,6 +197,9 @@ Naming/VariableNumber:
   Enabled: false
 # ==================== Layout ====================
 
+Layout/BlockAlignment:
+  Enabled: true
+
 # Need to allow indented case statements
 # Configuration parameters: IndentWhenRelativeTo, SupportedStyles, IndentOneStep.
 Layout/CaseIndentation:
@@ -208,9 +208,3 @@ Layout/CaseIndentation:
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: aligned
   Enabled: true
-
-# ==================== Performance ====================
-
-# Allow hash.each
-Performance/HashEachMethods:
-    Enabled: false  
