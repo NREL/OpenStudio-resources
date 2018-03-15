@@ -978,9 +978,31 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_afn_single_zone_nv_rb
     result = sim_test('afn_single_zone_nv.rb')
   end
-
+  
+  def test_afn_single_zone_nv_osm
+    result = sim_test('afn_single_zone_nv.osm')
+  end
+  
   def test_afn_single_zone_ac_rb
     result = sim_test('afn_single_zone_ac.rb')
+  end
+
+  def test_foundation_kiva_osm
+    result = sim_test('foundation_kiva.osm')
+  end
+    def test_foundation_kiva_rb
+    result = sim_test('foundation_kiva.rb')
+  end
+  def test_additional_props_rb
+    result = sim_test('additional_props.rb')
+  end
+  
+  def test_additional_props_osm
+    result = sim_test('additional_props.osm')
+  end
+  
+  def test_unitary_systems_airloop_and_zonehvac_rb
+    result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
   end
   
   # intersection tests
