@@ -979,9 +979,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('afn_single_zone_nv.rb')
   end
 
-  #def test_afn_single_zone_ac_rb
-  #  result = sim_test('afn_single_zone_ac.rb')
-  #end
+  def test_afn_single_zone_ac_rb
+    result = sim_test('afn_single_zone_ac.rb')
+  end
   
   # intersection tests
 
