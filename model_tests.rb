@@ -676,6 +676,15 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('airterminal_cooledbeam.rb')
   end
 
+  # TODO : add it once the next official release including this object is out
+  #def test_airterminal_fourpipebeam_osm
+  #  result = sim_test('airterminal_fourpipebeam.osm')
+  #end
+
+  def test_airterminal_fourpipebeam_rb
+    result = sim_test('airterminal_fourpipebeam.rb')
+  end
+
   def test_air_chillers_osm
     result = sim_test('air_chillers.osm')
   end
