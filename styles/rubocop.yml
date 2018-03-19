@@ -14,8 +14,11 @@ Style:
 Lint/AmbiguousOperator:
   Enabled: true
 
-Lint/BlockAlignment:
-  Enabled: true
+# Allow empty when branches to give
+# a space to clearly document the
+# reason that nothing is happening.
+Lint/EmptyWhen:
+  Enabled: false
 
 Lint/ParenthesesAsGroupedExpression:
   Enabled: true
@@ -26,8 +29,11 @@ Lint/RequireParentheses:
 Lint/UnreachableCode:
   Enabled: false
 
+# Allow variable initialization to indicate
+# what variable is going to be set by the next
+# block of code.
 Lint/UselessAssignment:
-  Enabled: true
+  Enabled: false
 
 Lint/UnusedBlockArgument:
   Description: 'Checks for unused block arguments.'
@@ -40,6 +46,7 @@ Lint/UnusedMethodArgument:
   Enabled: false
 
 # ==================== Metrics ====================
+
 Metrics/AbcSize:
   Max: 50
   Severity: warning
@@ -51,7 +58,6 @@ Metrics/BlockLength:
   Max: 50
   Severity: warning
 
-# Configuration parameters: CountComments.
 Metrics/ClassLength:
   Max: 500
   CountComments: false
@@ -61,26 +67,34 @@ Metrics/CyclomaticComplexity:
   Max: 60
   Severity: warning
 
+# Allow long lines to encourage sufficiently
+# detailed user-facing log messages.
 Metrics/LineLength:
   Max: 1200
   Severity: warning
 
-# Configuration parameters: CountComments.
 Metrics/MethodLength:
   Max: 350
   CountComments: false
   Severity: warning
 
-# Configuration parameters: CountKeywordArgs.
+Metrics/ModuleLength:
+  Max: 500
+  CountComments: false
+  Severity: warning
+
+# Longer parameter list limits for methods that
+# add HVAC systems
 Metrics/ParameterLists:
-  Max: 12
+  Max: 15
   Severity: warning
 
 Metrics/PerceivedComplexity:
   Max: 60
   Severity: warning
 
-# ==================== Styles, Layouts, and Naming ====================
+# ==================== Styles ====================
+
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/ClassAndModuleChildren:
   Enabled: false
@@ -97,22 +111,41 @@ Style/ClassVars:
 Style/ConditionalAssignment:
   Enabled: false
 
+# Documentation will be covered by YARD.
 Style/Documentation:
   Enabled: false
 
 Style/EachWithObject:
   Enabled: false
 
+# Allow for i in 0..3 loops
+Style/For:
+  Enabled: false
+
 # Configuration parameters: AllowedVariables.
 Style/GlobalVars:
   Enabled: false
 
-# Configuration parameters: MinBodyLength.
+# Disabled because in most of this codebase,
+# the current approach is more readable.
 Style/GuardClause:
   Enabled: true
 
-# Configuration parameters: MaxLineLength.
+# Allow duplication inside conditional branches to keep
+# code that does certain tasks more consolidated.
+Style/IdenticalConditionalBranches:
+  Enabled: false  
+
+# Allow this type of nesting for logic clarity.
+Style/IfInsideElse:
+  Enabled: false  
+
+# Do not force people to use one-line if statements.
 Style/IfUnlessModifier:
+  Enabled: false
+
+# Allow multiple comparisons via || for clarity
+Style/MultipleComparison:
   Enabled: false
 
 # Allow negatives
@@ -120,8 +153,7 @@ Style/IfUnlessModifier:
 Style/NegatedIf:
   Enabled: false
 
-# Do NOT enable.  For some reason this is catching any next which I feel are okay.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
+# Do not force people to use Next.
 Style/Next:
   Enabled: false
 
@@ -131,7 +163,11 @@ Style/NumericLiterals:
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#underscores-in-numerics'
   Enabled: false
 
-# Change per DLM -- pulled from https://github.com/bbatsov/rubocop/blob/master/config/enabled.yml
+Style/NumericPredicate:
+  Description: 'Do not force using .zero?'
+  Enabled: false
+  
+# encourage explicit returns for clarity
 Style/RedundantReturn:
   Description: 'Do not use return where it is not required.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-explicit-return'
@@ -153,6 +189,21 @@ Style/WordArray:
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#percent-w'
   EnforcedStyle: brackets
 
+# ==================== Naming ====================
+
+# Intentionally allow set_foo because these methods do not
+# take have cooresponding getters.
+Naming/AccessorMethodName:
+  Enabled: true
+
+# Allow variables like coeff_1 for legibility
+Naming/VariableNumber:
+  Enabled: false
+# ==================== Layout ====================
+
+Layout/BlockAlignment:
+  Enabled: true
+
 # Need to allow indented case statements
 # Configuration parameters: IndentWhenRelativeTo, SupportedStyles, IndentOneStep.
 Layout/CaseIndentation:
@@ -161,7 +212,3 @@ Layout/CaseIndentation:
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: aligned
   Enabled: true
-
-Naming/AccessorMethodName:
-  Enabled: true
-
