@@ -360,9 +360,9 @@ def addSimpleSystemAFN(model)
   returnMixerLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, mixerNode_AFN, mainReturnNode_AFN, mainReturn)
   systemReturnLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, mainReturnNode_AFN, fanInletNode_AFN, airLoopReturn)
   fanLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, fanInletNode_AFN, fanOutletNode_AFN, fanComponent)
-  #coolingCoilLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, fanOutletNode_AFN, heatingInletNode_AFN, coolingComponent)
-  #heatingCoilLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, heatingInletNode_AFN, heatingOutletNode_AFN, heatingComponent)
-  #equipmentAirLoopLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, heatingOutletNode_AFN, equipmentInletNode_AFN, airLoopSupply)
+  coolingCoilLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, fanOutletNode_AFN, heatingInletNode_AFN, coolingComponent)
+  heatingCoilLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, heatingInletNode_AFN, heatingOutletNode_AFN, heatingComponent)
+  equipmentAirLoopLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, heatingOutletNode_AFN, equipmentInletNode_AFN, airLoopSupply)
 
   return airLoopHVAC
 end
