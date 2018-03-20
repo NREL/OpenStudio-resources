@@ -173,7 +173,7 @@ def addSimpleSystem(model)
   return airLoopHVAC
 end
 
-def addSimpleSystemAFN(model, zone)
+def addSimpleSystemAFN(model)
   alwaysOn = model.alwaysOnDiscreteSchedule()
 
   airLoopHVAC = OpenStudio::Model::AirLoopHVAC.new(model)
@@ -319,40 +319,50 @@ def addSimpleSystemAFN(model, zone)
   airLoopSupply.setOutsideConvectionCoefficient(0.0065)
   airLoopSupply.setInsideConvectionCoefficient(0.0325)
 
-  # Build the AFN loop
+  # Build the AFN loop, first get the nodes and components we need
   
   splitter = airLoopHVAC.zoneSplitter()
-  splitterNode = splitter.inletModelObject().get.to_Node.get
-  yetanothernode = splitter.getAirflowNetworkDistributionNode
-  #zoneInletNode = splitter.outletModelObject(0).get.to_Node.get
-
   mixer = airLoopHVAC.zoneMixer()
-  zoneOutletNode = mixer.inletModelObject(0).get.to_Node.get
-  mixerOutletNode = mixer.outletModelObject().get.to_Node.get
 
+  equipmentInletNode = splitter.inletModelObject().get.to_Node.get
+
+  zoneSupplyRegisterNode = nil
+  zoneOutletNode = mixer.inletModelObject(0).get.to_Node.get
+
+  mainReturnNode = mixer.outletModelObject().get.to_Node.get
+
+  mixerOutletNode = mixer.outletModelObject().get.to_Node.get
   fanInletNode = fan.inletModelObject().get.to_Node.get
   fanOutletNode = fan.outletModelObject().get.to_Node.get
-  fanInletNode_AFN = fanInletNode.getAirflowNetworkDistributionNode
-  fanOutletNode_AFN = fanOutletNode.getAirflowNetworkDistributionNode
-  #fanLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, fanInletNode_AFN, fanOutletNode_AFN, fanComponent)
+  heatingInletNode = coilHeatingGas.inletModelObject().get.to_Node.get
+  heatingOutletNode = coilHeatingGas.outletModelObject().get.to_Node.get
 
-  equipmentInletNode_AFN = splitterNode.getAirflowNetworkDistributionNode
-  splitterNode_AFN = OpenStudio::Model::AirflowNetworkDistributionNode.new(model)
-  splitterNode_AFN.setNodeHeight(4) 
+  # Now walk around the loop and make the AFN nodes
+  equipmentInletNode_AFN = equipmentInletNode.getAirflowNetworkDistributionNode
+  splitterNode_AFN = splitter.getAirflowNetworkDistributionNode
   zoneSupplyNode_AFN = OpenStudio::Model::AirflowNetworkDistributionNode.new(model)
-  #zoneSupplyRegisterNode_AFN = zoneInletNode.getAirflowNetworkDistributionNode
 
-  # LIVING ZONE
-
+  zoneSupplyRegisterNode_AFN = nil
   zoneOutletNode_AFN = zoneOutletNode.getAirflowNetworkDistributionNode
+  
   zoneReturnNode_AFN = OpenStudio::Model::AirflowNetworkDistributionNode.new(model)
   mixerNode_AFN = mixer.getAirflowNetworkDistributionNode
-  mainReturnNode_AFN = mixerOutletNode.getAirflowNetworkDistributionNode
-  mainInletNode_AFN = nil # This one is weirdly connected in the example
-  
-  #heatingInletNode
-  #heatingOutletNode
+  mainReturnNode_AFN = mainReturnNode.getAirflowNetworkDistributionNode
+  fanInletNode_AFN = fanInletNode.getAirflowNetworkDistributionNode
+  fanOutletNode_AFN = fanOutletNode.getAirflowNetworkDistributionNode
+  heatingInletNode_AFN = heatingInletNode.getAirflowNetworkDistributionNode
+  heatingOutletNode_AFN = heatingOutletNode.getAirflowNetworkDistributionNode
 
+  # Now the links
+  
+  mainLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, equipmentInletNode_AFN, splitterNode_AFN, mainTruck)
+  # Zone stuff goes in here
+  returnMixerLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, mixerNode_AFN, mainReturnNode_AFN, mainReturn)
+  systemReturnLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, mainReturnNode_AFN, fanInletNode_AFN, airLoopReturn)
+  fanLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, fanInletNode_AFN, fanOutletNode_AFN, fanComponent)
+  #coolingCoilLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, fanOutletNode_AFN, heatingInletNode_AFN, coolingComponent)
+  #heatingCoilLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, heatingInletNode_AFN, heatingOutletNode_AFN, heatingComponent)
+  #equipmentAirLoopLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, heatingOutletNode_AFN, equipmentInletNode_AFN, airLoopSupply)
 
   return airLoopHVAC
 end
@@ -378,7 +388,7 @@ model.add_geometry({"length" => 17.242,
 zone = model.getThermalZones()[0] # There should only be one...
 
 #hvac = addSystemType3(model)
-hvac = addSimpleSystemAFN(model, zone)
+hvac = addSimpleSystemAFN(model)
 hvac = hvac.to_AirLoopHVAC.get
 hvac.addBranchForZone(zone)      
 outlet_node = hvac.supplyOutletNode
