@@ -24,6 +24,8 @@ ENV OSVERSION=${os_version} MONGOIP=${mongo_ip}
 # Create directory, Configure the prompt
 # Chained into a single run statement to mimize the number of image layers
 RUN mkdir -p /var/simdata/openstudio/OpenStudio-resources &&\
+    echo '' >> ~/.bashrc &&\
+    echo '# Setting the PS1 Prompt' >> ~/.bashrc &&\
     echo 'COLOR_0="0:37m" # Light Gray' >> ~/.bashrc &&\
     echo 'COLOR_1="38;5;167m" # Some light red' >> ~/.bashrc &&\
     echo 'COLOR_2="38;5;33m" # Some light blue' >> ~/.bashrc &&\
