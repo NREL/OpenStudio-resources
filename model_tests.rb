@@ -70,6 +70,11 @@ else
     $Custom_tag = "_#{$Custom_tag}"
     puts "Custom tag will be appended, files will be named like 'testname_X.Y.Z_out#{$Custom_tag}.osw'\n"
   end
+
+  # If an ENV variable was given with a value of "True" (case insensitive)
+  if ENV["SAVE_IDF"].to_s.downcase == "true"
+    $Save_idf=true
+  end
 end
 
 $:.unshift($ModelDir)
