@@ -1266,6 +1266,10 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
   end
 
+  def test_unitary_systems_airloop_and_zonehvac_osm
+    result = sim_test('unitary_systems_airloop_and_zonehvac.osm')
+  end
+
   def test_utility_bill01_rb
     result = sim_test('utility_bill01.rb')
   end
