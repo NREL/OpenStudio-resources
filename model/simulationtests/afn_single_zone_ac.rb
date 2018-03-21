@@ -13,25 +13,25 @@ class SurfaceNetworkBuilder < SurfaceVisitor
   def interiorFloor(model, surface, adjacentSurface)
     if !surface.outsideBoundaryCondition().start_with?('Ground') then
       # Create a surface linkage
-      link = surface.createAirflowNetworkSurface(@interiorCrack)
+      link = surface.getAirflowNetworkSurface(@interiorCrack)
     end
   end
 
   def interiorRoofCeiling(model, surface, adjacentSurface)
     # Create a surface linkage
-    link = surface.createAirflowNetworkSurface.new(@interiorCrack)
+    link = surface.getAirflowNetworkSurface.new(@interiorCrack)
   end
 
   def interiorWall(model, surface, adjacentSurface)
     # Create a surface linkage
-    link = surface.createAirflowNetworkSurface(@interiorCrack)
+    link = surface.getAirflowNetworkSurface(@interiorCrack)
   end
 
   def exteriorSurface(model, surface)
     # Create an external node?
     if !surface.outsideBoundaryCondition().start_with?('Ground') then
       # Create a surface linkage
-      link = surface.createAirflowNetworkSurface(@exteriorCrack)
+      link = surface.getAirflowNetworkSurface(@exteriorCrack)
     end
   end
 end
