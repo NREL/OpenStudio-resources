@@ -920,6 +920,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('ems.osm')
   end
 
+  def test_ems_scott_osm
+    result = sim_test('ems_scott.osm')
+  end
+  
+  def test_ems_1floor_SpaceType_1space
+    result = sim_test('ems_1floor_SpaceType_1space.osm')
+  end
+  
   def test_ems_rb
     result = sim_test('ems.rb')
   end
@@ -1394,14 +1402,13 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('afn_single_zone_nv.rb')
   end
 
-
   def test_afn_single_zone_nv_osm
     result = sim_test('afn_single_zone_nv.osm')
   end
 
-  #def test_afn_single_zone_ac_rb
-  #  result = sim_test('afn_single_zone_ac.rb')
-  #end
+  def test_afn_single_zone_ac_rb
+    result = sim_test('afn_single_zone_ac.rb')
+  end
 
   def test_foundation_kiva_osm
     result = sim_test('foundation_kiva.osm')
@@ -1417,7 +1424,10 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('additional_props.osm')
   end
 
-
+  def test_unitary_systems_airloop_and_zonehvac_rb
+    result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
+  end
+  
   # intersection tests
 
   def test_intersect_22_osm

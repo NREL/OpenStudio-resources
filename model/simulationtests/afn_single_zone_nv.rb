@@ -55,6 +55,8 @@ model.add_windows({"wwr" => 0.4,
 #add ASHRAE System type 03, PSZ-AC
 #model.add_hvac({"ashrae_sys_num" => '03'})
 
+zone = model.getThermalZones()[0] # There should only be one...
+
 #add ASHRAE System type 08, VAV w/ PFP Boxes
 #DLM: this invokes weird mass conservation rules with VAV
 #model.add_hvac({"ashrae_sys_num" => '08'})
@@ -80,6 +82,7 @@ model.add_design_days()
 afn_control =  model.getAirflowNetworkSimulationControl
 afn_control.setAirflowNetworkControl("MultizoneWithoutDistribution")
 
+
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
 # It doesn't matter here since there's only ony, but just in case
@@ -89,7 +92,7 @@ zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 zone = zones[0] # There should only be one...
 afnzone = zone.getAirflowNetworkZone
 
-#connect up
+# Connect up envelope
 visitor = SurfaceNetworkBuilder.new(model)
 
 # add output reports
