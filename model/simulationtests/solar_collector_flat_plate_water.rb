@@ -4,7 +4,7 @@ require 'lib/baseline_model'
 require 'json'
 
 model = BaselineModel.new
-  
+
 	model.add_standards( JSON.parse('{
   "schedules": [
     {
@@ -61,19 +61,19 @@ model.add_geometry({"length" => 100,
 model.add_windows({"wwr" => 0.4,
                   "offset" => 1,
                   "application_type" => "Above Floor"})
-        
+
 #add ASHRAE System type 01, PTAC, Residential
 model.add_hvac({"ashrae_sys_num" => '01'})
 
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
-              
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #add design days to the model (Chicago)
 model.add_design_days()
@@ -81,7 +81,9 @@ model.add_design_days()
 # create the swh loop and uses
 mixed_swh_loop = model.add_swh_loop("Mixed")
 
-zones = model.getThermalZones
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 zones.each do |thermal_zone|
   model.add_swh_end_uses(mixed_swh_loop, "Medium Office Bldg Swh")
 end
@@ -97,7 +99,7 @@ mixed_swh_loop.removeSupplyBranchWithComponent(swh_pipe)
 
 supply_components = mixed_swh_loop.supplyComponents("OS:Pump:ConstantSpeed".to_IddObjectType)
 swh_pump = supply_components.first.to_PumpConstantSpeed.get
-      
+
 # storage water heating loop
 storage_water_loop = OpenStudio::Model::PlantLoop.new(model)
 storage_water_loop.setName("Storage Water Loop")
@@ -114,7 +116,7 @@ temp_sch_type_limits.setUnitType('Temperature')
 
 # Storage water heating loop controls
 storage_temp_f = 140
-storage_delta_t_r = 9 #9F delta-T    
+storage_delta_t_r = 9 #9F delta-T
 storage_temp_c = OpenStudio.convert(storage_temp_f,'F','C').get
 storage_delta_t_k = OpenStudio.convert(storage_delta_t_r,'R','K').get
 storage_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model)
@@ -122,13 +124,13 @@ storage_temp_sch.setName("Hot Water Loop Temp - #{storage_temp_f}F")
 storage_temp_sch.defaultDaySchedule().setName("Hot Water Loop Temp - #{storage_temp_f}F Default")
 storage_temp_sch.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),storage_temp_c)
 storage_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
-storage_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model,storage_temp_sch)    
+storage_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model,storage_temp_sch)
 storage_stpt_manager.addToNode(storage_water_loop.supplyOutletNode)
 
 storage_plant = storage_water_loop.sizingPlant
 storage_plant.setLoopType('Heating')
 storage_plant.setDesignLoopExitTemperature(storage_temp_c)
-storage_plant.setLoopDesignTemperatureDifference(storage_delta_t_k)         
+storage_plant.setLoopDesignTemperatureDifference(storage_delta_t_k)
 
 # Storage water heating pump
 storage_pump_head_press_pa = 0.001
@@ -173,10 +175,28 @@ collector = OpenStudio::Model::SolarCollectorFlatPlateWater.new(model)
 storage_water_loop.addSupplyBranchForComponent(collector)
 collector.setSurface(shade)
 
-collector.outputVariableNames.each do |var|
-  OpenStudio::Model::OutputVariable.new(var, model)
+# Modify the Performance object
+# (Here I hardset them exactly like the constructor does)
+perf = collector.solarCollectorPerformance
+perf.setName("Solar Collector Performance FlatPlate")
+perf.setGrossArea(2.9646)
+perf.setTestFluid("Water") # Only accepted answer
+perf.setTestFlowRate(3.88e-05)
+perf.setTestCorrelationType("Inlet") # ["Inlet", "Average", "Outlet"]
+perf.setCoefficient1ofEfficiencyEquation(0.691)
+perf.setCoefficient2ofEfficiencyEquation(-0.00193)
+# This one is optional
+# perf.setCoefficient3ofEfficiencyEquation()
+perf.setCoefficient2ofIncidentAngleModifier(-0.1939)
+perf.setCoefficient3ofIncidentAngleModifier(-0.0055)
+
+add_out_vars = false
+if add_out_vars
+  collector.outputVariableNames.each do |var|
+    OpenStudio::Model::OutputVariable.new(var, model)
+  end
 end
-      
+
 # add a storage tank to the swh loop
 mixed_swh_loop.addSupplyBranchForComponent(storage_water_heater)
 

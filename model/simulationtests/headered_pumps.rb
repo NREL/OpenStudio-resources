@@ -18,7 +18,7 @@ model.add_geometry({"length" => 100,
 model.add_windows({"wwr" => 0.4,
                   "offset" => 1,
                   "application_type" => "Above Floor"})
-        
+
 #add packaged rooftop VAV with dist chilled and hot water attach all zones
 
 #Make a time stamp to use in multiple places
@@ -37,7 +37,7 @@ always_on_sch.winterDesignDaySchedule.addValue(os_time,1)
 always_on_sch_summer = OpenStudio::Model::ScheduleDay.new(model)
 always_on_sch.setSummerDesignDaySchedule(always_on_sch_summer)
 always_on_sch.summerDesignDaySchedule.setName("Always_On_Summer_Design_Day")
-always_on_sch.summerDesignDaySchedule.addValue(os_time,1)  
+always_on_sch.summerDesignDaySchedule.addValue(os_time,1)
 #All other days
 always_on_sch.defaultDaySchedule.setName("Always_On_Default")
 always_on_sch.defaultDaySchedule.addValue(os_time,1)
@@ -55,7 +55,7 @@ deck_temp_sch.winterDesignDaySchedule().addValue(os_time,12.8)
 deck_temp_sch_summer = OpenStudio::Model::ScheduleDay.new(model)
 deck_temp_sch.setSummerDesignDaySchedule(deck_temp_sch_summer)
 deck_temp_sch.summerDesignDaySchedule().setName("Deck_Temperature_Summer_Design_Day")
-deck_temp_sch.summerDesignDaySchedule().addValue(os_time,12.8)  
+deck_temp_sch.summerDesignDaySchedule().addValue(os_time,12.8)
 #All other days
 deck_temp_sch.defaultDaySchedule().setName("Deck_Temperature_Default")
 deck_temp_sch.defaultDaySchedule().addValue(os_time,12.8)
@@ -73,7 +73,7 @@ hot_water_temp_sch.winterDesignDaySchedule().addValue(os_time,67)
 hot_water_temp_sch_summer = OpenStudio::Model::ScheduleDay.new(model)
 hot_water_temp_sch.setSummerDesignDaySchedule(hot_water_temp_sch_summer)
 hot_water_temp_sch.summerDesignDaySchedule().setName("Hot_Water_Temperature_Summer_Design_Day")
-hot_water_temp_sch.summerDesignDaySchedule().addValue(os_time,67)  
+hot_water_temp_sch.summerDesignDaySchedule().addValue(os_time,67)
 #All other days
 hot_water_temp_sch.defaultDaySchedule().setName("Hot_Water_Temperature_Default")
 hot_water_temp_sch.defaultDaySchedule().addValue(os_time,67)
@@ -91,7 +91,7 @@ chilled_water_temp_sch.winterDesignDaySchedule().addValue(os_time,6.7)
 chilled_water_temp_schSummer = OpenStudio::Model::ScheduleDay.new(model)
 chilled_water_temp_sch.setSummerDesignDaySchedule(chilled_water_temp_schSummer)
 chilled_water_temp_sch.summerDesignDaySchedule().setName("Chilled_Water_Temperature_Summer_Design_Day")
-chilled_water_temp_sch.summerDesignDaySchedule().addValue(os_time,6.7)  
+chilled_water_temp_sch.summerDesignDaySchedule().addValue(os_time,6.7)
 #All other days
 chilled_water_temp_sch.defaultDaySchedule().setName("Chilled_Water_Temperature_Default")
 chilled_water_temp_sch.defaultDaySchedule().addValue(os_time,6.7)
@@ -217,26 +217,28 @@ chilledWaterDemandInlet.addToNode(chilledWaterDemandInletNode)
 chilledWaterDemandOutlet = OpenStudio::Model::PipeAdiabatic.new(model)
 chilledWaterDemandOutlet.addToNode(chilledWaterDemandOutletNode)
 
-#hook all zones to the airloop
-zones = model.getThermalZones
+# hook all zones to the airloop
+# In order to produce more consistent results between different runs,
+# we sort the zones by names (doesn't matter here, just in case)
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 zones.each do|zone|
-  airLoopHVAC.addBranchForZone(zone)      
+  airLoopHVAC.addBranchForZone(zone)
 end
 
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
-              
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
 #set whole building space type simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #add design days to the model (Chicago)
 model.add_design_days()
-       
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})
-                           
+

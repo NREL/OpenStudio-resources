@@ -16,11 +16,20 @@ model.add_geometry({"length" => 100,
 model.add_windows({"wwr" => 0.4,
                   "offset" => 1,
                   "application_type" => "Above Floor"})
-        
+
 #add ASHRAE System type 03, PSZ-AC
 model.add_hvac({"ashrae_sys_num" => '03'})
 
-air_system = model.getAirLoopHVACs.first
+# air_system = model.getAirLoopHVACs.first
+# If we get the first airLoopHVAC from the example model using the above
+# We cannot ensure we'll get the same one each time on subsequent runs
+# (they may be in different order in the model)
+# So we rely on ThermalZone names, and get the airLoopHVAC from there
+# Sort the zones by name
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+# Get the first zone, get its PTAC's fan.
+z = zones[0]
+air_system = z.airLoopHVAC.get
 
 oa_node = air_system.airLoopHVACOutdoorAirSystem.get.outboardOANode.get
 
@@ -33,17 +42,17 @@ indirect_evap.addToNode(oa_node)
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
-              
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #add design days to the model (Chicago)
 model.add_design_days()
-       
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})
-                           
+

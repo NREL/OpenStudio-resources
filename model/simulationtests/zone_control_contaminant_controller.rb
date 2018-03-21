@@ -16,7 +16,7 @@ model.add_geometry({"length" => 100,
 model.add_windows({"wwr" => 0.4,
                   "offset" => 1,
                   "application_type" => "Above Floor"})
-        
+
 #add ASHRAE System type 03, PSZ-AC
 model.add_hvac({"ashrae_sys_num" => '03'})
 
@@ -35,7 +35,10 @@ zoneAirContaminantBalance.setOutdoorCarbonDioxideSchedule(oa_cO2_schedule)
 co2_schedule = OpenStudio::Model::ScheduleRuleset.new(model)
 co2_schedule.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),900.0)
 
-zones = model.getThermalZones
+
+# In order to produce more consistent results between different runs,
+# we sort the zones by names (doesn't matter here, just in case)
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 zones.each do |zone|
   controller = OpenStudio::Model::ZoneControlContaminantController.new(model)
   controller.setCarbonDioxideControlAvailabilitySchedule(model.alwaysOnDiscreteSchedule)
@@ -53,12 +56,12 @@ end
 model.set_constructions()
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #add design days to the model (Chicago)
 model.add_design_days()
-       
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})
-                           
+
