@@ -70,6 +70,11 @@ else
     $Custom_tag = "_#{$Custom_tag}"
     puts "Custom tag will be appended, files will be named like 'testname_X.Y.Z_out#{$Custom_tag}.osw'\n"
   end
+
+  # If an ENV variable was given with a value of "True" (case insensitive)
+  if ENV["SAVE_IDF"].to_s.downcase == "true"
+    $Save_idf=true
+  end
 end
 
 $:.unshift($ModelDir)
@@ -1255,6 +1260,10 @@ class ModelTests < MiniTest::Unit::TestCase
 
   def test_unitary_vav_bypass_osm
     result = sim_test('unitary_vav_bypass.osm')
+  end
+
+  def test_unitary_systems_airloop_and_zonehvac_rb
+    result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
   end
 
   def test_utility_bill01_rb

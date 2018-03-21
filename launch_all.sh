@@ -13,7 +13,7 @@ source colors.sh
 ########################################################################################
 
 # All versions you want to run
-declare -a all_versions=("2.0.4" "2.0.5" "2.1.0" "2.1.1" "2.1.2" "2.2.0" "2.2.1" "2.2.2" "2.3.0" "2.3.1" "2.4.0" "2.4.1")
+declare -a all_versions=("2.0.4" "2.0.5" "2.1.0" "2.1.1" "2.1.2" "2.2.0" "2.2.1" "2.2.2" "2.3.0" "2.3.1" "2.4.0" "2.4.1" "2.4.3")
 #declare -a  all_versions=("2.4.0" "2.4.1")
 
 # Do you want to ask the user to set these arguments?
@@ -73,7 +73,7 @@ if [ "$ask_user" = true ]; then
   if [[ $REPLY =~ ^[Yy]$ ]]; then
     delete_base_image=true
   fi
-  
+
   echo -e -n "Do you want to enable the ${BCyan}verbose (debug) mode${Color_Off}? [y/${URed}N${Color_Off}] "
   read -n 1 -r
   echo    # (optional) move to a new line
@@ -93,7 +93,7 @@ if [ "$ask_user" = true ]; then
   echo "delete_custom_image=$delete_custom_image"
   echo "delete_base_image=$delete_base_image"
   echo "verbose=$verbose"
-  echo 
+  echo
 fi
 
 
@@ -138,27 +138,30 @@ os_container_str="${BBlue}container${Color_Off} ${UBlue}$os_container_name${Colo
 #                               M O N G O
 ########################################################################################
 
-if [ ! "$(docker ps -q -f name=$mongo_container_name)" ]; then
-  if [ "$(docker ps -aq -f status=exited -f name=$mongo_container_name)" ]; then
-    # cleanup
-    echo -e "* Deleting existing mongo $mongo_container_str"
-    docker rm $mongo_container_name > $OUT
+mongo_ip=''
+
+if [ "$use_mongo" = true ]; then
+  if [ ! "$(docker ps -q -f name=$mongo_container_name)" ]; then
+    if [ "$(docker ps -aq -f status=exited -f name=$mongo_container_name)" ]; then
+      # cleanup
+      echo -e "* Deleting existing mongo $mongo_container_str"
+      docker rm $mongo_container_name > $OUT
+    fi
+    # run your container
+    # Have the mongo docker write to the local directory with -v
+    echo -e "* Running mongo $mongo_container_str"
+    # On Unix it seems to keep running with the -d option only
+    # docker run --name $mongo_container_name -v "$(pwd)/database":/data/db -d $mongo_image_name > $OUT
+    # On windows it doesn't because it doesn't run in the foreground, so here's a workaround
+    docker run --name $mongo_container_name -v "$(pwd)/database":/data/db -d $mongo_image_name tail -f /dev/null > $OUT
   fi
-  # run your container
-  # Have the mongo docker write to the local directory with -v
-  echo -e "* Running mongo $mongo_container_str"
-  # On Unix it seems to keep running with the -d option only
-  # docker run --name $mongo_container_name -v "$(pwd)/database":/data/db -d $mongo_image_name > $OUT
-  # On windows it doesn't because it doesn't run in the foreground, so here's a workaround
-  docker run --name $mongo_container_name -v "$(pwd)/database":/data/db -d $mongo_image_name tail -f /dev/null > $OUT
+
+  # Place the mongo container ip into a file, that'll get added to the openstudio container via the dockerfile
+  # Actually we will set an environment variable in the dockerfile named MONGOIP too
+  mongo_ip=`docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $mongo_container_name`
+  echo "Mongo ip is $mongo_ip"
+  echo $mongo_ip > mongo_ip
 fi
-
-# Place the mongo container ip into a file, that'll get added to the openstudio container via the dockerfile
-# Actually we will set an environment variable in the dockerfile named MONGOIP too
-mongo_ip=`docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $mongo_container_name`
-echo "Mongo ip is $mongo_ip"
-echo $mongo_ip > mongo_ip
-
 
 for os_version in "${all_versions[@]}"; do
 
@@ -205,10 +208,14 @@ for os_version in "${all_versions[@]}"; do
     echo -e "Warning: The $os_container_str is already running... Stopping"
     docker stop $os_container_name > $OUT
   fi
-  # Launch, with link to the mongo one
+
   echo -e "* Launching the $os_container_str"
-  
-  docker run --name $os_container_name --link $mongo_container_name:mongo -v `pwd`/test:/root/test -d -it --rm $os_image_name /bin/bash > $OUT
+  if [ "$use_mongo" = true ]; then
+    # Launch, with link to the mongo one
+    docker run --name $os_container_name --link $mongo_container_name:mongo -v `pwd`/test:/root/test -d -it --rm $os_image_name /bin/bash > $OUT
+  else
+    docker run --name $os_container_name -v `pwd`/test:/root/test -d -it --rm $os_image_name /bin/bash > $OUT
+  fi
 
   # Chmod execute the script
   docker exec $os_container_name chmod +x docker_container_script.sh
@@ -257,7 +264,7 @@ for os_version in "${all_versions[@]}"; do
 
 done
 
-# On other systems that windows, fix permissions
+# On other systems than windows, fix permissions
 if [[ "$(uname)" != MINGW* ]]; then
   echo
   echo -e "${On_Blue}Fixing ownership: setting it to user=$USER and chmod=664 (requires sudo)${Color_Off}"
