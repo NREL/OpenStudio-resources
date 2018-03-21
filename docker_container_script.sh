@@ -30,9 +30,18 @@ if [ "$OSVERSION" = 2.0.4 ]; then
   # This version is weird, I directly require /usr/Ruby/openstudio.so in the model_tests.rb, done in docker exec via sed
   ~/.rbenv/shims/ruby model_tests.rb $test_filter
 else
-  ~/.rbenv/shims/ruby -I /usr/Ruby/openstudio.so model_tests.rb $test_filter
-fi
+  # Before 2.4.3, ruby used to be installed via rbenv
+  # From 2.4.3 onward, it installs ruby via the openstudio-server development script, so there is no longer rbenv and you can use system ruby directly
 
+  # We test if there is rbenv
+  if [ -f ~/.rbenv/shims/ruby ]; then
+    # If there is, we do use that
+    ~/.rbenv/shims/ruby -I /usr/Ruby/openstudio.so model_tests.rb $test_filter
+  else
+    # Otherwise, we use system ruby, no need for the include, RUBYLIB env variable is set
+    ruby model_tests.rb $test_filter
+  fi
+fi
 # Test if directory exists
 if [ -d "testruns" ]; then
 
