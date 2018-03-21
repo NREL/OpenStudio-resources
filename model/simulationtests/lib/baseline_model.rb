@@ -215,7 +215,8 @@ class BaselineModel < OpenStudio::Model::Model
 
     shading_control_hash = Hash.new
 
-    self.getThermalZones.each do |zone|
+    zones = self.getThermalZones.sort_by{|z| z.name.to_s}
+    zones.each do |zone|
       biggestWindow = nil
       zone.spaces.each do |space|
         space.surfaces.each do |surface|
@@ -293,8 +294,9 @@ class BaselineModel < OpenStudio::Model::Model
       exit
     end
 
-    #get the thermal zones in the self
-    zones = self.getThermalZones
+    # get the thermal zones in the self, and sort them by name to limit risks
+    # of getting different results on subsequent runs
+    zones = self.getThermalZones.sort_by{|z| z.name.to_s}
 
     #Add HVAC system type
       case sys_num
@@ -582,7 +584,8 @@ class BaselineModel < OpenStudio::Model::Model
     heating_sch.defaultDaySchedule.setName("Heating Sch Default")
     heating_sch.defaultDaySchedule.addValue(time_24hrs,heating_setpoint)
 
-    self.getThermalZones.each do |zone|
+    zones = self.getThermalZones.sort_by{|z| z.name.to_s}
+    zones.each do |zone|
       new_thermostat = OpenStudio::Model::ThermostatSetpointDualSetpoint.new(self)
 
       new_thermostat.setHeatingSchedule(heating_sch)
