@@ -160,15 +160,18 @@ class BaselineModel < OpenStudio::Model::Model
 
     end #End of floor loop
 
-    #Put all of the spaces in the model into a vector
+    # Put all of the spaces in the model into a vector
+    # We sort the spaces by name, so we add the thermalZones always in the
+    # same order in order to try limiting differences in order of subsequent
+    # systems etc
     spaces = OpenStudio::Model::SpaceVector.new
-    self.getSpaces.each { |space| spaces << space }
+    self.getSpaces.sort_by{|s| s.name.to_s}.each { |space| spaces << space }
 
     #Match surfaces for each space in the vector
     OpenStudio::Model.matchSurfaces(spaces)
 
     #Apply a thermal zone to each space in the model if that space has no thermal zone already
-    self.getSpaces.each do |space|
+    spaces.each do |space|
       if space.thermalZone.empty?
         new_thermal_zone = OpenStudio::Model::ThermalZone.new(self)
         space.setThermalZone(new_thermal_zone)

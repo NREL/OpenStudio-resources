@@ -38,6 +38,11 @@ $Custom_tag=''
 # TODO: move as a an ENV variable
 $Save_idf=false
 
+
+# List of tests that don't have a matching OSM test for a reason
+$NoMatchingOSMTests = ['ExampleModel.rb',
+                       'autosize_hvac.rb']
+
 puts "Running for OpenStudio #{$SdkLongVersion}"
 
 # Were to cp the out.osw for regression
@@ -151,6 +156,31 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
 
     FileUtils.cp(ori_file_path, in_osm)
   elsif (ext == '.rb')
+
+    if !$NoMatchingOSMTests.include?(filename)
+      # Check if there is a matching OSM file
+      matching_osm = File.join($ModelDir, filename.sub('.rb', '.osm'))
+      if File.exists?(matching_osm)
+        v = OpenStudio::IdfFile.loadVersionOnly(matching_osm)
+        # Seems like something we should definitely fix anyways, so throwing
+        if not v
+          fail "Cannot find versionString in #{matching_osm}"
+        end
+
+        # If there is a version, check that it's not newer than current bindings
+        model_version = v.get.str
+
+        if Gem::Version.new(model_version) > Gem::Version.new($SdkVersion)
+          # Skip instead of fail
+          skip "Matching OSM Model version is newer than the SDK version used (#{model_version} versus #{$SdkVersion})"
+        end
+      else
+        # If there isn't a matching, we warn, but we'll still run it
+        # It might make sense if you have just added it recently
+        warn "There is no matching OSM test for #{filename}"
+      end
+    end
+
     command = "\"#{$OpenstudioCli}\" \"#{File.join($ModelDir,filename)}\""
     run_command(command, dir, 3600)
 
@@ -1272,6 +1302,10 @@ class ModelTests < MiniTest::Unit::TestCase
 
   def test_unitary_systems_airloop_and_zonehvac_rb
     result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
+  end
+
+  def test_unitary_systems_airloop_and_zonehvac_osm
+    result = sim_test('unitary_systems_airloop_and_zonehvac.osm')
   end
 
   def test_utility_bill01_rb
