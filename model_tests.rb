@@ -1262,6 +1262,10 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('unitary_vav_bypass.osm')
   end
 
+  def test_unitary_systems_airloop_and_zonehvac_rb
+    result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
+  end
+
   def test_utility_bill01_rb
     result = sim_test('utility_bill01.rb')
   end
@@ -1378,11 +1382,8 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_additional_props_osm
     result = sim_test('additional_props.osm')
   end
-  
-  def test_unitary_systems_airloop_and_zonehvac_rb
-    result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
-  end
-  
+
+
   # intersection tests
 
   def test_intersect_22_osm
