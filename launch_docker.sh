@@ -53,6 +53,10 @@ fi
 echo -e "Running docker script for version ${BRed}$os_version${Color_Off}"
 
 
+# Hardcoded arg
+# Use mongo?
+use_mongo=false
+
 ########################################################################################
 #                               V A R I A B L E S
 ########################################################################################
@@ -241,27 +245,30 @@ trap cleanup INT
 #                               M O N G O
 ########################################################################################
 
-if [ ! "$(docker ps -q -f name=$mongo_container_name)" ]; then
-  if [ "$(docker ps -aq -f status=exited -f name=$mongo_container_name)" ]; then
-    # cleanup
-    echo -e "* Deleting existing mongo $mongo_container_str"
-    docker rm $mongo_container_name> $OUT
+mongo_ip=''
+
+if [ "$use_mongo" = true ]; then
+  if [ ! "$(docker ps -q -f name=$mongo_container_name)" ]; then
+    if [ "$(docker ps -aq -f status=exited -f name=$mongo_container_name)" ]; then
+      # cleanup
+      echo -e "* Deleting existing mongo $mongo_container_str"
+      docker rm $mongo_container_name> $OUT
+    fi
+    # run your container
+    # Have the mongo docker write to the local directory with -v
+    echo -e "* Running mongo $mongo_container_str"
+    # On Unix it seems to keep running with the -d option only
+    # docker run --name $mongo_container_name -v "$(pwd)/database":/data/db -d $mongo_image_name > $OUT
+    # On windows it doesn't because it doesn't run in the foreground, so here's a workaround
+    docker run --name $mongo_container_name -v "$(pwd)/database":/data/db -d $mongo_image_name tail -f /dev/null > $OUT
   fi
-  # run your container
-  # Have the mongo docker write to the local directory with -v
-  echo -e "* Running mongo $mongo_container_str"
-  # On Unix it seems to keep running with the -d option only
-  # docker run --name $mongo_container_name -v "$(pwd)/database":/data/db -d $mongo_image_name > $OUT
-  # On windows it doesn't because it doesn't run in the foreground, so here's a workaround
-  docker run --name $mongo_container_name -v "$(pwd)/database":/data/db -d $mongo_image_name tail -f /dev/null > $OUT
+
+
+  # Place the mongo container ip into a file, that'll get added to the openstudio container via the dockerfile
+  # Actually we will set an environment variable in the dockerfile named MONGOIP too
+  mongo_ip=`docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $mongo_container_name`
+  echo $mongo_ip > mongo_ip
 fi
-
-
-# Place the mongo container ip into a file, that'll get added to the openstudio container via the dockerfile
-# Actually we will set an environment variable in the dockerfile named MONGOIP too
-mongo_ip=`docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $mongo_container_name`
-echo $mongo_ip > mongo_ip
-
 
 #docker run --name my_openstudio --link openstudio-mongo:mongo -d -ti --rm nrel/openstudio:2.2.1
 #echo "Copying files to ${docker_id}"
@@ -336,9 +343,14 @@ if [ "$(docker ps -aq -f name=$os_container_name)" ]; then
   echo -e "perhaps also run ${Green}'docker rm $os_container_name'${Color_Off}"
   exit 1
 fi
-# Launch, with link to the mongo one
+
 echo -e "* Launching the $os_container_str"
-docker run --name $os_container_name --link $mongo_container_name:mongo -v `pwd`/test:/root/test -d -it --rm $os_image_name /bin/bash > $OUT
+if [ "$use_mongo" = true ]; then
+  # Launch, with link to the mongo one
+  docker run --name $os_container_name --link $mongo_container_name:mongo -v `pwd`/test:/root/test -d -it --rm $os_image_name /bin/bash > $OUT
+else
+  docker run --name $os_container_name -v `pwd`/test:/root/test -d -it --rm $os_image_name /bin/bash > $OUT
+fi
 
 # Chmod execute the script
 docker exec $os_container_name chmod +x docker_container_script.sh
@@ -354,8 +366,8 @@ if [ "$os_version" = 2.0.4 ]; then
   # Etc.nprocessor unknown, so replace with bash nproc
   docker exec $os_container_name sed -i "s/Etc.nprocessors/$(nproc)/" model_tests.rb
 fi
-  
-  
+
+
 # Execute it
 # Launch the regression tests
 echo -e -n "Do you want to launch the regression tests? [${URed}Y${Color_Off}/n] "
