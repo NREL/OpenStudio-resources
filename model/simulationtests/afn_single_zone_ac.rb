@@ -253,39 +253,6 @@ def addSimpleSystemAFN(model)
   mainTruck.setOutsideConvectionCoefficient(5.018)
   mainTruck.setInsideConvectionCoefficient(25.09)
 
-  zoneSupply = OpenStudio::Model::AirflowNetworkDuct.new(model)
-  zoneSupply.setDuctLength(10)
-  zoneSupply.setHydraulicDiameter(0.4064)
-  zoneSupply.setCrossSectionArea(0.1297)
-  zoneSupply.setSurfaceRoughness(0.0009)
-  zoneSupply.setCoefficientforLocalDynamicLossDuetoFitting(0.91)
-  zoneSupply.setDuctWallHeatTransmittanceCoefficient(0.946792)
-  zoneSupply.setOverallMoistureTransmittanceCoefficientfromAirtoAir(0.0000001)
-  zoneSupply.setOutsideConvectionCoefficient(5.018)
-  zoneSupply.setInsideConvectionCoefficient(25.09)
-
-  zoneReturn = OpenStudio::Model::AirflowNetworkDuct.new(model)
-  zoneReturn.setDuctLength(3)
-  zoneReturn.setHydraulicDiameter(0.5)
-  zoneReturn.setCrossSectionArea(0.1963)
-  zoneReturn.setSurfaceRoughness(0.0009)
-  zoneReturn.setCoefficientforLocalDynamicLossDuetoFitting(0.01)
-  zoneReturn.setDuctWallHeatTransmittanceCoefficient(0.001226)
-  zoneReturn.setOverallMoistureTransmittanceCoefficientfromAirtoAir(0.0000001)
-  zoneReturn.setOutsideConvectionCoefficient(0.0065)
-  zoneReturn.setInsideConvectionCoefficient(0.0325)
-
-  zoneConnectionDuct = OpenStudio::Model::AirflowNetworkDuct.new(model)
-  zoneConnectionDuct.setDuctLength(0.1)
-  zoneConnectionDuct.setHydraulicDiameter(1)
-  zoneConnectionDuct.setCrossSectionArea(0.7854)
-  zoneConnectionDuct.setSurfaceRoughness(0.0001)
-  zoneConnectionDuct.setCoefficientforLocalDynamicLossDuetoFitting(0)
-  zoneConnectionDuct.setDuctWallHeatTransmittanceCoefficient(0.001226)
-  zoneConnectionDuct.setOverallMoistureTransmittanceCoefficientfromAirtoAir(0.0000001)
-  zoneConnectionDuct.setOutsideConvectionCoefficient(0.0065)
-  zoneConnectionDuct.setInsideConvectionCoefficient(0.0325)
-
   mainReturn = OpenStudio::Model::AirflowNetworkDuct.new(model)
   mainReturn.setDuctLength(1)
   mainReturn.setHydraulicDiameter(0.5)
@@ -343,7 +310,7 @@ def addSimpleSystemAFN(model)
   zoneSupplyNode_AFN = OpenStudio::Model::AirflowNetworkDistributionNode.new(model)
 
   zoneSupplyRegisterNode_AFN = nil
-  zoneOutletNode_AFN = zoneOutletNode.getAirflowNetworkDistributionNode
+  #zoneOutletNode_AFN = zoneOutletNode.getAirflowNetworkDistributionNode
   
   zoneReturnNode_AFN = OpenStudio::Model::AirflowNetworkDistributionNode.new(model)
   mixerNode_AFN = mixer.getAirflowNetworkDistributionNode
@@ -418,24 +385,78 @@ model.add_design_days()
 
 #add simulation control
 afn_control =  model.getAirflowNetworkSimulationControl
-#afn_control.setAirflowNetworkControl("MultizoneWithoutDistribution")
+afn_control.setAirflowNetworkControl("MultizoneWithDistribution")
 
 #make an afn zone
 afnzone = zone.getAirflowNetworkZone
 
-#connect up envelope
-#visitor = SurfaceNetworkBuilder.new(model)
+# This is kind of lame, regetting stuff we already have above. Need to rethink how this
+# is structured at some point.
+splitter = hvac.zoneSplitter()
+mixer = hvac.zoneMixer()
+splitterNode_AFN = splitter.getAirflowNetworkDistributionNode
+mixerNode_AFN = splitter.getAirflowNetworkDistributionNode
 
-#connect distribution
-#
-#  +--- main ---+--- 
-#
+# This is not great either
+zoneOutletNode = mixer.inletModelObject(0).get.to_Node.get
+
+comps = hvac.demandComponents(hvac.demandInletNode(),zone)
+zoneInletNode = comps[-2].to_Node.get
+
+#zoneInletNode = zone.airLoopHVACTerminal.get.to_StraightComponent.get.outletModelObject.get.to_Node.get
+
+zoneInletNode_AFN = zoneInletNode.getAirflowNetworkDistributionNode
+zoneOutletNode_AFN = zoneOutletNode.getAirflowNetworkDistributionNode
+
+# Make the duct elements
+zoneSupply = OpenStudio::Model::AirflowNetworkDuct.new(model)
+zoneSupply.setDuctLength(10)
+zoneSupply.setHydraulicDiameter(0.4064)
+zoneSupply.setCrossSectionArea(0.1297)
+zoneSupply.setSurfaceRoughness(0.0009)
+zoneSupply.setCoefficientforLocalDynamicLossDuetoFitting(0.91)
+zoneSupply.setDuctWallHeatTransmittanceCoefficient(0.946792)
+zoneSupply.setOverallMoistureTransmittanceCoefficientfromAirtoAir(0.0000001)
+zoneSupply.setOutsideConvectionCoefficient(5.018)
+zoneSupply.setInsideConvectionCoefficient(25.09)
+
+zoneReturn = OpenStudio::Model::AirflowNetworkDuct.new(model)
+zoneReturn.setDuctLength(3)
+zoneReturn.setHydraulicDiameter(0.5)
+zoneReturn.setCrossSectionArea(0.1963)
+zoneReturn.setSurfaceRoughness(0.0009)
+zoneReturn.setCoefficientforLocalDynamicLossDuetoFitting(0.01)
+zoneReturn.setDuctWallHeatTransmittanceCoefficient(0.001226)
+zoneReturn.setOverallMoistureTransmittanceCoefficientfromAirtoAir(0.0000001)
+zoneReturn.setOutsideConvectionCoefficient(0.0065)
+zoneReturn.setInsideConvectionCoefficient(0.0325)
+
+zoneConnectionDuct = OpenStudio::Model::AirflowNetworkDuct.new(model)
+zoneConnectionDuct.setDuctLength(0.1)
+zoneConnectionDuct.setHydraulicDiameter(1)
+zoneConnectionDuct.setCrossSectionArea(0.7854)
+zoneConnectionDuct.setSurfaceRoughness(0.0001)
+zoneConnectionDuct.setCoefficientforLocalDynamicLossDuetoFitting(0)
+zoneConnectionDuct.setDuctWallHeatTransmittanceCoefficient(0.001226)
+zoneConnectionDuct.setOverallMoistureTransmittanceCoefficientfromAirtoAir(0.0000001)
+zoneConnectionDuct.setOutsideConvectionCoefficient(0.0065)
+zoneConnectionDuct.setInsideConvectionCoefficient(0.0325)
+
+# And now the linkages
+zoneSupplyLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, splitterNode_AFN, zoneInletNode_AFN, zoneSupply)
+zoneSupplyConnectionLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, zoneInletNode_AFN, afnzone, zoneConnectionDuct)
+zoneReturnConnectionLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, afnzone, zoneOutletNode_AFN, zoneConnectionDuct)
+zoneSupplyLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, zoneOutletNode_AFN, mixerNode_AFN, zoneReturn)
+
+
+# Connect up envelope
+visitor = SurfaceNetworkBuilder.new(model)
 
 # add output reports
-#OpenStudio::Model::OutputVariable.new("AFN Node Temperature", model)
-#OpenStudio::Model::OutputVariable.new("AFN Node Wind Pressure", model)
-#OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Mass Flow Rate", model)
-#OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Pressure Difference", model)
+OpenStudio::Model::OutputVariable.new("AFN Node Temperature", model)
+OpenStudio::Model::OutputVariable.new("AFN Node Wind Pressure", model)
+OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Mass Flow Rate", model)
+OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Pressure Difference", model)
  
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
