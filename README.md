@@ -82,9 +82,9 @@ This script is parsing all the out.osw (for all versions) in the `test` folder a
 
 **Setting up a suitable python environment**
 
-The script has been tested on Python 2.7.14 and 3.6.3. (The notebook has only been tested in 3.6 so prefer 3.6 if you don't have an environment yet). 
+The script has been tested on Python 2.7.14 and 3.6.3. The notebook has only been tested in 3.6 so **prefer Python 3** if you don't have an environment yet. 
 
-**To set up your environment**, and especially to ensure you have the necessary dependencies, **please read the dedicated page[Setting up Python](doc/Setting_up_Python.md)**.
+**To set up your environment**, and especially to ensure you have the necessary dependencies, **please read the dedicated page [Setting up Python](doc/Setting_up_Python.md)**.
 
 **Running the script**:
 

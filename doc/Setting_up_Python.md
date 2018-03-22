@@ -1,6 +1,6 @@
 # Setting up your python environment
 
-The script has been tested on Python 2.7.14 and 3.6.3. The notebook has only been tested in 3.6 so **prefer 3.6** if you don't have an environment yet.
+The script has been tested on Python 2.7.14 and 3.6.3. The notebook has only been tested in 3.6 so **prefer Python 3** if you don't have an environment yet.
 
 ## Using pip
 
@@ -8,9 +8,9 @@ To ensure you have the necessary dependencies you can type this pip install comm
 
     pip install requests matplotlib numpy pandas seaborn jupyter lxml beautifulsoup4 df2gspread
 
-On Windows, the preferred alternative is to use conda, but if you insist on using regular python with pip,
+**On Windows, the preferred alternative is to use conda**, but if you insist on using regular python with pip,
 you may have to manually install `numpy+mkl`.  
-You can do this by downloading the correct `numpy+mkl` wheel file for your platform from https://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy and then running:
+You can do this by downloading the correct `numpy+mkl` wheel file for your platform from [Gohlke's PythonLibs](https://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy) and then running:
 
 ```
 pip install numpy-1.14.0+mkl-cp37-cp37m-win_amd64.whl
@@ -40,7 +40,7 @@ There is a file `OpenStudio-resources/environment.yml` that you can use to creat
 
     conda env create -f environment.yml
     
-This will create an environment named `openstudio-resources` that you will need to activate every time:
+This will create an environment named `openstudio-resources` that you will need to activate **every time**:
 
     conda activate openstudio-resources
     
