@@ -84,17 +84,7 @@ This script is parsing all the out.osw (for all versions) in the `test` folder a
 
 The script has been tested on Python 2.7.14 and 3.6.3. (The notebook has only been tested in 3.6 so prefer 3.6 if you don't have an environment yet). 
 
-To ensure you have the necessary dependencies you can type this pip install command (whether in 2.7 or 3.6):
-
-```
-pip install requests matplotlib numpy pandas seaborn jupyter df2gspread lxml bs4
-```
-
-On Windows, you may have to manually install `numpy+mkl`.  You can do this by downloading the correct `numpy+mkl` wheel file for your platform from https://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy and then running:
-
-```
-pip install numpy-1.14.0+mkl-cp37-cp37m-win_amd64.whl
-```
+**To set up your environment**, and especially to ensure you have the necessary dependencies, **please read the dedicated page[Setting up Python](doc/Setting_up_Python.md)**.
 
 **Running the script**:
 
@@ -138,7 +128,7 @@ Launch a specific version
 ./launch_docker.sh 2.4.0
 ```
 
-Launch all versions (you can modify the harcoded arguments atop the script `launch_all.sh`)
+Launch all versions (you can modify the hardcoded arguments atop the script `launch_all.sh`)
 ```
 ./launch_all.sh
 ```
