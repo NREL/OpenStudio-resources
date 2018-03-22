@@ -162,3 +162,23 @@ Launch all versions (you can modify the hardcoded arguments atop the script `lau
 ```
 
 **Please refer to the [Instructions for Running Docker](doc/Instructions_Docker.md) for more info, especially if you use Windows.**
+
+
+## Three-way analysis when a new E+ version is out.
+
+**When two subsequent OpenStudio versions use different E+ versions, we expect to see deviations, but we want to be able to tell if these deviations come from E+ or OpenStudio.**
+
+A jupyter notebook is provided at `./update_eplus_compare/AutomateVersionTranslation.ipynb`. The notebook contains embedded markdown with instructions on how to use it.
+
+What the notebook does is to first help you generate results for three cases:
+
+* `OLD_OS-OLD_EPLUS`: Run all model_tests.rb in the old OpenStudio version. Retrieve the resulting IDF file (old E+ version) and the SQL file.
+* `Transition-NEW_EPLUS`: Use the EnergyPlus `Transition` utility to transition the IDF files from the old E+ version to the new E+ version. Run the new IDF files with the new EnergyPlus version, keep only the SQL and error file.
+* `NEW_OS-NEW_EPLUS`: Run all model_tests.rb with the new OpenStudio version based on the new EnergyPlus, retrieve the IDF and SQL files.
+
+Then the notebook allows you to load up the resulting data and analyze whether deviations are indeed coming only on E+ Side or OpenStudio's by looking at three levels of details:
+
+* All tests: Fail/Pass
+* All tests: Total Site Energy differences
+* For a specific test, look at End Use by Fuel differences to gauge where differences may be coming from.
+
