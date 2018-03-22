@@ -47,7 +47,7 @@ export N=8
 
 You can also call the command as `N=8 openstudio model_tests.rb` directly.
 
-**Two additional environment variables can be set to customize the behavior of the testing**:
+**Three additional environment variables can be set to customize the behavior of the testing**:
 
 * `CUSTOMTAG`: if set, it will be appended to the `out.osw`. For eg, if I set `CUSTOMTAG=Ubuntu_run1`, my output files will be named like `testname_X.Y.Z_out_Ubuntu_run1.osw`.
 Custom tagged OSWs are gitignored. They are useful for appreciating the stability of a test (eg. run it 5 times, compare resulting total site kbtu).
@@ -55,9 +55,12 @@ There is one special value, `SHA` (case-insensitive) that will append the build 
 
 * `SAVE_IDF`: if set to True (case-insensitive), in the `test/` folder next to the OSW the IDF file will be saved as well. This is a debugging feature used in conjunction with CUSTOMTAG to be able to appreciate the differences between the IDF files of two (or more) subsequent runs of the same ruby test.
 
+* `DONOTRERUNIFSUCCESS`: if set to True (case-insensitive), before running a test we check if there is already a corresponding `out.osw` and if it was successful already,
+we skip the test.
+
 Example usage:
 
-    SAVE_IDF=True N=8 CUSTOM_TAG=Ubuntu_run1 openstudio model_tests.rb
+    SAVE_IDF=True N=8 CUSTOM_TAG=Ubuntu_run1 DONOTRERUNIFSUCCESS=TRUE openstudio model_tests.rb
 
 
 ### Filtering tests to run
@@ -119,7 +122,7 @@ If you want to upload the results to the google sheet. You will need two things:
 
 **Setting up a suitable python environment**
 
-The script has been tested on Python 2.7.14 and 3.6.3. The notebook has only been tested in 3.6 so **prefer Python 3** if you don't have an environment yet. 
+The script has been tested on Python 2.7.14 and 3.6.3. The notebook has only been tested in 3.6 so **prefer Python 3** if you don't have an environment yet.
 
 **To set up your environment**, and especially to ensure you have the necessary dependencies, **please read the dedicated page [Setting up Python](doc/Setting_up_Python.md)**.
 
