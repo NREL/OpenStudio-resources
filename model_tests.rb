@@ -15,9 +15,19 @@ if ENV['N'].nil?
   # Number of parallel runs caps to nproc - 1
   ENV['N'] = [1, Etc.nprocessors - 1].max.to_s
 end
+
 # Variables to store the environment variables
 $Custom_tag=''
 $Save_idf=false
+
+# Don't rerun test if there is already an OSW that shows success if the test/
+# directory
+$DoNotReRunIfSuccess=false
+
+if ENV['DONOTRERUNIFSUCCESS'].to_s.downcase == "true"
+  $DoNotReRunIfSuccess=true
+end
+
 
 require 'minitest/autorun'
 
@@ -146,6 +156,25 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
   osw = File.join(dir, 'in.osw')
   out_osw = File.join(dir, 'out.osw')
   in_osm = File.join(dir, 'in.osm')
+  # Cp to the OutOSW directory
+  cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.osw")
+
+
+  # If $DoNotReRunIfSuccess is true, we check if the out_osw already exists
+  # and whether it was successful already
+  if $DoNotReRunIfSuccess
+    if File.exists?(cp_out_osw)
+      cp_result_osw = nil
+      File.open(cp_out_osw, 'r') do |f|
+        cp_result_osw = JSON::parse(f.read, :symbolize_names=>true)
+      end
+      if !cp_result_osw.nil?
+        if cp_result_osw[:completed_status] == "Success"
+          skip "Already ran with success"
+        end
+      end
+    end
+  end
 
   # todo, modify different weather file in osw
 
@@ -225,10 +254,8 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
   end
 
   if !result_osw.nil?
-    # Cp to the OutOSW directory
-    cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.osw")
-
     # FileUtils.cp(out_osw, cp_out_osw)
+
     # Instead of just copying, we clean up the osw then export that to a file
     # Remove timestamps and hash
     if result_osw.keys.include?(:eplusout_err)
