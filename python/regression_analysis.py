@@ -634,6 +634,12 @@ def success_sheet(df_files, model_test_cases=None, add_missing=True):
             filt2 = row == ''
             row[filt1 & filt2] = "N/A"
 
+    # Push OSM N/A to ruby N/A
+    success = success.unstack('Test').T
+    success.loc[(success['osm'] == 'N/A')
+                & (success['rb'] == ''), 'rb'] = 'N/A'
+    success = success.unstack('Test').swaplevel(axis=1).T
+
     # Create n_fail and order by that
     n_fail = (success == 'Fail').sum(axis=1)
     n_missing = (success == '').sum(axis=1)
