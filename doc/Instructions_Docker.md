@@ -80,7 +80,10 @@ You will need to log out and log back in.
 Install Hyper-V and Containers if you are prompted for it (restart needed).
 
 2. We will use mysys to be able to use bash. The easiest is to just rely on Git bash (mysysGit) since you probably already have it. If you have Git bash (MinGW), open that.
-If not go to [git-scm](https://git-scm.com/downloads) and install it. Make sure you install command line utilities.
+If not go to [git-scm](https://git-scm.com/downloads) and install it. Make sure you install command line utilities, and use MinTTY.
+
+![Use MinTTY](images/Install_Git_UseMinTTY.png)
+
 Search for "Git Bash" and launch the application:
 
 ![Git bash](images/git_bash.png)
