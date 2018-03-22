@@ -1,6 +1,7 @@
 # Setting up your python environment
 
-The script has been tested on Python 2.7.14 and 3.6.3. The notebook has only been tested in 3.6 so **prefer Python 3** if you don't have an environment yet.
+The script has been tested on Python 2.7.14 and 3.6.3 and 3.6.4.
+The notebook has only been tested in 3.6 so **prefer Python 3** if you don't have an environment yet.
 
 ## Using pip
 
