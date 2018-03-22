@@ -39,8 +39,15 @@ __maintainer__ = "Julien Marrec"
 __email__ = "julien@effibem.com"
 __status__ = "Production"
 
+# Directory of this file
+this_dir = os.path.dirname(os.path.abspath(__file__))
+# Root of project (OpenStudio-resources)
+ROOT_DIR = os.path.abspath(os.path.join(os.path.join(this_dir, '..')))
+
 # Folder in which the out.osw are stored
-TEST_DIR = './test/'
+TEST_DIR = os.path.join(ROOT_DIR, 'test')
+
+# Google Spreadsheet URL
 SHEET_URL = ('https://docs.google.com/spreadsheets/d/1gL8KSwRPtMPYj-'
              'QrTwlCwHJvNRP7llQyEinfM1-1Usg/edit?usp=sharing')
 
@@ -207,7 +214,7 @@ def find_osm_test_versions():
     v_regex = re.compile(r'\s+(\d+\.\d+\.\d+);\s+!-? Version Identifier')
 
     model_version_lists = []
-    osms = gb.glob('model/simulationtests/*.osm')
+    osms = gb.glob(os.path.join(ROOT_DIR, 'model/simulationtests/*.osm'))
     for osm in osms:
         found = False
         test = os.path.splitext(os.path.split(osm)[1])[0]
@@ -713,6 +720,8 @@ def update_and_upload():
     for use in post processing
 
     """
+    spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
+
     compat_matrix = parse_compatibility_matrix()
     df_files = find_info_osws(compat_matrix=compat_matrix, test_dir='./test/')
 
@@ -721,7 +730,6 @@ def update_and_upload():
     # Test Status
     success = success_sheet(df_files=df_files,
                             model_test_cases=model_test_cases)
-    spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
     wks_name = 'Test_Status'
     msg = "Uploading to '{}'".format(wks_name)
     if sys.version_info >= (3, 3):
@@ -739,7 +747,6 @@ def update_and_upload():
                                        success=success,
                                        only_for_mising_osm=False)
 
-    spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
     wks_name = 'Tests_Implemented'
     msg = "Uploading to '{}'".format(wks_name)
     if sys.version_info >= (3, 3):
@@ -754,7 +761,6 @@ def update_and_upload():
 
     # Site kbtu
     site_kbtu = df_files.applymap(parse_total_site_energy)
-    spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
     wks_name = 'SiteKBTU'
     msg = "Uploading to '{}'".format(wks_name)
     if sys.version_info >= (3, 3):
@@ -770,7 +776,6 @@ def update_and_upload():
     print("... Done")
 
     # Rolling percent difference of total kBTU from one version to the next
-    spreadsheet = '/EffiBEM&NREL-Regression-Test_Status'
     wks_name = 'SiteKBTU_Percent_Change'
     msg = "Uploading to '{}'".format(wks_name)
     if sys.version_info >= (3, 3):
@@ -905,6 +910,10 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
         You must pass the .png with it.
 
     * figsize (tuple, optional): the figure size, if None it is calculated
+
+    * save_indiv_figs_for_ax (bool, optional): If a big figure is generated,
+    save it in several chunks
+
     Returns:
     --------
     None, draws the plot
@@ -951,17 +960,17 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     for i, toplot in enumerate(my_chunks):
         ax = axes[i]
         heatmap_sitekbtu_pct_change_on_ax(toplot=toplot, ax=ax,
-                                      display_threshold=display_threshold,
-                                      repeat_x_on_top=repeat_x_on_top)
+                                          display_threshold=display_threshold,
+                                          repeat_x_on_top=repeat_x_on_top)
 
     # Figure Annotations: The title on the top axis, and the explanation
     # on the bottom axis
     title = "Percent difference total site kBTU from one version to the next"
 
     axes[0].annotate(s=title, xy=(0.5, 1.0), xycoords='axes fraction',
-                ha='center', va='top',
-                xytext=(0, 60), textcoords='offset points',
-                weight='bold', fontsize=16)
+                     ha='center', va='top',
+                     xytext=(0, 60), textcoords='offset points',
+                     weight='bold', fontsize=16)
 
     ann = ("Rows (Tests) have been filtered and are only displayed if there "
            "is at least one cell with more than {:.2%} change.\n"
@@ -979,12 +988,12 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     style = None
     if annotate_in_axes_coord:
         axes[-1].annotate(s=ann, xy=(0.0, 0.0), xycoords='axes fraction',
-                    ha='left', va='top',
-                    xytext=(0, -80), textcoords='offset points',
-                    style=style)
+                          ha='left', va='top',
+                          xytext=(0, -80), textcoords='offset points',
+                          style=style)
     else:
         axes[-1].annotate(s=ann, xy=(0.0, 0.0), xycoords='figure fraction',
-                    ha='left', va='bottom', style=style)
+                          ha='left', va='bottom', style=style)
     if savefig:
         if figname is None:
             figname = 'site_kbtu_pct_change.png'
@@ -1005,6 +1014,44 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     if show_plot:
         # fig.tight_layout()
         plt.show()
+
+
+def cli_heatmap(row_threshold, display_threshold,
+                save_indiv_figs_for_ax, figname_with_thresholds):
+    """
+    Helper function called from the CLI to plot the heatmap
+    """
+
+    df_files = find_info_osws()
+    site_kbtu = df_files.applymap(parse_total_site_energy)
+
+    if figname_with_thresholds:
+        figname = ('site_kbtu_pct_change_row{}_display{}'
+                   '.png'.format(row_threshold, display_threshold))
+    else:
+        figname = 'site_kbtu_pct_change.png'
+
+    heatmap_sitekbtu_pct_change(site_kbtu=site_kbtu,
+                                row_threshold=row_threshold,
+                                display_threshold=display_threshold,
+                                figname=figname,
+                                savefig=True,
+                                show_plot=False,
+                                save_indiv_figs_for_ax=True)
+    if sys.platform.startswith('darwin'):
+        subprocess.call(('open', figname))
+    elif os.name == 'nt':
+        os.startfile(figname)
+    elif os.name == 'posix':
+        subprocess.call(('xdg-open', figname))
+
+
+def cli_upload():
+    """
+    Helper function called from the CLI to upload to google sheets
+    """
+    _ = update_and_upload()
+    print("All results uploaded to {}".format(SHEET_URL))
 
 
 # If run from command line rather than imported
