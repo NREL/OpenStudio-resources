@@ -1,14 +1,14 @@
 OpenStudio Resources
 ==========
 
-This repository includes a suite of simulation tests that can be used to validate new OpenStudio model objects as well as ensure that objects continue to work after they are added. 
+This repository includes a suite of simulation tests that can be used to validate new OpenStudio model objects as well as ensure that objects continue to work after they are added.
 Each new OpenStudio Model object should ideally have two simulation tests associated with it:
 
 * a Ruby one which verifies the Ruby API and,
-* an OSM one that verifies the OSM file can be loaded with future versions of OpenStudio.  
+* an OSM one that verifies the OSM file can be loaded with future versions of OpenStudio.
 
-Both tests should result in a simulation-ready OpenStudio Model that can be simulated using EnergyPlus. 
-Both of these tests are located in the `\model\simulationtests` directory, the easiest way to add a new test is to find a related existing test and modify it. 
+Both tests should result in a simulation-ready OpenStudio Model that can be simulated using EnergyPlus.
+Both of these tests are located in the `\model\simulationtests` directory, the easiest way to add a new test is to find a related existing test and modify it.
 When new tests are added they must be added to the `model_tests.rb` file.
 
 ## Running the tests
@@ -26,6 +26,8 @@ ruby -I \path\to\openstudio.rb\dir\ model_tests.rb
 
 *Optional:* if you use your system ruby, you can do `gem install minitest-reporters` and enjoy a cleaner output.
 
+### Environment variables
+
 Multiple jobs will be run in parallel, the number of which is determined by:
 
 * The environment variable `N` if it is set
@@ -42,6 +44,23 @@ Unix
 ```
 export N=8
 ```
+
+You can also call the command as `N=8 openstudio model_tests.rb` directly.
+
+Two additional environment variables can be set to customize the behavior of the testing:
+
+* `CUSTOMTAG`: if set, it will be appended to the `out.osw`. For eg, if I set `CUSTOMTAG=Ubuntu_run1`, my output files will be named like `testname_X.Y.Z_out_Ubuntu_run1.osw`.
+Custom tagged OSWs are gitignored. They are useful for appreciating the stability of a test (eg. run it 5 times, compare resulting total site kbtu).
+There is one special value, `SHA` (case-insensitive) that will append the build SHA as a custom tag.
+
+* `SAVE_IDF`: if set to True (case-insensitive), in the `test/` folder next to the OSW the IDF file will be saved as well. This is a debugging feature used in conjunction with CUSTOMTAG to be able to appreciate the differences between the IDF files of two (or more) subsequent runs of the same ruby test.
+
+Example usage:
+
+    SAVE_IDF=True N=8 CUSTOM_TAG=Ubuntu_run1 openstudio model_tests.rb
+
+
+### Filtering tests to run
 
 To run specific test(s), you can either:
 
@@ -77,8 +96,14 @@ a given user can run the regression suite against his OpenStudio version exactly
 
 ### Parsing and analyzing
 
-The `regression_analysis.py` script is provided with functions to update the [google sheet](https://docs.google.com/spreadsheets/d/1gL8KSwRPtMPYj-QrTwlCwHJvNRP7llQyEinfM1-1Usg/edit#gid=1548402386) centralizing the test results, and visualize deviations.
+The `process_results.py` CLI is provided with functions to update the [google sheet](https://docs.google.com/spreadsheets/d/1gL8KSwRPtMPYj-QrTwlCwHJvNRP7llQyEinfM1-1Usg/edit#gid=1548402386) centralizing the test results, and visualize deviations.
 This script is parsing all the out.osw (for all versions) in the `test` folder and creating table representation for export to google spreadsheet, or for visualization as heatmaps.
+
+The CLI has embedded documentation including examples, go to the root of the repository and type:
+
+    python process_results.py -h
+
+
 
 **Setting up a suitable python environment**
 

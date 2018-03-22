@@ -1,3 +1,5 @@
+# This script should
+
 require 'openstudio' unless defined?(OpenStudio)
 
 require 'fileutils'
@@ -8,10 +10,14 @@ require 'open3'
 
 require 'etc'
 
+# Environment variables
 if ENV['N'].nil?
   # Number of parallel runs caps to nproc - 1
   ENV['N'] = [1, Etc.nprocessors - 1].max.to_s
 end
+# Variables to store the environment variables
+$Custom_tag=''
+$Save_idf=false
 
 require 'minitest/autorun'
 
@@ -34,14 +40,18 @@ $TestDir = File.join($RootDir, 'testruns')
 $SdkVersion = OpenStudio.openStudioVersion
 $SdkLongVersion = OpenStudio::openStudioLongVersion
 $Build_Sha = $SdkLongVersion.split('.')[-1]
-$Custom_tag=''
-# TODO: move as a an ENV variable
-$Save_idf=false
+
+
 
 
 # List of tests that don't have a matching OSM test for a reason
+# input the ruby file name, eg `xxxx.rb` NOT `test_xxx_rb`
 $NoMatchingOSMTests = ['ExampleModel.rb',
-                       'autosize_hvac.rb']
+                       'autosize_hvac.rb',
+                      # TODO: Temp
+                      'unitary_systems_airloop_and_zonehvac.rb',
+                      'airterminal_fourpipebeam.rb',
+                      ]
 
 puts "Running for OpenStudio #{$SdkLongVersion}"
 
@@ -56,30 +66,38 @@ else
   # Directly in here
   $OutOSWDir = File.join($RootDir, 'test')
 
-  # if the user uses env CUSTOMTAG=whatever, we use that and we don't ask for the tag
-  if ENV["CUSTOMTAG"].nil?
-    # Ask user if he wants to append a custom tag to the result out.osw
-    # We don't do it in docker so it can just run without user input
-    prompt = ("If you want to append a custom tag to the result out.osw(s) (eg: 'Windows_run3')\n"\
-              "enter it now, or type 'SHA' to append the build sha (#{$Build_Sha}),\n"\
-              "or leave empty if not desired\n> ")
-    $Custom_tag = [(print prompt), STDIN.gets.chomp][1]
-  else
-    $Custom_tag = ENV['CUSTOMTAG']
-  end
+  # if the user didn't supply env CUSTOMTAG=whatever,
+  # we ask him to optionally supply a tag
+=begin
+     n
+     n  if ENV["CUSTOMTAG"].nil?
+     n    # Ask user if he wants to append a custom tag to the result out.osw
+     n    # We don't do it in docker so it can just run without user input
+     n    prompt = ("If you want to append a custom tag to the result out.osw(s) (eg: 'Windows_run3')\n"\
+     n              "enter it now, or type 'SHA' to append the build sha (#{$Build_Sha}),\n"\
+     n              "or leave empty if not desired\n> ")
+     n    ENV["CUSTOMTAG"] = [(print prompt), STDIN.gets.chomp][1]
+     n  end
+=end
 
-  if not $Custom_tag.empty?
-    if $Custom_tag.downcase == 'sha'
-        $Custom_tag = $Build_Sha
-    end
-    $Custom_tag = "_#{$Custom_tag}"
-    puts "Custom tag will be appended, files will be named like 'testname_X.Y.Z_out#{$Custom_tag}.osw'\n"
-  end
+end
 
-  # If an ENV variable was given with a value of "True" (case insensitive)
-  if ENV["SAVE_IDF"].to_s.downcase == "true"
-    $Save_idf=true
+if !ENV["CUSTOMTAG"].nil?
+  $Custom_tag = ENV['CUSTOMTAG']
+end
+
+if not $Custom_tag.empty?
+  if $Custom_tag.downcase == 'sha'
+    $Custom_tag = $Build_Sha
   end
+  $Custom_tag = "_#{$Custom_tag}"
+  puts "Custom tag will be appended, files will be named like 'testname_X.Y.Z_out#{$Custom_tag}.osw'\n"
+end
+
+# If an ENV variable was given with a value of "True" (case insensitive)
+if ENV["SAVE_IDF"].to_s.downcase == "true"
+  $Save_idf=true
+  puts "Will save the IDF files in the test/ directory"
 end
 
 $:.unshift($ModelDir)
@@ -923,11 +941,11 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_ems_scott_osm
     result = sim_test('ems_scott.osm')
   end
-  
+
   def test_ems_1floor_SpaceType_1space
     result = sim_test('ems_1floor_SpaceType_1space.osm')
   end
-  
+
   def test_ems_rb
     result = sim_test('ems.rb')
   end
@@ -1427,7 +1445,7 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_unitary_systems_airloop_and_zonehvac_rb
     result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
   end
-  
+
   # intersection tests
 
   def test_intersect_22_osm
