@@ -28,12 +28,12 @@ ruby -I \path\to\openstudio.rb\dir\ model_tests.rb
 
 ### Environment variables
 
-Multiple jobs will be run in parallel, the number of which is determined by:
+**Multiple jobs will be run in parallel**, the number of which is determined by:
 
 * The environment variable `N` if it is set
 * Your number of logical threads minus 1 if `N` is not set (for eg a recent quad core machine will run 7 jobs in parallel)
 
-To the environment variable `N`:
+To set the environment variable `N`:
 
 Windows
 ```
@@ -47,7 +47,7 @@ export N=8
 
 You can also call the command as `N=8 openstudio model_tests.rb` directly.
 
-Two additional environment variables can be set to customize the behavior of the testing:
+**Two additional environment variables can be set to customize the behavior of the testing**:
 
 * `CUSTOMTAG`: if set, it will be appended to the `out.osw`. For eg, if I set `CUSTOMTAG=Ubuntu_run1`, my output files will be named like `testname_X.Y.Z_out_Ubuntu_run1.osw`.
 Custom tagged OSWs are gitignored. They are useful for appreciating the stability of a test (eg. run it 5 times, compare resulting total site kbtu).
@@ -91,19 +91,31 @@ The `model_tests.rb` is responsible to run the tests you have requested (or all 
 * Remove timestamps throughout the file to avoid useless git diff
 * Round values to 2 digits to avoid excessive diffing
 
-The `model_tests.rb`  outputs this modified `out.osw` in the right folder with the right naming convention `test_osversion_out.osw` (eg: air_chillers.rb_2.3.1_out.osm):
+The `model_tests.rb`  outputs this modified `out.osw` in the right folder with the right naming convention: `testname_X.Y.Z_out.osw` (eg: `air_chillers.rb_2.3.1_out.osw`):
 a given user can run the regression suite against his OpenStudio version exactly like he used to. Currently every test output is commited to the `test/` folder.
 
 ### Parsing and analyzing
 
 The `process_results.py` CLI is provided with functions to update the [google sheet](https://docs.google.com/spreadsheets/d/1gL8KSwRPtMPYj-QrTwlCwHJvNRP7llQyEinfM1-1Usg/edit#gid=1548402386) centralizing the test results, and visualize deviations.
-This script is parsing all the out.osw (for all versions) in the `test` folder and creating table representation for export to google spreadsheet, or for visualization as heatmaps.
 
-The CLI has embedded documentation including examples, go to the root of the repository and type:
+The CLI is an interface to the supporting module `./python/regression_analysis.py`.
+This module is responsible for parsing all the out.osw (for all versions) in the `test` folder
+and either creating a table representation for export to google spreadsheet, or for visualization as heatmaps.
+
+The CLI has embedded documentation including examples of usage, go to the root of the repository and type:
 
     python process_results.py -h
 
+#### Uploading to google sheets
 
+**This should only be done once an official release is out: run all tests with this version, commit the resulting out.osw, and update the google sheet**.
+
+If you want to upload the results to the google sheet. You will need two things:
+
+    * Write access to the google spreadsheet
+    * Install and configure the python module df2gspread. This requires setting credentials in the google console API, see [here](https://df2gspread.readthedocs.io/en/latest/overview.html#access-credentials) for how to do it.
+
+#### Python Configuration
 
 **Setting up a suitable python environment**
 
@@ -111,24 +123,15 @@ The script has been tested on Python 2.7.14 and 3.6.3. The notebook has only bee
 
 **To set up your environment**, and especially to ensure you have the necessary dependencies, **please read the dedicated page [Setting up Python](doc/Setting_up_Python.md)**.
 
-**Running the script**:
+#### Visualization deviations
 
-This script can be run as a command line utility:
-```
-python regression_analysis.py
-```
-
-You will be asked two questions:
-* Whether you want to upload the results to the google sheet.To use this function, you will need two things: 
-    * Write access to the google spreadsheet
-    * Install and configure the python module df2gspread. This requires setting credentials in the google console API, see [here](https://df2gspread.readthedocs.io/en/latest/overview.html#access-credentials) for how to do it.
-* Whether you want to plot a heatmap of the major deviations, and if so, what is your row (test threshold). In order to limit the size of the heatmap, the threshold is used to filter out tests where none of the individual versions have shown a deviation that is bigger. Suggested values are 0.01 (for 1%) and 0.005 (0.5%). Here is an example with a threshold of 0.01
+Using the CLI as `python process_results.py heatmap [options]`, you can easily see deviations as heatmaps:
 
 ![Percentage difference in total site kBTU](doc/images/site_kbtu_pct_change.png)
 
-**Exploring data**
+**Exploring data: going further**
 
-For exploring data in depth, the python file can also be imported and you can just use its high-level functiins. A jupyter notebook `Analyzing_Regression_Tests.ipynb` is provided for convenience and has some examples about how to slice and dice the data.
+For exploring data in depth, the support python file (`./python/regression_analysis.py`) can also be imported and you can just use its high-level functions. A jupyter notebook `Analyzing_Regression_Tests.ipynb` is provided for convenience and has some examples about how to slice and dice the data.
 
 To launch a notebook, you need to type `jupyter notebook [optional-start-path]`. If you don't provide a start path, it starts in your current directory.
 This opens a tab in your browser window, and you can navigate to the notebook of your choice. Each cell gets executed individually by pressing SHIFT+ENTER.
