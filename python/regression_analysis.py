@@ -14,11 +14,14 @@ from __future__ import division, print_function
 
 import sys
 import os
+import platform
 import json
 import re
 import subprocess
 import glob as gb
 
+import tqdm
+import shlex
 import requests
 
 import matplotlib as mpl
@@ -26,6 +29,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import seaborn as sns
+
+from ipywidgets import HTML
+from IPython.display import display
 
 from df2gspread import df2gspread as d2g
 
@@ -70,6 +76,25 @@ PRETTY_NAMES = {'cooling': 'Cooling',
                 'electricity': 'Electricity',
                 'natural_gas': 'Natural Gas'
                 }
+
+
+# Avoid having a prompt for new version
+OS_EPLUS_DICT = {'2.4.4': '8.9.0'}
+
+def isnotebook():
+    """
+    Helper function: is this running in a jupyter notebook?
+    """
+    try:
+        shell = get_ipython().__class__.__name__
+        if shell == 'ZMQInteractiveShell':
+            return True   # Jupyter notebook or qtconsole
+        elif shell == 'TerminalInteractiveShell':
+            return False  # Terminal running IPython
+        else:
+            return False  # Other type (?)
+    except NameError:
+        return False      # Probably standard Python interpreter
 
 
 def cleanup_bloated_osws():
@@ -302,7 +327,13 @@ def find_info_osws(compat_matrix=None, test_dir=None):
         msg = ("OpenStudio Version {} is not in the compatibility matrix\n"
                "Please input the corresponding E+ version (default='{}'):\n")
         for v in unknown_versions:
-            is_correct = False
+            # Skip the ones we hard mapped
+            if v in OS_EPLUS_DICT.keys():
+                is_correct = True
+                eplus = OS_EPLUS_DICT[v]
+            else:
+                is_correct = False
+
             while not is_correct:
                 # Ask user. If blank, then default to latest eplus known
                 eplus = input(msg.format(v, latest_eplus))
@@ -327,7 +358,9 @@ def find_info_osws(compat_matrix=None, test_dir=None):
     return df_files
 
 
-def find_info_osws_with_tags(compat_matrix=None, test_dir=None):
+def find_info_osws_with_tags(compat_matrix=None,
+                             test_dir=None,
+                             tags_only=True):
     """
     Looks for files in the test/ folder, and parses version and type (rb, osm)
     Constructs a dataframe that has E+/OS versions in column (by looking E+
@@ -340,7 +373,12 @@ def find_info_osws_with_tags(compat_matrix=None, test_dir=None):
     ------
     * compat_matrix (pd.DataFrame or None)
         if None, calls parse_compatibility_matrix. Otherwise you can supply it
+
     * test_dir (str path or None): if None uses the global TEST_DIR constant
+
+    * tags_only (bool): if True, only greps custom tagged files, if False will
+        grep tagged and regular files
+
     Returns:
     ---------
     * df_files (pd.DataFrame): A multi indexed dataframe in rows and columns
@@ -361,9 +399,19 @@ def find_info_osws_with_tags(compat_matrix=None, test_dir=None):
 
     files = gb.glob(os.path.join(test_dir, '*out*.osw'))
 
+    if tags_only:
+        files = gb.glob(os.path.join(test_dir, '*out_*.osw'))
+
+        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb)_'
+                       r'(?P<version>\d+\.\d+\.\d+)_out_(?P<Tag>.*?)\.osw')
+    else:
+        files = gb.glob(os.path.join(test_dir, '*out*.osw'))
+
+        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb)_'
+                       r'(?P<version>\d+\.\d+\.\d+)_out_?(?P<Tag>.*?)?\.osw')
+
     df_files = pd.DataFrame(files, columns=['path'])
-    filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb)_'
-                   r'(?P<version>\d+\.\d+\.\d+)_out_?(?P<Tag>.*?)?\.osw')
+
     version = (df_files['path'].apply(lambda p: os.path.relpath(p, test_dir))
                                .str.extract(pat=filepattern, expand=True))
     df_files = pd.concat([df_files,
@@ -386,7 +434,13 @@ def find_info_osws_with_tags(compat_matrix=None, test_dir=None):
         msg = ("OpenStudio Version {} is not in the compatibility matrix\n"
                "Please input the corresponding E+ version (default='{}'):\n")
         for v in unknown_versions:
-            is_correct = False
+            # Skip the ones we hard mapped
+            if v in OS_EPLUS_DICT.keys():
+                is_correct = True
+                eplus = OS_EPLUS_DICT[v]
+            else:
+                is_correct = False
+
             while not is_correct:
                 # Ask user. If blank, then default to latest eplus known
                 eplus = input(msg.format(v, latest_eplus))
@@ -635,10 +689,11 @@ def success_sheet(df_files, model_test_cases=None, add_missing=True):
             row[filt1 & filt2] = "N/A"
 
     # Push OSM N/A to ruby N/A
-    success = success.unstack('Test').T
-    success.loc[(success['osm'] == 'N/A')
-                & (success['rb'] == ''), 'rb'] = 'N/A'
-    success = success.unstack('Test').swaplevel(axis=1).T
+    if 'osm' in success.index.get_level_values('Type'):
+        success = success.unstack('Test').T
+        success.loc[(success['osm'] == 'N/A')
+                    & (success['rb'] == ''), 'rb'] = 'N/A'
+        success = success.unstack('Test').swaplevel(axis=1).T
 
     # Create n_fail and order by that
     n_fail = (success == 'Fail').sum(axis=1)
@@ -922,7 +977,7 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
 
     Returns:
     --------
-    None, draws the plot
+    True if draws the plot, False otherwise
     """
 
     site_kbtu_change = site_kbtu.pct_change(axis=1)
@@ -931,6 +986,20 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     g_toplot.index = [".".join(x) for x in g_toplot.index]
     g_toplot.columns = ["\n".join(x) for x in g_toplot.columns]
     g_toplot.columns.names = ['E+\nOS']
+
+    if g_toplot.empty:
+        if (site_kbtu_change.iloc[:, 1:] != 0).any().any():
+
+            msg = ("There are no percentages differences that are above the "
+                    "threshold={:.4%} for any test/version,"
+                    "but there are some non-zero values, absolute max diff is"
+                    "{:.5%}".format(row_threshold,
+                                    site_kbtu_change.abs().max().max()))
+        else:
+            msg = "There are NO differences at all"
+
+        print(msg)
+        return False
 
     if figsize is None:
         w = 16
@@ -1021,14 +1090,249 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
         # fig.tight_layout()
         plt.show()
 
+    return True
 
-def cli_heatmap(row_threshold, display_threshold,
-                save_indiv_figs_for_ax, figname_with_thresholds):
+###############################################################################
+#             S T A B I L I T Y    T E S T I N G
+###############################################################################
+
+
+def delete_custom_tagged_osws(contains=None, regex_pattern=None):
+    # Glob all
+    custom_osws = gb.glob(os.path.join(TEST_DIR, '*out_*.osw'))
+
+    # Check if need to only keep certain ones
+    if contains:
+        custom_osws = [x for x in custom_osws
+                       if contains in os.path.split(x)[1]]
+    elif regex_pattern:
+        re_pat = re.compile(r'{}'.format(regex_pattern))
+        custom_osws = [x for x in custom_osws
+                       if re_pat.search(os.path.split(x)[1])]
+
+    if custom_osws:
+        for x in custom_osws:
+            print("Deleting: {}".format(os.path.split(x)[1]))
+            os.remove(x)
+
+        return True
+    else:
+        print("Did not find any custom tagged files matching")
+        return False
+
+
+def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
+                   save_idf=False, energyplus_exe_path=None,
+                   platform_name=None):
+    """
+    This function will run model_tests.rb several times and save the out.osw
+    with a custom tag so they can be analyzed after. It is useful for testing
+    the stability of a given test (or several)
+
+    OSW files will be named like `testname_X.Y.Z_out_{platform}_run{n_i}.osw'
+
+    Args:
+    ------
+    * os_cli (path): Path to the CLI to be used defaults to 'openstudio'
+    You can use 'ruby' if the include paths are set correctly, or you could
+    provide the full path to your openstudio CLI
+
+    * test_filter (str): filter to pass to model_tests.rb.
+        eg: 'fourpipebeam' will results in `model_tests.rb -n /fourpipebeam/`
+        If omitted, runs all tests
+
+    * run_n_times (int): number of times to run the tests
+    * start_at (int): Override if you have already run N times before,
+    and do not want to override.
+        eg: n=2 and start_at=3 will results in '_run3' and 'run4'
+
+    * save_idf (bool): Whether you want to also save the IDF next to out.osw
+    Useful for checking IDF diffs for ruby tests that are unstable
+
+    * energyplus_exe_path (str, path): sets the ENERGYPLUS_EXE_PATH variable
+        Useful when the CLI doesn't find the E+ exe by himself.
+
+    * platform_name (str): Will default to `platform.system()` (eg: Linux)
+        You could pass stuff like 'Ubuntu'
+
+    """
+
+    # Check correct CLI
+    if os_cli is None:
+        os_cli = 'openstudio'
+
+    cmd = ('{} -e "require \'openstudio\'; '
+           'puts OpenStudio::openStudioLongVersion"'.format(os_cli))
+    os_long_version = None
+    # os_short_version = None
+    try:
+        process = subprocess.Popen(shlex.split(cmd),
+                                   shell=False,
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
+        lines = process.stdout.readlines()
+        os_long_version = lines[0].rstrip().decode()
+        # os_short_version = ".".join(os_long_version.split('.')[:-1])
+        print("Selected OS_CLI has version '{}'".format(os_long_version))
+    except:
+        print("Problem with the CLI, make sure it is configured properly")
+
+    # Configure env-like variables
+    if energyplus_exe_path is None:
+        eplus_exe = ''
+    else:
+        eplus_exe = "ENERGYPLUS_EXE_PATH='{}'".format(energyplus_exe_path)
+
+    if save_idf:
+        save_idf = "SAVE_IDF=True"
+    else:
+        save_idf = ''
+
+    if test_filter is None:
+        filt = ''
+    else:
+        filt = "-n /{}/".format(test_filter)
+
+    # Default platform
+    if platform_name is None:
+        platform_name = platform.system()
+
+    example_tag = '{}_run{}'.format(platform_name, start_at)
+    print("Custom tags will be like this: first run = '{}'".format(example_tag))
+
+    COMMAND = "env CUSTOMTAG={c} {s} {e} {cli} {m} {filt}"
+    print("\nExample Command:\n"
+          "{}".format(COMMAND.format(c=example_tag, s=save_idf, e=eplus_exe,
+                                     m=os.path.join(ROOT_DIR,
+                                                    'model_tests.rb'),
+                                     cli=os_cli, filt=filt)))
+
+    if isnotebook():
+        tdqm_bar = tqdm.tqdm_notebook
+        desc = '<h3>Running {} Times</h3>'.format(run_n_times)
+        label = HTML(desc)
+        display(label)
+    else:
+        tdqm_bar = tqdm.tqdm
+
+    for i in tdqm_bar(range(start_at, run_n_times + start_at),
+                      total=run_n_times):
+        print("\n\n" + "="*80)
+        print(" "*20 + "S T A R T I N G    O N    R U N   {}".format(i))
+        print("="*80)
+        custom_tag = "{}_run{}".format(platform_name, i)
+
+        full_command = COMMAND.format(c=custom_tag, s=save_idf, e=eplus_exe,
+                                      m=os.path.join(ROOT_DIR,
+                                                     'model_tests.rb'),
+                                      cli=os_cli, filt=filt)
+        print(full_command)
+        c_args = shlex.split(full_command)
+
+        process = subprocess.Popen(c_args,
+                                   shell=False,
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
+
+        for line in iter(process.stdout.readline, b''):
+            l = line.rstrip().decode()
+            if 'Started with run options' in l:
+                continue
+            print(l)
+
+        process.stdout.close()
+        process.wait()
+
+    return True
+
+
+###############################################################################
+#             C O M M A N D    L I N E    F U N C T I O N S
+###############################################################################
+
+
+def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
+    if tagged:
+        # Tagged-only
+        df_files = find_info_osws_with_tags(compat_matrix=None,
+                                            tags_only=True)
+    elif all_osws:
+        # All osws
+        df_files = find_info_osws_with_tags(compat_matrix=None,
+                                            tags_only=False)
+    else:
+        df_files = find_info_osws()
+
+    def background_colors(val):
+        fmt = ''
+        s = 'background-color: {}'
+        if val == 'Fail':
+            fmt = s.format('#F4C7C3')
+        elif val == 'N/A':
+            fmt = s.format('#EDEDED') + "; color: #ADADAD;"
+        elif val == '':
+            fmt = s.format('#f2e2c1')
+        return fmt
+
+    def hover(hover_color="#ffff99"):
+        return dict(selector="tr:hover",
+                    props=[("background-color", "%s" % hover_color)])
+
+    styles = [
+        hover(),
+        dict(selector="td", props=[("text-align", "center")]),
+        dict(selector="caption", props=[("caption-side", "bottom")])
+    ]
+
+    success = success_sheet(df_files)
+
+    if not entire_table:
+        ruby_or_osm_fail = (success.groupby(level='Test')['n_fail+missing']
+                                   .sum().sort_values(ascending=False) > 0)
+
+        print("Filtering only tests where there is a missing or failed osm OR"
+              "ruby test")
+        # success = success[success['n_fail+missing'] > 0]
+        success = success.loc[[x for x in success.index if x[0]
+                               in ruby_or_osm_fail.index[ruby_or_osm_fail]]]
+    html = (success.style
+                   .applymap(background_colors)
+                   .set_table_styles(styles)
+                   .set_caption("Test Success")).render()
+
+    filepath = 'Regression_Test_Status.html'
+    with open(filepath, 'w') as f:
+        f.write(html)
+
+    print("HTML file saved in {}".format(os.path.join(os.getcwd(), filepath)))
+    if sys.platform.startswith('darwin'):
+        subprocess.call(('open', filepath))
+    elif os.name == 'nt':
+        os.startfile(filepath)
+    elif os.name == 'posix':
+        subprocess.call(('xdg-open', filepath))
+
+
+def cli_heatmap(tagged=False, all_osws=False,
+                row_threshold=0.01,
+                display_threshold=0.001,
+                save_indiv_figs_for_ax=False,
+                figname_with_thresholds=True):
     """
     Helper function called from the CLI to plot the heatmap
     """
 
-    df_files = find_info_osws()
+    if tagged:
+        # Tagged-only
+        df_files = find_info_osws_with_tags(compat_matrix=None,
+                                            tags_only=True)
+    elif all_osws:
+        # All osws
+        df_files = find_info_osws_with_tags(compat_matrix=None,
+                                            tags_only=False)
+    else:
+        df_files = find_info_osws()
+
     site_kbtu = df_files.applymap(parse_total_site_energy)
 
     if figname_with_thresholds:
@@ -1037,30 +1341,36 @@ def cli_heatmap(row_threshold, display_threshold,
     else:
         figname = 'site_kbtu_pct_change.png'
 
-    heatmap_sitekbtu_pct_change(site_kbtu=site_kbtu,
-                                row_threshold=row_threshold,
-                                display_threshold=display_threshold,
-                                figname=figname,
-                                savefig=True,
-                                show_plot=False,
-                                save_indiv_figs_for_ax=True)
-    if sys.platform.startswith('darwin'):
-        subprocess.call(('open', figname))
-    elif os.name == 'nt':
-        os.startfile(figname)
-    elif os.name == 'posix':
-        subprocess.call(('xdg-open', figname))
+    if os._exists(figname):
+        os.remvove(figname)
+
+    s = heatmap_sitekbtu_pct_change(site_kbtu=site_kbtu,
+                                    row_threshold=row_threshold,
+                                    display_threshold=display_threshold,
+                                    figname=figname,
+                                    savefig=True,
+                                    show_plot=False,
+                                    save_indiv_figs_for_ax=True)
+    if s:
+        if sys.platform.startswith('darwin'):
+            subprocess.call(('open', figname))
+        elif os.name == 'nt':
+            os.startfile(figname)
+        elif os.name == 'posix':
+            subprocess.call(('xdg-open', figname))
 
 
 def cli_upload():
     """
     Helper function called from the CLI to upload to google sheets
     """
-    _ = update_and_upload()
+    update_and_upload()
     print("All results uploaded to {}".format(SHEET_URL))
 
 
 # If run from command line rather than imported
+# This should really happen anymore unless for testing
+# Preferred way is to either import or just the CLI
 if __name__ == "__main__":
 
     site_kbtu = None
