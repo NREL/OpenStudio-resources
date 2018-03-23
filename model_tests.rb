@@ -28,7 +28,6 @@ if ENV['DONOTRERUNIFSUCCESS'].to_s.downcase == "true"
   $DoNotReRunIfSuccess=true
 end
 
-
 require 'minitest/autorun'
 
 begin
@@ -1441,8 +1440,6 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('zone_mixing.rb')
   end
 
-
-
   def test_afn_single_zone_nv_rb
     result = sim_test('afn_single_zone_nv.rb')
   end
@@ -1454,6 +1451,11 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_afn_single_zone_ac_rb
     result = sim_test('afn_single_zone_ac.rb')
   end
+
+  # TODO: add this test once the ruby version works
+  # def test_afn_single_zone_ac_osm
+  #   result = sim_test('afn_single_zone_ac.osm')
+  # end
 
   def test_foundation_kiva_osm
     result = sim_test('foundation_kiva.osm')
