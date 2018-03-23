@@ -38,13 +38,13 @@
     "   ************* All Return Air Paths passed integrity testing",
     "   ************* No node connection errors were found.",
     "   ************* Beginning Simulation",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 1\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -7.07",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 09:47 - 09:50",
+    "   ** Warning ** Processing Monthly Tabular Reports: Variable names not valid for this simulation",
+    "   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual variables.",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 1\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -7.80",
+    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 09:29 - 09:30",
     "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** ElectricEIRChillerModel - CHILLER:ELECTRIC:EIR \"CHILLER ELECTRIC EIR 1\" - Air Cooled Condenser Inlet Temperature below 0C.",
-    "   **   ~~~   ** ... Outdoor Dry-bulb Condition =  -6.70 C. Occurrence info = RUN PERIOD 1, 01/01 09:50 - 09:53",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:TwoStageWithHumidityControlMode \"COIL COOLING DX TWO STAGE WITH HUMIDITY CONTROL MODE 1\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -3.40",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 02/16 14:43 - 14:47",
+    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:TwoStageWithHumidityControlMode \"COIL COOLING DX TWO STAGE WITH HUMIDITY CONTROL MODE 1\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -3.45",
+    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 02/16 14:40 - 14:45",
     "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
     "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-ELECTRICITY\" has no energy cost. ",
     "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
@@ -66,22 +66,16 @@
     "   ************* The following recurring error messages occurred.",
     "   *************",
     "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 1\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 3114 total times;",
+    "   *************  **   ~~~   **   This error occurred 2846 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-3.333333E-002 [C]  Min=-17.2 [C]",
-    "   *************",
-    "   *************  ** Warning ** ElectricEIRChillerModel - CHILLER:ELECTRIC:EIR \"CHILLER ELECTRIC EIR 1\" - Air Cooled Condenser Inlet Temperature below 0C error continues.",
-    "   *************  **   ~~~   **   This error occurred 2595 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-3.333333E-002 [C]  Min=-17.25 [C]",
+    "   *************  **   ~~~   **   Max=-2.500000E-002 [C]  Min=-18.35 [C]",
     "   *************",
     "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:TwoStageWithHumidityControlMode=\"COIL COOLING DX TWO STAGE WITH HUMIDITY CONTROL MODE 1\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 49 total times;",
+    "   *************  **   ~~~   **   This error occurred 35 total times;",
     "   *************  **   ~~~   **   during Warmup 0 times;",
     "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-0.366667 [C]  Min=-4.4 [C]",
+    "   *************  **   ~~~   **   Max=-0.55 [C]  Min=-4.4 [C]",
     "   *************",
     "   *************",
     "   ************* ===== Final Error Summary =====",
@@ -93,7 +87,7 @@
     "   *************",
     "   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.",
     "   ************* EnergyPlus Sizing Error Summary. During Sizing: 9 Warning; 0 Severe Errors.",
-    "   ************* EnergyPlus Completed Successfully-- 5780 Warning; 0 Severe Errors; "
+    "   ************* EnergyPlus Completed Successfully-- 2903 Warning; 0 Severe Errors; "
   ],
   "seed_file": "in.osm",
   "steps": [
@@ -215,12 +209,12 @@
           {
             "name": "total_site_energy",
             "units": "kBtu",
-            "value": 4117715.65
+            "value": 3676885.91
           },
           {
             "name": "net_site_energy",
             "units": "kBtu",
-            "value": 4117715.65
+            "value": 3676885.91
           },
           {
             "name": "total_building_area",
@@ -230,32 +224,32 @@
           {
             "name": "total_site_eui",
             "units": "kBtu/ft^2",
-            "value": 38.25
+            "value": 34.16
           },
           {
             "name": "eui",
             "units": "kBtu/ft^2",
-            "value": 38.25
+            "value": 34.16
           },
           {
             "name": "unmet_hours_during_heating",
             "units": "hr",
-            "value": 866.5
+            "value": 937
           },
           {
             "name": "unmet_hours_during_cooling",
             "units": "hr",
-            "value": 2220
+            "value": 3790.5
           },
           {
             "name": "unmet_hours_during_occupied_heating",
             "units": "hr",
-            "value": 479.67
+            "value": 542.5
           },
           {
             "name": "unmet_hours_during_occupied_cooling",
             "units": "hr",
-            "value": 1852.17
+            "value": 3395
           },
           {
             "name": "unmet_hours_tolerance_heating",
@@ -270,12 +264,12 @@
           {
             "name": "end_use_heating",
             "units": "kBtu",
-            "value": 987672.83
+            "value": 892312.95
           },
           {
             "name": "end_use_cooling",
             "units": "kBtu",
-            "value": 472439.44
+            "value": 291292.64
           },
           {
             "name": "end_use_interior_lighting",
@@ -300,12 +294,12 @@
           {
             "name": "end_use_fans",
             "units": "kBtu",
-            "value": 517081.63
+            "value": 314296.16
           },
           {
             "name": "end_use_pumps",
             "units": "kBtu",
-            "value": 51286.38
+            "value": 89758.28
           },
           {
             "name": "end_use_heat_rejection",
@@ -340,12 +334,12 @@
           {
             "name": "fuel_electricity",
             "units": "kBtu",
-            "value": 3234966.18
+            "value": 2808003.0
           },
           {
             "name": "fuel_natural_gas",
             "units": "kBtu",
-            "value": 799493.22
+            "value": 683101.28
           },
           {
             "name": "fuel_additional_fuel",
@@ -355,22 +349,22 @@
           {
             "name": "fuel_district_cooling",
             "units": "kBtu",
-            "value": 46954.86
+            "value": 124201.96
           },
           {
             "name": "fuel_district_heating",
             "units": "kBtu",
-            "value": 36301.4
+            "value": 61589.16
           },
           {
             "name": "end_use_electricity_heating",
             "units": "kWh",
-            "value": 53025
+            "value": 47522.22
           },
           {
             "name": "end_use_electricity_cooling",
             "units": "kWh",
-            "value": 116183.33
+            "value": 44711.11
           },
           {
             "name": "end_use_electricity_interior_lighting",
@@ -395,12 +389,12 @@
           {
             "name": "end_use_electricity_fans",
             "units": "kWh",
-            "value": 151541.67
+            "value": 92111.11
           },
           {
             "name": "end_use_electricity_pumps",
             "units": "kWh",
-            "value": 15030.56
+            "value": 26305.56
           },
           {
             "name": "end_use_electricity_heat_rejection",
@@ -435,12 +429,12 @@
           {
             "name": "end_use_natural_gas_heating",
             "units": "therms",
-            "value": 7705.91
+            "value": 6687.0
           },
           {
             "name": "end_use_natural_gas_cooling",
             "units": "therms",
-            "value": 290.56
+            "value": 145.33
           },
           {
             "name": "end_use_natural_gas_interior_lighting",
@@ -505,12 +499,12 @@
           {
             "name": "electricity_heating_ip",
             "units": "kWh",
-            "value": 53025.33
+            "value": 47523.39
           },
           {
             "name": "electricity_cooling_ip",
             "units": "kWh",
-            "value": 116183.61
+            "value": 44711.38
           },
           {
             "name": "electricity_interior_lighting_ip",
@@ -535,12 +529,12 @@
           {
             "name": "electricity_fans_ip",
             "units": "kWh",
-            "value": 151540.47
+            "value": 92110.72
           },
           {
             "name": "electricity_pumps_ip",
             "units": "kWh",
-            "value": 15031.92
+            "value": 26304.31
           },
           {
             "name": "electricity_heat_rejection_ip",
@@ -575,17 +569,17 @@
           {
             "name": "electricity_ip",
             "units": "kWh",
-            "value": 948075.61
+            "value": 822944.09
           },
           {
             "name": "natural_gas_heating_ip",
             "units": "MBtu",
-            "value": 770.45
+            "value": 668.57
           },
           {
             "name": "natural_gas_cooling_ip",
             "units": "MBtu",
-            "value": 29.05
+            "value": 14.53
           },
           {
             "name": "natural_gas_interior_lighting_ip",
@@ -650,7 +644,7 @@
           {
             "name": "natural_gas_ip",
             "units": "MBtu",
-            "value": 799.5
+            "value": 683.1
           },
           {
             "name": "additional_fuel_heating_ip",
@@ -735,7 +729,7 @@
           {
             "name": "district_cooling_cooling_ip",
             "units": "MBtu",
-            "value": 46.95
+            "value": 124.2
           },
           {
             "name": "district_cooling_interior_lighting_ip",
@@ -800,12 +794,12 @@
           {
             "name": "district_cooling_ip",
             "units": "MBtu",
-            "value": 46.95
+            "value": 124.2
           },
           {
             "name": "district_heating_heating_ip",
             "units": "MBtu",
-            "value": 36.3
+            "value": 61.59
           },
           {
             "name": "district_heating_cooling_ip",
@@ -875,7 +869,7 @@
           {
             "name": "district_heating_ip",
             "units": "MBtu",
-            "value": 36.3
+            "value": 61.59
           },
           {
             "name": "water_heating_ip",
@@ -995,7 +989,7 @@
           {
             "name": "exterior_lighting_total_consumption",
             "units": "kWh",
-            "value": 1206783.33
+            "value": 1077588.89
           },
           {
             "name": "inflation_approach",
@@ -1009,7 +1003,7 @@
           {
             "name": "annual_peak_electric_demand",
             "units": "kW",
-            "value": 319.46
+            "value": 265.69
           },
           {
             "name": "first_year_capital_cost",
