@@ -167,6 +167,50 @@ Launch all versions (you can modify the hardcoded arguments atop the script `lau
 **Please refer to the [Instructions for Running Docker](doc/Instructions_Docker.md) for more info, especially if you use Windows.**
 
 
+## Testing Stability of a test
+
+We want to make sure that a given ruby test is **stable** meaning that if you run it multiple times in a row on the same machine, it should always produce the exact same result.
+
+**Common causes of instability include such code**
+
+```
+model.getThermalZones.each_with_index do |z, i|
+  if i == 0
+    # Assign a ZoneHVAC:FourPipeFanCoil
+  elif if == 1
+    # Assign a ZoneHVAC:PackagedTerminalAirConditioner
+  ...
+end
+```
+
+It is possible that the thermalZones would be in a different order in the OSM file, so upon subsequent runs you want be putting your systems in different zones.
+The `lib/baseline_model.rb` does *name* spaces and zones in a reliable manner, so the above loop can be refactored to sort by zone name:
+
+```ruby
+model.getThermalZones.sort_by{|z| z.name.to_s}.each_with_index do |z, i|
+```
+
+**Testing stability**
+
+You can use the CLI to test for stability of a given test (or several). This relies on using custom tags for the
+`ut.osw` - eg files will be named 'testname_X.Y.Z_out_Linux_run3.osw' -, and parsing all custom tagged files to display the heatmap of difference or a text indicating compliance
+
+
+```bash
+# Clean up all custom-tagged OSWs
+python process_results.py test-stability clean
+# Run your test 5 times in a row. Replace `testname_rb` (eg `airterminal_fourpipebeam_rb`)
+python process_results.py test-stability -n testname_rb
+# Check that they all passed
+python process_results.py test-status --tagged
+# Check site kBTU differences
+python process_results.py heatmap --tagged
+```
+
+The embedded CLI documentation has options to customize the behavior of these commands, including passing the path to openstudio, run more or less times (defaults to 5 times), etc.
+
+
+
 ## Three-way analysis when a new E+ version is out.
 
 **When two subsequent OpenStudio versions use different E+ versions, we expect to see deviations, but we want to be able to tell if these deviations come from E+ or OpenStudio.**
@@ -185,3 +229,8 @@ Then the notebook allows you to load up the resulting data and analyze whether d
 * All tests: Total Site Energy differences
 * For a specific test, look at End Use by Fuel differences to gauge where differences may be coming from.
 
+
+## Contributing
+
+You are encouraged to create pull requests. An overall pull request template is provided for you to use, but it requires deleting unused section.
+You can open a specific PR template directly by appending `?template=xxx` argument with the value `newtest.md`, `testfix.md` or `newtestforexisting.md`
