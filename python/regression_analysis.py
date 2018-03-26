@@ -81,6 +81,7 @@ PRETTY_NAMES = {'cooling': 'Cooling',
 # Avoid having a prompt for new version
 OS_EPLUS_DICT = {'2.4.4': '8.9.0'}
 
+
 def isnotebook():
     """
     Helper function: is this running in a jupyter notebook?
@@ -267,6 +268,56 @@ def find_osm_test_versions():
     return model_test_cases
 
 
+def parse_model_tests_rb():
+    """
+    This functions looks for `def test_xxx_(rb|osm)` in model_tests.rb and
+    returns the name of the actual file called on the following line
+
+    eg:
+    model_tests.rb
+    ```
+    def test_intersect_test3_osm
+      result = intersect_test('test3.osm')
+    end
+
+    ```
+    Will append a tuple of ('test3', 'osm')
+
+    Returns:
+    --------
+    tests (list of tuples): a list of all tests (filename, ext)
+
+    """
+
+    with open(os.path.join(ROOT_DIR, 'model_tests.rb'), 'r') as f:
+        lines = f.read().splitlines()
+
+    test_pat = re.compile(r'^\s*def test_(.+)_(rb|osm)\s*$')
+    # The intersect tests are special, so we only parse autosizing and sim
+    res_pat = re.compile(r"^\s*result\s*=\s*(?:autosizing|sim)_test\('(.*)\.(rb|osm)'\)\s*")
+
+    # minitests = []
+    tests = []
+    # minitests_names = {}
+    for i, line in enumerate(lines):
+        m = test_pat.match(line)
+        if m:
+            # minitests.append((m.groups()[0], m.groups()[1]))
+            m2 = res_pat.match(lines[i+1])
+            if m2:
+                tests.append((m2.groups()[0], m2.groups()[1]))
+                # minitests_names[(m2.groups()[0],
+                # m2.groups()[1])] = (m.groups()[0], m.groups()[1])
+            else:
+                if 'intersect_test' in lines[i+1]:
+                    # Expected behavior
+                    pass
+                else:
+                    print("Expected result = xxxx on line {}, got: "
+                          "{}".format(i+1), lines[i+1])
+    return tests
+
+
 def find_info_osws(compat_matrix=None, test_dir=None):
     """
     Looks for files in the test/ folder, and parses version and type (rb, osm)
@@ -355,6 +406,7 @@ def find_info_osws(compat_matrix=None, test_dir=None):
     df_files.columns = pd.MultiIndex.from_tuples([(version_dict[x], x)
                                                   for x in df_files.columns],
                                                  names=['E+', 'OS'])
+
     return df_files
 
 
@@ -987,23 +1039,31 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     g_toplot.columns = ["\n".join(x) for x in g_toplot.columns]
     g_toplot.columns.names = ['E+\nOS']
 
-    if g_toplot.empty:
-        if (site_kbtu_change.iloc[:, 1:] != 0).any().any():
+    max_abs_diff = site_kbtu_change.iloc[:, 1:].abs().max().max()
 
-            msg = ("There are no percentages differences that are above the "
-                    "threshold={:.4%} for any test/version,"
-                    "but there are some non-zero values, absolute max diff is"
-                    "{:.5%}".format(row_threshold,
-                                    site_kbtu_change.abs().max().max()))
+    if g_toplot.empty:
+
+        if (max_abs_diff != 0):
+
+            if max_abs_diff > (0.0001 / 100.0):
+                msg = ("Warning: There are no percentages differences that are"
+                       " above the threshold={:.4%} for any test/version,"
+                       "but there are some non-zero values, absolute max diff "
+                       "is {:.4%}".format(row_threshold,
+                                          site_kbtu_change.abs().max().max()))
+            else:
+                msg = ("OK: There are no meaningful differences (<0.0001%)"
+                       "Max diff is {}".format(max_abs_diff))
         else:
-            msg = "There are NO differences at all"
+            msg = "OK: There are NO differences at all"
 
         print(msg)
         return False
-
+    else:
+        print("Max Absolute difference: {:.4%}".format(max_abs_diff))
     if figsize is None:
         w = 16
-        h = w * g_toplot.shape[0] / (3 * g_toplot.shape[1])
+        h = max(w * g_toplot.shape[0] / (3 * g_toplot.shape[1]), 4.0)
     else:
         w = figsize[0]
         h = figsize[1]
@@ -1198,7 +1258,8 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
         platform_name = platform.system()
 
     example_tag = '{}_run{}'.format(platform_name, start_at)
-    print("Custom tags will be like this: first run = '{}'".format(example_tag))
+    print("Custom tags will be like this: first run = "
+          "'{}'".format(example_tag))
 
     COMMAND = "env CUSTOMTAG={c} {s} {e} {cli} {m} {filt}"
     print("\nExample Command:\n"
@@ -1235,10 +1296,10 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
                                    stderr=subprocess.PIPE)
 
         for line in iter(process.stdout.readline, b''):
-            l = line.rstrip().decode()
-            if 'Started with run options' in l:
+            stripped_line = line.rstrip().decode()
+            if 'Started with run options' in stripped_line:
                 continue
-            print(l)
+            print(stripped_line)
 
         process.stdout.close()
         process.wait()
@@ -1284,13 +1345,22 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
         dict(selector="caption", props=[("caption-side", "bottom")])
     ]
 
+    # This shows all tests that are implemented but where we don't even have
+    # a single out.osw in any OpenStudio that exists,
+    # meaning the simulation
+    all_tests = parse_model_tests_rb()
+    totally_failing_tests = set(all_tests) - set(df_files.index.tolist())
+    if totally_failing_tests:
+        print("The following tests failed in all openstudio versions")
+        print(totally_failing_tests)
+
     success = success_sheet(df_files)
 
     if not entire_table:
         ruby_or_osm_fail = (success.groupby(level='Test')['n_fail+missing']
                                    .sum().sort_values(ascending=False) > 0)
 
-        print("Filtering only tests where there is a missing or failed osm OR"
+        print("Filtering only tests where there is a missing or failed osm OR "
               "ruby test")
         # success = success[success['n_fail+missing'] > 0]
         success = success.loc[[x for x in success.index if x[0]

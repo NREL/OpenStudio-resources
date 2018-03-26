@@ -147,8 +147,7 @@ if __name__ == "__main__":
     options = docopt(__doc__)
 
     # Debug
-
-    print(options)
+    # print(options)
     # exit()
 
     if options['heatmap']:
