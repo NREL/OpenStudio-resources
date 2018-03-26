@@ -148,6 +148,92 @@ def run_command(command, dir, timeout = Float::INFINITY)
   Dir.chdir(pwd)
 end
 
+# Helper function to post-process the out.osw and save it in test/ with
+# the right naming pattern
+# It also asserts whether the run was successful
+#
+# Cleaning includes removing timestamp and deleting :eplusout_err key if
+# bigger than 100 KiB
+def postprocess_out_osw_and_copy(filename)
+
+  dir = File.join($TestDir, filename)
+  out_osw = File.join(dir, 'out.osw')
+  # Cp to the OutOSW directory
+  cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.osw")
+
+  fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
+
+  result_osw = nil
+  File.open(out_osw, 'r') do |f|
+    result_osw = JSON::parse(f.read, :symbolize_names=>true)
+  end
+
+  if !result_osw.nil?
+    # FileUtils.cp(out_osw, cp_out_osw)
+
+    # Instead of just copying, we clean up the osw then export that to a file
+    # Remove timestamps and hash
+    if result_osw.keys.include?(:eplusout_err)
+      result_osw[:eplusout_err].gsub!(/YMD=.*?,/, '')
+      result_osw[:eplusout_err].gsub!(/Elapsed Time=.*?\n/, '')
+      # Replace eplusout_err by a list of lines instead of a big string
+      # Will make git diffing easier
+      result_osw[:eplusout_err] = result_osw[:eplusout_err].split("\n")
+    end
+
+    result_osw.delete(:completed_at)
+    result_osw.delete(:hash)
+    result_osw.delete(:started_at)
+    result_osw.delete(:updated_at)
+
+    # Should always be true
+    if (result_osw[:steps].size == 1) && (result_osw[:steps].select{|s| s[:measure_dir_name] == 'openstudio_results'}.size == 1)
+      # If something went wrong, there wouldn't be results
+      if result_osw[:steps][0].keys.include?(:result)
+        result_osw[:steps][0][:result].delete(:completed_at)
+        result_osw[:steps][0][:result].delete(:started_at)
+        result_osw[:steps][0][:result].delete(:step_files)
+
+        # Round all numbers to 2 digits to avoid excessive diffs
+        # result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
+        result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
+          if h[:value].is_a? Float
+            result_osw[:steps][0][:result][:step_values][i][:value] = h[:value].round(2)
+          end
+        end
+      end
+    end
+
+
+    # The fuel cell tests produce out.osw files that are about 800 MB
+    # because E+ throws a warning in the Regula Falsi routine (an E+ bug)
+    # which results in about 7.5 Million times the same warning
+    # So if the file size is bigger than 100 KiB, we throw out the eplusout_err
+    if File.size(out_osw) > 100000
+      result_osw.delete(:eplusout_err)
+    end
+
+    File.open(cp_out_osw,"w") do |f|
+      f.write(JSON.pretty_generate(result_osw))
+    end
+
+    if $Save_idf
+      in_idf = File.join(dir, 'run/in.idf')
+      if File.exists?(in_idf)
+        cp_in_idf = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.idf")
+        FileUtils.cp(in_idf, cp_in_idf)
+      end
+    end
+
+  end
+
+  # standard checks
+  assert_equal("Success", result_osw[:completed_status])
+
+  return result_osw
+
+end
+
 # run a simulation test
 def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measures = [], reporting_measures = [])
 
@@ -245,74 +331,7 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
 
   run_command(command, dir, 3600)
 
-  fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
-
-  result_osw = nil
-  File.open(out_osw, 'r') do |f|
-    result_osw = JSON::parse(f.read, :symbolize_names=>true)
-  end
-
-  if !result_osw.nil?
-    # FileUtils.cp(out_osw, cp_out_osw)
-
-    # Instead of just copying, we clean up the osw then export that to a file
-    # Remove timestamps and hash
-    if result_osw.keys.include?(:eplusout_err)
-      result_osw[:eplusout_err].gsub!(/YMD=.*?,/, '')
-      result_osw[:eplusout_err].gsub!(/Elapsed Time=.*?\n/, '')
-      # Replace eplusout_err by a list of lines instead of a big string
-      # Will make git diffing easier
-      result_osw[:eplusout_err] = result_osw[:eplusout_err].split("\n")
-    end
-
-    result_osw.delete(:completed_at)
-    result_osw.delete(:hash)
-    result_osw.delete(:started_at)
-    result_osw.delete(:updated_at)
-
-    # Should always be true
-    if (result_osw[:steps].size == 1) && (result_osw[:steps].select{|s| s[:measure_dir_name] == 'openstudio_results'}.size == 1)
-      # If something went wrong, there wouldn't be results
-      if result_osw[:steps][0].keys.include?(:result)
-        result_osw[:steps][0][:result].delete(:completed_at)
-        result_osw[:steps][0][:result].delete(:started_at)
-        result_osw[:steps][0][:result].delete(:step_files)
-
-        # Round all numbers to 2 digits to avoid excessive diffs
-        # result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
-        result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
-          if h[:value].is_a? Float
-            result_osw[:steps][0][:result][:step_values][i][:value] = h[:value].round(2)
-          end
-        end
-      end
-    end
-
-
-    # The fuel cell tests produce out.osw files that are about 800 MB
-    # because E+ throws a warning in the Regula Falsi routine (an E+ bug)
-    # which results in about 7.5 Million times the same warning
-    # So if the file size is bigger than 100 KiB, we throw out the eplusout_err
-    if File.size(out_osw) > 100000
-      result_osw.delete(:eplusout_err)
-    end
-
-    File.open(cp_out_osw,"w") do |f|
-      f.write(JSON.pretty_generate(result_osw))
-    end
-
-    if $Save_idf
-      in_idf = File.join(dir, 'run/in.idf')
-      if File.exists?(in_idf)
-        cp_in_idf = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.idf")
-        FileUtils.cp(in_idf, cp_in_idf)
-      end
-    end
-
-  end
-
-  # standard checks
-  assert_equal("Success", result_osw[:completed_status])
+  result_osw = postprocess_out_osw_and_copy(filename)
 
   # return result_osw for further checks
   return result_osw
@@ -388,12 +407,12 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
   end
 
   # DLM: this line fails on a clean repo if run_sim is false, why would you want run_sim to be false?
-  fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
+  # JM: because this is useful if you're just modifying the code below
+  # (= the checks) after a successful first run as you don't have to wait
+  # minutes for the simulation itself to rerun
+  # fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
 
-  result_osw = nil
-  File.open(out_osw, 'r') do |f|
-    result_osw = JSON::parse(f.read, :symbolize_names=>true)
-  end
+  result_osw = postprocess_out_osw_and_copy(filename)
 
   # Load the model
   versionTranslator = OpenStudio::OSVersion::VersionTranslator.new
@@ -969,7 +988,7 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('ems_scott.osm')
   end
 
-  def test_ems_1floor_SpaceType_1space
+  def test_ems_1floor_SpaceType_1space_osm
     result = sim_test('ems_1floor_SpaceType_1space.osm')
   end
 
@@ -1526,5 +1545,8 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_autosizing_rb
     result = autosizing_test('autosize_hvac.rb')
   end
+
+  # TODO: model/refbuildingtests/CreateRefBldgModel.rb is unused
+  # Either implement as a test, or delete
 
 end
