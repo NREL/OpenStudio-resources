@@ -63,7 +63,11 @@ The following has been checked to ensure compliance with the guidelines:
         python process_results.py test-stability clean
         # Run your test 5 times in a row. Replace `testname_rb` (eg `airterminal_fourpipebeam_rb`)
         python process_results.py test-stability -n testname_rb
+        # Check that they all passed
+        python process_results.py test-status --tagged
+        # Check site kBTU differences
         python process_results.py heatmap --tagged
+
         ```
 
 ----------------------------------------------------------------------------------------------------------
@@ -95,6 +99,9 @@ Please include a link to the specific test you are modifying, and a description 
         python process_results.py test-stability clean
         # Run your test 5 times in a row. Replace `testname_rb` (eg `airterminal_fourpipebeam_rb`)
         python process_results.py test-stability run -n testname
+        # Check that they all passed
+        python process_results.py test-status --tagged
+        # Check site kBTU differences
         python process_results.py heatmap --tagged
 
         ```
@@ -129,6 +136,9 @@ The following has been checked to ensure compliance with the guidelines:
         python process_results.py test-stability clean
         # Run your test 5 times in a row. Replace `testname_rb` (eg `airterminal_fourpipebeam_rb`)
         python process_results.py test-stability -n testname_rb
+        # Check that they all passed
+        python process_results.py test-status --tagged
+        # Check site kBTU differences
         python process_results.py heatmap --tagged
 
         ```
