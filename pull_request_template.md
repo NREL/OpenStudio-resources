@@ -17,13 +17,13 @@ Depending on your answer, please fill out the required section below, and delete
 Please include which class(es) you are adding a test to specifically test for.
 Include a link to the OpenStudio Pull Request in which you are adding the new classes, or the class itself if already on develop.
 
-eg:
-
-This pull request is in relation with the Pull Request [#3031](https://github.com/NREL/OpenStudio/pull/3031), and  will specifically test for the following classes:
-* `AirTerminalSingleDuctConstantVolumeFourPipeBeam`
-* `CoilCoolingFourPipeBeam`
-* `CoilHeatingFourPipeBeam`
-* Additionally it explicitly tests for the existing class [TableMultiVariableLookUp](https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/model/TableMultiVariableLookup.hpp)
+> eg:
+>
+> This pull request is in relation with the Pull Request [#3031](https://github.com/NREL/OpenStudio/pull/3031), and  will specifically test for the following classes:
+> * `AirTerminalSingleDuctConstantVolumeFourPipeBeam`
+> * `CoilCoolingFourPipeBeam`
+> * `CoilHeatingFourPipeBeam`
+> * Additionally it explicitly tests for the existing class [TableMultiVariableLookUp](https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/model/TableMultiVariableLookup.hpp)
 
 #### Work Checklist
 
@@ -35,8 +35,8 @@ The following has been checked to ensure compliance with the guidelines:
          - [ ] All new `out.osw` have been committed
 
      - [ ] with current develop (incude SHA):
-         - [ ] A matching OSM test has not yet been added because the official release is pending, but `model_tests.rb` has a TODO.
          - [ ] The label `PendingOSM` has been added to this PR
+         - [ ] A matching OSM test has not yet been added because the official release is pending, but `model_tests.rb` has a TODO.
             ```ruby
             def test_airterminal_cooledbeam_rb
               result = sim_test('airterminal_cooledbeam.rb')
@@ -51,7 +51,7 @@ The following has been checked to ensure compliance with the guidelines:
         - [ ] No `out.osw` have been committed as they need to be run with an official OpenStudio version
 
 
- - [ ] Ruby test is stable: when run multiple times on the same machine, it produces the same total site kBTU.
+ - [ ] **Ruby test is stable**: when run multiple times on the same machine, it produces the same total site kBTU.
     Please paste the heatmap png generated after running the following commands:
      - [ ] I ensured that I assign systems/loads/etc in a repeatable manner (eg: if I assign stuff to thermalZones, I do `model.getThermalZones.sort_by{|z| z.name.to_s}.each do ...` so I am sure I put the same ZoneHVAC systems to the same zones regardless of their order)
      - [ ] I tested stability using `process_results.py` (see `python process_results.py --help` for usage).
@@ -80,11 +80,11 @@ Please include a link to the specific test you are modifying, and a description 
  - [ ] Test has been run backwards (see [Instructions for Running Docker](https://github.com/NREL/OpenStudio-resources/blob/develop/doc/Instructions_Docker.md)) for all OpenStudio versions to update numbers
  - [ ] Changes did not make the test fail in older OpenStudio versions where it used to pass
  - [ ] Matching OSM has been replaced with the output of the ruby test for the oldest OpenStudio release where it passes.
- - [ ] All new/changed `out.osw` have been committed
+ - [ ] All new/changed `out.osw` have been committed for official OpenStudio versions only
 
 **Either way:**
 
- - [ ] Ruby test is still stable: when run multiple times on the same machine, it produces the same total site kBTU.
+ - [ ] **Ruby test is still stable**: when run multiple times on the same machine, it produces the same total site kBTU.
      - [ ] I ensured that I assign systems/loads/etc in a repeatable manner (eg: if I assign Terminals to thermalZones, I do `model.getThermalZones.sort_by{|z| z.name.to_s}.each do ...` so I am sure I put the same ZoneHVAC systems to the same zones regardless of their order)
      - [ ] I tested stability using `process_results.py` (see `python process_results.py --help` for usage).
      Please paste the heatmap png generated after running the following commands:
@@ -113,10 +113,10 @@ Include a link to the OpenStudio model classes themselves.
 
 The following has been checked to ensure compliance with the guidelines:
 
- - [ ] Test has been run backwards (see [Instructions for Running Docker](https://github.com/NREL/OpenStudio-resources/blob/develop/doc/Instructions_Docker.md)) for all OpenStudio versions
- - [ ] A Matching OSM test has been added with the output of the ruby test for the oldest OpenStudio release where it passes (include OpenStudio Version)
+ - [ ] **Test has been run backwards** (see [Instructions for Running Docker](https://github.com/NREL/OpenStudio-resources/blob/develop/doc/Instructions_Docker.md)) for all OpenStudio versions
+ - [ ] **A Matching OSM test** has been added with the output of the ruby test for the oldest OpenStudio release where it passes (include OpenStudio Version)
 
- - [ ] Ruby test is stable in the last OpenStudio version: when run multiple times on the same machine, it produces the same total site kBTU.
+ - [ ] **Ruby test is stable** in the last OpenStudio version: when run multiple times on the same machine, it produces the same total site kBTU.
     - [ ] I ensured that I assign systems/loads/etc in a repeatable manner (eg: if I assign stuff to thermalZones, I do `model.getThermalZones.sort_by{|z| z.name.to_s}.each do ...` so I am sure I put the same ZoneHVAC systems to the same zones regardless of their order)
      - [ ] I tested stability using `process_results.py` (see `python process_results.py --help` for usage).
      Please paste the heatmap png generated after running the following commands:
