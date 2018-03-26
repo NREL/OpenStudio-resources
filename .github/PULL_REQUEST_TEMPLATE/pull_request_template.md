@@ -56,7 +56,7 @@ The following has been checked to ensure compliance with the guidelines:
     Please paste the heatmap png generated after running the following commands:
      - [ ] I ensured that I assign systems/loads/etc in a repeatable manner (eg: if I assign stuff to thermalZones, I do `model.getThermalZones.sort_by{|z| z.name.to_s}.each do ...` so I am sure I put the same ZoneHVAC systems to the same zones regardless of their order)
      - [ ] I tested stability using `process_results.py` (see `python process_results.py --help` for usage).
-     Please paste the heatmap png generated after running the following commands:
+    Please paste the text output or heatmap png generated after running the following commands:
         ```bash
         # Clean up all custom-tagged OSWs
         python process_results.py test-stability clean
@@ -88,7 +88,7 @@ Please include a link to the specific test you are modifying, and a description 
  - [ ] **Ruby test is still stable**: when run multiple times on the same machine, it produces the same total site kBTU.
      - [ ] I ensured that I assign systems/loads/etc in a repeatable manner (eg: if I assign Terminals to thermalZones, I do `model.getThermalZones.sort_by{|z| z.name.to_s}.each do ...` so I am sure I put the same ZoneHVAC systems to the same zones regardless of their order)
      - [ ] I tested stability using `process_results.py` (see `python process_results.py --help` for usage).
-     Please paste the heatmap png generated after running the following commands:
+    Please paste the text output or heatmap png generated after running the following commands:
         ```bash
         # Clean up all custom-tagged OSWs
         python process_results.py test-stability clean
@@ -122,7 +122,7 @@ The following has been checked to ensure compliance with the guidelines:
  - [ ] **Ruby test is stable** in the last OpenStudio version: when run multiple times on the same machine, it produces the same total site kBTU.
     - [ ] I ensured that I assign systems/loads/etc in a repeatable manner (eg: if I assign stuff to thermalZones, I do `model.getThermalZones.sort_by{|z| z.name.to_s}.each do ...` so I am sure I put the same ZoneHVAC systems to the same zones regardless of their order)
      - [ ] I tested stability using `process_results.py` (see `python process_results.py --help` for usage).
-     Please paste the heatmap png generated after running the following commands:
+    Please paste the text output or heatmap png generated after running the following commands:
         ```bash
         # Clean up all custom-tagged OSWs
         python process_results.py test-stability clean
