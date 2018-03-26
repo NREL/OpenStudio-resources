@@ -2,6 +2,7 @@ Pull request overview
 ---------------------
 
 Please change this line to a description of the pull request, with useful supporting information.
+**Note**: You can open a specific PR template directly by appending `?template=xxx` argument with the value `newtest.md`, `testfix.md` or `newtestforexisting.md`.
 
 This Pull Request is concerning:
 
