@@ -32,23 +32,26 @@ The following has been checked to ensure compliance with the guidelines:
  - [ ] Tests pass either:
      - [ ] with official OpenStudio release (include version):
          - [ ] A matching OSM test has been added from the successful run of the Ruby one with the official OpenStudio release
+         - [ ] All new `out.osw` have been committed
 
      - [ ] with current develop (incude SHA):
          - [ ] A matching OSM test has not yet been added because the official release is pending, but `model_tests.rb` has a TODO.
          - [ ] The label `PendingOSM` has been added to this PR
-```ruby
-def test_airterminal_cooledbeam_rb
-  result = sim_test('airterminal_cooledbeam.rb')
-end
+            ```ruby
+            def test_airterminal_cooledbeam_rb
+              result = sim_test('airterminal_cooledbeam.rb')
+            end
 
-# TODO : To be added once the next official release
-# including this object is out : 2.5.0
-# def test_airterminal_fourpipebeam_osm
-#   result = sim_test('airterminal_fourpipebeam.osm')
-# end
-```
+            # TODO : To be added once the next official release
+            # including this object is out : 2.5.0
+            # def test_airterminal_fourpipebeam_osm
+            #   result = sim_test('airterminal_fourpipebeam.osm')
+            # end
+            ```
+        - [ ] No `out.osw` have been committed as they need to be run with an official OpenStudio version
 
- - [ ] Ruby test is stable: when ran multiple times on the same machine, it produces the same total site kBTU.
+
+ - [ ] Ruby test is stable: when run multiple times on the same machine, it produces the same total site kBTU.
     Please paste the heatmap png generated after running the following commands:
      - [ ] I ensured that I assign systems/loads/etc in a repeatable manner (eg: if I assign stuff to thermalZones, I do `model.getThermalZones.sort_by{|z| z.name.to_s}.each do ...` so I am sure I put the same ZoneHVAC systems to the same zones regardless of their order)
      - [ ] I tested stability using `process_results.py` (see `python process_results.py --help` for usage).
@@ -69,18 +72,19 @@ Please include a link to the specific test you are modifying, and a description 
 
 ### Work Checklist
 
-Add to this list or remove from it as applicable.  This is a simple templated set of guidelines.
-
-The change:
+**The change:**
  - [ ] affects site kBTU results
  - [ ] does not affect total site kBTU results
 
-If it affects total site kBTU:
+**If it affects total site kBTU:**
  - [ ] Test has been run backwards (see [Instructions for Running Docker](https://github.com/NREL/OpenStudio-resources/blob/develop/doc/Instructions_Docker.md)) for all OpenStudio versions to update numbers
  - [ ] Changes did not make the test fail in older OpenStudio versions where it used to pass
  - [ ] Matching OSM has been replaced with the output of the ruby test for the oldest OpenStudio release where it passes.
  - [ ] All new/changed `out.osw` have been committed
- - [ ] Ruby test is stable: when ran multiple times on the same machine, it produces the same total site kBTU.
+
+**Either way:**
+
+ - [ ] Ruby test is still stable: when run multiple times on the same machine, it produces the same total site kBTU.
      - [ ] I ensured that I assign systems/loads/etc in a repeatable manner (eg: if I assign Terminals to thermalZones, I do `model.getThermalZones.sort_by{|z| z.name.to_s}.each do ...` so I am sure I put the same ZoneHVAC systems to the same zones regardless of their order)
      - [ ] I tested stability using `process_results.py` (see `python process_results.py --help` for usage).
      Please paste the heatmap png generated after running the following commands:
@@ -98,14 +102,12 @@ If it affects total site kBTU:
 Please include which class(es) you are adding a test to specifically test for as it was currently not being tested for.
 Include a link to the OpenStudio model classes themselves.
 
-eg:
-
-This pull request adds missing tests for the following classes:
-*  [AvailabilibityManagerDifferentialThermostat](https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/model/AvailabilityManagerDifferentialThermostat.hpp)
-*  [AvailabilibityManagerHighTemperatureTurnOff](https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/model/AvailabilityManagerHighTemperatureTurnOff.hpp)
-*  [AvailabilibityManagerHighTemperatureTurnOn](https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/model/AvailabilityManagerHighTemperatureTurnOn.hpp)
-*  [AvailabilibityManagerHighTemperatureTurnOff](https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/model/AvailabilityManagerHighTemperatureTurnOff.hpp)
-*  [AvailabilibityManagerHighTemperatureTurnOn](https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/model/AvailabilityManagerHighTemperatureTurnOn.hpp)
+> eg:
+>
+> This pull request adds missing tests for the following classes:
+> *  [AvailabilibityManagerDifferentialThermostat](https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/model/AvailabilityManagerDifferentialThermostat.hpp)
+> *  [AvailabilibityManagerHighTemperatureTurnOff](https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/model/AvailabilityManagerHighTemperatureTurnOff.hpp)
+> *  [AvailabilibityManagerHighTemperatureTurnOn](https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/model/AvailabilityManagerHighTemperatureTurnOn.hpp)
 
 #### Work Checklist
 
@@ -114,7 +116,7 @@ The following has been checked to ensure compliance with the guidelines:
  - [ ] Test has been run backwards (see [Instructions for Running Docker](https://github.com/NREL/OpenStudio-resources/blob/develop/doc/Instructions_Docker.md)) for all OpenStudio versions
  - [ ] A Matching OSM test has been added with the output of the ruby test for the oldest OpenStudio release where it passes (include OpenStudio Version)
 
- - [ ] Ruby test is stable in the last OpenStudio version: when ran multiple times on the same machine, it produces the same total site kBTU.
+ - [ ] Ruby test is stable in the last OpenStudio version: when run multiple times on the same machine, it produces the same total site kBTU.
     - [ ] I ensured that I assign systems/loads/etc in a repeatable manner (eg: if I assign stuff to thermalZones, I do `model.getThermalZones.sort_by{|z| z.name.to_s}.each do ...` so I am sure I put the same ZoneHVAC systems to the same zones regardless of their order)
      - [ ] I tested stability using `process_results.py` (see `python process_results.py --help` for usage).
      Please paste the heatmap png generated after running the following commands:
