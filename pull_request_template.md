@@ -9,8 +9,9 @@ This Pull Request is concerning:
  - [ ] **Case 2 - `TestFix`:** a fix for an existing test. The GitHub issue should be referenced in the PR description
  - [ ] **Case 3 - `NewTestForExisting`:** a new test for an already-existing model API class
 
-Depending on your answer, please fill out the required section below, and delete the two others. Leave the review checklist here.
+Depending on your answer, please fill out the required section below, and delete the two others. Leave the review checklist in place.
 
+----------------------------------------------------------------------------------------------------------
 
 ### Case 1: New test for a new model API class
 
@@ -64,7 +65,7 @@ The following has been checked to ensure compliance with the guidelines:
         python process_results.py heatmap --tagged
         ```
 
-----
+----------------------------------------------------------------------------------------------------------
 
 ### Case 2: Fix for an existing test
 
@@ -96,6 +97,8 @@ Please include a link to the specific test you are modifying, and a description 
         python process_results.py heatmap --tagged
 
         ```
+
+----------------------------------------------------------------------------------------------------------
 
 ### Case 3: New test for an already-existing model API class
 
