@@ -18,6 +18,12 @@ Using the OpenStudio CLI:
 openstudio model_tests.rb
 ```
 
+To capture output in a file:
+
+```
+openstudio model_tests.rb > out.txt 2>&1
+```
+
 Using the OpenStudio Ruby bindings:
 
 ```
