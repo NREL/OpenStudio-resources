@@ -1,3 +1,5 @@
+# This script should
+
 require 'openstudio' unless defined?(OpenStudio)
 
 require 'fileutils'
@@ -8,9 +10,22 @@ require 'open3'
 
 require 'etc'
 
+# Environment variables
 if ENV['N'].nil?
   # Number of parallel runs caps to nproc - 1
   ENV['N'] = [1, Etc.nprocessors - 1].max.to_s
+end
+
+# Variables to store the environment variables
+$Custom_tag=''
+$Save_idf=false
+
+# Don't rerun test if there is already an OSW that shows success if the test/
+# directory
+$DoNotReRunIfSuccess=false
+
+if ENV['DONOTRERUNIFSUCCESS'].to_s.downcase == "true"
+  $DoNotReRunIfSuccess=true
 end
 
 require 'minitest/autorun'
@@ -34,14 +49,18 @@ $TestDir = File.join($RootDir, 'testruns')
 $SdkVersion = OpenStudio.openStudioVersion
 $SdkLongVersion = OpenStudio::openStudioLongVersion
 $Build_Sha = $SdkLongVersion.split('.')[-1]
-$Custom_tag=''
-# TODO: move as a an ENV variable
-$Save_idf=false
+
+
 
 
 # List of tests that don't have a matching OSM test for a reason
+# input the ruby file name, eg `xxxx.rb` NOT `test_xxx_rb`
 $NoMatchingOSMTests = ['ExampleModel.rb',
-                       'autosize_hvac.rb']
+                       'autosize_hvac.rb',
+                      # TODO: Temp
+                      'unitary_systems_airloop_and_zonehvac.rb',
+                      'airterminal_fourpipebeam.rb',
+                      ]
 
 puts "Running for OpenStudio #{$SdkLongVersion}"
 
@@ -56,30 +75,38 @@ else
   # Directly in here
   $OutOSWDir = File.join($RootDir, 'test')
 
-  # if the user uses env CUSTOMTAG=whatever, we use that and we don't ask for the tag
-  if ENV["CUSTOMTAG"].nil?
-    # Ask user if he wants to append a custom tag to the result out.osw
-    # We don't do it in docker so it can just run without user input
-    prompt = ("If you want to append a custom tag to the result out.osw(s) (eg: 'Windows_run3')\n"\
-              "enter it now, or type 'SHA' to append the build sha (#{$Build_Sha}),\n"\
-              "or leave empty if not desired\n> ")
-    $Custom_tag = [(print prompt), STDIN.gets.chomp][1]
-  else
-    $Custom_tag = ENV['CUSTOMTAG']
-  end
+  # if the user didn't supply env CUSTOMTAG=whatever,
+  # we ask him to optionally supply a tag
+=begin
+     n
+     n  if ENV["CUSTOMTAG"].nil?
+     n    # Ask user if he wants to append a custom tag to the result out.osw
+     n    # We don't do it in docker so it can just run without user input
+     n    prompt = ("If you want to append a custom tag to the result out.osw(s) (eg: 'Windows_run3')\n"\
+     n              "enter it now, or type 'SHA' to append the build sha (#{$Build_Sha}),\n"\
+     n              "or leave empty if not desired\n> ")
+     n    ENV["CUSTOMTAG"] = [(print prompt), STDIN.gets.chomp][1]
+     n  end
+=end
 
-  if not $Custom_tag.empty?
-    if $Custom_tag.downcase == 'sha'
-        $Custom_tag = $Build_Sha
-    end
-    $Custom_tag = "_#{$Custom_tag}"
-    puts "Custom tag will be appended, files will be named like 'testname_X.Y.Z_out#{$Custom_tag}.osw'\n"
-  end
+end
 
-  # If an ENV variable was given with a value of "True" (case insensitive)
-  if ENV["SAVE_IDF"].to_s.downcase == "true"
-    $Save_idf=true
+if !ENV["CUSTOMTAG"].nil?
+  $Custom_tag = ENV['CUSTOMTAG']
+end
+
+if not $Custom_tag.empty?
+  if $Custom_tag.downcase == 'sha'
+    $Custom_tag = $Build_Sha
   end
+  $Custom_tag = "_#{$Custom_tag}"
+  puts "Custom tag will be appended, files will be named like 'testname_X.Y.Z_out#{$Custom_tag}.osw'\n"
+end
+
+# If an ENV variable was given with a value of "True" (case insensitive)
+if ENV["SAVE_IDF"].to_s.downcase == "true"
+  $Save_idf=true
+  puts "Will save the IDF files in the test/ directory"
 end
 
 $:.unshift($ModelDir)
@@ -121,6 +148,92 @@ def run_command(command, dir, timeout = Float::INFINITY)
   Dir.chdir(pwd)
 end
 
+# Helper function to post-process the out.osw and save it in test/ with
+# the right naming pattern
+# It also asserts whether the run was successful
+#
+# Cleaning includes removing timestamp and deleting :eplusout_err key if
+# bigger than 100 KiB
+def postprocess_out_osw_and_copy(filename)
+
+  dir = File.join($TestDir, filename)
+  out_osw = File.join(dir, 'out.osw')
+  # Cp to the OutOSW directory
+  cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.osw")
+
+  fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
+
+  result_osw = nil
+  File.open(out_osw, 'r') do |f|
+    result_osw = JSON::parse(f.read, :symbolize_names=>true)
+  end
+
+  if !result_osw.nil?
+    # FileUtils.cp(out_osw, cp_out_osw)
+
+    # Instead of just copying, we clean up the osw then export that to a file
+    # Remove timestamps and hash
+    if result_osw.keys.include?(:eplusout_err)
+      result_osw[:eplusout_err].gsub!(/YMD=.*?,/, '')
+      result_osw[:eplusout_err].gsub!(/Elapsed Time=.*?\n/, '')
+      # Replace eplusout_err by a list of lines instead of a big string
+      # Will make git diffing easier
+      result_osw[:eplusout_err] = result_osw[:eplusout_err].split("\n")
+    end
+
+    result_osw.delete(:completed_at)
+    result_osw.delete(:hash)
+    result_osw.delete(:started_at)
+    result_osw.delete(:updated_at)
+
+    # Should always be true
+    if (result_osw[:steps].size == 1) && (result_osw[:steps].select{|s| s[:measure_dir_name] == 'openstudio_results'}.size == 1)
+      # If something went wrong, there wouldn't be results
+      if result_osw[:steps][0].keys.include?(:result)
+        result_osw[:steps][0][:result].delete(:completed_at)
+        result_osw[:steps][0][:result].delete(:started_at)
+        result_osw[:steps][0][:result].delete(:step_files)
+
+        # Round all numbers to 2 digits to avoid excessive diffs
+        # result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
+        result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
+          if h[:value].is_a? Float
+            result_osw[:steps][0][:result][:step_values][i][:value] = h[:value].round(2)
+          end
+        end
+      end
+    end
+
+
+    # The fuel cell tests produce out.osw files that are about 800 MB
+    # because E+ throws a warning in the Regula Falsi routine (an E+ bug)
+    # which results in about 7.5 Million times the same warning
+    # So if the file size is bigger than 100 KiB, we throw out the eplusout_err
+    if File.size(out_osw) > 100000
+      result_osw.delete(:eplusout_err)
+    end
+
+    File.open(cp_out_osw,"w") do |f|
+      f.write(JSON.pretty_generate(result_osw))
+    end
+
+    if $Save_idf
+      in_idf = File.join(dir, 'run/in.idf')
+      if File.exists?(in_idf)
+        cp_in_idf = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.idf")
+        FileUtils.cp(in_idf, cp_in_idf)
+      end
+    end
+
+  end
+
+  # standard checks
+  assert_equal("Success", result_osw[:completed_status])
+
+  return result_osw
+
+end
+
 # run a simulation test
 def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measures = [], reporting_measures = [])
 
@@ -128,6 +241,25 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
   osw = File.join(dir, 'in.osw')
   out_osw = File.join(dir, 'out.osw')
   in_osm = File.join(dir, 'in.osm')
+  # Cp to the OutOSW directory
+  cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.osw")
+
+
+  # If $DoNotReRunIfSuccess is true, we check if the out_osw already exists
+  # and whether it was successful already
+  if $DoNotReRunIfSuccess
+    if File.exists?(cp_out_osw)
+      cp_result_osw = nil
+      File.open(cp_out_osw, 'r') do |f|
+        cp_result_osw = JSON::parse(f.read, :symbolize_names=>true)
+      end
+      if !cp_result_osw.nil?
+        if cp_result_osw[:completed_status] == "Success"
+          skip "Already ran with success"
+        end
+      end
+    end
+  end
 
   # todo, modify different weather file in osw
 
@@ -199,76 +331,7 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
 
   run_command(command, dir, 3600)
 
-  fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
-
-  result_osw = nil
-  File.open(out_osw, 'r') do |f|
-    result_osw = JSON::parse(f.read, :symbolize_names=>true)
-  end
-
-  if !result_osw.nil?
-    # Cp to the OutOSW directory
-    cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.osw")
-
-    # FileUtils.cp(out_osw, cp_out_osw)
-    # Instead of just copying, we clean up the osw then export that to a file
-    # Remove timestamps and hash
-    if result_osw.keys.include?(:eplusout_err)
-      result_osw[:eplusout_err].gsub!(/YMD=.*?,/, '')
-      result_osw[:eplusout_err].gsub!(/Elapsed Time=.*?\n/, '')
-      # Replace eplusout_err by a list of lines instead of a big string
-      # Will make git diffing easier
-      result_osw[:eplusout_err] = result_osw[:eplusout_err].split("\n")
-    end
-
-    result_osw.delete(:completed_at)
-    result_osw.delete(:hash)
-    result_osw.delete(:started_at)
-    result_osw.delete(:updated_at)
-
-    # Should always be true
-    if (result_osw[:steps].size == 1) && (result_osw[:steps].select{|s| s[:measure_dir_name] == 'openstudio_results'}.size == 1)
-      # If something went wrong, there wouldn't be results
-      if result_osw[:steps][0].keys.include?(:result)
-        result_osw[:steps][0][:result].delete(:completed_at)
-        result_osw[:steps][0][:result].delete(:started_at)
-        result_osw[:steps][0][:result].delete(:step_files)
-
-        # Round all numbers to 2 digits to avoid excessive diffs
-        # result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
-        result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
-          if h[:value].is_a? Float
-            result_osw[:steps][0][:result][:step_values][i][:value] = h[:value].round(2)
-          end
-        end
-      end
-    end
-
-
-    # The fuel cell tests produce out.osw files that are about 800 MB
-    # because E+ throws a warning in the Regula Falsi routine (an E+ bug)
-    # which results in about 7.5 Million times the same warning
-    # So if the file size is bigger than 100 KiB, we throw out the eplusout_err
-    if File.size(out_osw) > 100000
-      result_osw.delete(:eplusout_err)
-    end
-
-    File.open(cp_out_osw,"w") do |f|
-      f.write(JSON.pretty_generate(result_osw))
-    end
-
-    if $Save_idf
-      in_idf = File.join(dir, 'run/in.idf')
-      if File.exists?(in_idf)
-        cp_in_idf = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.idf")
-        FileUtils.cp(in_idf, cp_in_idf)
-      end
-    end
-
-  end
-
-  # standard checks
-  assert_equal("Success", result_osw[:completed_status])
+  result_osw = postprocess_out_osw_and_copy(filename)
 
   # return result_osw for further checks
   return result_osw
@@ -344,12 +407,12 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
   end
 
   # DLM: this line fails on a clean repo if run_sim is false, why would you want run_sim to be false?
-  fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
+  # JM: because this is useful if you're just modifying the code below
+  # (= the checks) after a successful first run as you don't have to wait
+  # minutes for the simulation itself to rerun
+  # fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
 
-  result_osw = nil
-  File.open(out_osw, 'r') do |f|
-    result_osw = JSON::parse(f.read, :symbolize_names=>true)
-  end
+  result_osw = postprocess_out_osw_and_copy(filename)
 
   # Load the model
   versionTranslator = OpenStudio::OSVersion::VersionTranslator.new
@@ -711,7 +774,8 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('airterminal_cooledbeam.rb')
   end
 
-  # TODO : add it once the next official release including this object is out
+  # TODO : To be added once the next official release
+  # including this object is out : 2.5.0
   #def test_airterminal_fourpipebeam_osm
   #  result = sim_test('airterminal_fourpipebeam.osm')
   #end
@@ -923,11 +987,11 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_ems_scott_osm
     result = sim_test('ems_scott.osm')
   end
-  
-  def test_ems_1floor_SpaceType_1space
+
+  def test_ems_1floor_SpaceType_1space_osm
     result = sim_test('ems_1floor_SpaceType_1space.osm')
   end
-  
+
   def test_ems_rb
     result = sim_test('ems.rb')
   end
@@ -1409,6 +1473,11 @@ class ModelTests < MiniTest::Unit::TestCase
   #  result = sim_test('afn_single_zone_ac.rb')
   #end
 
+  # TODO: add this test once the ruby version works
+  # def test_afn_single_zone_ac_osm
+  #   result = sim_test('afn_single_zone_ac.osm')
+  # end
+
   def test_foundation_kiva_osm
     result = sim_test('foundation_kiva.osm')
   end
@@ -1426,7 +1495,7 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_unitary_systems_airloop_and_zonehvac_rb
     result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
   end
-  
+
   # intersection tests
 
   def test_intersect_22_osm
@@ -1477,5 +1546,8 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_autosizing_rb
     result = autosizing_test('autosize_hvac.rb')
   end
+
+  # TODO: model/refbuildingtests/CreateRefBldgModel.rb is unused
+  # Either implement as a test, or delete
 
 end

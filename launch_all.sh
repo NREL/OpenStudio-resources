@@ -40,6 +40,16 @@ verbose=false
 # Use mongo?
 use_mongo=false
 
+# Maximum number of cores
+# Defaults to all
+n_cores=`nproc`
+# Defaults to all minus 2
+# n_cores=$(($(nproc) - 2))
+
+# Don't rerun tests if out.osw is already there and success?
+# TODO: Implement
+donot_rerun_if_success=false
+
 #######################################################################################
 #                       G L O B A L    U S E R    A R G U M E N T S
 ########################################################################################
@@ -82,6 +92,27 @@ if [ "$ask_user" = true ]; then
     verbose=true
   fi
 
+  echo -e -n "Do you want to limit the number of ${BRed}threads${Color_Off} available to docker? Current default is ${BRed}`nproc`${Color_Off} [y/${URed}N${Color_Off}] "
+  read -n 1 -r
+  echo    # (optional) move to a new line
+  # Default is No
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    read n_cores
+    # Ensure it is a number (float or int)
+    while ! [[ "$n_cores" =~ ^[0-9.]+$ ]]; do
+      echo "Please enter an actual number!"
+      read n_cores
+    done
+  fi
+
+  echo -e -n "Do you want to force NOT re-running tests were we already have an out.osw and it was successful? By default it will rerun them [y/${URed}N${Color_Off}] "
+  read -n 1 -r
+  echo    # (optional) move to a new line
+  # Default is No
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    donot_rerun_if_success=true
+  fi
+
   echo "Global options have been set as follows:"
   echo "-----------------------------------------"
   echo "force_rebuild=$force_rebuild"
@@ -93,6 +124,8 @@ if [ "$ask_user" = true ]; then
   echo "delete_custom_image=$delete_custom_image"
   echo "delete_base_image=$delete_base_image"
   echo "verbose=$verbose"
+  echo "n_cores=$n_cores"
+  echo "donot_rerun_if_success=$donot_rerun_if_success"
   echo
 fi
 
@@ -212,9 +245,9 @@ for os_version in "${all_versions[@]}"; do
   echo -e "* Launching the $os_container_str"
   if [ "$use_mongo" = true ]; then
     # Launch, with link to the mongo one
-    docker run --name $os_container_name --link $mongo_container_name:mongo -v `pwd`/test:/root/test -d -it --rm $os_image_name /bin/bash > $OUT
+    docker run --name $os_container_name --cpus="$n_cores" --link $mongo_container_name:mongo -v `pwd`/test:/root/test -d -it --rm $os_image_name /bin/bash > $OUT
   else
-    docker run --name $os_container_name -v `pwd`/test:/root/test -d -it --rm $os_image_name /bin/bash > $OUT
+    docker run --name $os_container_name --cpus="$n_cores" -v `pwd`/test:/root/test -d -it --rm $os_image_name /bin/bash > $OUT
   fi
 
   # Chmod execute the script

@@ -50,6 +50,28 @@ ch = m.getChillerElectricEIRs.first
 p_chw = ch.plantLoop.get
 
 
+# Recreate the same TableMultiVariableLookup that is created in the Ctor for
+# CoilCoolingFourPipeBeam
+capModFuncOfWaterFlow = OpenStudio::Model::TableMultiVariableLookup.new(m, 1)
+capModFuncOfWaterFlow.setName("CapModFuncOfWaterFlow")
+capModFuncOfWaterFlow.setCurveType("Quadratic")
+capModFuncOfWaterFlow.setInterpolationMethod("EvaluateCurveToLimits")
+capModFuncOfWaterFlow.setMinimumValueofX1(0)
+capModFuncOfWaterFlow.setMaximumValueofX1(1.33)
+capModFuncOfWaterFlow.setMinimumTableOutput(0.0)
+capModFuncOfWaterFlow.setMaximumTableOutput(1.04)
+capModFuncOfWaterFlow.setInputUnitTypeforX1("Dimensionless")
+capModFuncOfWaterFlow.setOutputUnitType("Dimensionless")
+
+capModFuncOfWaterFlow.addPoint(0.0, 0.0)
+capModFuncOfWaterFlow.addPoint(0.05, 0.001)
+capModFuncOfWaterFlow.addPoint(0.33333, 0.71)
+capModFuncOfWaterFlow.addPoint(0.5, 0.85)
+capModFuncOfWaterFlow.addPoint(0.666667, 0.92)
+capModFuncOfWaterFlow.addPoint(0.833333, 0.97)
+capModFuncOfWaterFlow.addPoint(1.0, 1.0)
+capModFuncOfWaterFlow.addPoint(1.333333, 1.04)
+
 
 # Replace all terminals with ATUFourPipeBeams
 # There is only one airLoopHVAC, so I get it here
@@ -66,6 +88,8 @@ zones.each do |z|
   # Create a cooling coil, and add it to the ChW Loop
   cc = OpenStudio::Model::CoilCoolingFourPipeBeam.new(m)
   cc.setName("#{z.name} ATU FourPipeBeam Cooling Coil")
+  # Set the curve with the above table
+  cc.setBeamCoolingCapacityChilledWaterFlowModificationFactorCurve(capModFuncOfWaterFlow)
   p_chw.addDemandBranchForComponent(cc)
 
   # Create a heating coil, and add it to the HW Loop

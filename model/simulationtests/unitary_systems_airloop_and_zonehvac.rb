@@ -11,7 +11,7 @@ model.add_geometry({"length" => 100,
                     "floor_to_floor_height" => 4,
                     "plenum_height" => 1,
                     "perimeter_zone_depth" => 3})
-                    
+
 #add windows at a 40% window-to-wall ratio
 model.add_windows({"wwr" => 0.4,
                    "offset" => 1,
@@ -23,7 +23,7 @@ model.add_hvac({"ashrae_sys_num" => '01'})
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                        "cooling_setpoint" => 28})
-                       
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
@@ -33,7 +33,12 @@ model.set_space_type()
 #add design days to the model (Chicago)
 model.add_design_days()
 
-zone = model.getThermalZones[0]
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+
+# Get the first one
+zone = zones[0]
 
 #add AirLoopHVACUnitarySystem for air loop
 air_loop_unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
