@@ -1181,6 +1181,35 @@ def delete_custom_tagged_osws(contains=None, regex_pattern=None):
         return False
 
 
+def test_os_cli(os_cli=None):
+    """
+    Make sure the CLI is configured properly, and return the version if worked
+    False otherwise.
+    """
+     # Check correct CLI
+    if os_cli is None:
+        os_cli = 'openstudio'
+
+    cmd = ('{} -e "require \'openstudio\'; '
+           'puts OpenStudio::openStudioLongVersion"'.format(os_cli))
+    os_long_version = None
+    # os_short_version = None
+    try:
+        process = subprocess.Popen(shlex.split(cmd),
+                                   shell=False,
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
+        lines = process.stdout.readlines()
+        os_long_version = lines[0].rstrip().decode()
+        # os_short_version = ".".join(os_long_version.split('.')[:-1])
+        print("Selected OS_CLI has version '{}'".format(os_long_version))
+        return os_long_version
+    except:
+        print("Problem with the CLI, make sure it is configured properly")
+        print("Command that was run to test it:\n{}".format(cmd))
+        return False
+
+
 def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
                    save_idf=False, energyplus_exe_path=None,
                    platform_name=None):
@@ -1216,26 +1245,11 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
         You could pass stuff like 'Ubuntu'
 
     """
-
-    # Check correct CLI
     if os_cli is None:
         os_cli = 'openstudio'
 
-    cmd = ('{} -e "require \'openstudio\'; '
-           'puts OpenStudio::openStudioLongVersion"'.format(os_cli))
-    os_long_version = None
-    # os_short_version = None
-    try:
-        process = subprocess.Popen(shlex.split(cmd),
-                                   shell=False,
-                                   stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE)
-        lines = process.stdout.readlines()
-        os_long_version = lines[0].rstrip().decode()
-        # os_short_version = ".".join(os_long_version.split('.')[:-1])
-        print("Selected OS_CLI has version '{}'".format(os_long_version))
-    except:
-        print("Problem with the CLI, make sure it is configured properly")
+    if not test_os_cli(os_cli):
+        return False
 
     # Configure env-like variables
     if energyplus_exe_path is None:

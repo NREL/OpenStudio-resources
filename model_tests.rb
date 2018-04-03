@@ -1,5 +1,3 @@
-# This script should
-
 require 'openstudio' unless defined?(OpenStudio)
 
 require 'fileutils'
@@ -50,21 +48,16 @@ $SdkVersion = OpenStudio.openStudioVersion
 $SdkLongVersion = OpenStudio::openStudioLongVersion
 $Build_Sha = $SdkLongVersion.split('.')[-1]
 
-
-
-
-# List of tests that don't have a matching OSM test for a reason
+# List of tests that don't have a matching OSM test for a valid reason
+# No "Warn" will be issued for these
 # input the ruby file name, eg `xxxx.rb` NOT `test_xxx_rb`
 $NoMatchingOSMTests = ['ExampleModel.rb',
                        'autosize_hvac.rb',
-                      # TODO: Temp
-                      'unitary_systems_airloop_and_zonehvac.rb',
-                      'airterminal_fourpipebeam.rb',
                       ]
 
 puts "Running for OpenStudio #{$SdkLongVersion}"
 
-# Were to cp the out.osw for regression
+# Where to cp the out.osw for regression
 # Depends on whether you are in a docker env or not
 proc_file = '/proc/1/cgroup'
 is_docker = File.file?(proc_file) && (File.readlines(proc_file).grep(/docker/).size > 0)
@@ -774,17 +767,17 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('airterminal_cooledbeam.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 2.5.1
-  #def test_airterminal_fourpipebeam_osm
-  #  result = sim_test('airterminal_fourpipebeam.osm')
-  #end
+  # TODO : The next official release (2.5.1) is expected to have this object
+  # Pending PR: https://github.com/NREL/OpenStudio/pull/3031
+  def test_airterminal_fourpipebeam_rb
+    result = sim_test('airterminal_fourpipebeam.rb')
+  end
 
-  # TODO : To be added once the next official release
+  # TODO : To be added once the next **official** release
   # including this object is out : 2.5.1
-  #def test_airterminal_fourpipebeam_rb
-  #  result = sim_test('airterminal_fourpipebeam.rb')
-  #end
+  # def test_airterminal_fourpipebeam_osm
+  #   result = sim_test('airterminal_fourpipebeam.osm')
+  # end
 
   def test_air_chillers_osm
     result = sim_test('air_chillers.osm')
@@ -1470,10 +1463,10 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('afn_single_zone_nv.osm')
   end
 
-  # feature is not yet working
-  #def test_afn_single_zone_ac_rb
-  #  result = sim_test('afn_single_zone_ac.rb')
-  #end
+  # TODO: feature is not yet working, uncomment to test it out
+  # def test_afn_single_zone_ac_rb
+  #   result = sim_test('afn_single_zone_ac.rb')
+  # end
 
   # TODO: add this test once the ruby version works
   # def test_afn_single_zone_ac_osm
