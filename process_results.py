@@ -63,17 +63,17 @@ Options:
   -n <test_filter>, --test_filter=<test_filter>
         Test filter to pass to model_tests.rb
 
+ Optional:
   -N <n>, --run_n_times=<n>
         Number of times you run these tests [default: 5]
 
- Optional:
-  -S <i>, --start_at=<i>    Start numbering runs at i [default: 1]
+  -S <i>, --start_at=<i>  Start numbering runs at i [default: 1]
 
-  --os_cli<path>    Path to OS_CLI (or 'ruby'), [default: openstudio']
+  --os_cli<path>         Path to OS_CLI (or 'ruby'), [default: openstudio']
 
-  --eplus_exe=<path>  Same as ENERGYPLUS_EXE_PATH (typically not needed)
+  --eplus_exe=<path>     Same as ENERGYPLUS_EXE_PATH (typically not needed)
 
-  --save_idf        If supplied, will save the idf files next to the OSWs
+  --save_idf             If supplied, will save the idf files next to the OSWs
 
   --platform_name=<str>  Override the default `platform.system()` (eg: 'Linux')
 
@@ -95,8 +95,8 @@ Options:
 
   See --tagged and --all in the heatmap section above
 
-  --entire_table  Output also tests that have no missing/fail tests (makes a much
-                  bigger table)
+  --entire_table  Output also tests that have no missing/fail tests
+                  (makes a much bigger table)
 
 
  other:
@@ -125,7 +125,7 @@ Examples:
         RUNNING ALL TESTS WITH THIS NEW VERSION.
 
 
-  process_results.py test-stability -n 'fourpipebeam' -N 5 --os_cli='ruby'
+  process_results.py test-stability run -n 'fourpipebeam' -N 5 --os_cli='ruby'
     Will run `model_tests.rb -n /fourpipebeam/` 5 times with the CLI as 'ruby'
 
 Help:

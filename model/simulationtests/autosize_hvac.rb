@@ -778,7 +778,7 @@ zones.each_with_index do |zn, zone_index|
     air_loop_dual_duct.addBranchForZone(zn, term)
   when 36
     # TODO : To be added once the next official release
-    # including this object is out : 2.5.0     
+    # including this object is out : 2.5.1
     #clg_coil = OpenStudio::Model::CoilCoolingFourPipeBeam.new(model)
     #chw_loop.addDemandBranchForComponent(clg_coil)
 
