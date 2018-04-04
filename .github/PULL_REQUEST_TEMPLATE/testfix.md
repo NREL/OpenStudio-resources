@@ -1,15 +1,16 @@
 Pull request overview
 ---------------------
 
-Please change this line to a description of the pull request, with useful supporting information.
+**Please change this line to a description of the pull request, with useful supporting information.**
+
+Link to relevant GitHub Issue(s) if appropriate:
 
 This Pull Request is concerning:
 
  - [ ] **Case 1 - `NewTest`:** a new test for a new model API class,
  - [x] **Case 2 - `TestFix`:** a fix for an existing test. The GitHub issue should be referenced in the PR description
  - [ ] **Case 3 - `NewTestForExisting`:** a new test for an already-existing model API class
-
-Depending on your answer, please fill out the required section below, and delete the two others. Leave the review checklist in place.
+ - [ ] **Case 4 - `Other`:** Something else, like maintenance of the repo, or just committing test results with a new OpenStudio version.
 
 ----------------------------------------------------------------------------------------------------------
 
@@ -57,6 +58,6 @@ Please include a link to the specific test you are modifying, and a description 
  - [ ] Appropriate `out.osw` have been committed
  - [ ] Test is stable
  - [ ] The appropriate labels have been added to this PR:
-   - [ ] One of: `NewTest`, `TestFix`, `NewTestForExisting`
+   - [ ] One of: `NewTest`, `TestFix`, `NewTestForExisting`, `Other`
    - [ ] If `NewTest`: add `PendingOSM` if needed
 
