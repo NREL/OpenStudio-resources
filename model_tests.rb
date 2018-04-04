@@ -1473,12 +1473,6 @@ class ModelTests < MiniTest::Unit::TestCase
   #   result = sim_test('afn_single_zone_ac.osm')
   # end
 
-  def test_foundation_kiva_osm
-    result = sim_test('foundation_kiva.osm')
-  end
-    def test_foundation_kiva_rb
-    result = sim_test('foundation_kiva.rb')
-  end
   def test_additional_props_rb
     result = sim_test('additional_props.rb')
   end
@@ -1489,6 +1483,14 @@ class ModelTests < MiniTest::Unit::TestCase
 
   def test_unitary_systems_airloop_and_zonehvac_rb
     result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
+  end  
+    
+  def test_epw_design_conditions_rb
+    result = sim_test('epw_design_conditions.rb')
+  end
+  
+  def test_epw_design_conditions_osm
+    result = sim_test('epw_design_conditions.osm')
   end
 
   # intersection tests
