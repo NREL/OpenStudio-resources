@@ -219,7 +219,10 @@ The embedded CLI documentation has options to customize the behavior of these co
 
 ## Three-way analysis when a new E+ version is out.
 
-**When two subsequent OpenStudio versions use different E+ versions, we expect to see deviations, but we want to be able to tell if these deviations come from E+ or OpenStudio.**
+**When two subsequent OpenStudio versions use different E+ versions, we expect to see deviations,
+but we want to be able to tell if these deviations come from E+ or OpenStudio.**
+
+![OS_diffs](doc/images/Regression_Testing_Regular_v_Threeway.png)
 
 A jupyter notebook is provided at `./update_eplus_compare/AutomateVersionTranslation.ipynb`. The notebook contains embedded markdown with instructions on how to use it.
 
