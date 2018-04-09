@@ -7,7 +7,7 @@ The notebook has only been tested in 3.6 so **prefer Python 3** if you don't hav
 
 To ensure you have the necessary dependencies you can type this pip install command (whether in 2.7 or 3.6):
 
-    pip install requests matplotlib numpy pandas seaborn jupyter lxml beautifulsoup4 df2gspread
+    pip install requests matplotlib numpy pandas seaborn jupyter lxml beautifulsoup4 df2gspread docopt tqdm
 
 **On Windows, the preferred alternative is to use conda**, but if you insist on using regular python with pip,
 you may have to manually install `numpy+mkl`.  
@@ -89,5 +89,5 @@ export PROMPT_COMMAND=conda_auto_env
 After you are in the environment of your choice,
 you can run these install commands (if you have installed Anaconda, you already have most of them but it won't hurt).
 
-    conda install requests matplotlib numpy pandas seaborn jupyter lxml beautifulsoup4
+    conda install requests matplotlib numpy pandas seaborn jupyter lxml beautifulsoup4 docopt tqdm
     conda install -c conda-forge df2gspread
