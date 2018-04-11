@@ -1251,14 +1251,20 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
     if not test_os_cli(os_cli):
         return False
 
+    # Copy environment to add custom ENV variables
+    # passing env VAR=VALUE openstudio Xxxxx doesn't work on Windows
+    my_env = os.environ.copy()
+
     # Configure env-like variables
     if energyplus_exe_path is None:
         eplus_exe = ''
     else:
         eplus_exe = "ENERGYPLUS_EXE_PATH='{}'".format(energyplus_exe_path)
+        my_env['ENERGYPLUS_EXE_PATH'] = energyplus_exe_path
 
     if save_idf:
         save_idf = "SAVE_IDF=True"
+        my_env['SAVE_IDF'] = 'True'
     else:
         save_idf = ''
 
@@ -1275,12 +1281,17 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
     print("Custom tags will be like this: first run = "
           "'{}'".format(example_tag))
 
-    COMMAND = "env CUSTOMTAG={c} {s} {e} {cli} {m} {filt}"
+    # Used for display only
+    EXPLICIT_COMMAND = "env CUSTOMTAG={c} {s} {e} {cli} {m} {filt}"
     print("\nExample Command:\n"
-          "{}".format(COMMAND.format(c=example_tag, s=save_idf, e=eplus_exe,
-                                     m=os.path.join(ROOT_DIR,
+          "{}".format(EXPLICIT_COMMAND.format(c=example_tag, s=save_idf,
+                                              e=eplus_exe,
+                                              m=os.path.join(ROOT_DIR,
                                                     'model_tests.rb'),
-                                     cli=os_cli, filt=filt)))
+                                              cli=os_cli, filt=filt)))
+
+    # Actual command, env variables are passed as such (env parameter)
+    COMMAND = "{cli} {m} {filt}"
 
     if isnotebook():
         tdqm_bar = tqdm.tqdm_notebook
@@ -1297,17 +1308,26 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
         print("="*80)
         custom_tag = "{}_run{}".format(platform_name, i)
 
-        full_command = COMMAND.format(c=custom_tag, s=save_idf, e=eplus_exe,
-                                      m=os.path.join(ROOT_DIR,
-                                                     'model_tests.rb'),
-                                      cli=os_cli, filt=filt)
-        print(full_command)
+        my_env['CUSTOMTAG'] = custom_tag
+
+        m = os.path.join(ROOT_DIR, 'model_tests.rb')
+
+        explicit_command = EXPLICIT_COMMAND.format(c=custom_tag, s=save_idf,
+                                                   e=eplus_exe,
+                                                   m=m,
+                                                   cli=os_cli, filt=filt)
+        print(explicit_command)
+
+        # Actual command, the env variables are passed as such (env)
+        full_command = COMMAND.format(m=m, cli=os_cli, filt=filt)
+
         c_args = shlex.split(full_command)
 
         process = subprocess.Popen(c_args,
                                    shell=False,
                                    stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE)
+                                   stderr=subprocess.PIPE,
+                                   env=my_env)
 
         for line in iter(process.stdout.readline, b''):
             stripped_line = line.rstrip().decode()

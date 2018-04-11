@@ -1,16 +1,21 @@
 Pull request overview
 ---------------------
 
-Please change this line to a description of the pull request, with useful supporting information.
-**Note**: You can open a specific PR template directly by appending `?template=xxx` argument with the value `newtest.md`, `testfix.md` or `newtestforexisting.md`.
+**Please change this line to a description of the pull request, with useful supporting information.**
+
+Link to relevant GitHub Issue(s) if appropriate:
 
 This Pull Request is concerning:
 
  - [ ] **Case 1 - `NewTest`:** a new test for a new model API class,
  - [ ] **Case 2 - `TestFix`:** a fix for an existing test. The GitHub issue should be referenced in the PR description
  - [ ] **Case 3 - `NewTestForExisting`:** a new test for an already-existing model API class
+ - [ ] **Case 4 - `Other`:** Something else, like maintenance of the repo, or just committing test results with a new OpenStudio version.
 
-Depending on your answer, please fill out the required section below, and delete the two others. Leave the review checklist in place.
+Depending on your answer, please fill out the required section below, and delete the three others.
+Leave the review checklist in place.
+
+**Note**: You can open a specific PR template directly by appending `?template=xxx` argument with the value `newtest.md`, `testfix.md` or `newtestforexisting.md`.
 
 ----------------------------------------------------------------------------------------------------------
 
@@ -21,7 +26,7 @@ Include a link to the OpenStudio Pull Request in which you are adding the new cl
 
 > eg:
 >
-> This pull request is in relation with the Pull Request [#3031](https://github.com/NREL/OpenStudio/pull/3031), and  will specifically test for the following classes:
+> This pull request is in relation with the Pull Request [NREL/OpenStudio#3031](https://github.com/NREL/OpenStudio/pull/3031), and  will specifically test for the following classes:
 > * `AirTerminalSingleDuctConstantVolumeFourPipeBeam`
 > * `CoilCoolingFourPipeBeam`
 > * `CoilHeatingFourPipeBeam`
@@ -145,6 +150,13 @@ The following has been checked to ensure compliance with the guidelines:
 
 ----------------------------------------------------------------------------------------------------------
 
+### Case 4: Other
+
+Please be as explicit as possible about the changes you have made, and why they are warranted.
+
+
+----------------------------------------------------------------------------------------------------------
+
 ### Review Checklist
 
  - [ ] Code style (indentation, variable names, strip trailing spaces)
@@ -153,6 +165,6 @@ The following has been checked to ensure compliance with the guidelines:
  - [ ] Appropriate `out.osw` have been committed
  - [ ] Test is stable
  - [ ] The appropriate labels have been added to this PR:
-   - [ ] One of: `NewTest`, `TestFix`, `NewTestForExisting`
+   - [ ] One of: `NewTest`, `TestFix`, `NewTestForExisting`, `Other`
    - [ ] If `NewTest`: add `PendingOSM` if needed
 

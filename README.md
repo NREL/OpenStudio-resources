@@ -177,7 +177,7 @@ Launch all versions (you can modify the hardcoded arguments atop the script `lau
 
 We want to make sure that a given ruby test is **stable** meaning that if you run it multiple times in a row on the same machine, it should always produce the exact same result.
 
-**Common causes of instability include such code**
+#### Common causes of instability include such code
 
 ```
 model.getThermalZones.each_with_index do |z, i|
@@ -196,7 +196,7 @@ The `lib/baseline_model.rb` does *name* spaces and zones in a reliable manner, s
 model.getThermalZones.sort_by{|z| z.name.to_s}.each_with_index do |z, i|
 ```
 
-**Testing stability**
+#### Testing stability
 
 You can use the CLI to test for stability of a given test (or several). This relies on using custom tags for the
 `ut.osw` - eg files will be named 'testname_X.Y.Z_out_Linux_run3.osw' -, and parsing all custom tagged files to display the heatmap of difference or a text indicating compliance
@@ -219,7 +219,10 @@ The embedded CLI documentation has options to customize the behavior of these co
 
 ## Three-way analysis when a new E+ version is out.
 
-**When two subsequent OpenStudio versions use different E+ versions, we expect to see deviations, but we want to be able to tell if these deviations come from E+ or OpenStudio.**
+**When two subsequent OpenStudio versions use different E+ versions, we expect to see deviations,
+but we want to be able to tell if these deviations come from E+ or OpenStudio.**
+
+![OS_diffs](doc/images/Regression_Testing_Regular_v_Threeway.png)
 
 A jupyter notebook is provided at `./update_eplus_compare/AutomateVersionTranslation.ipynb`. The notebook contains embedded markdown with instructions on how to use it.
 
