@@ -35,7 +35,6 @@ rescue LoadError
   puts "Minitest Reporters not installed"
 end
 
-
 # config stuff
 $OpenstudioCli = OpenStudio::getOpenStudioCLI
 $RootDir = File.absolute_path(File.dirname(__FILE__))
@@ -86,6 +85,8 @@ end
 
 if !ENV["CUSTOMTAG"].nil?
   $Custom_tag = ENV['CUSTOMTAG']
+  # Debug
+  # puts "Setting custom tag to #{$Custom_tag}"
 end
 
 if not $Custom_tag.empty?

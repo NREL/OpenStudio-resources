@@ -1292,7 +1292,8 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
 
     # Actual command, env variables are passed as such (env parameter)
     COMMAND = "{cli} {m} {filt}"
-
+    m = os.path.join(ROOT_DIR, 'model_tests.rb')
+    
     if isnotebook():
         tdqm_bar = tqdm.tqdm_notebook
         desc = '<h3>Running {} Times</h3>'.format(run_n_times)
@@ -1310,8 +1311,6 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
 
         my_env['CUSTOMTAG'] = custom_tag
 
-        m = os.path.join(ROOT_DIR, 'model_tests.rb')
-
         explicit_command = EXPLICIT_COMMAND.format(c=custom_tag, s=save_idf,
                                                    e=eplus_exe,
                                                    m=m,
@@ -1321,7 +1320,12 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
         # Actual command, the env variables are passed as such (env)
         full_command = COMMAND.format(m=m, cli=os_cli, filt=filt)
 
-        c_args = shlex.split(full_command)
+        # Shlex does weird things with windows path and it's not necessary on
+        # Windows, so might as well not do it.
+        if sys.platform == 'win32':
+            c_args = full_command
+        else:
+            c_args = shlex.split(full_command)
 
         process = subprocess.Popen(c_args,
                                    shell=False,
@@ -1331,12 +1335,23 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
 
         for line in iter(process.stdout.readline, b''):
             stripped_line = line.rstrip().decode()
-            if 'Started with run options' in stripped_line:
+            if 'Started with run options' in stripped_line.lower():
                 continue
             print(stripped_line)
 
         process.stdout.close()
-        process.wait()
+        returncode = process.wait()
+        # If something went wrong (very likely in the first run of the loop),
+        # we raise and don't try further runs (they'll fail too)
+        if returncode != 0:
+            print("\n/!\ Something went wrong, process returned a "
+                  "returncode of {}".format(returncode))
+            print("Command: {}".format(c_args))
+            print("Custom ENV variables: "
+                  "{}".format({k:my_env[k] for k in my_env 
+                               if k in ['CUSTOMTAG', 'SAVE_IDF',
+                                        'ENERGYPLUS_EXE_PATH']}))
+            raise subprocess.CalledProcessError(returncode=1, cmd=c_args)
 
     return True
 
