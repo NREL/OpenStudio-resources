@@ -189,7 +189,7 @@ model.getThermalZones.each_with_index do |z, i|
 end
 ```
 
-It is possible that the thermalZones would be in a different order in the OSM file, so upon subsequent runs you want be putting your systems in different zones.
+It is possible that the thermalZones would be in a different order in the OSM file, so upon subsequent runs you may be putting your systems in different zones.
 The `lib/baseline_model.rb` does *name* spaces and zones in a reliable manner, so the above loop can be refactored to sort by zone name:
 
 ```ruby
@@ -205,9 +205,9 @@ You can use the CLI to test for stability of a given test (or several). This rel
 ```bash
 # Clean up all custom-tagged OSWs
 python process_results.py test-stability clean
-# Run your test 5 times in a row. Replace `testname_rb` (eg `airterminal_fourpipebeam_rb`)
-python process_results.py test-stability -n testname_rb
-# Check that they all passed
+# Run your test 5 times in a row. Replace `testname_rb` (eg `baseline_sys01_rb`)
+python process_results.py test-stability run -n testname_rb
+# Check that they all pass
 python process_results.py test-status --tagged
 # Check site kBTU differences
 python process_results.py heatmap --tagged
