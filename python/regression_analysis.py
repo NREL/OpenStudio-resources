@@ -1397,21 +1397,26 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
 
     styles = [
         hover(),
+        dict(selector="tr:nth-child(2n+1)", props=[('background', '#f5f5f5')]),
         dict(selector="td", props=[("text-align", "center")]),
-        dict(selector="caption", props=[("caption-side", "bottom")])
+        dict(selector="caption", props=[("caption-side", "bottom"),
+                                        ("color", "grey")])
     ]
 
     # This shows all tests that are implemented but where we don't even have
     # a single out.osw in any OpenStudio that exists,
-    # meaning the simulation
-    all_tests = parse_model_tests_rb()
-    totally_failing_tests = set(all_tests) - set(df_files.index.tolist())
-    if totally_failing_tests:
-        print("The following tests failed in all openstudio versions")
-        print(totally_failing_tests)
+    # meaning the simulation didn't even start
+    # (ruby measure failed, or OSM failed to load)
+    if not tagged:
+        all_tests = parse_model_tests_rb()
+        totally_failing_tests = set(all_tests) - set(df_files.index.tolist())
+        if totally_failing_tests:
+            print("The following tests may have failed in all openstudio versions")
+            print(totally_failing_tests)
 
     success = success_sheet(df_files)
-
+    caption = 'Test Success - All found'
+    
     if not entire_table:
         ruby_or_osm_fail = (success.groupby(level='Test')['n_fail+missing']
                                    .sum().sort_values(ascending=False) > 0)
@@ -1419,12 +1424,23 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
         print("Filtering only tests where there is a missing or failed osm OR "
               "ruby test")
         # success = success[success['n_fail+missing'] > 0]
-        success = success.loc[[x for x in success.index if x[0]
+        success2 = success.loc[[x for x in success.index if x[0]
                                in ruby_or_osm_fail.index[ruby_or_osm_fail]]]
+        if success2.empty:
+            print("\nOK: No Failing tests were found")
+        else:
+            print("\nWARNING: you have failing tests")
+            success = success2
+            caption = 'Test Success - Failed only'
+    
     html = (success.style
+                   .set_table_attributes('style="border:1px solid black;border-collapse:collapse;"')
+                   .set_properties(**{'border': '1px solid black',
+                                      'border-collapse': 'collapse',
+                                      'border-spacing': '0px'})   
                    .applymap(background_colors)
                    .set_table_styles(styles)
-                   .set_caption("Test Success")).render()
+                   .set_caption(caption)).render()
 
     filepath = 'Regression_Test_Status.html'
     with open(filepath, 'w') as f:
