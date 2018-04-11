@@ -32,20 +32,38 @@ model.set_space_type()
 #add design days to the model (Chicago)
 model.add_design_days()
 
-["../../weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"].each do |weather_file|
+check_all = false # requires that you have a folder of epw files at weatherdata/EPW
+if check_all
 
-  epw_file = OpenStudio::EpwFile.new(weather_file)
-  epw_design_conditions = epw_file.designConditions
-  epw_design_condition = epw_design_conditions[0]
+  weather_files = Dir.glob("../../weatherdata/EPW/*.epw")
+  weather_files.each do |weather_file|
+    begin
+      epw_file = OpenStudio::EpwFile.new(weather_file)
+      epw_design_conditions = epw_file.designConditions
+      puts "#{File.basename(weather_file)}: success"
+    rescue
+      puts "#{File.basename(weather_file)}: FAILURE"
+    end
+  end
 
-  unit = OpenStudio::Model::BuildingUnit.new(model)
-  unit.setName("#{File.basename(weather_file)}")
-  unit.setFeature("Title of Design Condition", epw_design_condition.titleOfDesignCondition)
-  ["Heating Coldest Month", "Heating Coldest Month Wind Speed 1%", "Cooling Dry Bulb 0.4%", "Cooling Enthalpy Mean Coincident Dry Bulb 1%"].each do |field|
-    unit.setFeature("#{field}", epw_design_condition.getFieldByName("#{field}").get)
+else
+
+  ["../../weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"].each do |weather_file|
+
+    epw_file = OpenStudio::EpwFile.new(weather_file)
+    epw_design_conditions = epw_file.designConditions
+    epw_design_condition = epw_design_conditions[0]
+
+    unit = OpenStudio::Model::BuildingUnit.new(model)
+    unit.setName("#{File.basename(weather_file)}")
+    unit.setFeature("Title of Design Condition", epw_design_condition.titleOfDesignCondition)
+    ["Heating Coldest Month", "Heating Coldest Month Wind Speed 1%", "Cooling Dry Bulb 0.4%", "Cooling Enthalpy Mean Coincident Dry Bulb 1%"].each do |field|
+      unit.setFeature("#{field}", epw_design_condition.getFieldByName("#{field}").get)
+    end
+
   end
 
 end
-       
+
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})
