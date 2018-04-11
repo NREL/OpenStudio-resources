@@ -1342,7 +1342,9 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
 
         for line in iter(process.stdout.readline, b''):
             stripped_line = line.rstrip().decode()
-            if 'Started with run options' in stripped_line.lower():
+            # Skip this output
+            if any(c in stripped_line.lower() 
+                   for c in ("started", "run options")):
                 continue
             print(stripped_line)
 
