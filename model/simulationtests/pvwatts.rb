@@ -34,9 +34,11 @@ model.add_design_days()
 
 #create the pvwatts generator object
 generator = nil
-model.getSurfaces.each do |surface|
+surfaces = model.getSurfaces.sort # sort surfaces for repeatible results
+surfaces.each do |surface|
   next unless surface.surfaceType.downcase == "roofceiling"
   generator = OpenStudio::Model::GeneratorPVWatts.new(model, surface, 1000)
+  generator.setSurface(surface) # not needed but tests the api
   break
 end
 
@@ -48,7 +50,8 @@ electric_load_center_dist = OpenStudio::Model::ElectricLoadCenterDistribution.ne
 electric_load_center_dist.addGenerator(generator)
 electric_load_center_dist.setInverter(inverter)
 
-#actually let's go with a shading surface instead
+# let's add a shading surface too
+vertices = nil
 if generator.surface.is_initialized
   surface = generator.surface.get
   vertices = surface.vertices
@@ -56,7 +59,16 @@ end
 shading_surface = OpenStudio::Model::ShadingSurface.new(vertices, model)
 shading_surface_group = OpenStudio::Model::ShadingSurfaceGroup.new(model)
 shading_surface.setShadingSurfaceGroup(shading_surface_group)
-generator.setSurface(shading_surface)
+
+generator = OpenStudio::Model::GeneratorPVWatts.new(model, shading_surface, 1000)
+generator.setSurface(shading_surface) # not needed but tests the api
+electric_load_center_dist.addGenerator(generator)
+
+# and add a random PV with no surface
+generator = OpenStudio::Model::GeneratorPVWatts.new(model, 1000)
+generator.setAzimuthAngle(30)
+generator.setTiltAngle(30)
+electric_load_center_dist.addGenerator(generator)
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})
