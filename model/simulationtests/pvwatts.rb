@@ -34,7 +34,7 @@ model.add_design_days()
 
 #create the pvwatts generator object
 generator = nil
-surfaces = model.getSurfaces.sort # sort surfaces for repeatible results
+surfaces = model.getSurfaces.sort_by{|z| z.name.to_s} # sort surfaces for repeatible results
 surfaces.each do |surface|
   next unless surface.surfaceType.downcase == "roofceiling"
   generator = OpenStudio::Model::GeneratorPVWatts.new(model, surface, 1000)
