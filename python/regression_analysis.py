@@ -1192,10 +1192,17 @@ def test_os_cli(os_cli=None):
 
     cmd = ('{} -e "require \'openstudio\'; '
            'puts OpenStudio::openStudioLongVersion"'.format(os_cli))
+    # Shlex does weird things with windows path and it's not necessary on
+    # Windows, so might as well not do it.
+    if sys.platform == 'win32':
+        c_args = cmd
+    else:
+        c_args = shlex.split(cmd)
+
     os_long_version = None
     # os_short_version = None
     try:
-        process = subprocess.Popen(shlex.split(cmd),
+        process = subprocess.Popen(c_args,
                                    shell=False,
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
@@ -1206,7 +1213,7 @@ def test_os_cli(os_cli=None):
         return os_long_version
     except:
         print("Problem with the CLI, make sure it is configured properly")
-        print("Command that was run to test it:\n{}".format(cmd))
+        print("Command that was run to test it:\n{}".format(c_args))
         return False
 
 
@@ -1292,7 +1299,8 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
 
     # Actual command, env variables are passed as such (env parameter)
     COMMAND = "{cli} {m} {filt}"
-
+    m = os.path.join(ROOT_DIR, 'model_tests.rb')
+    
     if isnotebook():
         tdqm_bar = tqdm.tqdm_notebook
         desc = '<h3>Running {} Times</h3>'.format(run_n_times)
@@ -1310,8 +1318,6 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
 
         my_env['CUSTOMTAG'] = custom_tag
 
-        m = os.path.join(ROOT_DIR, 'model_tests.rb')
-
         explicit_command = EXPLICIT_COMMAND.format(c=custom_tag, s=save_idf,
                                                    e=eplus_exe,
                                                    m=m,
@@ -1321,7 +1327,12 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
         # Actual command, the env variables are passed as such (env)
         full_command = COMMAND.format(m=m, cli=os_cli, filt=filt)
 
-        c_args = shlex.split(full_command)
+        # Shlex does weird things with windows path and it's not necessary on
+        # Windows, so might as well not do it.
+        if sys.platform == 'win32':
+            c_args = full_command
+        else:
+            c_args = shlex.split(full_command)
 
         process = subprocess.Popen(c_args,
                                    shell=False,
@@ -1331,12 +1342,25 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
 
         for line in iter(process.stdout.readline, b''):
             stripped_line = line.rstrip().decode()
-            if 'Started with run options' in stripped_line:
+            # Skip this output
+            if any(c in stripped_line.lower() 
+                   for c in ("started", "run options")):
                 continue
             print(stripped_line)
 
         process.stdout.close()
-        process.wait()
+        returncode = process.wait()
+        # If something went wrong (very likely in the first run of the loop),
+        # we raise and don't try further runs (they'll fail too)
+        if returncode != 0:
+            print("\n/!\ Something went wrong, process returned a "
+                  "returncode of {}".format(returncode))
+            print("Command: {}".format(c_args))
+            print("Custom ENV variables: "
+                  "{}".format({k:my_env[k] for k in my_env 
+                               if k in ['CUSTOMTAG', 'SAVE_IDF',
+                                        'ENERGYPLUS_EXE_PATH']}))
+            raise subprocess.CalledProcessError(returncode=1, cmd=c_args)
 
     return True
 
@@ -1375,21 +1399,26 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
 
     styles = [
         hover(),
+        dict(selector="tr:nth-child(2n+1)", props=[('background', '#f5f5f5')]),
         dict(selector="td", props=[("text-align", "center")]),
-        dict(selector="caption", props=[("caption-side", "bottom")])
+        dict(selector="caption", props=[("caption-side", "bottom"),
+                                        ("color", "grey")])
     ]
 
     # This shows all tests that are implemented but where we don't even have
     # a single out.osw in any OpenStudio that exists,
-    # meaning the simulation
-    all_tests = parse_model_tests_rb()
-    totally_failing_tests = set(all_tests) - set(df_files.index.tolist())
-    if totally_failing_tests:
-        print("The following tests failed in all openstudio versions")
-        print(totally_failing_tests)
+    # meaning the simulation didn't even start
+    # (ruby measure failed, or OSM failed to load)
+    if not tagged:
+        all_tests = parse_model_tests_rb()
+        totally_failing_tests = set(all_tests) - set(df_files.index.tolist())
+        if totally_failing_tests:
+            print("The following tests may have failed in all openstudio versions")
+            print(totally_failing_tests)
 
     success = success_sheet(df_files)
-
+    caption = 'Test Success - All found'
+    
     if not entire_table:
         ruby_or_osm_fail = (success.groupby(level='Test')['n_fail+missing']
                                    .sum().sort_values(ascending=False) > 0)
@@ -1397,12 +1426,23 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
         print("Filtering only tests where there is a missing or failed osm OR "
               "ruby test")
         # success = success[success['n_fail+missing'] > 0]
-        success = success.loc[[x for x in success.index if x[0]
+        success2 = success.loc[[x for x in success.index if x[0]
                                in ruby_or_osm_fail.index[ruby_or_osm_fail]]]
+        if success2.empty:
+            print("\nOK: No Failing tests were found")
+        else:
+            print("\nWARNING: you have failing tests")
+            success = success2
+            caption = 'Test Success - Failed only'
+    
     html = (success.style
+                   .set_table_attributes('style="border:1px solid black;border-collapse:collapse;"')
+                   .set_properties(**{'border': '1px solid black',
+                                      'border-collapse': 'collapse',
+                                      'border-spacing': '0px'})   
                    .applymap(background_colors)
                    .set_table_styles(styles)
-                   .set_caption("Test Success")).render()
+                   .set_caption(caption)).render()
 
     filepath = 'Regression_Test_Status.html'
     with open(filepath, 'w') as f:

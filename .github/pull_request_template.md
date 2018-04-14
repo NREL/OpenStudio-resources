@@ -67,7 +67,7 @@ The following has been checked to ensure compliance with the guidelines:
         # Clean up all custom-tagged OSWs
         python process_results.py test-stability clean
         # Run your test 5 times in a row. Replace `testname_rb` (eg `airterminal_fourpipebeam_rb`)
-        python process_results.py test-stability -n testname_rb
+        python process_results.py test-stability run -n testname_rb
         # Check that they all passed
         python process_results.py test-status --tagged
         # Check site kBTU differences
@@ -103,7 +103,7 @@ Please include a link to the specific test you are modifying, and a description 
         # Clean up all custom-tagged OSWs
         python process_results.py test-stability clean
         # Run your test 5 times in a row. Replace `testname_rb` (eg `airterminal_fourpipebeam_rb`)
-        python process_results.py test-stability run -n testname
+        python process_results.py test-stability run -n testname_rb
         # Check that they all passed
         python process_results.py test-status --tagged
         # Check site kBTU differences
@@ -140,7 +140,7 @@ The following has been checked to ensure compliance with the guidelines:
         # Clean up all custom-tagged OSWs
         python process_results.py test-stability clean
         # Run your test 5 times in a row. Replace `testname_rb` (eg `airterminal_fourpipebeam_rb`)
-        python process_results.py test-stability -n testname_rb
+        python process_results.py test-stability run -n testname_rb
         # Check that they all passed
         python process_results.py test-status --tagged
         # Check site kBTU differences

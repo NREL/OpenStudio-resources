@@ -124,9 +124,11 @@ Examples:
         THIS SHOULD ONLY BE DONE ONCE THE OFFICIAL RELEASE IS OUT AND AFTER
         RUNNING ALL TESTS WITH THIS NEW VERSION.
 
-
-  process_results.py test-stability run -n 'fourpipebeam' -N 5 --os_cli='ruby'
+  process_results.py test-stability run -n "fourpipebeam" -N 5 --os_cli=ruby
     Will run `model_tests.rb -n /fourpipebeam/` 5 times with the CLI as 'ruby'
+
+  python process_results.py test-stability run -n "baseline_sys01_osm" --os_cli="C:/openstudio-2.5.0/bin/openstudio"
+    Example of specifying a custom os_cli on Windows (forward slashes)
 
 Help:
   For help using this tool, please open an issue on the Github repository:
