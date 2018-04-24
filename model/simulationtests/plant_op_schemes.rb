@@ -16,7 +16,7 @@ model.add_geometry({"length" => 100,
 model.add_windows({"wwr" => 0.4,
                   "offset" => 1,
                   "application_type" => "Above Floor"})
-        
+
 #add ASHRAE System type 07, VAV w/ Reheat
 model.add_hvac({"ashrae_sys_num" => '07'})
 
@@ -36,7 +36,7 @@ cooling_op_scheme = OpenStudio::Model::PlantEquipmentOperationCoolingLoad.new(mo
 cooling_op_scheme.addEquipment(chiller)
 cooling_op_scheme.addEquipment(chiller2)
 # This cuts the load range into two pieces with only chiller2 operating on the lower end of the range
-# See PlantEquipmentOperationRangeBasedScheme for details about this api 
+# See PlantEquipmentOperationRangeBasedScheme for details about this api
 lower_range_equipment = []
 lower_range_equipment.push(chiller2)
 cooling_op_scheme.addLoadRange(25000.0,lower_range_equipment)
@@ -72,12 +72,12 @@ tower_scheme.addLoadRange(23.0,tower_equipment)
 model.set_constructions()
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #add design days to the model (Chicago)
 model.add_design_days()
-       
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})
-                           
+

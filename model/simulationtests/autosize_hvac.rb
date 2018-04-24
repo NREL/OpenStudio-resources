@@ -31,7 +31,9 @@ model.add_design_days()
                   # "offset" => 1,
                   # "application_type" => "Above Floor"})
 
-zones = model.getThermalZones.sort
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 puts "The model has #{zones.size} thermal zones"
 
 # Change the simulation to only run the sizing days
@@ -774,6 +776,18 @@ zones.each_with_index do |zn, zone_index|
   when 35
     term = OpenStudio::Model::AirTerminalDualDuctVAVOutdoorAir.new(model)
     air_loop_dual_duct.addBranchForZone(zn, term)
+  when 36
+    # TODO : To be added once the next official release
+    # including this object is out : 2.5.1
+    #clg_coil = OpenStudio::Model::CoilCoolingFourPipeBeam.new(model)
+    #chw_loop.addDemandBranchForComponent(clg_coil)
+
+    #htg_coil = OpenStudio::Model::CoilHeatingFourPipeBeam.new(model)
+    #hw_loop.addDemandBranchForComponent(htg_coil)
+
+    #term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeFourPipeBeam.new(model, clg_coil, htg_coil)
+    #air_loop.addBranchForZone(zn, term)
+
   when 26, 27, 28, 29, 30, 31, 32, 33
     # Previously used for the unitary systems, dehum, etc
   else

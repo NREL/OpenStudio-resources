@@ -16,7 +16,7 @@ model.add_geometry({"length" => 100,
 model.add_windows({"wwr" => 0.4,
                   "offset" => 1,
                   "application_type" => "Above Floor"})
-        
+
 air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
 
 oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
@@ -48,7 +48,9 @@ cooling_sch.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),12.8)
 cooling_spm = OpenStudio::Model::SetpointManagerScheduled.new(model,cooling_sch)
 cooling_spm.addToNode(supply_outlet_nodes[1])
 
-zones = model.getThermalZones
+# In order to produce more consistent results between different runs,
+# we sort the zones by names (doesn't matter here, just in case)
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 zones.each do |zone|
   terminal = OpenStudio::Model::AirTerminalDualDuctVAV.new(model)
   air_loop.addBranchForZone(zone,terminal)
@@ -57,17 +59,17 @@ end
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
-              
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #add design days to the model (Chicago)
 model.add_design_days()
-       
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})
-                           
+

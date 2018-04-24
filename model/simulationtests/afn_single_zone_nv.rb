@@ -51,9 +51,11 @@ model.add_geometry({"length" => 100,
 model.add_windows({"wwr" => 0.4,
                   "offset" => 1,
                   "application_type" => "Above Floor"})
-        
+
 #add ASHRAE System type 03, PSZ-AC
 #model.add_hvac({"ashrae_sys_num" => '03'})
+
+zone = model.getThermalZones()[0] # There should only be one...
 
 #add ASHRAE System type 08, VAV w/ PFP Boxes
 #DLM: this invokes weird mass conservation rules with VAV
@@ -61,12 +63,12 @@ model.add_windows({"wwr" => 0.4,
 
 #add thermostats
 #model.add_thermostats({"heating_setpoint" => 24, "cooling_setpoint" => 28})
-              
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #remove all infiltration
 model.getSpaceInfiltrationDesignFlowRates.each do |infil|
@@ -80,11 +82,17 @@ model.add_design_days()
 afn_control =  model.getAirflowNetworkSimulationControl
 afn_control.setAirflowNetworkControl("MultizoneWithoutDistribution")
 
-#make an afn zone
-zone = model.getThermalZones()[0] # There should only be one...
+
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+# It doesn't matter here since there's only ony, but just in case
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+
+# make an afn zone
+zone = zones[0] # There should only be one...
 afnzone = zone.getAirflowNetworkZone
 
-#connect up
+# Connect up envelope
 visitor = SurfaceNetworkBuilder.new(model)
 
 # add output reports
@@ -92,7 +100,7 @@ OpenStudio::Model::OutputVariable.new("AFN Node Temperature", model)
 OpenStudio::Model::OutputVariable.new("AFN Node Wind Pressure", model)
 OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Mass Flow Rate", model)
 OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Pressure Difference", model)
- 
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})

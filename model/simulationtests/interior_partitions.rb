@@ -11,10 +11,13 @@ model.add_geometry({"length" => 50,
               "floor_to_floor_height" => 4,
               "plenum_height" => 0,
               "perimeter_zone_depth" => 6})
-              
+
+# Get spaces, ordered by name to ensure consistency
+spaces = model.getSpaces.sort_by{|s| s.name.to_s}
+
 # collapse all spaces into one thermal zone
 thermalZone = nil
-model.getSpaces.each do |space|
+spaces.each do |space|
   if not thermalZone
     thermalZone = space.thermalZone.get
   else
@@ -49,10 +52,10 @@ interiorConstruction.insertLayer(0, interiorMaterial)
 
 # add some interior partition surfaces
 fractionOfExteriorSurfaceArea = 0.1
-model.getSpaces.each do |space|
+spaces.each do |space|
   interiorGroup = OpenStudio::Model::InteriorPartitionSurfaceGroup.new(model)
   interiorGroup.setSpace(space)
- 
+
   heights = [1, 3, 3, 1]
   lengths = [1, 3, 1, 3]
   dir_x = [1, 0, -1, 0]
@@ -72,17 +75,17 @@ model.getSpaces.each do |space|
     interiorSurface.setInteriorPartitionSurfaceGroup(interiorGroup)
     interiorSurface.setConverttoInternalMass(true)
     interiorSurface.setConstruction(interiorConstruction)
-    
+
     x = new_x
     y = new_y
     interiorArea += interiorSurface.grossArea
   end
-  
+
   surfaceArea = 0
   space.surfaces.each do |surface|
     surfaceArea += surface.grossArea
   end
-  
+
   multiplier = fractionOfExteriorSurfaceArea * surfaceArea / interiorArea
   interiorGroup.setMultiplier(multiplier.ceil)
 end
@@ -94,7 +97,7 @@ end
 model.add_windows({"wwr" => 0.4,
                   "offset" => 1,
                   "application_type" => "Above Floor"})
-        
+
 #add ASHRAE System type 01, PTAC, Residential
 model.add_hvac({"ashrae_sys_num" => '01'})
 
@@ -103,12 +106,12 @@ model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #add design days to the model (Chicago)
 model.add_design_days()
-       
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})
-                           
+

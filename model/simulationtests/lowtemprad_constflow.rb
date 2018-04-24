@@ -17,6 +17,10 @@ model.add_windows({"wwr" => 0.4,
                   "offset" => 1,
                   "application_type" => "Above Floor"})
 
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+
 # Add a hot water plant to supply the water to air heat pump
 # This could be baked into HVAC templates in the future
 hotWaterPlant = OpenStudio::Model::PlantLoop.new(model)
@@ -68,7 +72,7 @@ pipe_c1 = OpenStudio::Model::PipeAdiabatic.new(model)
 pipe_c1.addToNode(chilledWaterOutletNode)
 
 ## Make a Hot Water temperature schedule
-  
+
 osTime = OpenStudio::Time.new(0,24,0,0)
 
 hotWaterTempSchedule = OpenStudio::Model::ScheduleRuleset.new(model)
@@ -88,11 +92,11 @@ hotWaterTempSchedule.defaultDaySchedule().setName('Hot Water Temperature Default
 hotWaterTempSchedule.defaultDaySchedule().addValue(osTime,24)
 
 hotWaterSPM = OpenStudio::Model::SetpointManagerScheduled.new(model,hotWaterTempSchedule)
-hotWaterSPM.addToNode(hotWaterOutletNode)                  
+hotWaterSPM.addToNode(hotWaterOutletNode)
 
 
 ## Make a Chilled Water temperature schedule
-  
+
 chilledWaterTempSchedule = OpenStudio::Model::ScheduleRuleset.new(model)
 chilledWaterTempSchedule.setName('Chilled Water Temperature')
 ### Winter Design Day
@@ -110,7 +114,7 @@ chilledWaterTempSchedule.defaultDaySchedule().setName('Chilled Water Temperature
 chilledWaterTempSchedule.defaultDaySchedule().addValue(osTime,24)
 
 chilledWaterSPM = OpenStudio::Model::SetpointManagerScheduled.new(model,chilledWaterTempSchedule)
-chilledWaterSPM.addToNode(chilledWaterOutletNode)                  
+chilledWaterSPM.addToNode(chilledWaterOutletNode)
 
 #make some schedules to control the temperatures in the radiant coils
 coolingHighWaterTempSched  = OpenStudio::Model::ScheduleConstant.new(model)
@@ -132,7 +136,7 @@ heatingHighControlTempSched.setValue(20.0)
 heatingLowControlTempSched.setValue(17.0)
 
 #add a Low Temperature Radiant system to each zone
-model.getThermalZones.each do |z|
+zones.each do |z|
 
   heat_coil = OpenStudio::Model::CoilHeatingLowTempRadiantConstFlow.new(model,heatingHighWaterTempSched,heatingLowWaterTempSched,heatingHighControlTempSched,heatingLowControlTempSched)
   cool_coil = OpenStudio::Model::CoilCoolingLowTempRadiantConstFlow.new(model,coolingHighWaterTempSched,coolingLowWaterTempSched,coolingHighControlTempSched,coolingLowControlTempSched)
@@ -154,12 +158,12 @@ model.getThermalZones.each do |z|
   hotWaterPlant.addDemandBranchForComponent(heat_coil)
   chilledWaterPlant.addDemandBranchForComponent(cool_coil)
 end
-    
+
 #add thermostats
 #model.add_thermostats({"heating_setpoint" => 24,"cooling_setpoint" => 28})
-              
+
 #assign constructions from a local library to the walls/windows/etc. in the model
-model.set_constructions() 
+model.set_constructions()
 
 #create an internalsourceconstruction
 
@@ -176,7 +180,7 @@ layers << finished_floor = OpenStudio::Model::StandardOpaqueMaterial.new(model,"
 intSourceConst.setLayers(layers)
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #find a surface that's of surface type floor and assign the surface internal source construction
 model.getSurfaces.each do |s|
@@ -187,8 +191,8 @@ end
 
 #add design days to the model (Chicago)
 model.add_design_days()
-       
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})
-                           
+
