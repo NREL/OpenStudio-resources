@@ -30,7 +30,8 @@ require 'minitest/autorun'
 
 begin
   require "minitest/reporters"
-  Minitest::Reporters.use!
+  require "minitest/reporters/default_reporter"
+  Minitest::Reporters.use! Minitest::Reporters::DefaultReporter.new
 rescue LoadError
   puts "Minitest Reporters not installed"
 end
