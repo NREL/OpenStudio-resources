@@ -1,5 +1,4 @@
 require 'openstudio'
-require 'test/unit'
 
 
 #Simply test the example model
