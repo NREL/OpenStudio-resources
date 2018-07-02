@@ -961,6 +961,10 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('dsn_oa_w_ideal_loads.rb')
   end
 
+  def test_ideal_loads_w_plenums_rb
+    result = sim_test('ideal_loads_w_plenums.rb')
+  end
+
   def test_dual_duct_rb
     result = sim_test('dual_duct.rb')
   end
