@@ -31,7 +31,9 @@ require 'minitest/autorun'
 begin
   require "minitest/reporters"
   require "minitest/reporters/default_reporter"
-  Minitest::Reporters.use! Minitest::Reporters::DefaultReporter.new
+  reporter = Minitest::Reporters::DefaultReporter.new
+  reporter.start # had to call start manually otherwise was failing when trying to report elapsed time when run in CLI
+  Minitest::Reporters.use! reporter
 rescue LoadError
   puts "Minitest Reporters not installed"
 end
