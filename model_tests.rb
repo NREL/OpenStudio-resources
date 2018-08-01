@@ -1338,6 +1338,10 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_thermal_storage_osm
     result = sim_test('thermal_storage.osm')
   end
+  
+  def test_transformer_rb
+    result = sim_test('transformer.rb')
+  end
 
   def test_unitary_system_osm
     result = sim_test('unitary_system.osm')
@@ -1483,8 +1487,6 @@ class ModelTests < MiniTest::Unit::TestCase
   # def test_afn_single_zone_ac_osm
   #   result = sim_test('afn_single_zone_ac.osm')
   # end
-    
-  def test_foundation_kiva_rb
 
   def test_additional_props_rb
     result = sim_test('additional_props.rb')
