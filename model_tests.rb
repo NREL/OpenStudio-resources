@@ -31,7 +31,9 @@ require 'minitest/autorun'
 begin
   require "minitest/reporters"
   require "minitest/reporters/default_reporter"
-  Minitest::Reporters.use! Minitest::Reporters::DefaultReporter.new
+  reporter = Minitest::Reporters::DefaultReporter.new
+  reporter.start # had to call start manually otherwise was failing when trying to report elapsed time when run in CLI
+  Minitest::Reporters.use! reporter
 rescue LoadError
   puts "Minitest Reporters not installed"
 end
@@ -1481,7 +1483,7 @@ class ModelTests < MiniTest::Unit::TestCase
   # def test_afn_single_zone_ac_osm
   #   result = sim_test('afn_single_zone_ac.osm')
   # end
-  
+
   def test_additional_props_rb
     result = sim_test('additional_props.rb')
   end
@@ -1500,6 +1502,14 @@ class ModelTests < MiniTest::Unit::TestCase
 
   def test_unitary_systems_airloop_and_zonehvac_rb
     result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
+  end  
+    
+  def test_epw_design_conditions_rb
+    result = sim_test('epw_design_conditions.rb')
+  end
+  
+  def test_epw_design_conditions_osm
+    result = sim_test('epw_design_conditions.osm')
   end
 
   # intersection tests
