@@ -775,11 +775,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('airterminal_fourpipebeam.rb')
   end
 
-  # TODO : To be added once the next **official** release
-  # including this object is out : 2.5.2
-  # def test_airterminal_fourpipebeam_osm
-  #   result = sim_test('airterminal_fourpipebeam.osm')
-  # end
+  def test_airterminal_fourpipebeam_osm
+    result = sim_test('airterminal_fourpipebeam.osm')
+  end
 
   def test_air_chillers_osm
     result = sim_test('air_chillers.osm')
@@ -965,7 +963,7 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('ideal_loads_w_plenums.rb')
   end
 
-  # TODO: add it
+  # TODO: add it once ruby test works, expected in 2.6.2
   #def test_ideal_loads_w_plenums_osm
   #  result = sim_test('ideal_loads_w_plenums.osm')
   #end
@@ -1186,7 +1184,7 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('multiple_airloops.rb')
   end
 
-  # TODO: add it
+  # TODO: add it once ruby test works, expected in 2.6.2
   def test_multiple_airloops_osm
     result = sim_test('multiple_airloops.osm')
   end
