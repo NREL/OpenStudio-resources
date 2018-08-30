@@ -963,10 +963,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('ideal_loads_w_plenums.rb')
   end
 
-  # TODO: add it once ruby test works, expected in 2.6.2
-  #def test_ideal_loads_w_plenums_osm
-  #  result = sim_test('ideal_loads_w_plenums.osm')
-  #end
+  def test_ideal_loads_w_plenums_osm
+    result = sim_test('ideal_loads_w_plenums.osm')
+  end
 
   def test_dual_duct_rb
     result = sim_test('dual_duct.rb')
@@ -1184,7 +1183,6 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('multiple_airloops.rb')
   end
 
-  # TODO: add it once ruby test works, expected in 2.6.2
   def test_multiple_airloops_osm
     result = sim_test('multiple_airloops.osm')
   end
