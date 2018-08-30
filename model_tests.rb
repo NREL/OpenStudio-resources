@@ -771,14 +771,12 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('airterminal_cooledbeam.rb')
   end
 
-  # TODO : The next official release (2.5.1) is expected to have this object
-  # Pending PR: https://github.com/NREL/OpenStudio/pull/3031
   def test_airterminal_fourpipebeam_rb
     result = sim_test('airterminal_fourpipebeam.rb')
   end
 
   # TODO : To be added once the next **official** release
-  # including this object is out : 2.5.1
+  # including this object is out : 2.5.2
   # def test_airterminal_fourpipebeam_osm
   #   result = sim_test('airterminal_fourpipebeam.osm')
   # end
@@ -966,6 +964,11 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_ideal_loads_w_plenums_rb
     result = sim_test('ideal_loads_w_plenums.rb')
   end
+
+  # TODO: add it
+  #def test_ideal_loads_w_plenums_osm
+  #  result = sim_test('ideal_loads_w_plenums.osm')
+  #end
 
   def test_dual_duct_rb
     result = sim_test('dual_duct.rb')
@@ -1181,6 +1184,11 @@ class ModelTests < MiniTest::Unit::TestCase
 
   def test_multiple_airloops_rb
     result = sim_test('multiple_airloops.rb')
+  end
+
+  # TODO: add it
+  def test_multiple_airloops_osm
+    result = sim_test('multiple_airloops.osm')
   end
 
   def test_photovoltaics_rb
@@ -1495,19 +1503,19 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_pvwatts_rb
     result = sim_test('pvwatts.rb')
   end
-  
+
   def test_pvwatts_osm
     result = sim_test('pvwatts.osm')
   end
 
   def test_unitary_systems_airloop_and_zonehvac_rb
     result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
-  end  
-    
+  end
+
   def test_epw_design_conditions_rb
     result = sim_test('epw_design_conditions.rb')
   end
-  
+
   def test_epw_design_conditions_osm
     result = sim_test('epw_design_conditions.osm')
   end
