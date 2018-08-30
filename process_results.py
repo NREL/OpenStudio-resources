@@ -2,27 +2,27 @@
 Command Line Utility (CLI) to parse and analyze the regression tests results.
 
 Use it like so:
-  python process-results.py command [options]
+  python process_results.py command [options]
 
 Usage:
-  process-results.py heatmap [--tagged | --all]
+  process_results.py heatmap [--tagged | --all]
                              [-r <r_t> | --row_threshold=<r_t>]
                              [-d <d_t> | --display_threshold=<d_t>]
                              [--indiv_axes]
                              [--figname_with_thresholds]
                              [--figname_with_thresholds]
                              [--granular [--indiv_axes]]
-  process-results.py upload
-  process-results.py test-stability run -n <test_filter>
+  process_results.py upload
+  process_results.py test-stability run -n <test_filter>
                                         [-N <n>]
                                         [--start_at=<i>]
                                         [--os_cli=<path>]
                                         [--eplus_exe=<path>]
                                         [--save_idf]
                                         [--platform_name=<str>]
-  process-results.py test-stability clean [--contains=<str> | --pattern=<pat>]
-  process-results.py test-status [--tagged | --all] [--entire_table]
-  process-results.py -h | --help
+  process_results.py test-stability clean [--contains=<str> | --pattern=<pat>]
+  process_results.py test-status [--tagged | --all] [--entire_table]
+  process_results.py -h | --help
 
 Options:
 
@@ -104,22 +104,22 @@ Options:
   -h, --help         Show this screen.
 
 Examples:
-  process-results.py heatmap
+  process_results.py heatmap
         Parse results and generate a heatmap with default values
         of --row_threshold=0.01 and --display_threshold=0.005
 
-  process-results.py heatmap --granular
+  process_results.py heatmap --granular
         Heatmap with values of --row_threshold=0.0005
         and --display_threshold=0.0001
 
-  process-results.py heatmap -g -i -f
+  process_results.py heatmap -g -i -f
         Granular heatmap, save individual axes, and figure name with thresholds
 
-  process-results.py heatmap --row_threshold=0.01 --display_threshold=0.001
-  process-results.py heatmap -r 0.01 -d 0.001
+  process_results.py heatmap --row_threshold=0.01 --display_threshold=0.001
+  process_results.py heatmap -r 0.01 -d 0.001
         Parse results and generate a heatmap with custom thresholds
 
-  process-results.py upload
+  process_results.py upload
         Upload to the google spreadsheet.
         THIS SHOULD ONLY BE DONE ONCE THE OFFICIAL RELEASE IS OUT AND AFTER
         RUNNING ALL TESTS WITH THIS NEW VERSION.
