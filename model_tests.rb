@@ -1298,6 +1298,10 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_schedule_ruleset_2013_osm
     result = sim_test('schedule_ruleset_2013.osm')
   end
+  
+  def test_schedule_file_rb
+    result = sim_test('schedule_file.rb')
+  end
 
   def test_setpoint_managers_rb
     result = sim_test('setpoint_managers.rb')
