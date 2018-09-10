@@ -68,6 +68,8 @@ zone.setZoneControlHumidistat(humidistat)
 zone_hvac = OpenStudio::Model::ZoneHVACDehumidifierDX.new(model)
 zone_hvac.addToThermalZone(zone)
 
+#set LoadDistributionScheme
+zone.setLoadDistributionScheme("UniformLoad")
 
 model.save('before.osm', true)
 
