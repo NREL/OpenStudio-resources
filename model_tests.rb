@@ -110,6 +110,12 @@ $:.unshift($ModelDir)
 ENV['RUBYLIB'] = $ModelDir
 ENV['RUBYPATH'] = $ModelDir
 
+# bundle install a gemfile
+def bundle_install(gemfile)
+  gemfile_path = File.join($RootDir, gemfile)
+	fail "Gemfile '#{gemfile_path}' does not exist" if !File.exists?(gemfile_path)
+end
+
 # run a command in directory dir, throws exception on timeout or exit status != 0, always returns to initial directory
 def run_command(command, dir, timeout = Float::INFINITY)
   pwd = Dir.pwd
