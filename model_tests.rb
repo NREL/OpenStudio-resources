@@ -232,7 +232,7 @@ def postprocess_out_osw_and_copy(filename)
 end
 
 # run a simulation test
-def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measures = [], reporting_measures = [])
+def sim_test(filename, options = {})
 
   dir = File.join($TestDir, filename)
   osw = File.join(dir, 'in.osw')
@@ -240,7 +240,6 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
   in_osm = File.join(dir, 'in.osm')
   # Cp to the OutOSW directory
   cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.osw")
-
 
   # If $DoNotReRunIfSuccess is true, we check if the out_osw already exists
   # and whether it was successful already
@@ -265,7 +264,6 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
   # Start by deleting the testruns/test_xxx directory and recreating it
   FileUtils.rm_rf(dir) if File.exists?(dir)
   FileUtils.mkdir_p(dir)
-  FileUtils.cp($OswFile, osw)
 
   ext = File.extname(filename)
   if (ext == '.osm')
@@ -284,6 +282,7 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
     end
 
     FileUtils.cp(ori_file_path, in_osm)
+	FileUtils.cp($OswFile, osw)
   elsif (ext == '.rb')
 
     if !$NoMatchingOSMTests.include?(filename)
@@ -310,6 +309,7 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
       end
     end
 
+	# command to generate the initial osm
     command = "\"#{$OpenstudioCli}\" \"#{File.join($ModelDir,filename)}\""
     run_command(command, dir, 3600)
 
@@ -319,12 +319,37 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
       # puts "moving #{out_osm} to #{in_osm}"
       FileUtils.mv(out_osm, in_osm)
     end
+	
+	FileUtils.cp($OswFile, osw)
+	
+  elsif (ext == '.osw')
+  
+	# make an empty osm
+	model = OpenStudio::Model::Model.new
+	model.save(in_osm, true)
 
-    fail "Cannot find file #{in_osm}" if !File.exists?(in_osm)
+	# cooy the osw
+    FileUtils.cp(File.join($ModelDir,filename), osw)
+
   end
+  
+  fail "Cannot find file #{in_osm}" if !File.exists?(in_osm)
+  fail "Cannot find file #{osw}" if !File.exists?(osw)
+  
+  # extra options passed to cli
+  extra_options = ""
+  extra_options += "--verbose " if options[:verbose]
+  extra_options += "--include #{options[:include]} " if options[:include]
+  extra_options += "--gem_path #{options[:gem_path]} " if options[:gem_path]
+  extra_options += "--gem_home #{options[:gem_home]} " if options[:gem_home]
+  extra_options += "--bundle #{options[:bundle]} " if options[:bundle]
+  extra_options += "--bundle_path #{options[:bundle_path]} " if options[:bundle_path]
+  
+  extra_run_options = ""
+  extra_run_options += "--debug " if options[:debug]
 
-  command = "\"#{$OpenstudioCli}\" run -w \"#{osw}\""
-  #command = "\"#{$OpenstudioCli}\" run --debug -w \"#{osw}\""
+  # command to run the osw
+  command = "\"#{$OpenstudioCli}\" #{extra_options} run #{extra_run_options} -w \"#{osw}\""
 
   run_command(command, dir, 3600)
 
@@ -1511,7 +1536,12 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_epw_design_conditions_osm
     result = sim_test('epw_design_conditions.osm')
   end
-
+  
+  # model articulation tests
+  def test_model_articulation1_osw
+    result = sim_test('model_articulation1.osw')
+  end
+  
   # intersection tests
 
   def test_intersect_22_osm
@@ -1562,7 +1592,7 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_autosizing_rb
     result = autosizing_test('autosize_hvac.rb')
   end
-
+  
   # TODO: model/refbuildingtests/CreateRefBldgModel.rb is unused
   # Either implement as a test, or delete
 
