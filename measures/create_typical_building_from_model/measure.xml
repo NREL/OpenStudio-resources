@@ -1,0 +1,699 @@
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>create_typical_building_from_model</name>
+  <uid>339a2e3a-273c-4494-bb50-bfe586a0647c</uid>
+  <version_id>d4a8688f-d185-465f-9560-abfe916b4ee8</version_id>
+  <version_modified>20180626T202346Z</version_modified>
+  <xml_checksum>EE13F09F</xml_checksum>
+  <class_name>CreateTypicalBuildingFromModel</class_name>
+  <display_name>Create Typical Building from Model</display_name>
+  <description>Takes a model with space and stub space types, and assigns constructions, schedules, internal loads, hvac, and other loads such as exterior lights and service water heating. The end result is somewhat like a custom protptye model with user geometry, but it may use different HVAC systems.</description>
+  <modeler_description>Initially this was intended for stub space types, but it is possible that it will be run on models tha talready have internal loads, schedules, or constructions that should be preserved. Set it up to support addition at later date of bool args to skip specific types of model elements.</modeler_description>
+  <arguments>
+    <argument>
+      <name>template</name>
+      <display_name>Target Standard</display_name>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>90.1-2010</default_value>
+      <choices>
+        <choice>
+          <value>DOE Ref Pre-1980</value>
+          <display_name>DOE Ref Pre-1980</display_name>
+        </choice>
+        <choice>
+          <value>DOE Ref 1980-2004</value>
+          <display_name>DOE Ref 1980-2004</display_name>
+        </choice>
+        <choice>
+          <value>90.1-2004</value>
+          <display_name>90.1-2004</display_name>
+        </choice>
+        <choice>
+          <value>90.1-2007</value>
+          <display_name>90.1-2007</display_name>
+        </choice>
+        <choice>
+          <value>90.1-2010</value>
+          <display_name>90.1-2010</display_name>
+        </choice>
+        <choice>
+          <value>90.1-2013</value>
+          <display_name>90.1-2013</display_name>
+        </choice>
+        <choice>
+          <value>NREL ZNE Ready 2017</value>
+          <display_name>NREL ZNE Ready 2017</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>system_type</name>
+      <display_name>HVAC System Type</display_name>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Inferred</default_value>
+      <choices>
+        <choice>
+          <value>Inferred</value>
+          <display_name>Inferred</display_name>
+        </choice>
+        <choice>
+          <value>Ideal Air Loads</value>
+          <display_name>Ideal Air Loads</display_name>
+        </choice>
+        <choice>
+          <value>PTAC with hot water heat</value>
+          <display_name>PTAC with hot water heat</display_name>
+        </choice>
+        <choice>
+          <value>PTAC with gas coil heat</value>
+          <display_name>PTAC with gas coil heat</display_name>
+        </choice>
+        <choice>
+          <value>PTAC with electric baseboard heat</value>
+          <display_name>PTAC with electric baseboard heat</display_name>
+        </choice>
+        <choice>
+          <value>PTAC with no heat</value>
+          <display_name>PTAC with no heat</display_name>
+        </choice>
+        <choice>
+          <value>PTAC with district hot water heat</value>
+          <display_name>PTAC with district hot water heat</display_name>
+        </choice>
+        <choice>
+          <value>PTHP</value>
+          <display_name>PTHP</display_name>
+        </choice>
+        <choice>
+          <value>PSZ-AC with gas coil heat</value>
+          <display_name>PSZ-AC with gas coil heat</display_name>
+        </choice>
+        <choice>
+          <value>PSZ-AC with electric baseboard heat</value>
+          <display_name>PSZ-AC with electric baseboard heat</display_name>
+        </choice>
+        <choice>
+          <value>PSZ-AC with no heat</value>
+          <display_name>PSZ-AC with no heat</display_name>
+        </choice>
+        <choice>
+          <value>PSZ-AC with district hot water heat</value>
+          <display_name>PSZ-AC with district hot water heat</display_name>
+        </choice>
+        <choice>
+          <value>PSZ-HP</value>
+          <display_name>PSZ-HP</display_name>
+        </choice>
+        <choice>
+          <value>Fan coil district chilled water with no heat</value>
+          <display_name>Fan coil district chilled water with no heat</display_name>
+        </choice>
+        <choice>
+          <value>Fan coil district chilled water and boiler</value>
+          <display_name>Fan coil district chilled water and boiler</display_name>
+        </choice>
+        <choice>
+          <value>Fan coil district chilled water unit heaters</value>
+          <display_name>Fan coil district chilled water unit heaters</display_name>
+        </choice>
+        <choice>
+          <value>Fan coil district chilled water electric baseboard heat</value>
+          <display_name>Fan coil district chilled water electric baseboard heat</display_name>
+        </choice>
+        <choice>
+          <value>Fan coil district hot and chilled water</value>
+          <display_name>Fan coil district hot and chilled water</display_name>
+        </choice>
+        <choice>
+          <value>Fan coil district hot water and chiller</value>
+          <display_name>Fan coil district hot water and chiller</display_name>
+        </choice>
+        <choice>
+          <value>Fan coil chiller with no heat</value>
+          <display_name>Fan coil chiller with no heat</display_name>
+        </choice>
+        <choice>
+          <value>Baseboard district hot water heat</value>
+          <display_name>Baseboard district hot water heat</display_name>
+        </choice>
+        <choice>
+          <value>Baseboard district hot water heat with direct evap coolers</value>
+          <display_name>Baseboard district hot water heat with direct evap coolers</display_name>
+        </choice>
+        <choice>
+          <value>Baseboard electric heat</value>
+          <display_name>Baseboard electric heat</display_name>
+        </choice>
+        <choice>
+          <value>Baseboard electric heat with direct evap coolers</value>
+          <display_name>Baseboard electric heat with direct evap coolers</display_name>
+        </choice>
+        <choice>
+          <value>Baseboard hot water heat</value>
+          <display_name>Baseboard hot water heat</display_name>
+        </choice>
+        <choice>
+          <value>Baseboard hot water heat with direct evap coolers</value>
+          <display_name>Baseboard hot water heat with direct evap coolers</display_name>
+        </choice>
+        <choice>
+          <value>Window AC with no heat</value>
+          <display_name>Window AC with no heat</display_name>
+        </choice>
+        <choice>
+          <value>Window AC with forced air furnace</value>
+          <display_name>Window AC with forced air furnace</display_name>
+        </choice>
+        <choice>
+          <value>Window AC with district hot water baseboard heat</value>
+          <display_name>Window AC with district hot water baseboard heat</display_name>
+        </choice>
+        <choice>
+          <value>Window AC with hot water baseboard heat</value>
+          <display_name>Window AC with hot water baseboard heat</display_name>
+        </choice>
+        <choice>
+          <value>Window AC with electric baseboard heat</value>
+          <display_name>Window AC with electric baseboard heat</display_name>
+        </choice>
+        <choice>
+          <value>Window AC with unit heaters</value>
+          <display_name>Window AC with unit heaters</display_name>
+        </choice>
+        <choice>
+          <value>Direct evap coolers</value>
+          <display_name>Direct evap coolers</display_name>
+        </choice>
+        <choice>
+          <value>Direct evap coolers with unit heaters</value>
+          <display_name>Direct evap coolers with unit heaters</display_name>
+        </choice>
+        <choice>
+          <value>Unit heaters</value>
+          <display_name>Unit heaters</display_name>
+        </choice>
+        <choice>
+          <value>Heat pump heat with no cooling</value>
+          <display_name>Heat pump heat with no cooling</display_name>
+        </choice>
+        <choice>
+          <value>Heat pump heat with direct evap cooler</value>
+          <display_name>Heat pump heat with direct evap cooler</display_name>
+        </choice>
+        <choice>
+          <value>VAV with reheat</value>
+          <display_name>VAV with reheat</display_name>
+        </choice>
+        <choice>
+          <value>VAV with PFP boxes</value>
+          <display_name>VAV with PFP boxes</display_name>
+        </choice>
+        <choice>
+          <value>VAV with gas reheat</value>
+          <display_name>VAV with gas reheat</display_name>
+        </choice>
+        <choice>
+          <value>VAV with zone unit heaters</value>
+          <display_name>VAV with zone unit heaters</display_name>
+        </choice>
+        <choice>
+          <value>VAV with electric baseboard heat</value>
+          <display_name>VAV with electric baseboard heat</display_name>
+        </choice>
+        <choice>
+          <value>VAV cool with zone heat pump heat</value>
+          <display_name>VAV cool with zone heat pump heat</display_name>
+        </choice>
+        <choice>
+          <value>PVAV with reheat</value>
+          <display_name>PVAV with reheat</display_name>
+        </choice>
+        <choice>
+          <value>PVAV with PFP boxes</value>
+          <display_name>PVAV with PFP boxes</display_name>
+        </choice>
+        <choice>
+          <value>Residential forced air</value>
+          <display_name>Residential forced air</display_name>
+        </choice>
+        <choice>
+          <value>Residential forced air cooling hot water baseboard heat</value>
+          <display_name>Residential forced air cooling hot water baseboard heat</display_name>
+        </choice>
+        <choice>
+          <value>Residential forced air with district hot water</value>
+          <display_name>Residential forced air with district hot water</display_name>
+        </choice>
+        <choice>
+          <value>Residential heat pump</value>
+          <display_name>Residential heat pump</display_name>
+        </choice>
+        <choice>
+          <value>Forced air furnace</value>
+          <display_name>Forced air furnace</display_name>
+        </choice>
+        <choice>
+          <value>Forced air furnace district chilled water fan coil</value>
+          <display_name>Forced air furnace district chilled water fan coil</display_name>
+        </choice>
+        <choice>
+          <value>Forced air furnace direct evap cooler</value>
+          <display_name>Forced air furnace direct evap cooler</display_name>
+        </choice>
+        <choice>
+          <value>Residential AC with no heat</value>
+          <display_name>Residential AC with no heat</display_name>
+        </choice>
+        <choice>
+          <value>Residential AC with electric baseboard heat</value>
+          <display_name>Residential AC with electric baseboard heat</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>hvac_delivery_type</name>
+      <display_name>HVAC System Delivery Type</display_name>
+      <description>How the HVAC system delivers heating or cooling to the zone.</description>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Forced Air</default_value>
+      <choices>
+        <choice>
+          <value>Forced Air</value>
+          <display_name>Forced Air</display_name>
+        </choice>
+        <choice>
+          <value>Hydronic</value>
+          <display_name>Hydronic</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>htg_src</name>
+      <display_name>HVAC Heating Source</display_name>
+      <description>The primary source of heating used by HVAC systems in the model.</description>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>NaturalGas</default_value>
+      <choices>
+        <choice>
+          <value>Electricity</value>
+          <display_name>Electricity</display_name>
+        </choice>
+        <choice>
+          <value>NaturalGas</value>
+          <display_name>NaturalGas</display_name>
+        </choice>
+        <choice>
+          <value>DistrictHeating</value>
+          <display_name>DistrictHeating</display_name>
+        </choice>
+        <choice>
+          <value>DistrictAmbient</value>
+          <display_name>DistrictAmbient</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>clg_src</name>
+      <display_name>HVAC Cooling Source</display_name>
+      <description>The primary source of cooling used by HVAC systems in the model.</description>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Electricity</default_value>
+      <choices>
+        <choice>
+          <value>Electricity</value>
+          <display_name>Electricity</display_name>
+        </choice>
+        <choice>
+          <value>DistrictCooling</value>
+          <display_name>DistrictCooling</display_name>
+        </choice>
+        <choice>
+          <value>DistrictAmbient</value>
+          <display_name>DistrictAmbient</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>kitchen_makeup</name>
+      <display_name>Kitchen Exhaust MakeUp Air Calculation Method</display_name>
+      <description>Determine logic to identify dining or cafe zones to provide makeup air to kitchen exhaust.</description>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Adjacent</default_value>
+      <choices>
+        <choice>
+          <value>None</value>
+          <display_name>None</display_name>
+        </choice>
+        <choice>
+          <value>Largest Zone</value>
+          <display_name>Largest Zone</display_name>
+        </choice>
+        <choice>
+          <value>Adjacent</value>
+          <display_name>Adjacent</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>exterior_lighting_zone</name>
+      <display_name>Exterior Lighting Zone</display_name>
+      <description>Identify the Exterior Lighitng Zone for the Building Site.</description>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>3 - All Other Areas</default_value>
+      <choices>
+        <choice>
+          <value>0 - Undeveloped Areas Parks</value>
+          <display_name>0 - Undeveloped Areas Parks</display_name>
+        </choice>
+        <choice>
+          <value>1 - Developed Areas Parks</value>
+          <display_name>1 - Developed Areas Parks</display_name>
+        </choice>
+        <choice>
+          <value>2 - Neighborhood</value>
+          <display_name>2 - Neighborhood</display_name>
+        </choice>
+        <choice>
+          <value>3 - All Other Areas</value>
+          <display_name>3 - All Other Areas</display_name>
+        </choice>
+        <choice>
+          <value>4 - High Activity</value>
+          <display_name>4 - High Activity</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>add_constructions</name>
+      <display_name>Add Constructions to Model</display_name>
+      <description>Construction Set will be appied to entire building</description>
+      <type>Boolean</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>true</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>add_space_type_loads</name>
+      <display_name>Add Space Type Loads to Model</display_name>
+      <description>Populate existing space types in model with internal loads.</description>
+      <type>Boolean</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>true</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>add_elevators</name>
+      <display_name>Add Elevators to Model</display_name>
+      <description>Elevators will be add directly to space in model vs. being applied to a space type.</description>
+      <type>Boolean</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>true</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>add_exterior_lights</name>
+      <display_name>Add Exterior Lights to Model</display_name>
+      <description>Multiple exterior lights objects will be added for different classes of lighting such as parking and facade.</description>
+      <type>Boolean</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>true</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>onsite_parking_fraction</name>
+      <display_name>Onsite Parking Fraction</display_name>
+      <description>If set to 0 no exterior lighting for parking will be added</description>
+      <type>Double</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>1</default_value>
+    </argument>
+    <argument>
+      <name>add_exhaust</name>
+      <display_name>Add Exhaust Fans to Model</display_name>
+      <description>Depending upon building type exhaust fans can be in kitchens, restrooms or other space types</description>
+      <type>Boolean</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>true</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>add_swh</name>
+      <display_name>Add Service Water Heating to Model</display_name>
+      <description>This will add both the supply and demand side of service water heating.</description>
+      <type>Boolean</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>true</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>add_thermostat</name>
+      <display_name>Add Thermostats</display_name>
+      <description>Add Thermost to model based on Space Type Standards information of spaces assigned to thermal zones.</description>
+      <type>Boolean</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>true</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>add_hvac</name>
+      <display_name>Add HVAC System to Model</display_name>
+      <description>Add HVAC System and thermostats to model</description>
+      <type>Boolean</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>true</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>remove_objects</name>
+      <display_name>Clean Model of non-gemoetry objects</display_name>
+      <description>Only removes objects of type that are selected to be added.</description>
+      <type>Boolean</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>true</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>use_upstream_args</name>
+      <display_name>Use Upstream Argument Values</display_name>
+      <description>When true this will look for arguments or registerValues in upstream measures that match arguments from this measure, and will use the value from the upstream measure in place of what is entered for this measure.</description>
+      <type>Boolean</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>true</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
+  </arguments>
+  <outputs/>
+  <provenances/>
+  <tags>
+    <tag>Whole Building.Space Types</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Software Tool</name>
+      <value>Apply Measure Now</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Software Tool</name>
+      <value>OpenStudio Application</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Software Tool</name>
+      <value>Parametric Analysis Tool</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Use Case</name>
+      <value>Model Articulation</value>
+      <datatype>string</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <filename>test.osw</filename>
+      <filetype>osw</filetype>
+      <usage_type>test</usage_type>
+      <checksum>6DB338FC</checksum>
+    </file>
+    <file>
+      <filename>SmallOffice.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>519B22EB</checksum>
+    </file>
+    <file>
+      <filename>MidriseApartment.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>EB7A2671</checksum>
+    </file>
+    <file>
+      <filename>LargeOffice04.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>5415617A</checksum>
+    </file>
+    <file>
+      <filename>test_hvac.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>3F28DB5B</checksum>
+    </file>
+    <file>
+      <filename>Model.hvac.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>AE1BD721</checksum>
+    </file>
+    <file>
+      <filename>create_typical_building_from_model_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>1CDEFD08</checksum>
+    </file>
+    <file>
+      <filename>os_lib_helper_methods.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>9CFC43FB</checksum>
+    </file>
+    <file>
+      <filename>os_lib_model_generation.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>9CC16F63</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>2.0.0</identifier>
+        <min_compatible>2.0.0</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>F8E692FD</checksum>
+    </file>
+  </files>
+</measure>
