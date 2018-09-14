@@ -216,16 +216,7 @@ class OpenStudioResults < OpenStudio::Measure::ReportingMeasure
       runner.registerError("Can't find Building Area to get tabular units. Measure can't run")
       return false
     end
-    
-    begin
-      runner.registerValue('standards_gem_version', OpenstudioStandards::VERSION)
-    rescue
-    end
-    begin
-      runner.registerValue('workflow_gem_version', OpenStudio::Workflow::VERSION)
-    rescue
-    end
-    
+
     if energy_plus_area_units.get.first.to_s == 'm2'
 
       # generate data for requested sections
