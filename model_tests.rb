@@ -878,17 +878,13 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('airterminal_cooledbeam.rb')
   end
 
-  # TODO : The next official release (2.5.1) is expected to have this object
-  # Pending PR: https://github.com/NREL/OpenStudio/pull/3031
   def test_airterminal_fourpipebeam_rb
     result = sim_test('airterminal_fourpipebeam.rb')
   end
 
-  # TODO : To be added once the next **official** release
-  # including this object is out : 2.5.1
-  # def test_airterminal_fourpipebeam_osm
-  #   result = sim_test('airterminal_fourpipebeam.osm')
-  # end
+  def test_airterminal_fourpipebeam_osm
+    result = sim_test('airterminal_fourpipebeam.osm')
+  end
 
   def test_air_chillers_osm
     result = sim_test('air_chillers.osm')
@@ -1072,6 +1068,10 @@ class ModelTests < MiniTest::Unit::TestCase
 
   def test_ideal_loads_w_plenums_rb
     result = sim_test('ideal_loads_w_plenums.rb')
+  end
+
+  def test_ideal_loads_w_plenums_osm
+    result = sim_test('ideal_loads_w_plenums.osm')
   end
 
   def test_dual_duct_rb
@@ -1288,6 +1288,10 @@ class ModelTests < MiniTest::Unit::TestCase
 
   def test_multiple_airloops_rb
     result = sim_test('multiple_airloops.rb')
+  end
+
+  def test_multiple_airloops_osm
+    result = sim_test('multiple_airloops.osm')
   end
 
   def test_multiple_loops_w_plenums_rb

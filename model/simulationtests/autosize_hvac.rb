@@ -777,16 +777,15 @@ zones.each_with_index do |zn, zone_index|
     term = OpenStudio::Model::AirTerminalDualDuctVAVOutdoorAir.new(model)
     air_loop_dual_duct.addBranchForZone(zn, term)
   when 36
-    # TODO : To be added once the next official release
-    # including this object is out : 2.5.1
-    #clg_coil = OpenStudio::Model::CoilCoolingFourPipeBeam.new(model)
-    #chw_loop.addDemandBranchForComponent(clg_coil)
+    # 2.5.2 and onwards
+    clg_coil = OpenStudio::Model::CoilCoolingFourPipeBeam.new(model)
+    chw_loop.addDemandBranchForComponent(clg_coil)
 
-    #htg_coil = OpenStudio::Model::CoilHeatingFourPipeBeam.new(model)
-    #hw_loop.addDemandBranchForComponent(htg_coil)
+    htg_coil = OpenStudio::Model::CoilHeatingFourPipeBeam.new(model)
+    hw_loop.addDemandBranchForComponent(htg_coil)
 
-    #term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeFourPipeBeam.new(model, clg_coil, htg_coil)
-    #air_loop.addBranchForZone(zn, term)
+    term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeFourPipeBeam.new(model, clg_coil, htg_coil)
+    air_loop.addBranchForZone(zn, term)
 
   when 26, 27, 28, 29, 30, 31, 32, 33
     # Previously used for the unitary systems, dehum, etc
