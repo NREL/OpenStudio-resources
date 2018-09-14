@@ -32,7 +32,7 @@ if [ "$OSVERSION" = 2.0.4 ]; then
 else
   # Before 2.4.3, ruby used to be installed via rbenv
   # From 2.4.3 onward, it installs ruby via the openstudio-server development script, so there is no longer rbenv and you can use system ruby directly
-
+  # Note JM 2018-08-30: in recent versions at least, we could just use the cli, `openstudio model_test.rb`
   # We test if there is rbenv
   if [ -f ~/.rbenv/shims/ruby ]; then
     # If there is, we do use that

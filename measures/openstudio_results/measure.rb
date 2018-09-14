@@ -1,12 +1,48 @@
+# *******************************************************************************
+# OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC.
+# All rights reserved.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# (1) Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+#
+# (2) Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and/or other materials provided with the distribution.
+#
+# (3) Neither the name of the copyright holder nor the names of any contributors
+# may be used to endorse or promote products derived from this software without
+# specific prior written permission from the respective party.
+#
+# (4) Other than as required in clauses (1) and (2), distributions in any form
+# of modifications or other derivative works may not use the "OpenStudio"
+# trademark, "OS", "os", or any other confusingly similar designation without
+# specific prior written permission from Alliance for Sustainable Energy, LLC.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE
+# UNITED STATES GOVERNMENT, OR THE UNITED STATES DEPARTMENT OF ENERGY, NOR ANY OF
+# THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+# OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# *******************************************************************************
+
 require 'erb'
 require 'json'
 
 require "#{File.dirname(__FILE__)}/resources/os_lib_reporting"
 require "#{File.dirname(__FILE__)}/resources/os_lib_schedules"
 require "#{File.dirname(__FILE__)}/resources/os_lib_helper_methods"
+require_relative 'resources/Siz.Model'
 
 # start the measure
-class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
+class OpenStudioResults < OpenStudio::Measure::ReportingMeasure
   # define the name that a user will see, this method may be deprecated as
   # the display name in PAT comes from the name field in measure.xml
   def name
@@ -85,12 +121,12 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
 
   # define the arguments that the user will input
   def arguments
-    args = OpenStudio::Ruleset::OSArgumentVector.new
+    args = OpenStudio::Measure::OSArgumentVector.new
 
     # populate arguments
     possible_sections.each do |method_name|
       # get display name
-      arg = OpenStudio::Ruleset::OSArgument.makeBoolArgument(method_name, true)
+      arg = OpenStudio::Measure::OSArgument.makeBoolArgument(method_name, true)
       display_name = eval("OsLib_Reporting.#{method_name}(nil,nil,nil,true)[:title]")
       arg.setDisplayName(display_name)
       arg.setDefaultValue(true)
@@ -98,7 +134,7 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
     end
 
     args
-  end # end the arguments method
+  end
 
   def energyPlusOutputRequests(runner, user_arguments)
     super(runner, user_arguments)
@@ -121,8 +157,8 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
 
     result
   end
-  
-  def outputs 
+
+  def outputs
     result = OpenStudio::Measure::OSOutputVector.new
     result << OpenStudio::Measure::OSOutput.makeDoubleOutput('electricity_ip') # kWh
     result << OpenStudio::Measure::OSOutput.makeDoubleOutput('natural_gas_ip') # MBtu
@@ -172,7 +208,7 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
     column_units_query = "SELECT DISTINCT  units FROM tabulardatawithstrings WHERE ReportName='AnnualBuildingUtilityPerformanceSummary' and TableName='Building Area'"
     energy_plus_area_units = sql_file.execAndReturnVectorOfString(column_units_query)
     if energy_plus_area_units.is_initialized
-      if energy_plus_area_units.get.size == 0
+      if energy_plus_area_units.get.empty?
         runner.registerError("Can't find any contents in Building Area Table to get tabular units. Measure can't run")
         return false
       end
@@ -180,13 +216,21 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
       runner.registerError("Can't find Building Area to get tabular units. Measure can't run")
       return false
     end
-
-    if energy_plus_area_units.get.first.to_s == "m2"
+    
+    begin
+      runner.registerValue('standards_gem_version', OpenstudioStandards::VERSION)
+    rescue
+    end
+    begin
+      runner.registerValue('workflow_gem_version', OpenStudio::Workflow::VERSION)
+    rescue
+    end
+    
+    if energy_plus_area_units.get.first.to_s == 'm2'
 
       # generate data for requested sections
       sections_made = 0
       possible_sections.each do |method_name|
-
         begin
           next unless args[method_name]
           section = false
@@ -197,7 +241,7 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
             sections_made += 1
             # look for emtpy tables and warn if skipped because returned empty
             section[:tables].each do |table|
-              if not table
+              if !table
                 runner.registerWarning("A table in #{display_name} section returned false and was skipped.")
                 section[:messages] = ["One or more tables in #{display_name} section returned false and was skipped."]
               end
@@ -205,36 +249,34 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
           else
             runner.registerWarning("#{display_name} section returned false and was skipped.")
             section = {}
-            section[:title] = "#{display_name}"
+            section[:title] = display_name.to_s
             section[:tables] = []
             section[:messages] = []
             section[:messages] << "#{display_name} section returned false and was skipped."
             @sections << section
           end
-        rescue => e
+        rescue StandardError => e
           display_name = eval("OsLib_Reporting.#{method_name}(nil,nil,nil,true)[:title]")
-          if display_name == nil then display_name == method_name end
+          if display_name.nil? then display_name == method_name end
           runner.registerWarning("#{display_name} section failed and was skipped because: #{e}. Detail on error follows.")
-          runner.registerWarning("#{e.backtrace.join("\n")}")
+          runner.registerWarning(e.backtrace.join("\n").to_s)
 
           # add in section heading with message if section fails
           section = {}
-          section[:title] = "#{display_name}"
+          section[:title] = display_name.to_s
           section[:tables] = []
           section[:messages] = []
           section[:messages] << "#{display_name} section failed and was skipped because: #{e}. Detail on error follows."
-          section[:messages] << ["#{e.backtrace.join("\n")}"]
+          section[:messages] << [e.backtrace.join("\n").to_s]
           @sections << section
-
         end
-
       end
 
     else
-      wrong_tabular_units_string = "IP units were provided, SI units were expected. Leave EnergyPlus tabular results in SI units to run this report."
+      wrong_tabular_units_string = 'IP units were provided, SI units were expected. Leave EnergyPlus tabular results in SI units to run this report.'
       runner.registerWarning(wrong_tabular_units_string)
       section = {}
-      section[:title] = "Tabular EnergyPlus results provided in wrong units."
+      section[:title] = 'Tabular EnergyPlus results provided in wrong units.'
       section[:tables] = []
       section[:messages] = []
       section[:messages] << wrong_tabular_units_string
@@ -264,7 +306,7 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
       # make sure data is written to the disk one way or the other
       begin
         file.fsync
-      rescue
+      rescue StandardError
         file.flush
       end
     end
@@ -275,7 +317,7 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
     # annual_peak_electric_demand
     annual_peak_electric_demand_k_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='DemandEndUseComponentsSummary' and ReportForString='Entire Facility' and TableName='End Uses' and RowName= 'Total End Uses' and ColumnName='Electricity' and Units='W'"
     annual_peak_electric_demand_kw = OpenStudio.convert(sql_file.execAndReturnFirstDouble(annual_peak_electric_demand_k_query).get, 'W', 'kW').get
-    runner.registerValue('annual_peak_electric_demand',annual_peak_electric_demand_kw,'kW')
+    runner.registerValue('annual_peak_electric_demand', annual_peak_electric_demand_kw, 'kW')
 
     # get base year for use in first_year_cap_cost
     baseYrString_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' and ReportForString='Entire Facility' and TableName='Life-Cycle Cost Parameters' and RowName= 'Base Date' and ColumnName= 'Value'"
@@ -283,19 +325,19 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
     # get first_year_cap_cost
     first_year_cap_cost_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' and ReportForString='Entire Facility' and TableName='Capital Cash Flow by Category (Without Escalation)' and RowName= '#{baseYrString}' and ColumnName= 'Total'"
     first_year_cap_cost = sql_file.execAndReturnFirstDouble(first_year_cap_cost_query).get
-    runner.registerValue('first_year_capital_cost',first_year_cap_cost,'$')
+    runner.registerValue('first_year_capital_cost', first_year_cap_cost, '$')
 
     # annual_utility_cost
     annual_utility_cost = sql_file.annualTotalUtilityCost
     if annual_utility_cost.is_initialized
-      runner.registerValue('annual_utility_cost',annual_utility_cost.get,'$')
+      runner.registerValue('annual_utility_cost', annual_utility_cost.get, '$')
     else
-      runner.registerValue('annual_utility_cost',0.0,'$')
+      runner.registerValue('annual_utility_cost', 0.0, '$')
     end
 
     # total_lifecycle_cost
     total_lifecycle_cost_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' and ReportForString='Entire Facility' and TableName='Present Value by Year' and RowName= 'TOTAL' and ColumnName= 'Present Value of Costs'"
-    runner.registerValue('total_lifecycle_cost',sql_file.execAndReturnFirstDouble(total_lifecycle_cost_query).get,'$')
+    runner.registerValue('total_lifecycle_cost', sql_file.execAndReturnFirstDouble(total_lifecycle_cost_query).get, '$')
 
     # closing the sql file
     sql_file.close
@@ -304,8 +346,8 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
     runner.registerFinalCondition("Generated report with #{sections_made} sections to #{html_out_path}.")
 
     true
-  end # end the run method
-end # end the measure
+  end
+end
 
 # this allows the measure to be use by the application
 OpenStudioResults.new.registerWithApplication

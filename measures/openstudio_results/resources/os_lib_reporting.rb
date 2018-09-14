@@ -1,4 +1,40 @@
+# *******************************************************************************
+# OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC.
+# All rights reserved.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# (1) Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+#
+# (2) Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and/or other materials provided with the distribution.
+#
+# (3) Neither the name of the copyright holder nor the names of any contributors
+# may be used to endorse or promote products derived from this software without
+# specific prior written permission from the respective party.
+#
+# (4) Other than as required in clauses (1) and (2), distributions in any form
+# of modifications or other derivative works may not use the "OpenStudio"
+# trademark, "OS", "os", or any other confusingly similar designation without
+# specific prior written permission from Alliance for Sustainable Energy, LLC.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE
+# UNITED STATES GOVERNMENT, OR THE UNITED STATES DEPARTMENT OF ENERGY, NOR ANY OF
+# THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+# OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# *******************************************************************************
+
 require 'json'
+require 'openstudio-standards'
 
 module OsLib_Reporting
   # setup - get model, sql, and setup web assets path
@@ -105,7 +141,6 @@ module OsLib_Reporting
 
   # clean up unkown strings used for runner.registerValue names
   def self.reg_val_string_prep(string)
-
     # replace non alpha-numberic characters with an underscore
     string = string.gsub(/[^0-9a-z]/i, '_')
 
@@ -139,7 +174,7 @@ module OsLib_Reporting
     # create table
     template_table_01 = {}
     template_table_01[:title] = 'Fruit'
-    template_table_01[:header] = %w(Definition Value)
+    template_table_01[:header] = ['Definition', 'Value']
     template_table_01[:units] = ['', '$/pound']
     template_table_01[:data] = []
 
@@ -234,15 +269,15 @@ module OsLib_Reporting
     # general building information type data output
     general_building_information = {}
     general_building_information[:title] = 'Building Summary' # name will be with section
-    general_building_information[:header] = %w(Information Value Units)
+    general_building_information[:header] = ['Data', 'Value']
     general_building_information[:units] = [] # won't populate for this table since each row has different units
     general_building_information[:data] = []
 
     # structure ID / building name
     display = 'Building Name'
-    target_units = 'building_name'
+    target_units = 'n/a'
     value = model.getBuilding.name.to_s
-    general_building_information[:data] << [display, value, target_units]
+    general_building_information[:data] << [display, value]
     runner.registerValue(OsLib_Reporting.reg_val_string_prep(display), value, target_units)
 
     # total site energy
@@ -250,20 +285,20 @@ module OsLib_Reporting
     source_units = 'GJ'
     target_units = 'kBtu'
     value = OpenStudio.convert(sqlFile.totalSiteEnergy.get, source_units, target_units).get
-    value_neat = OpenStudio.toNeatString(value, 0, true)
+    value_neat = "#{OpenStudio.toNeatString(value, 0, true)} #{target_units}"
     runner.registerValue(OsLib_Reporting.reg_val_string_prep(display), value, target_units)
-    general_building_information[:data] << [display, value_neat, target_units]
+    general_building_information[:data] << [display, value_neat]
 
     # net site energy
     display = 'Net Site Energy'
     source_units = 'GJ'
     target_units = 'kBtu'
     value = OpenStudio.convert(sqlFile.netSiteEnergy.get, source_units, target_units).get
-    value_neat = OpenStudio.toNeatString(value, 0, true)
+    value_neat = "#{OpenStudio.toNeatString(value, 0, true)} #{target_units}"
     runner.registerValue(OsLib_Reporting.reg_val_string_prep(display), value, target_units)
     # always register value, but only add to table if net is different than total
     if sqlFile.totalSiteEnergy.get != sqlFile.netSiteEnergy.get
-      general_building_information[:data] << [display, value_neat, target_units]
+      general_building_information[:data] << [display, value_neat]
     end
 
     # total building area
@@ -283,55 +318,55 @@ module OsLib_Reporting
       source_units = 'm^2'
       target_units = 'ft^2'
       value = OpenStudio.convert(query_results.get, source_units, target_units).get
-      value_neat = OpenStudio.toNeatString(value, 0, true)
-      general_building_information[:data] << [display, value_neat, target_units]
+      value_neat = "#{OpenStudio.toNeatString(value, 0, true)} #{target_units}"
+      general_building_information[:data] << [display, value_neat]
       runner.registerValue(OsLib_Reporting.reg_val_string_prep(display), value, target_units)
     end
 
     # temp code to check OS vs. E+ area
     energy_plus_area = query_results.get
     open_studio_area = model.getBuilding.floorArea
-    if not (energy_plus_area - open_studio_area).abs < 1.0
+    if (energy_plus_area - open_studio_area).abs >= 1.0
       runner.registerWarning("EnergyPlus reported area is #{query_results.get.round} (m^2). OpenStudio reported area is #{model.getBuilding.floorArea.round} (m^2).")
     end
 
     # total EUI
-    eui =  sqlFile.totalSiteEnergy.get / energy_plus_area
+    eui = sqlFile.totalSiteEnergy.get / energy_plus_area
     display = 'Total Site EUI'
     source_units = 'GJ/m^2'
     target_units = 'kBtu/ft^2'
     if query_results.get > 0.0 # don't calculate EUI if building doesn't have any area
       value = OpenStudio.convert(eui, source_units, target_units).get
-      value_neat = OpenStudio.toNeatString(value, 2, true)
+      value_neat = "#{OpenStudio.toNeatString(value, 2, true)} #{target_units}"
       runner.registerValue(OsLib_Reporting.reg_val_string_prep(display), value, target_units) # is it ok not to calc EUI if no area in model
     else
       value_neat = "can't calculate Total EUI."
     end
-    general_building_information[:data] << ["#{display}", value_neat, target_units]
+    general_building_information[:data] << [display.to_s, value_neat]
 
     # net EUI
-    eui =  sqlFile.netSiteEnergy.get / energy_plus_area
+    eui = sqlFile.netSiteEnergy.get / energy_plus_area
     display = 'EUI'
     source_units = 'GJ/m^2'
     target_units = 'kBtu/ft^2'
     if query_results.get > 0.0 # don't calculate EUI if building doesn't have any area
       value = OpenStudio.convert(eui, source_units, target_units).get
-      value_neat = OpenStudio.toNeatString(value, 2, true)
+      value_neat = "#{OpenStudio.toNeatString(value, 2, true)} #{target_units}"
       runner.registerValue(OsLib_Reporting.reg_val_string_prep(display), value, target_units) # is it ok not to calc EUI if no area in model
     else
-      value_neat = "can't calculate Net EUI."
+      value_neat = 'Net EUI could not be calculated.'
     end
     # always register value, but only add to table if net is different than total
     if sqlFile.totalSiteEnergy.get != sqlFile.netSiteEnergy.get
-      general_building_information[:data] << ["Net Site EUI", value_neat, target_units]
+      general_building_information[:data] << ['Net Site EUI', value_neat]
     end
 
     # get standards building type
-    building_type = ''
+    building_type = 'n/a'
     if model.getBuilding.standardsBuildingType.is_initialized
       building_type = model.getBuilding.standardsBuildingType.get
     end
-    general_building_information[:data] << ['OpenStudio Standards Building Type',building_type,'']
+    general_building_information[:data] << ['OpenStudio Standards Building Type', building_type]
 
     return general_building_information
   end
@@ -343,7 +378,7 @@ module OsLib_Reporting
     output_data_space_type_breakdown[:title] = ''
     output_data_space_type_breakdown[:header] = ['Space Type Name', 'Floor Area', 'Standards Building Type', 'Standards Space Type']
     units = 'ft^2'
-    output_data_space_type_breakdown[:units] = ['', units,'','']
+    output_data_space_type_breakdown[:units] = ['', units, '', '']
     output_data_space_type_breakdown[:data] = []
     output_data_space_type_breakdown[:chart_type] = 'simple_pie'
     output_data_space_type_breakdown[:chart] = []
@@ -382,7 +417,7 @@ module OsLib_Reporting
       floor_area_si = 0
       # loop through spaces so I can skip if not included in floor area
       spaceType.spaces.each do |space|
-        next if not space.partofTotalFloorArea
+        next if !space.partofTotalFloorArea
         floor_area_si += space.floorArea * space.multiplier
       end
 
@@ -402,7 +437,7 @@ module OsLib_Reporting
         standards_space_type = ''
       end
 
-      output_data_space_type_breakdown[:data] << [display, value_neat,standards_building_type,standards_space_type]
+      output_data_space_type_breakdown[:data] << [display, value_neat, standards_building_type, standards_space_type]
       runner.registerValue("space_type_#{OsLib_Reporting.reg_val_string_prep(display)}", value, units)
 
       # data for graph
@@ -416,7 +451,7 @@ module OsLib_Reporting
 
     spaces.each do |space|
       if space.spaceType.empty?
-        next if not space.partofTotalFloorArea
+        next if !space.partofTotalFloorArea
         no_space_type_area_counter += space.floorArea * space.multiplier
       end
     end
@@ -470,7 +505,7 @@ module OsLib_Reporting
       value = OpenStudio.convert(total_end_use, 'GJ', target_units).get
       value_neat = OpenStudio.toNeatString(value, 0, true)
       output_data_end_use[:data] << [end_use, value_neat]
-      runner.registerValue("end_use_#{end_use.downcase.gsub(" ","_")}", value, target_units)
+      runner.registerValue("end_use_#{end_use.downcase.tr(' ', '_')}", value, target_units)
       if value > 0
         output_data_end_use[:chart] << JSON.generate(label: end_use, value: value, color: end_use_colors[counter])
       end
@@ -506,7 +541,7 @@ module OsLib_Reporting
       value = OpenStudio.convert(results.get, 'GJ', target_units).get
       value_neat = OpenStudio.toNeatString(value, 0, true)
       output_data_end_use_electricity[:data] << [end_use, value_neat]
-      runner.registerValue("end_use_electricity_#{end_use.downcase.gsub(" ","_")}", value, target_units)
+      runner.registerValue("end_use_electricity_#{end_use.downcase.tr(' ', '_')}", value, target_units)
       if value > 0
         output_data_end_use_electricity[:chart] << JSON.generate(label: end_use, value: value, color: end_use_colors[counter])
       end
@@ -544,7 +579,7 @@ module OsLib_Reporting
       value = results.get * 9.48 # manual conversion from GJ to therms
       value_neat = OpenStudio.toNeatString(value, 0, true)
       output_data_end_use_gas[:data] << [end_use, value_neat]
-      runner.registerValue("end_use_natural_gas_#{end_use.downcase.gsub(" ","_")}", value, target_units)
+      runner.registerValue("end_use_natural_gas_#{end_use.downcase.tr(' ', '_')}", value, target_units)
       if value > 0
         output_data_end_use_gas[:chart] << JSON.generate(label: end_use, value: value, color: end_use_colors[counter])
       end
@@ -589,7 +624,7 @@ module OsLib_Reporting
       value = OpenStudio.convert(results.get, 'GJ', target_units).get
       value_neat = OpenStudio.toNeatString(value, 0, true)
       output_data_energy_use[:data] << [fuel_type, value_neat]
-      runner.registerValue("fuel_#{fuel_type.downcase.gsub(" ","_")}", value, target_units)
+      runner.registerValue("fuel_#{fuel_type.downcase.tr(' ', '_')}", value, target_units)
       if value > 0
         output_data_energy_use[:chart] << JSON.generate(label: fuel_type, value: value, color: color[counter])
       end
@@ -667,7 +702,7 @@ module OsLib_Reporting
         # net site energy
         display = cat
         source_units = 'C'
-        value = OpenStudio.convert(setpoint_not_met_cat_value.get.to_f,'K','R').get
+        value = OpenStudio.convert(setpoint_not_met_cat_value.get.to_f, 'K', 'R').get
         value_neat = value.round(2)
         tolerance_summary[:data] << [display, value_neat]
         runner.registerValue("unmet_hours_tolerance_#{cat.downcase}", value, target_units)
@@ -677,201 +712,127 @@ module OsLib_Reporting
     return tolerance_summary
   end
 
-  # summary of what to show for each type of air loop component
-  def self.air_loop_component_summary_logic(component, model)
-
+  # Generalized method for getting component performance characteristics
+  def self.general_component_summary_logic(component)
     data_arrays = []
 
-    if component.to_AirLoopHVACOutdoorAirSystem.is_initialized
-      component = component.to_AirLoopHVACOutdoorAirSystem.get
-      # get ControllerOutdoorAir
-      controller_oa = component.getControllerOutdoorAir
+    # Convert to HVAC Component
+    component = component.to_HVACComponent
+    return data_arrays if component.empty?
+    component = component.get
 
-      sizing_source_units = 'm^3/s'
-      sizing_target_units = 'cfm'
-      if controller_oa.maximumOutdoorAirFlowRate.is_initialized
-        sizing_ip = OpenStudio.convert(controller_oa.maximumOutdoorAirFlowRate.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
+    # Skip object types that are not informative
+    types_to_skip = ['SetpointManager:MixedAir', 'Node']
+    idd_obj_type = component.iddObject.name.gsub('OS:', '')
+    return data_arrays if types_to_skip.include?(idd_obj_type)
+
+    # Only report the component type once
+    comp_name_used = false
+
+    # Airflow, heating and cooling capacity, and water flow
+    summary_types = []
+    summary_types << ['maxAirFlowRate', 'm^3/s', 'cfm', 'Air Flow Rate', 0]
+    summary_types << ['maxHeatingCapacity', 'W', 'Btu/hr', 'Heating Capacity', 1]
+    summary_types << ['maxCoolingCapacity', 'W', 'ton', 'Cooling Capacity', 1]
+    summary_types << ['maxWaterFlowRate', 'm^3/s', 'gal/min', 'Water Flow Rate', 2]
+    summary_types.each do |s|
+      val_method = s[0]
+      units_si = s[1]
+      units_ip = s[2]
+      val_name = s[3]
+      decimal_places = s[4]
+      # Get the value and skip if not available
+      val_si = component.public_send(val_method)
+      next if val_si.empty?
+      # Determine if the value was autosized or hard sized
+      siz = 'Hard Sized'
+      if component.public_send("#{val_method}Autosized").is_initialized
+        if component.public_send("#{val_method}Autosized").get
+          siz = 'Autosized'
+        end
       end
-      value_source_units = 'm^3/s'
-      value_target_units = 'cfm'
-      if controller_oa.minimumOutdoorAirFlowRate.is_initialized
-        value_ip = OpenStudio.convert(controller_oa.minimumOutdoorAirFlowRate.get, value_source_units, value_target_units).get
-        value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-      else
-        value_ip_neat = 'Autosized'
+      # Convert and report the value
+      val_ip = OpenStudio.convert(val_si.get, units_si, units_ip).get
+      val_ip_neat = OpenStudio.toNeatString(val_ip, decimal_places, true)
+      data_arrays << ['', val_name, "#{val_ip_neat} #{units_ip}", siz, '']
+    end
+
+    # Performance characteristics (specific to each component type)
+    perf_chars = component.performanceCharacteristics.each do |char|
+      perf_val = char[0].to_s.to_f
+      perf_name = char[1]
+      perf_units_ip = ''
+      # Unit conversion for pressure rise and pump head
+      if perf_name.downcase.include?('pressure rise')
+        perf_units_ip = 'in w.g.'
+        perf_val = OpenStudio.convert(perf_val, 'Pa', 'inH_{2}O').get
+        perf_val = OpenStudio.toNeatString(perf_val, 2, true)
+      elsif perf_name.downcase.include?('pump head')
+        perf_units_ip = 'ft H2O'
+        perf_val = OpenStudio.convert(perf_val, 'Pa', 'ftH_{2}O').get
+        perf_val = OpenStudio.toNeatString(perf_val, 1, true)
+      elsif perf_name.downcase.include?('efficiency') || perf_name.downcase.include?('effectiveness')
+        perf_units_ip = '%'
+        perf_val *= 100
+        perf_val = OpenStudio.toNeatString(perf_val, 1, true)
       end
-      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, 'Minimum Outdoor Air Flow Rate', value_ip_neat, value_target_units, '']
+      # Report the value
+      data_arrays << ['', perf_name, "#{perf_val} #{perf_units_ip}", '', '']
+    end
 
-    elsif component.to_CoilCoolingDXSingleSpeed.is_initialized
-      component = component.to_CoilCoolingDXSingleSpeed.get
-      sizing_source_units = 'W'
-      sizing_target_units = 'Btu/h'
-      if component.ratedTotalCoolingCapacity.is_initialized
-        sizing_ip = OpenStudio.convert(component.ratedTotalCoolingCapacity.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value_source_units = 'COP'
-      value_target_units = 'COP'
-      value_ip = component.ratedCOP.get
-      value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-      description = 'Rated COP'
-      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+    return data_arrays
+  end
 
-    elsif component.to_CoilCoolingDXTwoSpeed.is_initialized
-      component = component.to_CoilCoolingDXTwoSpeed.get
+  # Gives the Plant Loop connection information for an HVAC Component
+  def self.water_component_logic(component)
+    data_arrays = []
 
-      # high speed
-      sizing_source_units = 'W'
-      sizing_target_units = 'Btu/h'
-      if component.ratedHighSpeedTotalCoolingCapacity.is_initialized
-        sizing_ip = OpenStudio.convert(component.ratedHighSpeedTotalCoolingCapacity.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value_source_units = 'COP'
-      value_target_units = 'COP'
-      value_ip = component.ratedHighSpeedCOP.get
-      value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-      description = 'Rated COP'
-      data_arrays << ["#{component.iddObject.name} - HighSpeed", sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+    component = component.to_HVACComponent
+    return data_arrays if component.empty?
+    component = component.get
 
-      # low speed
-      sizing_source_units = 'W'
-      sizing_target_units = 'Btu/h'
-      if component.ratedLowSpeedTotalCoolingCapacity.is_initialized
-        sizing_ip = OpenStudio.convert(component.ratedLowSpeedTotalCoolingCapacity.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value_source_units = 'COP'
-      value_target_units = 'COP'
-      value_ip = component.ratedLowSpeedCOP.get
-      value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-      description = 'Rated COP'
-      data_arrays << ["#{component.iddObject.name} (cont) - LowSpeed", sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+    # Only deal with plant-connected components
+    return data_arrays unless component.respond_to?('plantLoop')
 
-    elsif component.iddObject.name == 'OS:Coil:Cooling:Water'
-      component = component.to_CoilCoolingWater.get
-      sizing_source_units = 'm^3/s'
-      sizing_target_units = 'gal/min'
-      if component.designWaterFlowRate.is_initialized
-        sizing_ip = OpenStudio.convert(component.designWaterFlowRate.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value = component.plantLoop.get.name
-      description = 'Plant Loop'
-      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value, '', '']
+    # Report the plant loop name
+    if component.plantLoop.is_initialized
+      data_arrays << ['', 'Plant Loop', component.plantLoop.get.name, '', '']
+    end
 
-    elsif component.to_CoilHeatingGas.is_initialized
-      component = component.to_CoilHeatingGas.get
-      sizing_source_units = 'W'
-      sizing_target_units = 'Btu/h'
-      if component.nominalCapacity.is_initialized
-        sizing_ip = OpenStudio.convert(component.nominalCapacity.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value_source_units = ''
-      value_target_units = ''
-      value_ip = component.gasBurnerEfficiency
-      value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-      description = 'Gas Burner Efficiency'
-      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+    return data_arrays
+  end
 
-    elsif component.to_CoilHeatingElectric.is_initialized
-      component = component.to_CoilHeatingElectric.get
-      sizing_source_units = 'W'
-      sizing_target_units = 'Btu/h'
-      if component.nominalCapacity.is_initialized
-        sizing_ip = OpenStudio.convert(component.nominalCapacity.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value_source_units = ''
-      value_target_units = ''
-      value_ip = component.efficiency
-      value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-      description = 'Efficiency'
-      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+  # Shows the calculated brake horsepower for fans and pumps
+  def self.motor_component_logic(component)
+    data_arrays = []
 
-    elsif component.to_CoilHeatingDXSingleSpeed.is_initialized
-      component = component.to_CoilHeatingDXSingleSpeed.get
-      sizing_source_units = 'W'
-      sizing_target_units = 'Btu/h'
-      if component.ratedTotalHeatingCapacity.is_initialized
-        sizing_ip = OpenStudio.convert(component.ratedTotalHeatingCapacity.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value_source_units = 'COP'
-      value_target_units = 'COP'
-      value_ip = component.ratedCOP # is optional for CoilCoolingDXSingleSpeed but is just a double for CoilHeatingDXSingleSpeed
-      value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-      description = 'Rated COP'
-      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+    # Skip exhaust fans for now because of bug in openstudio-standards
+    return data_arrays if component.to_FanZoneExhaust.is_initialized
 
-    elsif component.to_CoilHeatingWater.is_initialized
-      component = component.to_CoilHeatingWater.get
-      sizing_source_units = 'm^3/s'
-      sizing_target_units = 'gal/min'
-      if component.maximumWaterFlowRate.is_initialized
-        sizing_ip = OpenStudio.convert(component.maximumWaterFlowRate.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value = component.plantLoop.get.name
-      description = 'Plant Loop'
-      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value, '', '']
+    concrete_comp = component.cast_to_concrete_type
+    component = concrete_comp unless component.nil?
 
-    elsif component.to_FanConstantVolume.is_initialized
-      component = component.to_FanConstantVolume.get
-      sizing_source_units = 'm^3/s'
-      sizing_target_units = 'cfm'
-      if component.maximumFlowRate.is_initialized
-        sizing_ip = OpenStudio.convert(component.maximumFlowRate.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value_source_units = 'Pa'
-      value_target_units = 'inH_{2}O'
-      value_ip = OpenStudio.convert(component.pressureRise, value_source_units, value_target_units).get
-      value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, 'Pressure Rise', value_ip_neat, value_target_units, '']
+    # Only deal with plant-connected components
+    return data_arrays unless component.respond_to?('brake_horsepower')
 
-    elsif component.to_FanVariableVolume.is_initialized
-      component = component.to_FanVariableVolume.get
-      sizing_source_units = 'm^3/s'
-      sizing_target_units = 'cfm'
-      if component.maximumFlowRate.is_initialized
-        sizing_ip = OpenStudio.convert(component.maximumFlowRate.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value_source_units = 'Pa'
-      value_target_units = 'inH_{2}O'
-      value_ip = OpenStudio.convert(component.pressureRise, value_source_units, value_target_units).get
-      value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, 'Pressure Rise', value_ip_neat, value_target_units, '']
+    # Report the plant loop name
+    bhp = component.brake_horsepower
+    bhp_neat = OpenStudio.toNeatString(bhp, 2, true)
+    data_arrays << ['', 'Brake Horsepower', "#{bhp_neat} HP", '', '']
 
-    elsif component.iddObject.name == 'OS:SetpointManager:Scheduled'
+    return data_arrays
+  end
+
+  # Shows the setpoint manager details depending on type
+  def self.spm_logic(component)
+    data_arrays = []
+
+    case component.iddObject.name
+    when 'OS:SetpointManager:Scheduled'
+      # Constrol type and temperature range
       setpoint = component.to_SetpointManagerScheduled.get
       supply_air_temp_schedule = setpoint.schedule
-      schedule_values = OsLib_Schedules.getMinMaxAnnualProfileValue(model, supply_air_temp_schedule)
+      schedule_values = OsLib_Schedules.getMinMaxAnnualProfileValue(component.model, supply_air_temp_schedule)
       if schedule_values.nil?
         schedule_values_pretty = "can't inspect schedule"
         target_units = ''
@@ -885,9 +846,10 @@ module OsLib_Reporting
           target_units = 'raw si values'
         end
       end
-      data_arrays << [setpoint.iddObject.name, '', '', "Control Variable - #{setpoint.controlVariable}", schedule_values_pretty, target_units, '']
+      data_arrays << ['', "Control Variable - #{setpoint.controlVariable}", "#{schedule_values_pretty} #{target_units}", '', '']
 
-    elsif component.iddObject.name == 'OS:SetpointManager:SingleZone:Reheat'
+    when 'OS:SetpointManager:SingleZone:Reheat'
+      # Control Zone
       setpoint = component.to_SetpointManagerSingleZoneReheat.get
       control_zone = setpoint.controlZone
       if control_zone.is_initialized
@@ -895,16 +857,95 @@ module OsLib_Reporting
       else
         control_zone_name = ''
       end
-      data_arrays << [component.iddObject.name, '', '', 'Control Zone', control_zone_name, '', '']
+      data_arrays << ['', 'Control Zone', control_zone_name, '', '']
 
-    else
-      data_arrays << [component.iddObject.name, '', '', '', '', '', '']
+    when 'OS:SetpointManager:FollowOutdoorAirTemperature'
+      setpoint = component.to_SetpointManagerFollowOutdoorAirTemperature.get
+      ref_temp_type = setpoint.referenceTemperatureType
+      data_arrays << [setpoint.iddObject.name, 'Reference Temperature Type', ref_temp_type, '', '']
+
+    when 'OS:SetpointManager:OutdoorAirReset'
+      setpoint = componet.to_SetpointManagerOutdoorAirReset.get
+      wt_at_hi_oat_f = OpenStudio.convert(setpoint.setpointatOutdoorHighTemperature, 'C', 'F').get.round(1)
+      wt_at_lo_oat_f = OpenStudio.convert(setpoint.setpointatOutdoorLowTemperature, 'C', 'F').get.round(1)
+      hi_oat_f = OpenStudio.convert(setpoint.outdoorHighTemperature, 'C', 'F').get.round(1)
+      lo_oat_f = OpenStudio.convert(setpoint.outdoorLowTemperature, 'C', 'F').get.round(1)
+      desc = "#{wt_at_lo_oat_f} F to #{wt_at_hi_oat_f.round} F btwn OAT #{lo_oat_f} F to #{hi_oat_f} F."
+      data_arrays << [setpoint.iddObject.name, 'Reset', desc, '', '']
+
+    when 'OS:SetpointManager:Warmest'
+      setpoint = component.to_SetpointManagerWarmest
+      min_sat_f = OpenStudio.convert(setpoint.minimumSetpointTemperature, 'C', 'F').get.round(1)
+      max_sat_f = OpenStudio.convert(setpoint.minimumSetpointTemperature, 'C', 'F').get.round(1)
+      desc = "#{min_sat_f} F to #{max_sat_f.round} F"
+      data_arrays << [setpoint.iddObject.name, 'Reset SAT per Worst Zone', desc, '', '']
+
+    when 'OS:SetpointManager:WarmestTemperatureFlow'
+      setpoint = component.to_SetpointManagerWarmestTemperatureFlow
+      min_sat_f = OpenStudio.convert(setpoint.minimumSetpointTemperature, 'C', 'F').get.round(1)
+      max_sat_f = OpenStudio.convert(setpoint.minimumSetpointTemperature, 'C', 'F').get.round(1)
+      desc = "#{min_sat_f} F to #{max_sat_f.round} F, #{setpoint.strategy}"
+      data_arrays << [setpoint.iddObject.name, 'Reset SAT & Flow per Worst Zone', desc, '', '']
     end
 
-    # TODO: - add support for more types of objects
+    return data_arrays
+  end
 
-    # thermal zones and terminals are handled directly in the air loop helper
-    # since they operate over a collection of objects vs. a single component
+  # summary of what to show for each type of air loop component
+  def self.air_loop_component_summary_logic(component, model)
+    # Generic component logic first
+    data_arrays = general_component_summary_logic(component)
+
+    # Water component logic
+    data_arrays += water_component_logic(component)
+
+    # Motor component logic
+    data_arrays += motor_component_logic(component)
+
+    # Setpoint manager logic
+    data_arrays += spm_logic(component)
+
+    # Unique logic for subset of components
+    case component.iddObject.name
+    when 'OS:AirLoopHVAC:OutdoorAirSystem'
+      component = component.to_AirLoopHVACOutdoorAirSystem.get
+      controller_oa = component.getControllerOutdoorAir
+
+      # Min OA
+      units_si = 'm^3/s'
+      units_ip = 'cfm'
+      if controller_oa.minimumOutdoorAirFlowRate.is_initialized
+        value_ip = OpenStudio.convert(controller_oa.minimumOutdoorAirFlowRate.get, units_si, units_ip).get
+        value_ip_neat = OpenStudio.toNeatString(value_ip, 0, true)
+        siz = 'Hard Sized'
+      elsif controller_oa.autosizedMinimumOutdoorAirFlowRate.is_initialized
+        value_ip = OpenStudio.convert(controller_oa.autosizedMinimumOutdoorAirFlowRate.get, units_si, units_ip).get
+        value_ip_neat = OpenStudio.toNeatString(value_ip, 0, true)
+        siz = 'Autosized'
+      else
+        value_ip_neat = 'Autosized'
+      end
+      data_arrays << ['', 'Minimum Outdoor Air Flow Rate', "#{value_ip_neat} #{units_ip}", siz, '']
+
+      # Max OA
+      if controller_oa.maximumOutdoorAirFlowRate.is_initialized
+        value_ip = OpenStudio.convert(controller_oa.maximumOutdoorAirFlowRate.get, units_si, units_ip).get
+        value_ip_neat = OpenStudio.toNeatString(value_ip, 0, true)
+        siz = 'Hard Sized'
+      elsif controller_oa.autosizedMaximumOutdoorAirFlowRate.is_initialized
+        value_ip = OpenStudio.convert(controller_oa.autosizedMaximumOutdoorAirFlowRate.get, units_si, units_ip).get
+        value_ip_neat = OpenStudio.toNeatString(value_ip, 0, true)
+        siz = 'Autosized'
+      else
+        sizing_ip_neat = 'Autosized'
+      end
+      data_arrays << ['', 'Maximum Outdoor Air Flow Rate', "#{value_ip_neat} #{units_ip}", siz, '']
+    end
+
+    # Make the component type the first element of the first row
+    if !data_arrays.empty?
+      data_arrays[0][0] = component.iddObject.name.gsub('OS:', '')
+    end
 
     return data_arrays
   end
@@ -929,11 +970,11 @@ module OsLib_Reporting
       # air loop data output
       output_data_air_loops = {}
       output_data_air_loops[:title] = air_loop.name.get # TODO: - confirm first that it has name
-      output_data_air_loops[:header] = ['Object', 'Sizing', 'Sizing Units', 'Description', 'Value', 'Value Units', 'Count']
+      output_data_air_loops[:header] = ['Object', 'Description', 'Value', 'Sizing', 'Count']
       output_data_air_loops[:units] = [] # not using units for these tables
       output_data_air_loops[:data] = []
 
-      output_data_air_loops[:data] << [{ sub_header: 'supply' }, '', '', '', '', '', '']
+      output_data_air_loops[:data] << [{ sub_header: 'supply' }, '', '', '', '']
 
       # hold values for later use
       dcv_setting = 'na' # should hit this if there isn't an outdoor air object on the loop
@@ -944,7 +985,7 @@ module OsLib_Reporting
         # skip some object types, but look for node with setpoint manager
         if component.to_Node.is_initialized
           setpoint_managers = component.to_Node.get.setpointManagers
-          if setpoint_managers.size > 0
+          if !setpoint_managers.empty?
             # setpoint type
             setpoint = setpoint_managers[0] # TODO: - could have more than one in some situations
             data_arrays = OsLib_Reporting.air_loop_component_summary_logic(setpoint, model)
@@ -971,12 +1012,17 @@ module OsLib_Reporting
           controller_mv = controller_oa.controllerMechanicalVentilation
           # get dcv value
           dcv_setting = controller_mv.demandControlledVentilation
+          if dcv_setting
+            dcv_setting = 'On'
+          else
+            dcv_setting = 'Off'
+          end
           # get economizer setting
-          economizer_setting =  controller_oa.getEconomizerControlType
+          economizer_setting = controller_oa.getEconomizerControlType
         end
       end
 
-      output_data_air_loops[:data] << [{ sub_header: 'demand' }, '', '', '', '', '', '']
+      output_data_air_loops[:data] << [{ sub_header: 'demand' }, '', '', '', '']
       # demand side summary, list of terminal types used, and number of zones
       thermal_zones = []
       terminals = []
@@ -989,7 +1035,7 @@ module OsLib_Reporting
           thermal_zones << thermal_zone
           thermal_zone.equipment.each do |zone_equip|
             next if zone_equip.to_ZoneHVACComponent.is_initialized # should only find terminals
-            terminals << zone_equip.iddObject.name
+            terminals << zone_equip.iddObject.name.gsub('OS:', '')
           end
 
           # populate thermostat ranges
@@ -1015,7 +1061,7 @@ module OsLib_Reporting
       end
 
       # get floor area of thermal zones
-      total_loop_floor_area =  0
+      total_loop_floor_area = 0
       thermal_zones.each do |zone|
         total_loop_floor_area += zone.floorArea
       end
@@ -1023,28 +1069,35 @@ module OsLib_Reporting
       total_loop_floor_area_ip_neat = OpenStudio.toNeatString(total_loop_floor_area_ip, 0, true)
 
       # output zone and terminal data
-      output_data_air_loops[:data] << ['Thermal Zones', '', '', 'Total Floor Area', total_loop_floor_area_ip_neat, 'ft^2', thermal_zones.size]
-      if cooling_temp_ranges.size == 0
+      output_data_air_loops[:data] << ['Thermal Zones', 'Total Floor Area', "#{total_loop_floor_area_ip_neat} ft^2", '', thermal_zones.size]
+      if cooling_temp_ranges.empty?
         cooling_temp_ranges_pretty = "can't inspect schedules"
       else
         cooling_temp_ranges_pretty = "#{OpenStudio.convert(cooling_temp_ranges.min, 'C', 'F').get.round(1)} to #{OpenStudio.convert(cooling_temp_ranges.max, 'C', 'F').get.round(1)}"
       end
-      if heating_temps_ranges.size == 0
+      if heating_temps_ranges.empty?
         heating_temps_ranges_pretty = "can't inspect schedules"
       else
         heating_temps_ranges_pretty = "#{OpenStudio.convert(heating_temps_ranges.min, 'C', 'F').get.round(1)} to #{OpenStudio.convert(heating_temps_ranges.max, 'C', 'F').get.round(1)}"
       end
-      output_data_air_loops[:data] << ['Thermal Zones', '', '', 'thermostat ranges for cooling', cooling_temp_ranges_pretty, 'F', '']
-      output_data_air_loops[:data] << ['Thermal Zones', '', '', 'thermostat ranges for heating', heating_temps_ranges_pretty, 'F', '']
-      output_data_air_loops[:data] << ['Terminal Types Used', '', '', terminals.uniq.sort.join(', '), '', '', terminals.size]
+      output_data_air_loops[:data] << ['Thermal Zones', 'Cooling Setpoint Range', "#{cooling_temp_ranges_pretty} F", '', '']
+      output_data_air_loops[:data] << ['Thermal Zones', 'Heating Setpoint Range', "#{heating_temps_ranges_pretty} F", '', '']
+      output_data_air_loops[:data] << ['Terminal Types Used', terminals.uniq.sort.join(', '), '', '', terminals.size]
 
       # controls summary
-      output_data_air_loops[:data] << [{ sub_header: 'controls' }, '', '', '', '', '', '']
+      output_data_air_loops[:data] << [{ sub_header: 'controls' }, '', '', '', '']
 
-      output_data_air_loops[:data] << ['HVAC Operation Schedule', '', '', '', air_loop.availabilitySchedule.name, '', ''] # I think this is a bool
-      output_data_air_loops[:data] << ['Night Cycle Setting', '', '', '', air_loop.nightCycleControlType, 'Choice', '']
-      output_data_air_loops[:data] << ['Economizer Setting', '', '', '', economizer_setting, 'Choice', '']
-      output_data_air_loops[:data] << ['Demand Controlled Ventilation Status', '', '', '', dcv_setting, 'Bool', '']
+      output_data_air_loops[:data] << ['HVAC Operation Schedule', '', air_loop.availabilitySchedule.name, '', ''] # I think this is a bool
+      output_data_air_loops[:data] << ['Night Cycle Setting', '', air_loop.nightCycleControlType, '', '']
+      output_data_air_loops[:data] << ['Economizer Setting', '', economizer_setting, '', '']
+      output_data_air_loops[:data] << ['Demand Controlled Ventilation Status', '', dcv_setting, '', '']
+      htg_sat_si = air_loop.sizingSystem.centralHeatingDesignSupplyAirTemperature
+      htg_sat_ip = OpenStudio.toNeatString(OpenStudio.convert(htg_sat_si, 'C', 'F').get, 1, true)
+      output_data_air_loops[:data] << ['Central Heating Design Supply Air Temperature', '', "#{htg_sat_ip} F", '', '']
+      clg_sat_si = air_loop.sizingSystem.centralCoolingDesignSupplyAirTemperature
+      clg_sat_ip = OpenStudio.toNeatString(OpenStudio.convert(clg_sat_si, 'C', 'F').get, 1, true)
+      output_data_air_loops[:data] << ['Central Cooling Design Supply Air Temperature', '', "#{clg_sat_ip} F", '', '']
+      output_data_air_loops[:data] << ['Load to Size On', '', air_loop.sizingSystem.typeofLoadtoSizeOn, '', '']
 
       # populate tables for section
       output_data_air_loop_tables << output_data_air_loops
@@ -1055,170 +1108,18 @@ module OsLib_Reporting
 
   # summary of what to show for each type of plant loop component
   def self.plant_loop_component_summary_logic(component, model)
-    data_arrays = []
-    if component.to_PumpConstantSpeed.is_initialized
-      component = component.to_PumpConstantSpeed.get
-      sizing_source_units = 'm^3/s'
-      sizing_target_units = 'gal/min'
-      if component.ratedFlowRate.is_initialized
-        sizing_ip = OpenStudio.convert(component.ratedFlowRate.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value_source_units = 'W'
-      value_target_units = 'W'
-      if component.ratedPowerConsumption.is_initialized
-        value_ip = component.ratedPowerConsumption.get
-        value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-      else
-        value_ip_neat = 'Autosized'
-      end
-      description = 'Rated Power Consumption'
-      data_arrays <<  [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+    # Generic component logic first
+    data_arrays = general_component_summary_logic(component)
 
-    elsif component.to_PumpVariableSpeed.is_initialized
-      component = component.to_PumpVariableSpeed.get
-        sizing_source_units = 'm^3/s'
-      sizing_target_units = 'gal/min'
-      if component.ratedFlowRate.is_initialized
-        sizing_ip = OpenStudio.convert(component.ratedFlowRate.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value_source_units = 'W'
-      value_target_units = 'W'
-      if component.ratedPowerConsumption.is_initialized
-        value_ip = component.ratedPowerConsumption.get
-        value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-      else
-        value_ip_neat = 'Autosized'
-      end
-      description = 'Rated Power Consumption'
-      data_arrays <<  [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+    # Motor component logic
+    data_arrays += motor_component_logic(component)
 
-    elsif component.to_BoilerHotWater.is_initialized
-      component = component.to_BoilerHotWater.get
-      sizing_source_units = 'W'
-      sizing_target_units = 'Btu/h'
-      if component.nominalCapacity.is_initialized
-        sizing_ip = OpenStudio.convert(component.nominalCapacity.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value_source_units = 'fraction'
-      value_target_units = 'fraction'
-      value = component.nominalThermalEfficiency
-      value_neat = OpenStudio.toNeatString(value, 2, true)
-      description = 'Nominal Thermal Efficiency'
-      data_arrays <<  [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_neat, value_target_units, '']
+    # Setpoint manager logic
+    data_arrays += spm_logic(component)
 
-    elsif component.to_WaterHeaterMixed.is_initialized
-      component = component.to_WaterHeaterMixed.get
-      sizing_source_units = 'm^3'
-      sizing_target_units = 'gal'
-      if component.tankVolume.is_initialized
-        sizing_ip = OpenStudio.convert(component.tankVolume.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 0, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value_source_units = 'fraction'
-      value_target_units = 'fraction'
-      value = component.heaterThermalEfficiency
-      if value.is_initialized
-        value_neat = OpenStudio.toNeatString(value.get, 2, true)
-      else
-        value_neat = '' # not sure what that would default to if it wasn't there
-      end
-      description = 'Heater Thermal Efficiency'
-      data_arrays <<  [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_neat, value_target_units, '']
-
-    elsif component.to_ChillerElectricEIR.is_initialized
-      component = component.to_ChillerElectricEIR.get
-      sizing_source_units = 'W'
-      sizing_target_units = 'Btu/h'
-      if component.referenceCapacity.is_initialized
-        sizing_ip = OpenStudio.convert(component.referenceCapacity.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value = component.referenceCOP
-      value_neat = OpenStudio.toNeatString(value, 2, true)
-      description = 'Reference COP'
-      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_neat, '', '']
-
-      # second line to indicate if water or air cooled
-      if component.secondaryPlantLoop.is_initialized
-        data_arrays << ["#{component.iddObject.name} (cont)", '', '', 'Chiller Source', component.secondaryPlantLoop.get.name, '', '']
-      else
-        data_arrays << ["#{component.iddObject.name} (cont)", '', '', 'Chiller Source', 'Air Cooled', '', '']
-      end
-
-    elsif component.to_CoolingTowerSingleSpeed.is_initialized
-
-      # data for water
-      component = component.to_CoolingTowerSingleSpeed.get
-      sizing_source_units = 'm^3/s'
-      sizing_target_units = 'gal/min'
-      if component.designWaterFlowRate.is_initialized
-        sizing_ip = OpenStudio.convert(component.designWaterFlowRate.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      data_arrays << ["#{component.iddObject.name} - Air", sizing_ip_neat, sizing_target_units, '', '', '', '']
-
-      # data for air
-      component = component.to_CoolingTowerSingleSpeed.get
-      sizing_source_units = 'm^3/s'
-      sizing_target_units = 'cfm'
-      if component.designAirFlowRate.is_initialized
-        sizing_ip = OpenStudio.convert(component.designAirFlowRate.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value_source_units = 'W'
-      value_target_units = 'W'
-      if component.fanPoweratDesignAirFlowRate.is_initialized
-        value_ip = OpenStudio.convert(component.fanPoweratDesignAirFlowRate.get, sizing_source_units, sizing_target_units).get
-        value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-      else
-        value_ip_neat = 'Autosized'
-      end
-      description = 'Fan Power at Design Air Flow Rate'
-      data_arrays << ["#{component.iddObject.name} (cont) - Water", sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
-
-    elsif component.to_SetpointManagerScheduled.is_initialized
-      setpoint = component.to_SetpointManagerScheduled.get
-      supply_air_temp_schedule = setpoint.schedule
-      schedule_values = OsLib_Schedules.getMinMaxAnnualProfileValue(model, supply_air_temp_schedule)
-      if schedule_values.nil?
-        schedule_values_pretty = "can't inspect schedule"
-        target_units = ''
-      else
-        if setpoint.controlVariable.to_s == 'Temperature'
-          source_units = 'C'
-          target_units = 'F'
-          schedule_values_pretty = "#{OpenStudio.convert(schedule_values['min'], source_units, target_units).get.round(1)} to #{OpenStudio.convert(schedule_values['max'], source_units, target_units).get.round(1)}"
-        else # TODO: - add support for other control variables
-          schedule_values_pretty = "#{schedule_values['min']} to #{schedule_values['max']}"
-          target_units = 'raw si values'
-        end
-      end
-      data_arrays << [setpoint.iddObject.name, '', '', "Control Variable - #{setpoint.controlVariable}", schedule_values_pretty, target_units, '']
-
-    elsif component.to_SetpointManagerFollowOutdoorAirTemperature.is_initialized
-      setpoint = component.to_SetpointManagerFollowOutdoorAirTemperature.get
-      ref_temp_type = setpoint.referenceTemperatureType
-      data_arrays << [setpoint.iddObject.name, '', '', 'Reference Temperature Type', ref_temp_type, 'Choice', '']
-
-    else
-      data_arrays << [component.iddObject.name, '', '', '', '', '', '']
+    # Make the component type the first element of the first row
+    if !data_arrays.empty?
+      data_arrays[0][0] = component.iddObject.name.gsub('OS:', '')
     end
 
     return data_arrays
@@ -1244,11 +1145,11 @@ module OsLib_Reporting
       # plant loop data output
       output_data_plant_loops = {}
       output_data_plant_loops[:title] = plant_loop.name.get # TODO: - confirm first that it has name
-      output_data_plant_loops[:header] = ['Object', 'Sizing', 'Sizing Units', 'Description', 'Value', 'Value Units', 'Count']
+      output_data_plant_loops[:header] = ['Object', 'Description', 'Value', 'Sizing', 'Count']
       output_data_plant_loops[:units] = [] # not using units for these tables
       output_data_plant_loops[:data] = []
 
-      output_data_plant_loops[:data] << [{ sub_header: 'supply' }, '', '', '', '', '', '']
+      output_data_plant_loops[:data] << [{ sub_header: 'supply' }, '', '', '', '']
 
       plant_loop.supplyComponents.each do |component|
         if component.to_ThermalZone.is_initialized
@@ -1259,7 +1160,7 @@ module OsLib_Reporting
         next if component.to_Mixer.is_initialized
         if component.to_Node.is_initialized
           setpoint_managers = component.to_Node.get.setpointManagers
-          if setpoint_managers.size > 0
+          if !setpoint_managers.empty?
             # setpoint type
             setpoint = setpoint_managers[0] # TODO: - could have more than one in some situations
             data_arrays = OsLib_Reporting.plant_loop_component_summary_logic(setpoint, model)
@@ -1277,7 +1178,7 @@ module OsLib_Reporting
       end
 
       # loop through demand components
-      output_data_plant_loops[:data] << [{ sub_header: 'demand' }, '', '', '', '', '', '']
+      output_data_plant_loops[:data] << [{ sub_header: 'demand' }, '', '', '', '']
 
       # keep track of terminal count to report later
       terminal_connections = [] # Not sure how I want to list in display
@@ -1321,34 +1222,46 @@ module OsLib_Reporting
         # don't report here if this component is connected to a terminal
         next if terminal_connection == true
 
-        output_data_plant_loops[:data] << [component.iddObject.name, '', '', description, value, '', '']
+        output_data_plant_loops[:data] << [component.iddObject.name.gsub('OS:', ''), description, value, '', '']
       end
 
       # report terminal connections
-      if terminal_connections.size > 0
-        output_data_plant_loops[:data] << ['Air Terminal Connections', '', '', '', '', '', terminal_connections.size]
+      if !terminal_connections.empty?
+        output_data_plant_loops[:data] << ['Air Terminal Connections', '', '', '', terminal_connections.size]
       end
 
-      output_data_plant_loops[:data] << [{ sub_header: 'controls' }, '', '', '', '', '', '']
+      output_data_plant_loops[:data] << [{ sub_header: 'controls' }, '', '', '', '']
 
-      # loop flow rates
-      sizing_source_units = 'm^3/s'
-      sizing_target_units = 'gal/min'
-      if plant_loop.maximumLoopFlowRate.is_initialized
-        sizing_ip = OpenStudio.convert(plant_loop.maximumLoopFlowRate.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value_source_units = 'm^3/s'
-      value_target_units = 'gal/min'
-      if plant_loop.maximumLoopFlowRate.is_initialized
-        value_ip = OpenStudio.convert(plant_loop.minimumLoopFlowRate.get, value_source_units, value_target_units).get
+      # Min loop flow rate
+      units_si = 'm^3/s'
+      units_ip = 'gal/min'
+      if plant_loop.minimumLoopFlowRate.is_initialized
+        value_ip = OpenStudio.convert(plant_loop.minimumLoopFlowRate.get, units_si, units_ip).get
         value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
+        siz = 'Hard Sized'
+      elsif plant_loop.autosizedMinimumLoopFlowRate.is_initialized
+        value_ip = OpenStudio.convert(plant_loop.autosizedMinimumLoopFlowRate.get, units_si, units_ip).get
+        value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
+        siz = 'Autosized'
       else
-        value_ip_neat = 0.0
+        value_ip_neat = 'Autosized'
       end
-      output_data_plant_loops[:data] << ['Loop Flow Rate Range', sizing_ip_neat, sizing_target_units, 'Minimum Loop Flow Rate', value_ip_neat, value_target_units, '']
+      output_data_plant_loops[:data] << ['Loop Flow Rate Range', 'Minimum Loop Flow Rate', "#{value_ip_neat} #{units_ip}", siz, '']
+
+      # Max loop flow rate
+      if plant_loop.maximumLoopFlowRate.is_initialized
+        value_ip = OpenStudio.convert(plant_loop.maximumLoopFlowRate.get, units_si, units_ip).get
+        value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
+        siz = 'Hard Sized'
+      elsif
+        plant_loop.autosizedMaximumLoopFlowRate.is_initialized
+        value_ip = OpenStudio.convert(plant_loop.autosizedMaximumLoopFlowRate.get, units_si, units_ip).get
+        value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
+        siz = 'Autosized'
+      else
+        value_ip_neat = 'Autosized'
+      end
+      output_data_plant_loops[:data] << ['Loop Flow Rate Range', 'Maximum Loop Flow Rate', "#{value_ip_neat} #{units_ip}", siz, '']
 
       # loop temperatures
       source_units = 'C'
@@ -1356,21 +1269,24 @@ module OsLib_Reporting
       min_temp = plant_loop.minimumLoopTemperature
       max_temp = plant_loop.maximumLoopTemperature
       value_neat = "#{OpenStudio.convert(min_temp, source_units, target_units).get.round(1)} to #{OpenStudio.convert(max_temp, source_units, target_units).get.round(1)}"
-      output_data_plant_loops[:data] << ['Loop Temperature Range', '', '', '', value_neat, target_units, '']
+      output_data_plant_loops[:data] << ['Loop Temperature Range', '', "#{value_neat} #{target_units}", '', '']
 
       # get values out of sizing plant
       sizing_plant = plant_loop.sizingPlant
       source_units = 'C'
       target_units = 'F'
       loop_exit_temp = sizing_plant.designLoopExitTemperature
-      value_neat = OpenStudio.toNeatString(OpenStudio.convert(loop_exit_temp, source_units, target_units).get, 2, true)
+      value_neat = OpenStudio.toNeatString(OpenStudio.convert(loop_exit_temp, source_units, target_units).get, 1, true)
 
-      output_data_plant_loops[:data] << ['Design Loop Exit Temperature', '', '', '', value_neat, target_units, '']
+      output_data_plant_loops[:data] << ['Loop Design Exit Temperature', '', "#{value_neat} #{target_units}", '', '']
       source_units = 'K'
       target_units = 'R'
       loop_design_temp_diff = sizing_plant.loopDesignTemperatureDifference
-      value_neat = OpenStudio.toNeatString(OpenStudio.convert(loop_design_temp_diff, source_units, target_units).get, 2, true)
-      output_data_plant_loops[:data] << ['Loop Design Temperature Difference', '', '', '', value_neat, target_units, '']
+      value_neat = OpenStudio.toNeatString(OpenStudio.convert(loop_design_temp_diff, source_units, target_units).get, 1, true)
+      output_data_plant_loops[:data] << ['Loop Design Temperature Difference', '', "#{value_neat} #{target_units}", '', '']
+
+      # Equipment staging
+      output_data_plant_loops[:data] << ['Equipment Loading/Staging', '', plant_loop.loadDistributionScheme, '', '']
 
       # push tables
       output_data_plant_loop_tables << output_data_plant_loops
@@ -1381,211 +1297,13 @@ module OsLib_Reporting
 
   # summary of what to show for each type of zone equipment component
   def self.zone_equipment_component_summary_logic(component, model)
-    if component.to_FanZoneExhaust.is_initialized
-      component = component.to_FanZoneExhaust.get
+    # Generic component logic first
+    data_arrays = general_component_summary_logic(component)
 
-      sizing_source_units = 'm^3/s'
-      sizing_target_units = 'cfm'
-      if component.maximumFlowRate.is_initialized
-        sizing_ip = OpenStudio.convert(component.maximumFlowRate.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 0.0 # is that the proper default
-      end
-      value_source_units = 'fraction'
-      value_target_units = 'fraction'
-      value_ = component.fanEfficiency
-      value_neat = OpenStudio.toNeatString(value_, 2, true)
+    # Motor component logic
+    data_arrays += motor_component_logic(component)
 
-      description = 'Fan Efficiency'
-      data_array = [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_neat, value_target_units, '']
-
-    elsif component.to_ZoneHVACPackagedTerminalHeatPump.is_initialized
-      component = component.to_ZoneHVACPackagedTerminalHeatPump.get
-
-      # report outdoor air when not heating or cooling
-      sizing_source_units = 'm^3/s'
-      sizing_target_units = 'cfm'
-      if component.outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded.is_initialized
-        sizing_ip = OpenStudio.convert(component.outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value = component.availabilitySchedule.name
-      description = 'Availability Schedule'
-      data_array = ["#{component.iddObject.name} - Outdoor Air When No Clg. or Htg", sizing_ip_neat, sizing_target_units, description, value, '', '']
-
-      # get cooling coil
-      if component.coolingCoil.to_CoilCoolingDXSingleSpeed.is_initialized
-        cooling_coil = component.coolingCoil.to_CoilCoolingDXSingleSpeed.get
-        sizing_source_units = 'W'
-        sizing_target_units = 'Btu/h'
-        if cooling_coil.ratedTotalCoolingCapacity.is_initialized
-          sizing_ip = OpenStudio.convert(cooling_coil.ratedTotalCoolingCapacity.get, sizing_source_units, sizing_target_units).get
-          sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-        else
-          sizing_ip_neat = 'Autosized'
-        end
-        value_source_units = 'COP'
-        value_target_units = 'COP'
-        value_ip = cooling_coil.ratedCOP.get
-        value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-        description = 'Rated COP'
-        data_array = ["#{component.iddObject.name} - #{cooling_coil.iddObject.name}", sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
-      else
-        cooling_coil = component.coolingCoil
-        data_array = ["#{component.iddObject.name} - #{cooling_coil.iddObject.name}", '', '', '', '', '', '']
-      end
-
-      # get heating coil
-      if component.coolingCoil.to_CoilHeatingDXSingleSpeed.is_initialized
-        heating_coil = component.heatingCoil.to_CoilHeatingDXSingleSpeed.get
-        sizing_source_units = 'W'
-        sizing_target_units = 'Btu/h'
-        if heating_coil.ratedTotalHeatingCapacity.is_initialized
-          sizing_ip = OpenStudio.convert(heating_coil.ratedTotalHeatingCapacity.get, sizing_source_units, sizing_target_units).get
-          sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-        else
-          sizing_ip_neat = 'Autosized'
-        end
-        value_source_units = 'COP'
-        value_target_units = 'COP'
-        value_ip = heating_coil.ratedCOP # is optional for CoilCoolingDXSingleSpeed but is just a double for CoilHeatingDXSingleSpeed
-        value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-        description = 'Rated COP'
-        data_array = ["#{component.iddObject.name} - #{heating_coil.iddObject.name}", sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
-      else
-        heating_coil = component.heatingCoil
-        data_array = ["#{component.iddObject.name} - #{heating_coil.iddObject.name}", '', '', '', '', '', '']
-      end
-
-      # get fan
-      if component.supplyAirFan.to_FanConstantVolume.is_initialized
-        fan = component.supplyAirFan.to_FanConstantVolume.get
-        sizing_source_units = 'm^3/s'
-        sizing_target_units = 'cfm'
-        if fan.maximumFlowRate.is_initialized
-          sizing_ip = OpenStudio.convert(fan.maximumFlowRate.get, sizing_source_units, sizing_target_units).get
-          sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-        else
-          sizing_ip_neat = 'Autosized'
-        end
-        value_source_units = 'Pa'
-        value_target_units = 'inH_{2}O'
-        value_ip = OpenStudio.convert(fan.pressureRise, value_source_units, value_target_units).get
-        value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-        data_array = ["#{component.iddObject.name} - #{fan.iddObject.name}", sizing_ip_neat, sizing_target_units, 'Pressure Rise', value_ip_neat, value_target_units, '']
-      else
-        fan = component.supplyAirFan
-        data_array = ["#{component.iddObject.name} - #{fan.iddObject.name}", '', '', '', '', '', '']
-      end
-
-      # get supplemental heat
-      if component.supplementalHeatingCoil.to_CoilHeatingElectric.is_initialized
-        supplemental_heating_coil = component.supplementalHeatingCoil.to_CoilHeatingElectric.get
-        sizing_source_units = 'W'
-        sizing_target_units = 'Btu/h'
-        if supplemental_heating_coil.nominalCapacity.is_initialized
-          sizing_ip = OpenStudio.convert(supplemental_heating_coil.nominalCapacity.get, sizing_source_units, sizing_target_units).get
-          sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-        else
-          sizing_ip_neat = 'Autosized'
-        end
-        value_source_units = ''
-        value_target_units = ''
-        value_ip = supplemental_heating_coil.efficiency
-        value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-        description = 'Efficiency'
-        data_array = ["#{component.iddObject.name} - #{supplemental_heating_coil.iddObject.name}", sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
-      else
-        supplemental_heating_coil = component.supplyAirFan
-        data_array = ["#{component.iddObject.name} - #{supplemental_heating_coil.iddObject.name}", '', '', '', '', '', '']
-      end
-
-    elsif component.to_ZoneHVACPackagedTerminalAirConditioner.is_initialized
-      component = component.to_ZoneHVACPackagedTerminalAirConditioner.get
-
-      # report outdoor air when not heating or cooling
-      sizing_source_units = 'm^3/s'
-      sizing_target_units = 'cfm'
-      if component.outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded.is_initialized
-        sizing_ip = OpenStudio.convert(component.outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded.get, sizing_source_units, sizing_target_units).get
-        sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-      else
-        sizing_ip_neat = 'Autosized'
-      end
-      value = component.availabilitySchedule.name
-      description = 'Availability Schedule'
-      data_array = ["#{component.iddObject.name} - Outdoor Air When No Clg. or Htg", sizing_ip_neat, sizing_target_units, description, value, '', '']
-
-      # get cooling coil
-      if component.coolingCoil.to_CoilCoolingDXSingleSpeed.is_initialized
-        cooling_coil = component.coolingCoil.to_CoilCoolingDXSingleSpeed.get
-        sizing_source_units = 'W'
-        sizing_target_units = 'Btu/h'
-        if cooling_coil.ratedTotalCoolingCapacity.is_initialized
-          sizing_ip = OpenStudio.convert(cooling_coil.ratedTotalCoolingCapacity.get, sizing_source_units, sizing_target_units).get
-          sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-        else
-          sizing_ip_neat = 'Autosized'
-        end
-        value_source_units = 'COP'
-        value_target_units = 'COP'
-        value_ip = cooling_coil.ratedCOP.get
-        value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-        description = 'Rated COP'
-        data_array = ["#{component.iddObject.name} - #{cooling_coil.iddObject.name}", sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
-      else
-        cooling_coil = component.coolingCoil
-        data_array = ["#{component.iddObject.name} - #{cooling_coil.iddObject.name}", '', '', '', '', '', '']
-      end
-
-      # get heating coil
-      if component.heatingCoil.to_CoilHeatingWater.is_initialized
-        heating_coil = component.heatingCoil.to_CoilHeatingWater.get
-        sizing_source_units = 'm^3/s'
-        sizing_target_units = 'gal/min'
-        if heating_coil.maximumWaterFlowRate.is_initialized
-          sizing_ip = OpenStudio.convert(heating_coil.maximumWaterFlowRate.get, sizing_source_units, sizing_target_units).get
-          sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-        else
-          sizing_ip_neat = 'Autosized'
-        end
-        value = heating_coil.plantLoop.get.name
-        description = 'Plant Loop'
-        data_array = ["#{component.iddObject.name} - #{heating_coil.iddObject.name}", sizing_ip_neat, sizing_target_units, description, value, '', '']
-      else
-        heating_coil = component.heatingCoil
-        data_array = ["#{component.iddObject.name} - #{heating_coil.iddObject.name}", '', '', '', '', '', '']
-      end
-
-      # get fan
-      if component.supplyAirFan.to_FanConstantVolume.is_initialized
-        fan = component.supplyAirFan.to_FanConstantVolume.get
-        sizing_source_units = 'm^3/s'
-        sizing_target_units = 'cfm'
-        if fan.maximumFlowRate.is_initialized
-          sizing_ip = OpenStudio.convert(fan.maximumFlowRate.get, sizing_source_units, sizing_target_units).get
-          sizing_ip_neat = OpenStudio.toNeatString(sizing_ip, 2, true)
-        else
-          sizing_ip_neat = 'Autosized'
-        end
-        value_source_units = 'Pa'
-        value_target_units = 'inH_{2}O'
-        value_ip = OpenStudio.convert(fan.pressureRise, value_source_units, value_target_units).get
-        value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-        data_array = ["#{component.iddObject.name} - #{fan.iddObject.name}", sizing_ip_neat, sizing_target_units, 'Pressure Rise', value_ip_neat, value_target_units, '']
-      else
-        fan = component.supplyAirFan
-        data_array = ["#{component.iddObject.name} - #{fan.iddObject.name}", '', '', '', '', '', '']
-      end
-
-    else
-      data_array = [component.iddObject.name, '', '', '', '', '', '']
-    end
-
-    return data_array
+    return data_arrays
   end
 
   # create table plant loop summary
@@ -1608,17 +1326,25 @@ module OsLib_Reporting
       # plant loop data output
       output_data_zone_equipment = {}
       output_data_zone_equipment[:title] = zone.name.get # TODO: - confirm that zone has a name
-      output_data_zone_equipment[:header] = ['Object', 'Sizing', 'Sizing Units', 'Description', 'Value', 'Value Units', 'Count']
+      output_data_zone_equipment[:header] = ['Object', 'Description', 'Value', 'Sizing', 'Count']
       output_data_zone_equipment[:units] = [] # not using units for these tables
       output_data_zone_equipment[:data] = []
 
       zone.equipment.sort.each do |zone_equip|
         next unless zone_equip.to_ZoneHVACComponent.is_initialized # skip any terminals
-        output_data_zone_equipment[:data] << OsLib_Reporting.zone_equipment_component_summary_logic(zone_equip, model)
+        data_arrays = OsLib_Reporting.zone_equipment_component_summary_logic(zone_equip, model)
+        data_arrays.each do |data_array| # typically just one, but in some cases there are a few
+          output_data_zone_equipment[:data] << data_array
+        end
+
+        # Make the component type the first element of the first row
+        if !data_arrays.empty?
+          data_arrays[0][0] = zone_equip.iddObject.name.gsub('OS:', '')
+        end
       end
 
       # push table to array
-      if output_data_zone_equipment[:data].size > 0
+      if !output_data_zone_equipment[:data].empty?
         @output_data_zone_equipment_section[:tables] << output_data_zone_equipment
       end
     end
@@ -1628,12 +1354,23 @@ module OsLib_Reporting
 
   # create table for constructions
   def self.envelope_section_section(model, sqlFile, runner, name_only = false)
+    # Versions of OpenStudio greater than 2.4.0 use a modified version of
+    # openstudio-standards with different method calls.  These methods
+    # require a "Standard" object instead of the standard being passed into method calls.
+    # This Standard object is used throughout the QAQC check.
+    if OpenStudio::VersionString.new(OpenStudio.openStudioVersion) < OpenStudio::VersionString.new('2.4.2')
+      use_old_gem_code = true
+    else
+      use_old_gem_code = false
+      std = Standard.build('90.1-2013') # actual standard doesn't matter in this case
+    end
+
     # array to hold tables
     envelope_tables = []
 
     # gather data for section
     @envelope_section = {}
-    @envelope_section[:title] = 'Envelope'
+    @envelope_section[:title] = 'Envelope Summary'
     @envelope_section[:tables] = envelope_tables
 
     # stop here if only name is requested this is used to populate display name for arguments
@@ -1650,6 +1387,14 @@ module OsLib_Reporting
     surface_data[:units] = ['', area_units, '', target_units]
     surface_data[:data] = []
 
+    # construction details
+    # TODO
+    # add table with subheads for each construction, and rows for each material layer
+    # construction_details = {}
+    # construction_details[:title] = 'Construction Details'
+    # construction_details[:header] = ['Material']
+    # construction_details[:data] = []
+
     # loop through surfaces to get constructions
     ext_const_base = {}
     model.getSurfaces.each do |surface|
@@ -1665,7 +1410,7 @@ module OsLib_Reporting
       net_area_ip = OpenStudio.convert(net_area, 'm^2', 'ft^2').get
       net_area_ip_neat = OpenStudio.toNeatString(net_area_ip, 0, true)
       surface_count = count
-      if  construction.thermalConductance.is_initialized
+      if construction.thermalConductance.is_initialized
         thermal_conductance = construction.thermalConductance.get
         source_units = 'm^2*K/W'
         r_value_ip = OpenStudio.convert(1 / thermal_conductance, source_units, target_units).get
@@ -1675,17 +1420,28 @@ module OsLib_Reporting
       end
       surface_data[:data] << [construction.name, net_area_ip_neat, surface_count, r_value_ip_neat]
       runner.registerValue(OsLib_Reporting.reg_val_string_prep(construction.name.to_s), net_area_ip, area_units)
+
+      # TODO: Get this working like subsurfaces
+      # construction_details[:data] << [{ sub_header: "Material Layers in Construction '#{construction.name}':"}]
+      # construction.layers.each do |l|
+      #  construction_details[:data] << [l.name]
+      # end
     end
     envelope_tables << surface_data
 
     # summary of exterior constructions used in the model for sub surfaces
     sub_surface_data = {}
     sub_surface_data[:title] = 'Sub Surface Constructions'
-    sub_surface_data[:header] = ['Construction', 'Area', 'Surface Count', 'U-Factor']
+    sub_surface_data[:header] = ['Construction', 'Net Area', 'Surface Count', 'U-factor', 'SHGC', 'VLT']
     area_units = 'ft^2'
-    u_factor_units = 'Btu/ft^2*h*R'
-    sub_surface_data[:units] = ['', area_units, '', u_factor_units]
+    u_factor_ip_units = 'Btu/ft^2*h*R'
+    sub_surface_data[:units] = ['', area_units, '', u_factor_ip_units]
     sub_surface_data[:data] = []
+
+    construction_details = {}
+    construction_details[:title] = 'Sub Surface Construction Details (Material Layers)'
+    construction_details[:header] = ['Material Name']
+    construction_details[:data] = []
 
     # loop through sub_surfaces to get constructions
     ext_const_sub = {}
@@ -1704,23 +1460,55 @@ module OsLib_Reporting
       surface_count = count
       source_units = 'm^2*K/W'
       target_units = 'ft^2*h*R/Btu'
-      if construction.uFactor.is_initialized
-        u_factor = construction.uFactor.get
-        u_factor_ip = 1 / OpenStudio.convert(1 / u_factor, source_units, target_units).get
-        u_factor_ip_neat = OpenStudio.toNeatString(u_factor_ip, 4, true)
-      else
-        u_factor_ip_neat = ''
+      vlt_neat = 'n/a'
+      shgc_neat = 'n/a'
+      u_factor_neat = ''
+      if construction.to_Construction.is_initialized
+        construction_root = construction.to_Construction.get
+        if construction_root.isFenestration
+          if use_old_gem_code
+            shgc = construction_root.calculated_solar_heat_gain_coefficient
+          else
+            shgc = std.construction_calculated_solar_heat_gain_coefficient(construction_root)
+          end
+          shgc_neat = OpenStudio.toNeatString(shgc, 2, false)
+          if use_old_gem_code
+            vlt = construction_root.calculated_visible_transmittance
+          else
+            vlt = std.construction_calculated_visible_transmittance(construction_root)
+          end
+          vlt_neat = OpenStudio.toNeatString(vlt, 2, false)
+          if use_old_gem_code
+            u_factor = construction_root.calculated_u_factor
+          else
+            u_factor = std.construction_calculated_u_factor(construction_root)
+          end
+          u_factor_ip = OpenStudio.convert(u_factor, 'W/m^2*K', u_factor_ip_units).get
+          u_factor_neat = OpenStudio.toNeatString(u_factor_ip, 2, false)
+        else
+          u_factor = construction.thermalConductance.get
+          u_factor_ip = OpenStudio.convert(u_factor, 'W/m^2*K', u_factor_ip_units).get
+          u_factor_neat = OpenStudio.toNeatString(u_factor_ip, 2, false)
+        end
+        # add layer details for each construction
+        construction_details[:data] << [{ sub_header: "Material Layers in Construction '#{construction.name}':" }]
+        construction_root.layers.each do |l|
+          construction_details[:data] << [l.name]
+        end
+
       end
-      sub_surface_data[:data] << [construction.name, net_area_ip_neat, surface_count, u_factor_ip_neat]
+
+      sub_surface_data[:data] << [construction.name, net_area_ip_neat, surface_count, u_factor_neat, shgc_neat, vlt_neat]
       runner.registerValue(OsLib_Reporting.reg_val_string_prep(construction.name.to_s), net_area_ip, area_units)
     end
     envelope_tables << sub_surface_data
+    envelope_tables << construction_details
 
     # Conditioned Window-Wall Ratio and Skylight-Roof Ratio
     fenestration_data = {}
-    fenestration_data[:title] = 'WWR & Skylight Ratio'
-    fenestration_data[:header] = %w(Description Total North East South West)
-    target_units = '%' # it is a bit odd, but eplusout.htm calls the tale ratio, but shows as percentage. I'll match that here for now.
+    fenestration_data[:title] = 'Window-to-Wall and Skylight-to-Roof area Ratios'
+    fenestration_data[:header] = ['Description', 'Total', 'North', 'East', 'South', 'West']
+    target_units = '%' # ratios reported as percentages
     fenestration_data[:units] = ['', target_units, target_units, target_units, target_units, target_units]
     fenestration_data[:data] = []
 
@@ -1761,7 +1549,7 @@ module OsLib_Reporting
         display = fenestration
         fenestration_data[:data] << [display, total.get, north.get, east.get, south.get, west.get]
         fenestration_data[:data] << ["#{display} (Conditioned)", total_cond.get, north_cond.get, east_cond.get, south_cond.get, west_cond.get]
-        runner.registerValue("#{OsLib_Reporting.reg_val_string_prep(display)}", total.get, target_units)
+        runner.registerValue(OsLib_Reporting.reg_val_string_prep(display).to_s, total.get, target_units)
         runner.registerValue("#{OsLib_Reporting.reg_val_string_prep(display)}_conditioned", total_cond.get, target_units)
 
         # skylight
@@ -1824,7 +1612,7 @@ module OsLib_Reporting
       if water_use_equipment_def.targetTemperatureSchedule.is_initialized
         target_temp_sch = water_use_equipment_def.targetTemperatureSchedule.get
         schedule_values = OsLib_Schedules.getMinMaxAnnualProfileValue(model, target_temp_sch)
-        if not schedule_values.nil?
+        if !schedule_values.nil?
           min_ip = OpenStudio.convert(schedule_values['min'], 'C', 'F').get
           max_ip = OpenStudio.convert(schedule_values['max'], 'C', 'F').get
           target_temp_range = "#{min_ip.round(1)} to #{max_ip.round(1)}"
@@ -1839,7 +1627,7 @@ module OsLib_Reporting
     end
 
     # don't create empty table
-    if water_use_data[:data].size > 0
+    if !water_use_data[:data].empty?
       @water_use_data_section[:tables] = [water_use_data] # only one table for this section
     else
       @water_use_data_section[:tables] = []
@@ -1878,7 +1666,7 @@ module OsLib_Reporting
     else
       # add data
       total_watts_ip = total_watts.get
-      consumption_ip = OpenStudio.convert(sqlFile.netSiteEnergy.get,'GJ','kWh').get
+      consumption_ip = OpenStudio.convert(sqlFile.netSiteEnergy.get, 'GJ', 'kWh').get
       total_watts_ip_neat = OpenStudio.toNeatString(total_watts_ip, 2, true)
       consumption_ip_neat = OpenStudio.toNeatString(consumption_ip, 2, true)
       ext_light_data[:data] << ['Exterior Lighting Total', total_watts_ip_neat, consumption_ip_neat]
@@ -1972,7 +1760,7 @@ module OsLib_Reporting
       output_data_space_type_details = {}
       output_data_space_type_details[:title] = "#{spaceType.name}<br>(#{space_name_list.uniq.size} spaces and #{zone_name_list.uniq.size} thermal zones)"
       output_data_space_type_details[:header] = ['Definition', 'Value', 'Unit', 'Inst. Multiplier']
-      output_data_space_type_details[:units] = []  # won't use this for these tables since units change
+      output_data_space_type_details[:units] = [] # won't use this for these tables since units change
       output_data_space_type_details[:data] = []
 
       # data for space type details
@@ -1999,38 +1787,19 @@ module OsLib_Reporting
       instances = spaceType.people
       instances.each do |instance|
         def_display = instance.definition.name
-        pd = instance.definition.to_PeopleDefinition.get
-
-        if pd.numberofPeopleCalculationMethod.downcase == 'people'
+        if instance.numberOfPeople.is_initialized && instance.numberOfPeople.get > 0
+          def_value = instance.numberOfPeople.get
+          def_value_neat = OpenStudio.toNeatString(def_value, 0, true)
           def_units = 'people'
-          def_value = pd.numberOfPeople
-          if def_value.is_initialized
-            def_value = def_value.get
-            def_value_neat = OpenStudio.toNeatString(def_value, 0, true)
-          else
-            def_value_neat = "N/A"
-          end
-        elsif pd.numberofPeopleCalculationMethod.downcase == 'area/person'
-          def_units = 'ft^2/person'
-          def_value = pd.spaceFloorAreaperPerson
-          if def_value.is_initialized
-            def_value = OpenStudio::convert(def_value.get, "m^2", "ft^2").get
-            def_value_neat = OpenStudio.toNeatString(def_value, 0, true)
-          else
-            def_value_neat = "N/A"
-          end
-
-        elsif pd.numberofPeopleCalculationMethod.downcase == 'people/area'
+        elsif instance.peoplePerFloorArea.is_initialized && instance.peoplePerFloorArea.get > 0
+          def_value = instance.peoplePerFloorArea.get / OpenStudio.convert(1, 'm^2', 'ft^2').get
+          def_value_neat = OpenStudio.toNeatString(def_value, 4, true)
           def_units = 'people/ft^2'
-          def_value = pd.peopleperSpaceFloorArea
-          if def_value.is_initialized
-            def_value = def_value.get / OpenStudio.convert(1, 'm^2', 'ft^2').get
-            def_value_neat = OpenStudio.toNeatString(def_value, 0, true)
-          else
-            def_value_neat = "N/A"
-          end
+        elsif instance.spaceFloorAreaPerPerson.is_initialized && instance.spaceFloorAreaPerPerson.get > 0
+          def_value = OpenStudio.convert(instance.spaceFloorAreaPerPerson.get, 'm^2', 'ft^2').get
+          def_value_neat = OpenStudio.toNeatString(def_value, 0, true)
+          def_units = 'ft^2/person'
         end
-
         count = instance.multiplier
         output_data_space_type_details[:data] << [def_display, def_value_neat, def_units, count]
       end
@@ -2204,8 +1973,8 @@ module OsLib_Reporting
         query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_name}' and RowName= '#{row}' and ColumnName= '#{header}'"
         results = sqlFile.execAndReturnFirstString(query) # this is first time I needed string vs. double for weather file
         # TODO: - would be nice to get units from first column
-        if row == "Elevation" then results = "#{OpenStudio::convert(results.get.to_f,"m","ft").get.round} (ft)" end
-        #if row == "Elevation" then results = "#{results.class} (f)" end
+        if row == 'Elevation' then results = "#{OpenStudio.convert(results.get.to_f, 'm', 'ft').get.round} (ft)" end
+        # if row == "Elevation" then results = "#{results.class} (f)" end
         row_data << results
       end
 
@@ -2217,13 +1986,13 @@ module OsLib_Reporting
     climate_zone = ''
     climateZones = model.getClimateZones
     climateZones.climateZones.each do |climateZone|
-      if climateZone.institution == "ASHRAE"
+      if climateZone.institution == 'ASHRAE'
         climate_zone = climateZone.value
         next
       end
     end
 
-    table[:data] << ['ASHRAE Climate Zone',climate_zone]
+    table[:data] << ['ASHRAE Climate Zone', climate_zone]
 
     return table
   end
@@ -2293,7 +2062,7 @@ module OsLib_Reporting
     # create a second table
     building_performance_table = {}
     building_performance_table[:title] = 'Building Performance'
-    building_performance_table[:header] = %w(Description Value)
+    building_performance_table[:header] = ['Description', 'Value']
     building_performance_table[:units] = []
     building_performance_table[:data] = []
 
@@ -2308,7 +2077,7 @@ module OsLib_Reporting
     # create a second table
     site_performance_table = {}
     site_performance_table[:title] = 'Site Performance'
-    site_performance_table[:header] = %w(Description Value)
+    site_performance_table[:header] = ['Description', 'Value']
     site_performance_table[:units] = []
     site_performance_table[:data] = []
 
@@ -2378,17 +2147,17 @@ module OsLib_Reporting
 
     # sorted end use array to pass in for stacked bar chart order
     end_use_order = []
-    month_order = %w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
+    month_order = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
     # loop through fuels for consumption tables
     OpenStudio::EndUseFuelType.getValues.each do |fuel_type|
       # get fuel type and units
       fuel_type = OpenStudio::EndUseFuelType.new(fuel_type).valueDescription
       if fuel_type == 'Electricity'
-        units = "\"kWh\""
+        units = '"kWh"'
         unit_str = 'kWh'
       else
-        units = "\"Million Btu\""
+        units = '"Million Btu"'
         unit_str = 'MBtu'
       end
 
@@ -2623,7 +2392,7 @@ module OsLib_Reporting
     row_names = sqlFile.execAndReturnVectorOfString(rows_name_query).get
     rows = []
     row_names.each do |row_name|
-	  next if row_name == 'Other' # other currently mixes water and dist htg/clg. Don't want to show that
+      next if row_name == 'Other' # other currently mixes water and dist htg/clg. Don't want to show that
       rows << row_name
     end
 
@@ -2716,8 +2485,8 @@ module OsLib_Reporting
       end
     end
 
-	# catchall bin for values over the top
-	temperature_bins[">= #{temperature_bins_temps_ip.last}"] = 0
+    # catchall bin for values over the top
+    temperature_bins[">= #{temperature_bins_temps_ip.last}"] = 0
 
     # create table
     temperature_table = {}
@@ -2726,12 +2495,12 @@ module OsLib_Reporting
     temperature_bins.each do |k, v|
       temperature_table[:header] << k
     end
-    temperature_table[:header] += ['Unmet Clg','Unmet Clg - Occ', 'Mean Temp']
-    temperature_table[:units] = ['', 'hr','hr']
+    temperature_table[:header] += ['Unmet Clg', 'Unmet Clg - Occ', 'Mean Temp']
+    temperature_table[:units] = ['', 'hr', 'hr']
     temperature_bins.each do |k, v|
       temperature_table[:units] << 'F'
     end
-    temperature_table[:units] += ['hr','hr','F']
+    temperature_table[:units] += ['hr', 'hr', 'F']
     temperature_table[:data] = []
     temperature_table[:data_color] = []
 
@@ -2767,10 +2536,10 @@ module OsLib_Reporting
               end
             end
 
-			# add to top if larger than all other hash values
-			if not found_bin
-			  temperature_bins[temperature_bins.keys.last] += 1
-			end
+            # add to top if larger than all other hash values
+            if !found_bin
+              temperature_bins[temperature_bins.keys.last] += 1
+            end
 
           end # end of for i in 0..(output_timeseries.size - 1)
         else
@@ -2791,8 +2560,8 @@ module OsLib_Reporting
         mean = OpenStudio.convert(temp_sum / temp_counter.to_f, 'C', 'F').get
 
         # add rows to table
-        row_data = [key, unmet_htg.round,unmet_htg_occ.round]
-        row_color = ['','','']
+        row_data = [key, unmet_htg.round, unmet_htg_occ.round]
+        row_color = ['', '', '']
         temperature_bins.each do |k, v|
           row_data << v
           if v > 2000
@@ -2806,7 +2575,7 @@ module OsLib_Reporting
           end
         end
         row_data += [unmet_clg.round, unmet_clg_occ.round, "#{mean.round(1)} (F)"]
-        row_color += ['','','']
+        row_color += ['', '', '']
         temperature_table[:data] << row_data
         temperature_table[:data_color] << row_color
       end
@@ -2831,8 +2600,8 @@ module OsLib_Reporting
       end
     end
 
-	# add catch all bin at top
-	humidity_bins[">= #{humidity_bins_ip.last}"] = 0
+    # add catch all bin at top
+    humidity_bins[">= #{humidity_bins_ip.last}"] = 0
 
     # create table
     humidity_table = {}
@@ -2882,10 +2651,10 @@ module OsLib_Reporting
               end
             end
 
-			# add to top if larger than all other hash values
-			if not found_bin
-			  humidity_bins[humidity_bins.keys.last] += 1
-			end
+            # add to top if larger than all other hash values
+            if !found_bin
+              humidity_bins[humidity_bins.keys.last] += 1
+            end
 
           end # end of for i in 0..(output_timeseries.size - 1)
         else
@@ -2944,7 +2713,7 @@ module OsLib_Reporting
     # data for query
     report_name = 'LightingSummary'
     table_name = 'Interior Lighting'
-    columns = ['', 'Zone', 'Lighting Power Density', 'Total Power', 'Schedule Name', 'Scheduled Hours/Week', 'Actual Load Hours/Week', 'Return Air Fraction', 'Annual Consumption']
+    columns = ['Lights ', 'Zone', 'Lighting Power Density', 'Total Power', 'Schedule Name', 'Scheduled Hours/Week', 'Actual Load Hours/Week', 'Return Air Fraction', 'Annual Consumption']
     columns_query = ['', 'Zone', 'Lighting Power Density', 'Total Power', 'Schedule Name', 'Scheduled Hours/Week', 'Full Load Hours/Week', 'Return Air Fraction', 'Consumption']
 
     # populate dynamic rows
@@ -2956,9 +2725,9 @@ module OsLib_Reporting
       rows << row_name
     end
 
-    # create table
+    # Zone-level Lighting Summary
     table = {}
-    table[:title] = ''
+    table[:title] = 'Zone Lighting'
     table[:header] = columns
     source_units_lpd = 'W/m^2'
     source_units_energy = 'GJ'
@@ -2976,7 +2745,7 @@ module OsLib_Reporting
         column_counter += 1
         next if header == ''
         query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_name}' and RowName= '#{row}' and ColumnName= '#{header}'"
-        if not table[:source_units][column_counter] == ''
+        if table[:source_units][column_counter] != ''
           results = sqlFile.execAndReturnFirstDouble(query)
           row_data_ip = OpenStudio.convert(results.to_f, table[:source_units][column_counter], table[:units][column_counter]).get
           row_data << row_data_ip.round(2)
@@ -2989,8 +2758,113 @@ module OsLib_Reporting
       table[:data] << row_data
     end
 
-    # add table to array of tables
+    # Space-level lighting loads table(s)
+    space_lighting_table = {}
+    space_lighting_table[:title] = 'Space Lighting Details'
+    space_lighting_table[:header] = ['Load Name', 'Definition Name', 'Load Type', 'Load (units)', 'Multiplier', 'Total Load (W)']
+    space_lighting_table[:data] = []
+
+    spaces = model.getSpaces
+    spaces.each do |space|
+      table_row = []
+      lp = space.lightingPowerPerFloorArea.to_f * 0.092903 # convert to IP
+      area = space.floorArea * 10.7639
+      space_lighting_table[:data] << [{ sub_header: "Space Name: '#{space.name}', Area: #{area.round(0)} ft^2, Total LPD: #{lp.round(2)} w/ft^2" }, '', '', '', '', '']
+
+      lights_found = 0
+
+      if space.spaceType.is_initialized
+
+        space.spaceType.get.lights.each do |lights_object|
+          tlp = ''
+          def_name = lights_object.lightsDefinition.name
+
+          lights_found += 1
+
+          if lights_object.lightsDefinition.designLevelCalculationMethod == 'LightingLevel'
+
+            val = "#{lights_object.lightsDefinition.lightingLevel.to_f.round(0)} (W)"
+            tlp = lights_object.lightsDefinition.lightingLevel.to_f * lights_object.multiplier
+
+          end
+
+          if lights_object.lightsDefinition.designLevelCalculationMethod == 'Watts/Area'
+
+            val_si = lights_object.lightsDefinition.wattsperSpaceFloorArea.to_f * 0.092903 # convert to IP
+            val = "#{val_si.to_f.round(2)} (W/ft^2)"
+            tlp = (lights_object.lightsDefinition.wattsperSpaceFloorArea.to_f * space.floorArea) * lights_object.multiplier
+
+          end
+
+          if lights_object.lightsDefinition.designLevelCalculationMethod == 'Watts/Person'
+
+            val = "#{lights_object.lightsDefinition.wattsperPerson.to_f.round(2)} (W/Person)"
+            tlp = (lights_object.lightsDefinition.wattsperPerson.to_f * space.numberOfPeople) * lights_object.multiplier
+
+          end
+
+          space_lighting_table[:data] << [lights_object.name.to_s, def_name, 'Spacetype', val, lights_object.multiplier.round(0), tlp.round(0)]
+        end
+
+      end
+
+      space.lights.each do |sl|
+        tlp = ''
+        def_name = sl.lightsDefinition.name
+
+        lights_found += 1
+
+        if sl.lightsDefinition.designLevelCalculationMethod == 'LightingLevel'
+
+          val = "#{sl.lightsDefinition.lightingLevel.to_f.round(0)} (W)"
+          tlp = sl.lightsDefinition.lightingLevel.to_f * sl.multiplier
+
+        end
+
+        if sl.lightsDefinition.designLevelCalculationMethod == 'Watts/Area'
+
+          val_si = sl.lightsDefinition.wattsperSpaceFloorArea.to_f * 0.092903 # convert to IP
+          val = "#{val_si.to_f.round(2)} (W/ft^2)"
+          tlp = (sl.lightsDefinition.wattsperSpaceFloorArea.to_f * space.floorArea) * sl.multiplier
+
+        end
+
+        if sl.lightsDefinition.designLevelCalculationMethod == 'Watts/Person'
+          val = "#{sl.lightsDefinition.wattsperPerson.to_f.round(2)} (W/Person)"
+          tlp = (sl.lightsDefinition.wattsperPerson.to_f * space.numberOfPeople) * sl.multiplier
+        end
+
+        space_lighting_table[:data] << [sl.name.to_s, def_name, 'Space', val, sl.multiplier.round(0), tlp.round(0)]
+      end
+
+      space_lighting_table[:data] << ['-', '-', '-', '-', '-', '-'] if lights_found == 0
+    end
+
+    # Lighting Controls
+    lighting_controls_table = {}
+    lighting_controls_table[:title] = 'Lighting Controls Details'
+    lighting_controls_table[:header] = ['Space Name', 'Control Name', 'Zone Controlled (type, fraction)', 'Illuminance Setpoint (fc)']
+    lighting_controls_table[:data] = []
+    model.getSpaces.sort.each do |space|
+      thermal_zone = space.thermalZone.get
+
+      zone_control = 'n/a'
+
+      space.daylightingControls.each do |dc|
+        if thermal_zone.primaryDaylightingControl.is_initialized && dc.isPrimaryDaylightingControl
+          zone_control = "#{thermal_zone.name} (primary, #{thermal_zone.fractionofZoneControlledbyPrimaryDaylightingControl.round(1)})"
+        end
+        if thermal_zone.secondaryDaylightingControl.is_initialized && dc.isSecondaryDaylightingControl
+          zone_control = "#{thermal_zone.name} (secondary, #{thermal_zone.fractionofZoneControlledbySecondaryDaylightingControl.round(1)})"
+        end
+        lighting_controls_table[:data] << [space.name, dc.name, zone_control, (dc.illuminanceSetpoint * 0.092903).round(0)]
+      end
+    end
+
+    # add tables to report
     interior_lighting_tables << table
+    interior_lighting_tables << space_lighting_table
+    interior_lighting_tables << lighting_controls_table
 
     return @interior_lighting_section
   end
@@ -3051,7 +2925,103 @@ module OsLib_Reporting
     end
 
     # add table to array of tables
-    if table[:data].size > 0 then plug_loads_tables << table end
+    if !table[:data].empty? then plug_loads_tables << table end
+
+    # space-level electric plug loads inputs table
+    table = {}
+    table[:title] = 'Space-level Electric Plug Loads'
+    table[:header] = ['Equipment Name', 'Definition', 'Load (units)', 'Inheritance Level', 'Multiplier', 'Total Load (W)']
+    table[:data] = []
+
+    model.getSpaces.sort.each do |space|
+      space_elec_equip = {}
+
+      # check for equipment from both inheritance paths
+
+      space_elec_equip['spacetype'] = space.spaceType.is_initialized ? space.spaceType.get.electricEquipment : []
+      space_elec_equip['space'] = space.electricEquipment
+
+      # space subheading if any equipment found
+
+      area = space.floorArea * 10.7639
+      table[:data] << [{ sub_header: "Space Name: #{space.name}, Area: #{area.round(0)} ft^2" }, '', '', '', '', ''] if !space_elec_equip['spacetype'].empty? || !space_elec_equip['space'].empty?
+
+      # spacetype equipment
+
+      space_elec_equip.each do |inheritance_level, elec_equip_array|
+        elec_equip_array.each do |elec_equip|
+          if elec_equip.electricEquipmentDefinition.designLevelCalculationMethod == 'Watts/Area'
+            ee_power = elec_equip.powerPerFloorArea.to_f * 0.092903 # IP
+            ee_power = "#{ee_power.round(2)} (W/ft^2)"
+            ee_total_power = ((elec_equip.powerPerFloorArea.to_f * space.floorArea) * 0.092903) * elec_equip.multiplier
+            end
+
+          if elec_equip.electricEquipmentDefinition.designLevelCalculationMethod == 'Watts/Person'
+            ee_power = "#{elec_equip.powerPerPerson.to_f.round(2)} (W/person)"
+            ee_total_power = (elec_equip.powerPerPerson.to_f * space.numberOfPeople) * elec_equip.multiplier
+          end
+
+          if elec_equip.electricEquipmentDefinition.designLevelCalculationMethod == 'EquipmentLevel'
+            ee_power = "#{elec_equip.designLevel.to_f.round(0)} (W)"
+            ee_total_power = elec_equip.designLevel.to_f.round(0) * elec_equip.multiplier
+          end
+
+          table[:data] << [elec_equip.name, elec_equip.electricEquipmentDefinition.name, ee_power, inheritance_level, elec_equip.multiplier.round(1), ee_total_power.round(0)]
+        end
+      end
+    end # space-level elec plug loads table
+
+    # if data, add table to report
+    plug_loads_tables << table if !table[:data].empty?
+
+    # space-level gas plug loads inputs table
+    table = {}
+    table[:title] = 'Space-level Gas Plug Loads'
+    table[:header] = ['Equipment Name', 'Definition', 'Load (units)', 'Inheritance Level', 'Multiplier', 'Total Load (BTU/hr)']
+    table[:data] = []
+
+    model.getSpaces.sort.each do |space|
+      space_gas_equip = {}
+
+      # check for equipment from both inheritance paths
+
+      space_gas_equip['spacetype'] = space.spaceType.is_initialized ? space.spaceType.get.gasEquipment : []
+      space_gas_equip['space'] = space.gasEquipment
+
+      # space subheading if any equipment found
+
+      area = space.floorArea.to_f * 10.7639 # --> IP
+      table[:data] << [{ sub_header: "Space Name: #{space.name}, Area: #{area.round(0)} ft^2" }, '', '', '', '', ''] if !space_gas_equip['spacetype'].empty? || !space_gas_equip['space'].empty?
+
+      # spacetype equipment
+
+      space_gas_equip.each do |inheritance_level, gas_equip_array|
+        gas_equip_array.each do |gas_equip|
+          if gas_equip.gasEquipmentDefinition.designLevelCalculationMethod == 'Watts/Area'
+            ge_power = gas_equip.powerPerFloorArea.to_f * 0.316998331 # W/m^2 --> BTU/hr/ft^2 (OpenStudio.convert() !work (!))
+            ge_total_power = ((ge_power * area) * gas_equip.multiplier).to_f
+            ge_power = "#{ge_power.to_f.round(2)} (BTU/hr/ft^2)"
+            end
+
+          if gas_equip.gasEquipmentDefinition.designLevelCalculationMethod == 'Watts/Person'
+            ge_power = gas_equip.powerPerPerson.to_f * 3.412142 # W --> BTU/hr
+            ge_total_power = ((ge_power * space.numberOfPeople) * gas_equip.multiplier).to_f
+            ge_power = "#{ge_power.to_f.round(2)} (BTU/hr/person)"
+          end
+
+          if gas_equip.gasEquipmentDefinition.designLevelCalculationMethod == 'EquipmentLevel'
+            ge_power = gas_equip.designLevel.to_f * 3.412142 # W --> BTU/hr
+            ge_power = "#{ge_power.to_f.round(0)} (BTU/hr)"
+            ge_total_power = gas_equip.designLevel.to_f * gas_equip.multiplier
+          end
+
+          table[:data] << [gas_equip.name, gas_equip.gasEquipmentDefinition.name, ge_power, inheritance_level, gas_equip.multiplier.round(1), ge_total_power.round(0)]
+        end
+      end
+    end # space-level gas plug loads table
+
+    # if data, add table to report
+    plug_loads_tables << table if !table[:data].empty?
 
     # data for query
     # TODO: - need to test this in model with gas equipment
@@ -3095,7 +3065,7 @@ module OsLib_Reporting
     end
 
     # add table to array of tables
-    if table[:data].size > 0 then plug_loads_tables << table end
+    if !table[:data].empty? then plug_loads_tables << table end
 
     return @plug_loads_section
   end
@@ -3115,7 +3085,7 @@ module OsLib_Reporting
       return @hvac_load_profile_section
     end
 
-    month_order = %w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
+    month_order = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
     # create table
     hvac_load_profile_monthly_table = {}
@@ -3199,7 +3169,7 @@ module OsLib_Reporting
         num_blanks_end = 12 - output_timeseries.get.values.size - num_blanks_start
 
         # fill in blank data for partial year simulations
-        for i in 0..(num_blanks_start-1)
+        for i in 0..(num_blanks_start - 1)
           month = hvac_load_profile_monthly_table[:header][i + 1]
           dry_bulb_monthly << ''
         end
@@ -3213,7 +3183,7 @@ module OsLib_Reporting
         end # end of for i in 0..(output_timeseries.size - 1)
 
         # fill in blank data for partial year simulations
-        for i in 0..(num_blanks_end-1)
+        for i in 0..(num_blanks_end - 1)
           month = hvac_load_profile_monthly_table[:header][i]
           dry_bulb_monthly << ''
         end
@@ -3342,7 +3312,7 @@ module OsLib_Reporting
         next if header == ''
         if header == 'Multiplier' then header = 'Multipliers' end # what we want to show is different than what is in E+ table
         query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_name}' and RowName= '#{row}' and ColumnName= '#{header}'"
-        if not zone_summary_table[:source_units][column_counter] == ''
+        if zone_summary_table[:source_units][column_counter] != ''
           results = sqlFile.execAndReturnFirstDouble(query)
           row_data_ip = OpenStudio.convert(results.to_f, zone_summary_table[:source_units][column_counter], zone_summary_table[:units][column_counter]).get
           row_data << row_data_ip.round(2)
@@ -3397,7 +3367,7 @@ module OsLib_Reporting
         column_counter += 1
         next if header == '' || header == 'Heating/Cooling'
         query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_01_name}' and RowName= '#{row}' and ColumnName= '#{header}'"
-        if not zone_dd_table[:source_units][column_counter] == ''
+        if zone_dd_table[:source_units][column_counter] != ''
           results = sqlFile.execAndReturnFirstDouble(query)
           row_data_ip = OpenStudio.convert(results.to_f, zone_dd_table[:source_units][column_counter], zone_dd_table[:units][column_counter]).get
           row_data << row_data_ip.round(2)
@@ -3419,7 +3389,7 @@ module OsLib_Reporting
         column_counter += 1
         next if header == '' || header == 'Heating/Cooling'
         query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_02_name}' and RowName= '#{row}' and ColumnName= '#{header}'"
-        if not zone_dd_table[:source_units][column_counter] == ''
+        if zone_dd_table[:source_units][column_counter] != ''
           results = sqlFile.execAndReturnFirstDouble(query)
           row_data_ip = OpenStudio.convert(results.to_f, zone_dd_table[:source_units][column_counter], zone_dd_table[:units][column_counter]).get
           row_data << row_data_ip.round(2)
@@ -3532,7 +3502,7 @@ module OsLib_Reporting
     table[:header] = columns
     source_units_volume = 'm^3'
     target_units_volume = 'ft^3'
-    table[:units] = ['', '', '', target_units_volume, 'ach', 'ach', 'ach', 'ach','ach', 'ach']
+    table[:units] = ['', '', '', target_units_volume, 'ach', 'ach', 'ach', 'ach', 'ach', 'ach']
     table[:source_units] = ['', '', '', source_units_volume, 'ach', 'ach', 'ach', 'ach', 'ach', 'ach']
     table[:data] = []
 
@@ -3614,7 +3584,7 @@ module OsLib_Reporting
         runner.registerWarning("Inflation approach: #{inf_appr.get} not recognized")
         return false
       end
-      runner.registerValue("inflation_approach", inf_appr)
+      runner.registerValue('inflation_approach', inf_appr)
     else
       runner.registerWarning('Could not determine inflation approach used')
       return false
@@ -3624,7 +3594,7 @@ module OsLib_Reporting
     base_yr_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Life-Cycle Cost Parameters' AND RowName='Base Date' AND ColumnName='Value'"
     base_yr = sqlFile.execAndReturnFirstString(base_yr_query)
     if base_yr.is_initialized
-      if base_yr.get.match(/\d\d\d\d/)
+      if base_yr.get =~ /\d\d\d\d/
         base_yr = base_yr.get.match(/\d\d\d\d/)[0].to_f
       else
         runner.registerWarning("Could not determine the analysis start year from #{base_yr.get}")
@@ -3640,7 +3610,7 @@ module OsLib_Reporting
     length_yrs = sqlFile.execAndReturnFirstInt(length_yrs_query)
     if length_yrs.is_initialized
       length_yrs = length_yrs.get
-      runner.registerValue("analysis_length", length_yrs, "yrs")
+      runner.registerValue('analysis_length', length_yrs, 'yrs')
     else
       runner.registerWarning('Could not determine analysis length')
       return false
@@ -3692,7 +3662,7 @@ module OsLib_Reporting
       end
 
       # o&m cash flow (excluding utility costs)
-      om_types = %w(Maintenance Repair Operation Replacement MinorOverhaul MajorOverhaul OtherOperational)
+      om_types = ['Maintenance', 'Repair', 'Operation', 'Replacement', 'MinorOverhaul', 'MajorOverhaul', 'OtherOperational']
       om_types.each do |om_type|
         om_cash_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Operating Cash Flow by Category (Without Escalation)' AND RowName='#{yr}' AND ColumnName='#{om_type}'"
         om_cash = sqlFile.execAndReturnFirstDouble(om_cash_query)
@@ -3921,7 +3891,7 @@ module OsLib_Reporting
         column_counter += 1
         next if header == ''
         query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_name}' and RowName= '#{row}' and ColumnName= '#{header}'"
-        if not table[:source_units][column_counter] == ''
+        if table[:source_units][column_counter] != ''
           results = sqlFile.execAndReturnFirstDouble(query)
           row_data_ip = OpenStudio.convert(results.to_f, table[:source_units][column_counter], table[:units][column_counter]).get
           row_data << row_data_ip.round(2)
@@ -4027,13 +3997,13 @@ module OsLib_Reporting
       # get rules
       schedule.scheduleRules.each do |rule|
         # add days of week to text
-        if rule.applySunday then sun = 'Sun' else sun = '' end
-        if rule.applyMonday then mon = 'Mon' else mon = '' end
-        if rule.applyTuesday then tue = 'Tue' else tue = '' end
-        if rule.applyWednesday then wed = 'Wed' else wed = '' end
-        if rule.applyThursday then thu = 'Thu' else thu = '' end
-        if rule.applyFriday then fri = 'Fri' else fri = '' end
-        if rule.applySaturday then sat = 'Sat' else sat = '' end
+        rule.applySunday ? (sun = 'Sun') : (sun = '')
+        rule.applyMonday ? (mon = 'Mon') : (mon = '')
+        rule.applyTuesday ? (tue = 'Tue') : (tue = '')
+        rule.applyWednesday ? (wed = 'Wed') : (wed = '')
+        rule.applyThursday ? (thu = 'Thu') : (thu = '')
+        rule.applyFriday ? (fri = 'Fri') : (fri = '')
+        rule.applySaturday ? (sat = 'Sat') : (sat = '')
 
         # add dates to text
         if rule.startDate.is_initialized
@@ -4063,7 +4033,7 @@ module OsLib_Reporting
         text = array[1]
 
         if profile_counter == -2
-          name = "#{text}"
+          name = text.to_s
         elsif profile_counter < 1
           name = " #{text}"
         else

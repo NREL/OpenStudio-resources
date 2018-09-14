@@ -537,8 +537,10 @@ def load_osw(out_osw_path):
     --------
     * data (dict): the parsed data
     """
-    if out_osw_path is None:
+    # Check is 'NaN', 'NaT' or 'None'
+    if pd.isna(out_osw_path):
         return None
+
     with open(out_osw_path, 'r') as jsonfile:
         json_text = jsonfile.read()
     data = json.loads(json_text)
@@ -593,6 +595,10 @@ def parse_success(out_osw_path):
     than the OpenStudio version used to run the tests
 
     """
+    if out_osw_path is None:
+        return ''
+
+
     data = load_osw(out_osw_path)
     if data is None:
         return ''
@@ -1300,7 +1306,7 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
     # Actual command, env variables are passed as such (env parameter)
     COMMAND = "{cli} {m} {filt}"
     m = os.path.join(ROOT_DIR, 'model_tests.rb')
-    
+
     if isnotebook():
         tdqm_bar = tqdm.tqdm_notebook
         desc = '<h3>Running {} Times</h3>'.format(run_n_times)
@@ -1343,7 +1349,7 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
         for line in iter(process.stdout.readline, b''):
             stripped_line = line.rstrip().decode()
             # Skip this output
-            if any(c in stripped_line.lower() 
+            if any(c in stripped_line.lower()
                    for c in ("started", "run options")):
                 continue
             print(stripped_line)
@@ -1357,7 +1363,7 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
                   "returncode of {}".format(returncode))
             print("Command: {}".format(c_args))
             print("Custom ENV variables: "
-                  "{}".format({k:my_env[k] for k in my_env 
+                  "{}".format({k:my_env[k] for k in my_env
                                if k in ['CUSTOMTAG', 'SAVE_IDF',
                                         'ENERGYPLUS_EXE_PATH']}))
             raise subprocess.CalledProcessError(returncode=1, cmd=c_args)
@@ -1418,7 +1424,7 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
 
     success = success_sheet(df_files)
     caption = 'Test Success - All found'
-    
+
     if not entire_table:
         ruby_or_osm_fail = (success.groupby(level='Test')['n_fail+missing']
                                    .sum().sort_values(ascending=False) > 0)
@@ -1434,12 +1440,12 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
             print("\nWARNING: you have failing tests")
             success = success2
             caption = 'Test Success - Failed only'
-    
+
     html = (success.style
                    .set_table_attributes('style="border:1px solid black;border-collapse:collapse;"')
                    .set_properties(**{'border': '1px solid black',
                                       'border-collapse': 'collapse',
-                                      'border-spacing': '0px'})   
+                                      'border-spacing': '0px'})
                    .applymap(background_colors)
                    .set_table_styles(styles)
                    .set_caption(caption)).render()

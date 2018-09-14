@@ -1,3 +1,38 @@
+# *******************************************************************************
+# OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC.
+# All rights reserved.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# (1) Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+#
+# (2) Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and/or other materials provided with the distribution.
+#
+# (3) Neither the name of the copyright holder nor the names of any contributors
+# may be used to endorse or promote products derived from this software without
+# specific prior written permission from the respective party.
+#
+# (4) Other than as required in clauses (1) and (2), distributions in any form
+# of modifications or other derivative works may not use the "OpenStudio"
+# trademark, "OS", "os", or any other confusingly similar designation without
+# specific prior written permission from Alliance for Sustainable Energy, LLC.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE
+# UNITED STATES GOVERNMENT, OR THE UNITED STATES DEPARTMENT OF ENERGY, NOR ANY OF
+# THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+# OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# *******************************************************************************
+
 module OsLib_Schedules
   # create a ruleset schedule with a basic profile
   def self.createSimpleSchedule(model, options = {})
@@ -50,7 +85,7 @@ module OsLib_Schedules
 
     result = sch_ruleset
     return result
-  end # end of OsLib_Schedules.createSimpleSchedule
+  end
 
   # find the maximum profile value for a schedule
   def self.getMinMaxAnnualProfileValue(model, schedule)
@@ -86,11 +121,11 @@ module OsLib_Schedules
       end
       result = { 'min' => min, 'max' => max } # this doesn't include summer and winter design day
     else
-      result =  nil
+      result = nil
     end
 
     return result
-  end # end of OsLib_Schedules.getMaxAnnualProfileValue
+  end
 
   # find the maximum profile value for a schedule
   def self.simpleScheduleValueAdjust(model, schedule, double, modificationType = 'Multiplier') # can increase/decrease by percentage or static value
@@ -124,7 +159,7 @@ module OsLib_Schedules
 
     result = schedule
     return result
-  end # end of OsLib_Schedules.getMaxAnnualProfileValue
+  end
 
   # change value when value passes/fails test
   def self.conditionalScheduleValueAdjust(model, schedule, valueTestDouble, passDouble, failDouble, floorDouble, modificationType = 'Multiplier') # can increase/decrease by percentage or static value
@@ -376,7 +411,7 @@ module OsLib_Schedules
 
     result = { 'mergedSchedule' => sch_ruleset, 'denominator' => denominator }
     return result
-  end # end of OsLib_Schedules.weightedMergeScheduleRulesets
+  end
 
   # create a new schedule using absolute velocity of existing schedule
   def self.scheduleFromRateOfChange(model, schedule)
@@ -408,7 +443,7 @@ module OsLib_Schedules
       i = 0
       valuesIntermediate = []
       timesIntermediate = []
-      until i == (values.size)
+      until i == values.size
         if i == 0
           valuesIntermediate << 0.0
           if times[i] > hourBumpTime
@@ -442,7 +477,7 @@ module OsLib_Schedules
       profile.clearValues
 
       i = 0
-      until i == (timesIntermediate.size)
+      until i == timesIntermediate.size
         if i == (timesIntermediate.size - 1)
           profile.addValue(timesIntermediate[i], valuesIntermediate[i].to_f)
         else
@@ -456,7 +491,7 @@ module OsLib_Schedules
 
     result = newSchedule
     return result
-  end # end of OsLib_Schedules.createSimpleSchedule
+  end
 
   # create a complex ruleset schedule
   def self.createComplexSchedule(model, options = {})
@@ -544,7 +579,7 @@ module OsLib_Schedules
 
     result = sch_ruleset
     return result
-  end # end of OsLib_Schedules.createComplexSchedule
+  end
 
   def self.addScheduleTypeLimits(model) # TODO: - make sure to add this new method to cofee when done
     type_limits = {}
@@ -764,8 +799,8 @@ module OsLib_Schedules
     shift_minutes = (((options['shift_hoo']) - (options['shift_hoo']).to_i) * 60).to_i
 
     # time objects to use in measure
-    time_0 =  OpenStudio::Time.new(0, 0, 0, 0)
-    time_1_min =  OpenStudio::Time.new(0, 0, 1, 0) # add this to avoid times in day profile less than this
+    time_0 = OpenStudio::Time.new(0, 0, 0, 0)
+    time_1_min = OpenStudio::Time.new(0, 0, 1, 0) # add this to avoid times in day profile less than this
     time_12 =  OpenStudio::Time.new(0, 12, 0, 0)
     time_24 =  OpenStudio::Time.new(0, 24, 0, 0)
     start_hoo_time = OpenStudio::Time.new(0, start_hoo_hours, start_hoo_minutes, 0)
@@ -801,9 +836,9 @@ module OsLib_Schedules
     end
 
     # making some temp objects to avoid having to deal with wrap around for change of hoo times
-    if mid_hoo < start_hoo_time then adj_mid_hoo = mid_hoo + time_24 else adj_mid_hoo = mid_hoo end
-    if finish_hoo_time < adj_mid_hoo then adj_finish_hoo_time = finish_hoo_time + time_24 else adj_finish_hoo_time = finish_hoo_time end
-    if mid_non_hoo < adj_finish_hoo_time then adj_mid_non_hoo = mid_non_hoo + time_24 else adj_mid_non_hoo = mid_non_hoo end
+    mid_hoo < start_hoo_time ? (adj_mid_hoo = mid_hoo + time_24) : (adj_mid_hoo = mid_hoo)
+    finish_hoo_time < adj_mid_hoo ? (adj_finish_hoo_time = finish_hoo_time + time_24) : (adj_finish_hoo_time = finish_hoo_time)
+    mid_non_hoo < adj_finish_hoo_time ? (adj_mid_non_hoo = mid_non_hoo + time_24) : (adj_mid_non_hoo = mid_non_hoo)
     adj_start = start_hoo_time + time_24 # not used
 
     # edit profiles
@@ -825,7 +860,7 @@ module OsLib_Schedules
       # push times to array
       times.each do |time|
         # create logic for four possible quadrants. Assume any quadrant can pass over 24/0 threshold
-        if time < start_hoo_time then temp_time = time + time_24 else temp_time = time end
+        time < start_hoo_time ? (temp_time = time + time_24) : (temp_time = time)
 
         # calculate change in time do to hoo delta
         if temp_time <= adj_finish_hoo_time
@@ -857,12 +892,12 @@ module OsLib_Schedules
           min_time_value = day_sch.getValue(time_0)
           found_24_or_0 = true
         end
-      end  # end of times.each do
+      end
 
       # push values to array
       values.each do |value|
         new_values << value
-      end # end of values.each do
+      end
 
       # add value for what will be 24
       new_times << time_24
@@ -878,7 +913,7 @@ module OsLib_Schedules
           day_sch.addValue(new_times[i], new_values[i])
         end
       end
-    end  # end of profiles.each do
+    end
 
     return schedule
   end
