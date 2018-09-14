@@ -301,6 +301,10 @@ def sim_test(filename, options = {})
 
   ext = File.extname(filename)
   if (ext == '.osm')
+
+    # Copy the generic OSW needed for sim
+    FileUtils.cp($OswFile, osw)
+
     # Check that version of OSM is inferior or equal to the current
     # openstudio sdk used (only for docker...)
     ori_file_path = File.join($ModelDir,filename)
@@ -316,8 +320,12 @@ def sim_test(filename, options = {})
     end
 
     FileUtils.cp(ori_file_path, in_osm)
-    FileUtils.cp($OswFile, osw)
+
   elsif (ext == '.rb')
+
+    # Copy the generic OSW file, needed to add design days in particular when
+    # running the measure to generate the OSM, and then of course for the sim
+    FileUtils.cp($OswFile, osw)
 
     if !$NoMatchingOSMTests.include?(filename)
       # Check if there is a matching OSM file
@@ -354,15 +362,13 @@ def sim_test(filename, options = {})
       FileUtils.mv(out_osm, in_osm)
     end
 
-    FileUtils.cp($OswFile, osw)
-
   elsif (ext == '.osw')
 
     # make an empty osm
     model = OpenStudio::Model::Model.new
     model.save(in_osm, true)
 
-    # copy the osw
+    # Copy the specific osw
     FileUtils.cp(File.join($ModelDir,filename), osw)
 
   end
@@ -384,6 +390,8 @@ def sim_test(filename, options = {})
 
   # command to run the osw
   command = "\"#{$OpenstudioCli}\" #{extra_options} run #{extra_run_options} -w \"#{osw}\""
+  puts "COMMAND:"
+  puts command
 
   run_command(command, dir, 3600)
 
