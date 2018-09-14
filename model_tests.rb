@@ -1338,9 +1338,13 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_thermal_storage_osm
     result = sim_test('thermal_storage.osm')
   end
-  
+
   def test_transformer_rb
     result = sim_test('transformer.rb')
+  end
+
+  def test_transformer_osm
+    result = sim_test('transformer.osm')
   end
 
   def test_unitary_system_osm
@@ -1499,19 +1503,19 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_pvwatts_rb
     result = sim_test('pvwatts.rb')
   end
-  
+
   def test_pvwatts_osm
     result = sim_test('pvwatts.osm')
   end
 
   def test_unitary_systems_airloop_and_zonehvac_rb
     result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
-  end  
-    
+  end
+
   def test_epw_design_conditions_rb
     result = sim_test('epw_design_conditions.rb')
   end
-  
+
   def test_epw_design_conditions_osm
     result = sim_test('epw_design_conditions.osm')
   end
