@@ -110,10 +110,30 @@ $:.unshift($ModelDir)
 ENV['RUBYLIB'] = $ModelDir
 ENV['RUBYPATH'] = $ModelDir
 
-# bundle install a gemfile
-def bundle_install(gemfile)
-  gemfile_path = File.join($RootDir, gemfile)
-	fail "Gemfile '#{gemfile_path}' does not exist" if !File.exists?(gemfile_path)
+# bundle install a gemfile identified by directory name inside of 'gemfiles'
+# returns full directory name gemfile_dir
+# gemfile at gemfile_dir + 'Gemfile', bundle at gemfile_dir + 'gems'
+def bundle_install(gemfile_dirname, force_install)
+
+  original_dir = Dir.pwd  
+  gemfile_dir = File.join($RootDir, 'gemfiles', gemfile_dirname)
+  fail "Gemfile dir '#{gemfile_dir}' does not exist" if !File.exists?(gemfile_dir)
+
+  Dir.chdir(gemfile_dir)
+  
+  if force_install
+    FileUtils.rm_rf('Gemfile.lock') if File.exists?('Gemfile.lock')
+    FileUtils.rm_rf('./gems') if File.exists?('./gems')
+    FileUtils.rm_rf('./bundle') if File.exists?('./bundle')
+  end
+
+  assert(system('bundle install --path ./gems'))
+  assert(system('bundle lock --add_platform ruby'))
+
+  return gemfile_dir
+  
+ensure
+  Dir.chdir(original_dir)  
 end
 
 # run a command in directory dir, throws exception on timeout or exit status != 0, always returns to initial directory
@@ -160,6 +180,7 @@ end
 def postprocess_out_osw_and_copy(filename)
 
   dir = File.join($TestDir, filename)
+  
   out_osw = File.join(dir, 'out.osw')
   # Cp to the OutOSW directory
   cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.osw")
@@ -241,6 +262,10 @@ end
 def sim_test(filename, options = {})
 
   dir = File.join($TestDir, filename)
+  if options[:outdir]
+    dir = File.join($TestDir, options[:outdir])
+  end
+  
   osw = File.join(dir, 'in.osw')
   out_osw = File.join(dir, 'out.osw')
   in_osm = File.join(dir, 'in.osm')
@@ -359,7 +384,11 @@ def sim_test(filename, options = {})
 
   run_command(command, dir, 3600)
 
-  result_osw = postprocess_out_osw_and_copy(filename)
+  out_filename = filename
+  if options[:outdir]
+    out_filename = options[:outdir]
+  end
+  result_osw = postprocess_out_osw_and_copy(out_filename)
 
   # return result_osw for further checks
   return result_osw
@@ -1546,6 +1575,68 @@ class ModelTests < MiniTest::Unit::TestCase
   # model articulation tests
   def test_model_articulation1_osw
     result = sim_test('model_articulation1.osw')
+  end
+  
+  def test_model_articulation1_osw_bundle_no_git
+    gemfile_dir = bundle_install('bundle_no_git', false)
+    gemfile = File.join(gemfile_dir, 'Gemfile')
+    bundle_path = File.join(gemfile_dir, 'gems')
+    extra_options = {:outdir => 'model_articulation1.osw.bundle_no_git', 
+                     :bundle => gemfile, :bundle_path => bundle_path}
+    result = sim_test('model_articulation1.osw', extra_options)
+    
+    # check that we got the right version of standards and workflow
+    standards = nil
+    workflow = nil
+    result[:steps].each do |step|
+      if step[:measure_dir_name] == 'openstudio_results'
+        step[:result][:step_values].each do |step_value|
+          if step_value[:name] == 'standards_gem_version'
+            standards = step_value[:value]
+          elsif step_value[:name] == 'workflow_gem_version'
+            workflow = step_value[:value]
+          end
+        end
+      end
+    end
+    assert(standards.is_a? String)
+    assert(workflow.is_a? String)
+    puts "standards = #{standards}"
+    puts "workflow = #{workflow}"
+    
+    assert(/0.2.2/.match(standards))
+    assert(/1.3.2/.match(workflow))
+  end
+    
+  def test_model_articulation1_osw_bundle_git
+    gemfile_dir = bundle_install('bundle_git', false)
+    gemfile = File.join(gemfile_dir, 'Gemfile')
+    bundle_path = File.join(gemfile_dir, 'gems')
+    extra_options = {:outdir => 'model_articulation1.osw.bundle_git', 
+                     :bundle => gemfile, :bundle_path => bundle_path}
+    result = sim_test('model_articulation1.osw', extra_options)
+    
+    # check that we got the right version of standards and workflow
+    standards = nil
+    workflow = nil
+    result[:steps].each do |step|
+      if step[:measure_dir_name] == 'openstudio_results'
+        step[:result][:step_values].each do |step_value|
+          if step_value[:name] == 'standards_gem_version'
+            standards = step_value[:value]
+          elsif step_value[:name] == 'workflow_gem_version'
+            workflow = step_value[:value]
+          end
+        end
+      end
+    end
+    assert(standards.is_a? String)
+    assert(workflow.is_a? String)
+    puts "standards = #{standards}"
+    puts "workflow = #{workflow}"
+    
+    #assert(/0.2.2/.match(standards))
+    #assert(/1.3.2/.match(workflow))
   end
   
   # intersection tests
