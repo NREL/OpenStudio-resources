@@ -1326,13 +1326,13 @@ class ModelTests < MiniTest::Unit::TestCase
 
   # TODO : To be added once the next official release
   # including this object is out : 2.7.0
-  def test_schedule_file_osm
+  #def test_schedule_file_osm
     # Note: there is a special case in sim_test for this test to copy the
     # necessary CSV file to the testruns/schedule_file.osm/ folder
     # We cannot do it here since sim_test starts by deleting and recreating
     # this folder
-    result = sim_test('schedule_file.osm')
-  end
+    #result = sim_test('schedule_file.osm')
+  #end
 
   def test_setpoint_managers_rb
     result = sim_test('setpoint_managers.rb')
