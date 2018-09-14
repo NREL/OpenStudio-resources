@@ -1306,10 +1306,13 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_schedule_ruleset_2013_osm
     result = sim_test('schedule_ruleset_2013.osm')
   end
-  
+
   def test_schedule_file_rb
     result = sim_test('schedule_file.rb')
   end
+
+  # TODO: find how to handle the OSM version of this test, since it needs
+  # supporting files
 
   def test_setpoint_managers_rb
     result = sim_test('setpoint_managers.rb')
@@ -1507,19 +1510,19 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_pvwatts_rb
     result = sim_test('pvwatts.rb')
   end
-  
+
   def test_pvwatts_osm
     result = sim_test('pvwatts.osm')
   end
 
   def test_unitary_systems_airloop_and_zonehvac_rb
     result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
-  end  
-    
+  end
+
   def test_epw_design_conditions_rb
     result = sim_test('epw_design_conditions.rb')
   end
-  
+
   def test_epw_design_conditions_osm
     result = sim_test('epw_design_conditions.osm')
   end
