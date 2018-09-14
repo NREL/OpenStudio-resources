@@ -128,6 +128,9 @@ def bundle_install(gemfile_dirname, force_install)
   end
 
   assert(system('bundle install --path ./gems'))
+  
+  Dir.chdir(gemfile_dir)
+  
   assert(system('bundle lock --add_platform ruby'))
 
   return gemfile_dir
