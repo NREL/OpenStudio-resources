@@ -33,6 +33,13 @@ model.set_space_type()
 #add design days to the model (Chicago)
 model.add_design_days()
 
+###############################################################################
+
+# Add output variables?
+add_out_vars = false
+
+###############################################################################
+
 # set year to 2013
 yd = model.getYearDescription()
 yd.setCalendarYear(2013)
@@ -50,11 +57,13 @@ model.getLightss.each do |lights|
   lights.setSchedule(schedule_file)
 end
 
-# request hourly output
-var = OpenStudio::Model::OutputVariable.new("Schedule Value", model)
-var.setKeyValue("Test Schedule")
+if add_out_vars
+  # request hourly output
+  var = OpenStudio::Model::OutputVariable.new("Schedule Value", model)
+  var.setKeyValue("Test Schedule")
 
-var = OpenStudio::Model::OutputVariable.new("Site Day Type Index", model)
+  var = OpenStudio::Model::OutputVariable.new("Site Day Type Index", model)
+end
 
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
