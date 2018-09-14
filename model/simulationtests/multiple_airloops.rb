@@ -24,7 +24,7 @@ hvac = OpenStudio::Model::addSystemType7(model).to_AirLoopHVAC.get
 
 zones = model.getThermalZones
 zones.each do |z|
-  hvac.addBranchForZone(z)
+  hvac.multiAddBranchForZone(z)
 end
 
 #add thermostats
