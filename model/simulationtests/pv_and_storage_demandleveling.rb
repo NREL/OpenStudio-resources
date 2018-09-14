@@ -5,7 +5,7 @@ require 'json'
 
 model = BaselineModel.new
 
-	model.add_standards( JSON.parse('{
+model.add_standards( JSON.parse('{
   "schedules": [
     {
         "name": "Medium Office Bldg Swh",

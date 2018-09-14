@@ -284,6 +284,19 @@ def sim_test(filename, weather_file = nil, model_measures = [], energyplus_measu
     end
 
     FileUtils.cp(ori_file_path, in_osm)
+
+    # Specific case for schedule_file_osm
+    if (filename == 'schedule_file.osm')
+      # We need to manually copy the supporting schedule into
+      # the testruns folder for the simulation to be able to find it
+      sch_ori_path = File.join(File.dirname(__FILE__),
+                            'model/simulationtests/lib/schedulefile.csv')
+      sch_ori_path = File.realpath(sch_ori_path)
+
+      sch_target_path  = File.join(dir, File.basename(sch_ori_path))
+      FileUtils.cp(sch_ori_path, sch_target_path)
+    end
+
   elsif (ext == '.rb')
 
     if !$NoMatchingOSMTests.include?(filename)
@@ -1306,6 +1319,20 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_schedule_ruleset_2013_osm
     result = sim_test('schedule_ruleset_2013.osm')
   end
+
+  def test_schedule_file_rb
+    result = sim_test('schedule_file.rb')
+  end
+
+  # TODO : To be added once the next official release
+  # including this object is out : 2.7.0
+  #def test_schedule_file_osm
+    # Note: there is a special case in sim_test for this test to copy the
+    # necessary CSV file to the testruns/schedule_file.osm/ folder
+    # We cannot do it here since sim_test starts by deleting and recreating
+    # this folder
+    #result = sim_test('schedule_file.osm')
+  #end
 
   def test_setpoint_managers_rb
     result = sim_test('setpoint_managers.rb')
