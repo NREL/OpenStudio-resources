@@ -6,23 +6,23 @@ model = BaselineModel.new
 
 #make a 2 story, 100m X 50m, 10 zone core/perimeter building
 model.add_geometry({"length" => 100,
-              "width" => 50,
-              "num_floors" => 2,
-              "floor_to_floor_height" => 4,
-              "plenum_height" => 1,
-              "perimeter_zone_depth" => 3})
+                    "width" => 50,
+                    "num_floors" => 2,
+                    "floor_to_floor_height" => 4,
+                    "plenum_height" => 1,
+                    "perimeter_zone_depth" => 3})
 
 #add windows at a 40% window-to-wall ratio
 model.add_windows({"wwr" => 0.4,
-                  "offset" => 1,
-                  "application_type" => "Above Floor"})
+                   "offset" => 1,
+                   "application_type" => "Above Floor"})
 
 #add ASHRAE System type 01, PTAC, Residential
 model.add_hvac({"ashrae_sys_num" => '01'})
 
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
-                      "cooling_setpoint" => 28})
+                       "cooling_setpoint" => 28})
 
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
@@ -60,7 +60,7 @@ unit_load_at_name_plate_efficiency = 0.35
 
 if name_plate_rating === 0
   max_energy = 0
-  
+
   if schedules[0].iddObject.type == "Schedule:Year".to_IddObjectType
     schedules[0].targets.each do |week_target|
       if week_target.iddObject.type == "Schedule:Week:Daily".to_IddObjectType
@@ -89,36 +89,36 @@ if name_plate_rating === 0
         end
       end
     end
-  
+
   end
- # runner.registerInfo("Max energy is #{max_energy} J")
-  
+  # runner.registerInfo("Max energy is #{max_energy} J")
+
   minutes_per_timestep = nil
   model.getObjectsByType("Timestep".to_IddObjectType).each do |timestep|
     timestep_per_hour = timestep.getDouble(0)
-    if timestep_per_hour.empty? 
+    if timestep_per_hour.empty?
       #runner.registerError("Cannot determine timesteps per hour")
       #return false
     end
     minutes_per_timestep = 60 / timestep_per_hour.get
   end
-  
-  if minutes_per_timestep.nil? 
+
+  if minutes_per_timestep.nil?
     #runner.registerError("Cannot determine minutes per timestep")
     #return false
   end
-    
+
   seconds_per_timestep = minutes_per_timestep * 60
   max_power = max_energy / seconds_per_timestep
-  
+
   #runner.registerInfo("Max power is #{max_power} W")
-  
+
   name_plate_rating = max_power/unit_load_at_name_plate_efficiency
 end
 
 sensor = OpenStudio::Model::EnergyManagementSystemSensor.new(model,"Schedule Value")
 sensor.setKeyName("Transformer Output Electric Energy Schedule")
-sensor.setName("TransformerOutputElectricEnergyScheduleEMSSensor")   
+sensor.setName("TransformerOutputElectricEnergyScheduleEMSSensor")
 
 meteredOutputVariable = OpenStudio::Model::EnergyManagementSystemMeteredOutputVariable.new(model,sensor)
 meteredOutputVariable.setEMSVariableName(sensor.name.to_s)
@@ -131,7 +131,7 @@ meteredOutputVariable.setUnits("J")
 
 #add 8 lines to deal with E+ bug; can be removed in E+ 9.0
 program = OpenStudio::Model::EnergyManagementSystemProgram.new(model)
-program.setName("DummyProgram")   
+program.setName("DummyProgram")
 program.addLine("SET N = 0")
 program.addLine("SET N = 0")
 program.addLine("SET N = 0")
@@ -149,7 +149,7 @@ pcm.addProgram(program)
 meter = OpenStudio::Model::OutputMeter.new(model)
 meter.setName("Transformer:ExteriorEquipment:Electricity")
 meter.setReportingFrequency("Timestep")
- 
+
 transformer = OpenStudio::Model::ElectricLoadCenterTransformer.new(model)
 transformer.setTransformerUsage("PowerInFromGrid")
 transformer.setRatedCapacity("#{name_plate_rating}".to_f)
@@ -162,7 +162,7 @@ transformer.setNameplateEfficiency("#{name_plate_efficiency}".to_f)
 transformer.setPerUnitLoadforNameplateEfficiency("#{unit_load_at_name_plate_efficiency}".to_f)
 transformer.setReferenceTemperatureforNameplateEfficiency(75)
 transformer.setConsiderTransformerLossforUtilityCost(true)
-transformer.addMeter("Transformer:ExteriorEquipment:Electricity")  
+transformer.addMeter("Transformer:ExteriorEquipment:Electricity")
 
 outputVariable = OpenStudio::Model::OutputVariable.new("Transformer Efficiency", model)
 outputVariable.setReportingFrequency("Timestep")
