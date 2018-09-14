@@ -40,7 +40,6 @@ yd.setCalendarYear(2013)
 # add schedule file
 file_name = File.join(File.dirname(__FILE__), 'lib/schedulefile.csv')
 file_name = File.realpath(file_name)
-puts file_name
 external_file = OpenStudio::Model::ExternalFile::getExternalFile(model, file_name)
 external_file = external_file.get
 schedule_file = OpenStudio::Model::ScheduleFile.new(external_file, 3, 1)
