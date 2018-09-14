@@ -1187,6 +1187,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('multiple_airloops.osm')
   end
 
+  def test_multiple_loops_w_plenums_rb
+    result = sim_test('multiple_loops_w_plenums.rb')
+  end
+
+  def test_multiple_loops_w_plenums_osm
+    result = sim_test('multiple_loops_w_plenums.osm')
+  end
+
   def test_photovoltaics_rb
     result = sim_test('photovoltaics.rb')
   end
