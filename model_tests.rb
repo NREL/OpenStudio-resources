@@ -115,12 +115,12 @@ ENV['RUBYPATH'] = $ModelDir
 # gemfile at gemfile_dir + 'Gemfile', bundle at gemfile_dir + 'gems'
 def bundle_install(gemfile_dirname, force_install)
 
-  original_dir = Dir.pwd  
+  original_dir = Dir.pwd
   gemfile_dir = File.join($RootDir, 'gemfiles', gemfile_dirname)
   fail "Gemfile dir '#{gemfile_dir}' does not exist" if !File.exists?(gemfile_dir)
 
   Dir.chdir(gemfile_dir)
-  
+
   if force_install
     FileUtils.rm_rf('Gemfile.lock') if File.exists?('Gemfile.lock')
     FileUtils.rm_rf('./gems') if File.exists?('./gems')
@@ -128,15 +128,15 @@ def bundle_install(gemfile_dirname, force_install)
   end
 
   assert(system('bundle install --path ./gems'))
-  
+
   Dir.chdir(gemfile_dir)
-  
+
   assert(system('bundle lock --add_platform ruby'))
 
   return gemfile_dir
-  
+
 ensure
-  Dir.chdir(original_dir)  
+  Dir.chdir(original_dir)
 end
 
 # run a command in directory dir, throws exception on timeout or exit status != 0, always returns to initial directory
@@ -183,7 +183,7 @@ end
 def postprocess_out_osw_and_copy(filename)
 
   dir = File.join($TestDir, filename)
-  
+
   out_osw = File.join(dir, 'out.osw')
   # Cp to the OutOSW directory
   cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.osw")
@@ -268,7 +268,7 @@ def sim_test(filename, options = {})
   if options[:outdir]
     dir = File.join($TestDir, options[:outdir])
   end
-  
+
   osw = File.join(dir, 'in.osw')
   out_osw = File.join(dir, 'out.osw')
   in_osm = File.join(dir, 'in.osm')
@@ -316,7 +316,7 @@ def sim_test(filename, options = {})
     end
 
     FileUtils.cp(ori_file_path, in_osm)
-	FileUtils.cp($OswFile, osw)
+    FileUtils.cp($OswFile, osw)
   elsif (ext == '.rb')
 
     if !$NoMatchingOSMTests.include?(filename)
@@ -343,7 +343,7 @@ def sim_test(filename, options = {})
       end
     end
 
-	# command to generate the initial osm
+    # command to generate the initial osm
     command = "\"#{$OpenstudioCli}\" \"#{File.join($ModelDir,filename)}\""
     run_command(command, dir, 3600)
 
@@ -353,23 +353,23 @@ def sim_test(filename, options = {})
       # puts "moving #{out_osm} to #{in_osm}"
       FileUtils.mv(out_osm, in_osm)
     end
-	
-	FileUtils.cp($OswFile, osw)
-	
-  elsif (ext == '.osw')
-  
-	# make an empty osm
-	model = OpenStudio::Model::Model.new
-	model.save(in_osm, true)
 
-	# cooy the osw
+    FileUtils.cp($OswFile, osw)
+
+  elsif (ext == '.osw')
+
+    # make an empty osm
+    model = OpenStudio::Model::Model.new
+    model.save(in_osm, true)
+
+    # copy the osw
     FileUtils.cp(File.join($ModelDir,filename), osw)
 
   end
-  
+
   fail "Cannot find file #{in_osm}" if !File.exists?(in_osm)
   fail "Cannot find file #{osw}" if !File.exists?(osw)
-  
+
   # extra options passed to cli
   extra_options = ""
   extra_options += "--verbose " if options[:verbose]
@@ -378,7 +378,7 @@ def sim_test(filename, options = {})
   extra_options += "--gem_home #{options[:gem_home]} " if options[:gem_home]
   extra_options += "--bundle #{options[:bundle]} " if options[:bundle]
   extra_options += "--bundle_path #{options[:bundle_path]} " if options[:bundle_path]
-  
+
   extra_run_options = ""
   extra_run_options += "--debug " if options[:debug]
 
@@ -1566,36 +1566,36 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_pvwatts_rb
     result = sim_test('pvwatts.rb')
   end
-  
+
   def test_pvwatts_osm
     result = sim_test('pvwatts.osm')
   end
 
   def test_unitary_systems_airloop_and_zonehvac_rb
     result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
-  end  
-    
+  end
+
   def test_epw_design_conditions_rb
     result = sim_test('epw_design_conditions.rb')
   end
-  
+
   def test_epw_design_conditions_osm
     result = sim_test('epw_design_conditions.osm')
   end
-  
+
   # model articulation tests
   def test_model_articulation1_osw
     result = sim_test('model_articulation1.osw')
   end
-  
+
   def test_model_articulation1_osw_bundle_no_git
     gemfile_dir = bundle_install('bundle_no_git', false)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
-    extra_options = {:outdir => 'model_articulation1.osw.bundle_no_git', 
+    extra_options = {:outdir => 'model_articulation1.osw.bundle_no_git',
                      :bundle => gemfile, :bundle_path => bundle_path}
     result = sim_test('model_articulation1.osw', extra_options)
-    
+
     # check that we got the right version of standards and workflow
     standards = nil
     workflow = nil
@@ -1614,19 +1614,19 @@ class ModelTests < MiniTest::Unit::TestCase
     assert(workflow.is_a? String)
     puts "standards = #{standards}"
     puts "workflow = #{workflow}"
-    
+
     assert(/0.2.2/.match(standards))
     assert(/1.3.2/.match(workflow))
   end
-    
+
   def test_model_articulation1_osw_bundle_git
     gemfile_dir = bundle_install('bundle_git', false)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
-    extra_options = {:outdir => 'model_articulation1.osw.bundle_git', 
+    extra_options = {:outdir => 'model_articulation1.osw.bundle_git',
                      :bundle => gemfile, :bundle_path => bundle_path}
     result = sim_test('model_articulation1.osw', extra_options)
-    
+
     # check that we got the right version of standards and workflow
     standards = nil
     workflow = nil
@@ -1645,11 +1645,11 @@ class ModelTests < MiniTest::Unit::TestCase
     assert(workflow.is_a? String)
     puts "standards = #{standards}"
     puts "workflow = #{workflow}"
-    
+
     #assert(/0.2.2/.match(standards))
     #assert(/1.3.2/.match(workflow))
   end
-  
+
   # intersection tests
 
   def test_intersect_22_osm
@@ -1700,7 +1700,7 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_autosizing_rb
     result = autosizing_test('autosize_hvac.rb')
   end
-  
+
   # TODO: model/refbuildingtests/CreateRefBldgModel.rb is unused
   # Either implement as a test, or delete
 
