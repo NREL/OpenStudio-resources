@@ -374,16 +374,10 @@ def sim_test(filename, options = {})
       FileUtils.mv(out_osm, in_osm)
     end
   
-  FileUtils.cp($OswFile, osw)
+    FileUtils.cp($OswFile, osw)
   
   elsif (ext == '.osw')
   
-  # make an empty osm
-  model = OpenStudio::Model::Model.new
-  model.save(in_osm, true)
-
-  elsif (ext == '.osw')
-
     # make an empty osm
     model = OpenStudio::Model::Model.new
     model.save(in_osm, true)
