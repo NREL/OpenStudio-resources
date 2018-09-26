@@ -6,20 +6,32 @@ model = BaselineModel.new
 
 #make a 2 story, 100m X 50m, 10 zone core/perimeter building
 model.add_geometry({"length" => 100,
-              "width" => 50,
-              "num_floors" => 1,
-              "floor_to_floor_height" => 4,
-              "plenum_height" => 1,
-              "perimeter_zone_depth" => 3})
+                    "width" => 50,
+                    "num_floors" => 1,
+                    "floor_to_floor_height" => 4,
+                    "plenum_height" => 1,
+                    "perimeter_zone_depth" => 3})
 
 #add windows at a 40% window-to-wall ratio
 model.add_windows({"wwr" => 0.4,
-                  "offset" => 1,
-                  "application_type" => "Above Floor"})
+                   "offset" => 1,
+                   "application_type" => "Above Floor"})
 
-#add ASHRAE System type 03, PSZ-AC
-#model.add_hvac({"ashrae_sys_num" => '03'})
+#add thermostats
+model.add_thermostats({"heating_setpoint" => 24,
+                       "cooling_setpoint" => 28})
 
+#assign constructions from a local library to the walls/windows/etc. in the model
+model.set_constructions()
+
+#set whole building space type; simplified 90.1-2004 Large Office Whole Building
+model.set_space_type()
+
+#add design days to the model (Chicago)
+model.add_design_days()
+
+
+# We manually create our own HVAC system
 air_system = OpenStudio::Model::addSystemType6(model).to_AirLoopHVAC.get
 
 # In order to produce more consistent results between different runs,
@@ -30,7 +42,14 @@ zone = zones.first
 air_system.addBranchForZone(zone)
 coil = air_system.supplyComponents(OpenStudio::Model::CoilCoolingDXTwoSpeed::iddObjectType).first.to_CoilCoolingDXTwoSpeed.get
 unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
-unitary.setString(2, 'SetPoint')
+begin
+  unitary.setControlType('SetPoint')
+rescue
+  # For (much) older OS Versions where the method wasn't implemented yet
+  # (I think 2.3.1 was the first where setControlType was implemented)
+  unitary.setString(2, 'SetPoint')
+end
+
 #new_coil = OpenStudio::Model::CoilCoolingWaterToAirHeatPumpEquationFit.new(model)
 new_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
 unitary.setCoolingCoil(new_coil)
@@ -81,22 +100,12 @@ hotWaterSPM.addToNode(hotWaterOutletNode)
 
 hotWaterPlant.addDemandBranchForComponent(new_coil)
 
-var = OpenStudio::Model::OutputVariable.new("Cooling Coil Total Cooling Rate",model)
-var.setReportingFrequency("detailed")
-
-
-#add thermostats
-model.add_thermostats({"heating_setpoint" => 24,
-                      "cooling_setpoint" => 28})
-
-#assign constructions from a local library to the walls/windows/etc. in the model
-model.set_constructions()
-
-#set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()
-
-#add design days to the model (Chicago)
-model.add_design_days()
+# add output reports
+add_out_vars = false
+if add_out_vars
+  var = OpenStudio::Model::OutputVariable.new("Cooling Coil Total Cooling Rate",model)
+  var.setReportingFrequency("detailed")
+end
 
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
