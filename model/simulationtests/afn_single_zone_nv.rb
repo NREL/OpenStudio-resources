@@ -41,16 +41,16 @@ model = BaselineModel.new
 
 #make a 1 story, 100m X 50m, 1 zone building
 model.add_geometry({"length" => 100,
-              "width" => 50,
-              "num_floors" => 1,
-              "floor_to_floor_height" => 4,
-              "plenum_height" => 0,
-              "perimeter_zone_depth" => 0})
+                    "width" => 50,
+                    "num_floors" => 1,
+                    "floor_to_floor_height" => 4,
+                    "plenum_height" => 0,
+                    "perimeter_zone_depth" => 0})
 
 #add windows at a 40% window-to-wall ratio
 model.add_windows({"wwr" => 0.4,
-                  "offset" => 1,
-                  "application_type" => "Above Floor"})
+                   "offset" => 1,
+                   "application_type" => "Above Floor"})
 
 #add ASHRAE System type 03, PSZ-AC
 #model.add_hvac({"ashrae_sys_num" => '03'})
@@ -96,10 +96,13 @@ afnzone = zone.getAirflowNetworkZone
 visitor = SurfaceNetworkBuilder.new(model)
 
 # add output reports
-OpenStudio::Model::OutputVariable.new("AFN Node Temperature", model)
-OpenStudio::Model::OutputVariable.new("AFN Node Wind Pressure", model)
-OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Mass Flow Rate", model)
-OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Pressure Difference", model)
+add_out_vars = false
+if add_out_vars
+  OpenStudio::Model::OutputVariable.new("AFN Node Temperature", model)
+  OpenStudio::Model::OutputVariable.new("AFN Node Wind Pressure", model)
+  OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Mass Flow Rate", model)
+  OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Pressure Difference", model)
+end
 
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
