@@ -32,16 +32,29 @@ m = BaselineModel.new
 #
 #make a 2 story, 100m X 50m, 10 zone core/perimeter building
 m.add_geometry({"length" => 100,
-              "width" => 50,
-              "num_floors" => 2,
-              "floor_to_floor_height" => 4,
-              "plenum_height" => 1,
-              "perimeter_zone_depth" => 3})
+                "width" => 50,
+                "num_floors" => 2,
+                "floor_to_floor_height" => 4,
+                "plenum_height" => 1,
+                "perimeter_zone_depth" => 3})
 
 #add windows at a 40% window-to-wall ratio
 m.add_windows({"wwr" => 0.4,
-                  "offset" => 1,
-                  "application_type" => "Above Floor"})
+               "offset" => 1,
+               "application_type" => "Above Floor"})
+
+#add thermostats
+m.add_thermostats({"heating_setpoint" => 24,
+                   "cooling_setpoint" => 28})
+
+#assign constructions from a local library to the walls/windows/etc. in the model
+m.set_constructions()
+
+#set whole building space type; simplified 90.1-2004 Large Office Whole Building
+m.set_space_type()
+
+#add design days to the model (Chicago)
+m.add_design_days()
 
 #add ASHRAE System type 07, VAV w/ Reheat
 m.add_hvac({"ashrae_sys_num" => '07'})
@@ -65,7 +78,14 @@ coil.remove()
 zone = zones[1]
 zone.airLoopHVAC.get.removeBranchForZone(zone)
 airloop = OpenStudio::Model::AirLoopHVAC.new(m)
-terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(m,m.alwaysOnDiscreteSchedule())
+alwaysOn = m.alwaysOnDiscreteSchedule()
+# Starting with E 9.0.0, Uncontrolled is deprecated and replaced with
+# ConstantVolume:NoReheat
+if Gem::Version.new(OpenStudio::openStudioVersion) >= Gem::Version.new("2.7.0")
+  terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(m, alwaysOn)
+else
+  terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(m, alwaysOn)
+end
 airloop.addBranchForZone(zone,terminal)
 unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(m)
 unitary.setFanPlacement("BlowThrough")
@@ -102,41 +122,25 @@ newcoil.addToNode(node)
 ##CoilSystemCoolingWaterHeatExchangerAssisted
 ##zone = zones[3]
 ##zone.airLoopHVAC.get.removeBranchForZone(zone)
-#zone = OpenStudio::Model::ThermalZone.new(model)
-#airloop = OpenStudio::Model::AirLoopHVAC.new(model)
-#terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,model.alwaysOnDiscreteSchedule())
+#zone = OpenStudio::Model::ThermalZone.new(m)
+#airloop = OpenStudio::Model::AirLoopHVAC.new(m)
+#terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(m,m.alwaysOnDiscreteSchedule())
 #airloop.addBranchForZone(zone,terminal)
-#fan = OpenStudio::Model::FanConstantVolume.new(model)
+#fan = OpenStudio::Model::FanConstantVolume.new(m)
 #fan.addToNode(airloop.supplyOutletNode)
-#heating_coil = OpenStudio::Model::CoilHeatingGas.new(model)
+#heating_coil = OpenStudio::Model::CoilHeatingGas.new(m)
 #heating_coil.addToNode(airloop.supplyOutletNode)
-#coil_system = OpenStudio::Model::CoilSystemCoolingWaterHeatExchangerAssisted.new(model)
+#coil_system = OpenStudio::Model::CoilSystemCoolingWaterHeatExchangerAssisted.new(m)
 #coil_system.addToNode(airloop.supplyOutletNode)
-##spm = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(model)
+##spm = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(m)
 ##spm.setControlZone(zone)
 ##spm.addToNode(airloop.supplyOutletNode)
 #water_coil = coil_system.coolingCoil
-#chiller = model.getChillerElectricEIRs.first
+#chiller = m.getChillerElectricEIRs.first
 #plant = chiller.plantLoop.get
 #plant.addDemandBranchForComponent(water_coil)
 
 
-#add thermostats
-m.add_thermostats({"heating_setpoint" => 24,
-                      "cooling_setpoint" => 28})
-
-#assign constructions from a local library to the walls/windows/etc. in the model
-m.set_constructions()
-
-#set whole building space type; simplified 90.1-2004 Large Office Whole Building
-m.set_space_type()
-
-#add design days to the model (Chicago)
-m.add_design_days()
-
 #save the OpenStudio model (.osm)
 m.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
-                           "osm_name" => "in.osm"})
-
-#m.save(Dir.pwd + '/out.osm',true)
-
+                       "osm_name" => "in.osm"})

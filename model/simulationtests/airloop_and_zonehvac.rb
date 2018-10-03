@@ -51,7 +51,17 @@ air_loop_unitary.setControllingZoneorThermostatLocation(zone)
 #add AirLoopHVAC
 air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
 air_loop_unitary.addToNode(air_loop.supplyInletNode)
-diffuser = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, model.alwaysOnDiscreteSchedule)
+
+alwaysOn = m.alwaysOnDiscreteSchedule()
+
+# Starting with E 9.0.0, Uncontrolled is deprecated and replaced with
+# ConstantVolume:NoReheat
+if Gem::Version.new(OpenStudio::openStudioVersion) >= Gem::Version.new("2.7.0")
+  diffuser = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, alwaysOn)
+else
+  diffuser = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, alwaysOn)
+end
+
 air_loop.addBranchForZone(zone, diffuser.to_StraightComponent)
 air_loop.addBranchForZone(zone)
 

@@ -175,7 +175,14 @@ zones.each_with_index do |z, i|
     air_loop.removeBranchForZone(z)
 
     schedule = model.alwaysOnDiscreteSchedule()
-    new_terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,schedule)
+    # Starting with E 9.0.0, Uncontrolled is deprecated and replaced with
+    # ConstantVolume:NoReheat
+    if Gem::Version.new(OpenStudio::openStudioVersion) >= Gem::Version.new("2.7.0")
+      new_terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, schedule)
+    else
+      new_terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, schedule)
+    end
+
     unitaryAirLoopHVAC.addBranchForZone(z,new_terminal.to_StraightComponent)
     unitary.setControllingZone(z)
   end
