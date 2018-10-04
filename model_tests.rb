@@ -97,7 +97,7 @@ if not $Custom_tag.empty?
     $Custom_tag = $Build_Sha
   end
   $Custom_tag = "_#{$Custom_tag}"
-  puts "Custom tag will be appended, files will be named like 'testname_X.Y.Z_out#{$Custom_tag}.osw'\n"
+  puts "Custom tag will be appended, files will be named like 'testname_#{$SdkVersion}_out#{$Custom_tag}.osw'\n"
 end
 
 # If an ENV variable was given with a value of "True" (case insensitive)
