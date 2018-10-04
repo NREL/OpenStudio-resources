@@ -52,7 +52,7 @@ air_loop_unitary.setControllingZoneorThermostatLocation(zone)
 air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
 air_loop_unitary.addToNode(air_loop.supplyInletNode)
 
-alwaysOn = m.alwaysOnDiscreteSchedule()
+alwaysOn = model.alwaysOnDiscreteSchedule()
 
 # Starting with E 9.0.0, Uncontrolled is deprecated and replaced with
 # ConstantVolume:NoReheat
