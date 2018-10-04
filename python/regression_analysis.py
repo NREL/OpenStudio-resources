@@ -1108,7 +1108,7 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     # on the bottom axis
     title = "Percent difference total site kBTU from one version to the next"
 
-    axes[0].annotate(s=title, xy=(0.5, 1.0), xycoords='axes fraction',
+    axes[0].annotate(title, xy=(0.5, 1.0), xycoords='axes fraction',
                      ha='center', va='top',
                      xytext=(0, 60), textcoords='offset points',
                      weight='bold', fontsize=16)
@@ -1128,12 +1128,12 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     style = 'italic'
     style = None
     if annotate_in_axes_coord:
-        axes[-1].annotate(s=ann, xy=(0.0, 0.0), xycoords='axes fraction',
+        axes[-1].annotate(ann, xy=(0.0, 0.0), xycoords='axes fraction',
                           ha='left', va='top',
                           xytext=(0, -80), textcoords='offset points',
                           style=style)
     else:
-        axes[-1].annotate(s=ann, xy=(0.0, 0.0), xycoords='figure fraction',
+        axes[-1].annotate(ann, xy=(0.0, 0.0), xycoords='figure fraction',
                           ha='left', va='bottom', style=style)
     if savefig:
         if figname is None:
