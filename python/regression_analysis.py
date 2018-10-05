@@ -294,7 +294,8 @@ def parse_model_tests_rb():
 
     test_pat = re.compile(r'^\s*def test_(.+)_(rb|osm)\s*$')
     # The intersect tests are special, so we only parse autosizing and sim
-    res_pat = re.compile(r"^\s*result\s*=\s*(?:autosizing|sim)_test\('(.*)\.(rb|osm)'\)\s*")
+    res_pat = re.compile(r"^\s*result\s*=\s*(?:autosizing|sim)_test"
+                         r"\('(.*)\.(rb|osm)'\)\s*")
 
     # minitests = []
     tests = []
@@ -449,17 +450,15 @@ def find_info_osws_with_tags(compat_matrix=None,
     if compat_matrix is None:
         compat_matrix = parse_compatibility_matrix()
 
-    files = gb.glob(os.path.join(test_dir, '*out*.osw'))
-
     if tags_only:
         files = gb.glob(os.path.join(test_dir, '*out_*.osw'))
 
-        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb)_'
+        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw)_'
                        r'(?P<version>\d+\.\d+\.\d+)_out_(?P<Tag>.*?)\.osw')
     else:
         files = gb.glob(os.path.join(test_dir, '*out*.osw'))
 
-        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb)_'
+        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw)_'
                        r'(?P<version>\d+\.\d+\.\d+)_out_?(?P<Tag>.*?)?\.osw')
 
     df_files = pd.DataFrame(files, columns=['path'])
@@ -597,7 +596,6 @@ def parse_success(out_osw_path):
     """
     if out_osw_path is None:
         return ''
-
 
     data = load_osw(out_osw_path)
     if data is None:
@@ -1192,7 +1190,7 @@ def test_os_cli(os_cli=None):
     Make sure the CLI is configured properly, and return the version if worked
     False otherwise.
     """
-     # Check correct CLI
+    # Check correct CLI
     if os_cli is None:
         os_cli = 'openstudio'
 
@@ -1300,7 +1298,7 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
           "{}".format(EXPLICIT_COMMAND.format(c=example_tag, s=save_idf,
                                               e=eplus_exe,
                                               m=os.path.join(ROOT_DIR,
-                                                    'model_tests.rb'),
+                                                             'model_tests.rb'),
                                               cli=os_cli, filt=filt)))
 
     # Actual command, env variables are passed as such (env parameter)
@@ -1363,7 +1361,7 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
                   "returncode of {}".format(returncode))
             print("Command: {}".format(c_args))
             print("Custom ENV variables: "
-                  "{}".format({k:my_env[k] for k in my_env
+                  "{}".format({k: my_env[k] for k in my_env
                                if k in ['CUSTOMTAG', 'SAVE_IDF',
                                         'ENERGYPLUS_EXE_PATH']}))
             raise subprocess.CalledProcessError(returncode=1, cmd=c_args)
@@ -1419,7 +1417,8 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
         all_tests = parse_model_tests_rb()
         totally_failing_tests = set(all_tests) - set(df_files.index.tolist())
         if totally_failing_tests:
-            print("The following tests may have failed in all openstudio versions")
+            print("The following tests may have failed in all "
+                  "openstudio versions")
             print(totally_failing_tests)
 
     success = success_sheet(df_files)
@@ -1442,7 +1441,8 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
             caption = 'Test Success - Failed only'
 
     html = (success.style
-                   .set_table_attributes('style="border:1px solid black;border-collapse:collapse;"')
+                   .set_table_attributes('style="border:1px solid black;'
+                                         'border-collapse:collapse;"')
                    .set_properties(**{'border': '1px solid black',
                                       'border-collapse': 'collapse',
                                       'border-spacing': '0px'})

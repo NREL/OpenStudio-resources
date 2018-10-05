@@ -1653,11 +1653,11 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('model_articulation1.osw')
   end
 
-  def test_model_articulation1_osw_bundle_no_git
+  def test_model_articulation1_bundle_no_git_osw
     gemfile_dir = bundle_install('bundle_no_git', false)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
-    extra_options = {:outdir => 'model_articulation1.osw.bundle_no_git',
+    extra_options = {:outdir => 'model_articulation1_bundle_no_git.osw',
                      :bundle => gemfile, :bundle_path => bundle_path}
     result = sim_test('model_articulation1.osw', extra_options)
 
@@ -1684,11 +1684,11 @@ class ModelTests < MiniTest::Unit::TestCase
     assert(/1.3.2/.match(workflow))
   end
 
-  def test_model_articulation1_osw_bundle_git
+  def test_model_articulation1_bundle_git_osw
     gemfile_dir = bundle_install('bundle_git', false)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
-    extra_options = {:outdir => 'model_articulation1.osw.bundle_git',
+    extra_options = {:outdir => 'model_articulation1_bundle_git.osw',
                      :bundle => gemfile, :bundle_path => bundle_path}
     result = sim_test('model_articulation1.osw', extra_options)
 
