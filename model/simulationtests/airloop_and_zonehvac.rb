@@ -54,8 +54,8 @@ air_loop_unitary.addToNode(air_loop.supplyInletNode)
 
 alwaysOn = model.alwaysOnDiscreteSchedule()
 
-# Starting with E 9.0.0, Uncontrolled is deprecated and replaced with
-# ConstantVolume:NoReheat
+# Starting with E+ 9.0.0 (in OS 2.7.0), Uncontrolled is deprecated
+# and replaced with ConstantVolume:NoReheat
 if Gem::Version.new(OpenStudio::openStudioVersion) >= Gem::Version.new("2.7.0")
   diffuser = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, alwaysOn)
 else
@@ -78,11 +78,14 @@ zone.setZoneControlHumidistat(humidistat)
 zone_hvac = OpenStudio::Model::ZoneHVACDehumidifierDX.new(model)
 zone_hvac.addToThermalZone(zone)
 
-
-model.save('before.osm', true)
+# Explicitly Set Load Distribution scheme (in 2.7.0 and above only)
+# to the same historical default of "SequentialLoad"
+if Gem::Version.new(OpenStudio::openStudioVersion) >= Gem::Version.new("2.7.0")
+  zone.setLoadDistributionScheme("SequentialLoad")
+end
 
 #remove airloop
-air_loop.remove # fails due to this line
+air_loop.remove
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})
