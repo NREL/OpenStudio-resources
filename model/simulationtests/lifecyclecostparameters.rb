@@ -22,4 +22,4 @@ model.getConstructions.each do |construction|
 end
 
 # save the OpenStudio model (.osm)
-model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})
+model.save(OpenStudio::Path.new("in.osm") , true);
