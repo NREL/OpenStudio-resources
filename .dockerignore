@@ -1,15 +1,50 @@
+# Ignore folders we don't need to send as build context
+database
+doc
+
+# Ignore everything in gemfiles, it's very large!
+gemfiles/*
+# but the Gemfiles themselves
+!gemfiles/bundle_git/Gemfile
+!gemfiles/bundle_no_git/Gemfile
+
+LocalOnly
+__pycache__
+python
 testruns
 test
-database
-Dockerfile
-launch_docker.sh
-
 update_eplus_compare
-LocalOnly
 
+# Ignore the measure test folders (they tend to be large)
+measures/**/tests
 
 .git
-.gitignore
+.github
+.ipynb_checkoints
+
+
+# Ignore root-level files
+# All hiden files
+.*
+*.ipynb
+*.png
+*.html
+Dockerfile
+Dockerfile.in
+launch_all.sh
+launch_docker.sh
+process_results.py
+environment.yml
+
+# I don't even know what's that doing here
+install.qs
+
+# TODO: if we decide to implement functionality where it'll use more than one weather file, then remove this
+# For now we only use one weather file, so uncomment all others
+weatherdata
+!weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw
+!weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.ddy
+
 LICENSE
 LICENSE.md
 VERSION
@@ -18,9 +53,8 @@ Changelog.md
 Makefile
 docker-compose.yml
 docs
-.*
 COPYRIGHT.txt
-
+tags
 
 # The other way round: ignore everything
 # *
