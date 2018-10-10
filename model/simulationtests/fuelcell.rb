@@ -30,6 +30,29 @@ eld = OpenStudio::Model::ElectricLoadCenterDistribution.new(model)
 #add fuel cell
 fuelcell = OpenStudio::Model::GeneratorFuelCell.new(model)
 fuelcell.powerModule.setZone(zones[0])
+
+# Set the fuel supply that was automatically created to the same as the
+# 9.0.0 ExampleFile 'Microcogeneration.idf' in order to avoid problem
+# with 'LiquidGeneric' (https://github.com/NREL/EnergyPlus/issues/6998)
+# Starting in OpenStudio 2.7.0, this is done by default, but for backwards
+# compatibility, and demonstration of the API, we explicitly set it
+fs = fuelcell.fuelSupply
+fs.setName("NATURALGAS")
+fs.resetLiquidGenericFuelLowerHeatingValue
+fs.resetLiquidGenericFuelHigherHeatingValue
+fs.resetLiquidGenericFuelMolecularWeight
+fs.resetLiquidGenericFuelCO2EmissionFactor
+fs.removeAllConstituents
+fs.setFuelType("GaseousConstituents")
+fs.addConstituent("METHANE", 0.9490)
+fs.addConstituent("CarbonDioxide", 0.0070)
+fs.addConstituent("NITROGEN", 0.0160)
+fs.addConstituent("ETHANE", 0.0250)
+fs.addConstituent("PROPANE", 0.0020)
+fs.addConstituent("BUTANE", 0.0006)
+fs.addConstituent("PENTANE", 0.0002)
+fs.addConstituent("OXYGEN", 0.0002)
+
 #add fuel cell to electric load center distribution
 eld.addGenerator(fuelcell)
 eld.setGeneratorOperationSchemeType("Baseload")
