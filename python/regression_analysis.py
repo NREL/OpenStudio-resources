@@ -801,6 +801,8 @@ def test_implemented_sheet(df_files, success=None, model_test_cases=None,
     test_impl = test_impl.pivot(index='Test', columns='Type',
                                 values='Has_Test').fillna(False)
 
+    # Filter out OSW:
+    test_impl = test_impl[[x for x in test_impl.columns if x != 'osw']]
     test_impl = test_impl.join(model_test_cases[['OSM version', 'Major',
                                                  'Minor', 'Patch']]).fillna('')
 
