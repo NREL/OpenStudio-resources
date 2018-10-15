@@ -97,7 +97,7 @@ if not $Custom_tag.empty?
     $Custom_tag = $Build_Sha
   end
   $Custom_tag = "_#{$Custom_tag}"
-  puts "Custom tag will be appended, files will be named like 'testname_X.Y.Z_out#{$Custom_tag}.osw'\n"
+  puts "Custom tag will be appended, files will be named like 'testname_#{$SdkVersion}_out#{$Custom_tag}.osw'\n"
 end
 
 # If an ENV variable was given with a value of "True" (case insensitive)
@@ -373,11 +373,11 @@ def sim_test(filename, options = {})
       # puts "moving #{out_osm} to #{in_osm}"
       FileUtils.mv(out_osm, in_osm)
     end
-  
+
     FileUtils.cp($OswFile, osw)
-  
+
   elsif (ext == '.osw')
-  
+
     # make an empty osm
     model = OpenStudio::Model::Model.new
     model.save(in_osm, true)
@@ -386,10 +386,10 @@ def sim_test(filename, options = {})
     FileUtils.cp(File.join($ModelDir,filename), osw)
 
   end
-  
+
   fail "Cannot find file #{in_osm}" if !File.exists?(in_osm)
   fail "Cannot find file #{osw}" if !File.exists?(osw)
-  
+
   # extra options passed to cli
   extra_options = ""
   extra_options += "--verbose " if options[:verbose]
@@ -398,7 +398,7 @@ def sim_test(filename, options = {})
   extra_options += "--gem_home #{options[:gem_home]} " if options[:gem_home]
   extra_options += "--bundle #{options[:bundle]} " if options[:bundle]
   extra_options += "--bundle_path #{options[:bundle_path]} " if options[:bundle_path]
-  
+
   extra_run_options = ""
   extra_run_options += "--debug " if options[:debug]
 
@@ -420,8 +420,8 @@ def sim_test(filename, options = {})
 
   # command to run the osw
   command = "\"#{$OpenstudioCli}\" #{extra_options} run #{extra_run_options} -w \"#{osw}\""
-  puts "COMMAND:"
-  puts command
+  # puts "COMMAND:"
+  # puts command
 
   run_command(command, dir, 3600)
 
@@ -1292,9 +1292,10 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('multiple_loops_w_plenums.rb')
   end
 
-  def test_multiple_loops_w_plenums_osm
-    result = sim_test('multiple_loops_w_plenums.osm')
-  end
+  # TODO: add when official 2.7.0 is out
+  # def test_multiple_loops_w_plenums_osm
+  #   result = sim_test('multiple_loops_w_plenums.osm')
+  # end
 
   def test_photovoltaics_rb
     result = sim_test('photovoltaics.rb')
@@ -1646,84 +1647,17 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_epw_design_conditions_osm
     result = sim_test('epw_design_conditions.osm')
   end
-  
-  # model articulation tests
-  def test_model_articulation1_osw
-    result = sim_test('model_articulation1.osw')
-  end
-  
-  def test_model_articulation1_osw_bundle_no_git
-    gemfile_dir = bundle_install('bundle_no_git', false)
-    gemfile = File.join(gemfile_dir, 'Gemfile')
-    bundle_path = File.join(gemfile_dir, 'gems')
-    extra_options = {:outdir => 'model_articulation1.osw.bundle_no_git', 
-                     :bundle => gemfile, :bundle_path => bundle_path}
-    result = sim_test('model_articulation1.osw', extra_options)
-    
-    # check that we got the right version of standards and workflow
-    standards = nil
-    workflow = nil
-    result[:steps].each do |step|
-      if step[:measure_dir_name] == 'openstudio_results'
-        step[:result][:step_values].each do |step_value|
-          if step_value[:name] == 'standards_gem_version'
-            standards = step_value[:value]
-          elsif step_value[:name] == 'workflow_gem_version'
-            workflow = step_value[:value]
-          end
-        end
-      end
-    end
-    assert(standards.is_a? String)
-    assert(workflow.is_a? String)
-    puts "standards = #{standards}"
-    puts "workflow = #{workflow}"
-    
-    assert(/0.2.2/.match(standards))
-    assert(/1.3.2/.match(workflow))
-  end
-    
-  def test_model_articulation1_osw_bundle_git
-    gemfile_dir = bundle_install('bundle_git', false)
-    gemfile = File.join(gemfile_dir, 'Gemfile')
-    bundle_path = File.join(gemfile_dir, 'gems')
-    extra_options = {:outdir => 'model_articulation1.osw.bundle_git', 
-                     :bundle => gemfile, :bundle_path => bundle_path}
-    result = sim_test('model_articulation1.osw', extra_options)
-    
-    # check that we got the right version of standards and workflow
-    standards = nil
-    workflow = nil
-    result[:steps].each do |step|
-      if step[:measure_dir_name] == 'openstudio_results'
-        step[:result][:step_values].each do |step_value|
-          if step_value[:name] == 'standards_gem_version'
-            standards = step_value[:value]
-          elsif step_value[:name] == 'workflow_gem_version'
-            workflow = step_value[:value]
-          end
-        end
-      end
-    end
-    assert(standards.is_a? String)
-    assert(workflow.is_a? String)
-    puts "standards = #{standards}"
-    puts "workflow = #{workflow}"
-    
-    #assert(/0.2.2/.match(standards))
-    #assert(/1.3.2/.match(workflow))
-  end
-  
+
   # model articulation tests
   def test_model_articulation1_osw
     result = sim_test('model_articulation1.osw')
   end
 
-  def test_model_articulation1_osw_bundle_no_git
+  def test_model_articulation1_bundle_no_git_osw
     gemfile_dir = bundle_install('bundle_no_git', false)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
-    extra_options = {:outdir => 'model_articulation1.osw.bundle_no_git',
+    extra_options = {:outdir => 'model_articulation1_bundle_no_git.osw',
                      :bundle => gemfile, :bundle_path => bundle_path}
     result = sim_test('model_articulation1.osw', extra_options)
 
@@ -1750,11 +1684,11 @@ class ModelTests < MiniTest::Unit::TestCase
     assert(/1.3.2/.match(workflow))
   end
 
-  def test_model_articulation1_osw_bundle_git
+  def test_model_articulation1_bundle_git_osw
     gemfile_dir = bundle_install('bundle_git', false)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
-    extra_options = {:outdir => 'model_articulation1.osw.bundle_git',
+    extra_options = {:outdir => 'model_articulation1_bundle_git.osw',
                      :bundle => gemfile, :bundle_path => bundle_path}
     result = sim_test('model_articulation1.osw', extra_options)
 
@@ -1831,7 +1765,7 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_autosizing_rb
     result = autosizing_test('autosize_hvac.rb')
   end
-  
+
   # TODO: model/refbuildingtests/CreateRefBldgModel.rb is unused
   # Either implement as a test, or delete
 

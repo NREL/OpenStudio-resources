@@ -164,32 +164,18 @@ transformer.setReferenceTemperatureforNameplateEfficiency(75)
 transformer.setConsiderTransformerLossforUtilityCost(true)
 transformer.addMeter("Transformer:ExteriorEquipment:Electricity")
 
-outputVariable = OpenStudio::Model::OutputVariable.new("Transformer Efficiency", model)
-outputVariable.setReportingFrequency("Timestep")
-outputVariable = OpenStudio::Model::OutputVariable.new("Transformer Input Electric Power", model)
-outputVariable.setReportingFrequency("Timestep")
-outputVariable = OpenStudio::Model::OutputVariable.new("Transformer Input Electric Energy", model)
-outputVariable.setReportingFrequency("Timestep")
-outputVariable = OpenStudio::Model::OutputVariable.new("Transformer Output Electric Power", model)
-outputVariable.setReportingFrequency("Timestep")
-outputVariable = OpenStudio::Model::OutputVariable.new("Transformer Output Electric Energy", model)
-outputVariable.setReportingFrequency("Timestep")
-outputVariable = OpenStudio::Model::OutputVariable.new("Transformer No Load Loss Rate", model)
-outputVariable.setReportingFrequency("Timestep")
-outputVariable = OpenStudio::Model::OutputVariable.new("Transformer No Load Loss Energy", model)
-outputVariable.setReportingFrequency("Timestep")
-outputVariable = OpenStudio::Model::OutputVariable.new("Transformer Load Loss Rate", model)
-outputVariable.setReportingFrequency("Timestep")
-outputVariable = OpenStudio::Model::OutputVariable.new("Transformer Load Loss Energy", model)
-outputVariable.setReportingFrequency("Timestep")
-outputVariable = OpenStudio::Model::OutputVariable.new("Transformer Thermal Loss Rate", model)
-outputVariable.setReportingFrequency("Timestep")
-outputVariable = OpenStudio::Model::OutputVariable.new("Transformer Thermal Loss Energy", model)
-outputVariable.setReportingFrequency("Timestep")
-outputVariable = OpenStudio::Model::OutputVariable.new("Transformer Distribution Electric Loss Energy", model)
-outputVariable.setReportingFrequency("Timestep")
+# add output reports
+add_out_vars = false
+if add_out_vars
+  # Request timeseries data for debugging
+  reporting_frequency = "Timestep"
+  # Enable all output Variables for the object
+  transformer.outputVariableNames.each do |var_name|
+    outputVariable = OpenStudio::Model::OutputVariable.new(var_name,model)
+    outputVariable.setReportingFrequency(reporting_frequency)
+  end
+end
 
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})
-

@@ -97,7 +97,13 @@ def addSystemType3(model)
   node1 = fan.outletModelObject().get.to_Node.get
   setpointMSZR.addToNode(node1)
 
-  terminal =  OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,alwaysOn)
+  # Starting with E 9.0.0, Uncontrolled is deprecated and replaced with
+  # ConstantVolume:NoReheat
+  if Gem::Version.new(OpenStudio::openStudioVersion) >= Gem::Version.new("2.7.0")
+    terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model,alwaysOn)
+  else
+    terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,alwaysOn)
+  end
 
   airLoopHVAC.addBranchForHVACComponent(terminal)
 
@@ -157,7 +163,7 @@ def addSimpleSystem(model)
   fan.addToNode(supplyOutletNode)
   coilCooling.addToNode(supplyOutletNode)
   coilHeatingGas.addToNode(supplyOutletNode)
- 
+
 
   #Node node1 = fan.outletModelObject()->cast<Node>();
   #setpointMSZR.addToNode(node1);
@@ -166,7 +172,11 @@ def addSimpleSystem(model)
   node1 = coilHeatingGas.outletModelObject().get.to_Node.get
   setpointMSZR.addToNode(node1)
 
-  terminal =  OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,alwaysOn)
+  if Gem::Version.new(OpenStudio::openStudioVersion) >= Gem::Version.new("2.7.0")
+    terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model,alwaysOn)
+  else
+    terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,alwaysOn)
+  end
 
   airLoopHVAC.addBranchForHVACComponent(terminal)
 
@@ -225,7 +235,7 @@ def addSimpleSystemAFN(model)
   fan.addToNode(supplyOutletNode)
   coilCooling.addToNode(supplyOutletNode)
   coilHeatingGas.addToNode(supplyOutletNode)
- 
+
   #Node node1 = fan.outletModelObject()->cast<Node>();
   #setpointMSZR.addToNode(node1);
 
@@ -233,7 +243,11 @@ def addSimpleSystemAFN(model)
   node1 = coilHeatingGas.outletModelObject().get.to_Node.get
   setpointMSZR.addToNode(node1)
 
-  terminal =  OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,alwaysOn)
+  if Gem::Version.new(OpenStudio::openStudioVersion) >= Gem::Version.new("2.7.0")
+    terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model,alwaysOn)
+  else
+    terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,alwaysOn)
+  end
 
   airLoopHVAC.addBranchForHVACComponent(terminal)
 
@@ -274,7 +288,7 @@ def addSimpleSystemAFN(model)
   airLoopReturn.setOverallMoistureTransmittanceCoefficientfromAirtoAir(0.0000001)
   airLoopReturn.setOutsideConvectionCoefficient(0.0065)
   airLoopReturn.setInsideConvectionCoefficient(0.0325)
-  
+
   airLoopSupply = OpenStudio::Model::AirflowNetworkDuct.new(model)
   airLoopSupply.setDuctLength(0.1)
   airLoopSupply.setHydraulicDiameter(1)
@@ -287,7 +301,7 @@ def addSimpleSystemAFN(model)
   airLoopSupply.setInsideConvectionCoefficient(0.0325)
 
   # Build the AFN loop, first get the nodes and components we need
-  
+
   splitter = airLoopHVAC.zoneSplitter()
   mixer = airLoopHVAC.zoneMixer()
 
@@ -311,7 +325,7 @@ def addSimpleSystemAFN(model)
 
   zoneSupplyRegisterNode_AFN = nil
   #zoneOutletNode_AFN = zoneOutletNode.getAirflowNetworkDistributionNode
-  
+
   zoneReturnNode_AFN = OpenStudio::Model::AirflowNetworkDistributionNode.new(model)
   mixerNode_AFN = mixer.getAirflowNetworkDistributionNode
   mainReturnNode_AFN = mainReturnNode.getAirflowNetworkDistributionNode
@@ -321,7 +335,7 @@ def addSimpleSystemAFN(model)
   heatingOutletNode_AFN = heatingOutletNode.getAirflowNetworkDistributionNode
 
   # Now the links
-  
+
   mainLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, equipmentInletNode_AFN, splitterNode_AFN, mainTruck)
   # Zone stuff goes in here
   returnMixerLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, mixerNode_AFN, mainReturnNode_AFN, mainReturn)
@@ -338,17 +352,17 @@ model = BaselineModel.new
 
 #make a 1 story, 100m X 50m, 1 zone building
 model.add_geometry({"length" => 17.242,
-              "width" => 10.778,
-              "num_floors" => 1,
-              "floor_to_floor_height" => 4,
-              "plenum_height" => 0,
-              "perimeter_zone_depth" => 0})
+                    "width" => 10.778,
+                    "num_floors" => 1,
+                    "floor_to_floor_height" => 4,
+                    "plenum_height" => 0,
+                    "perimeter_zone_depth" => 0})
 
 #add windows at a 40% window-to-wall ratio
 #model.add_windows({"wwr" => 0.4,
 #                  "offset" => 1,
 #                  "application_type" => "Above Floor"})
-        
+
 #add ASHRAE System type 03, PSZ-AC
 #model.add_hvac({"ashrae_sys_num" => '03'})
 
@@ -357,9 +371,9 @@ zone = model.getThermalZones()[0] # There should only be one...
 #hvac = addSystemType3(model)
 hvac = addSimpleSystemAFN(model)
 hvac = hvac.to_AirLoopHVAC.get
-hvac.addBranchForZone(zone)      
+hvac.addBranchForZone(zone)
 outlet_node = hvac.supplyOutletNode
-setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get  
+setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get
 setpoint_manager.setControlZone(zone)
 
 #add ASHRAE System type 08, VAV w/ PFP Boxes
@@ -368,7 +382,7 @@ setpoint_manager.setControlZone(zone)
 
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 22, "cooling_setpoint" => 26.6})
-              
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
@@ -453,11 +467,14 @@ zoneSupplyLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model,
 visitor = SurfaceNetworkBuilder.new(model)
 
 # add output reports
-OpenStudio::Model::OutputVariable.new("AFN Node Temperature", model)
-OpenStudio::Model::OutputVariable.new("AFN Node Wind Pressure", model)
-OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Mass Flow Rate", model)
-OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Pressure Difference", model)
- 
+add_out_vars = false
+if add_out_vars
+  OpenStudio::Model::OutputVariable.new("AFN Node Temperature", model)
+  OpenStudio::Model::OutputVariable.new("AFN Node Wind Pressure", model)
+  OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Mass Flow Rate", model)
+  OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Pressure Difference", model)
+end
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})

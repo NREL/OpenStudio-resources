@@ -270,7 +270,7 @@ def find_osm_test_versions():
 
 def parse_model_tests_rb():
     """
-    This functions looks for `def test_xxx_(rb|osm)` in model_tests.rb and
+    This functions looks for `def test_xxx_(rb|osm|osw)` in model_tests.rb and
     returns the name of the actual file called on the following line
 
     eg:
@@ -292,9 +292,10 @@ def parse_model_tests_rb():
     with open(os.path.join(ROOT_DIR, 'model_tests.rb'), 'r') as f:
         lines = f.read().splitlines()
 
-    test_pat = re.compile(r'^\s*def test_(.+)_(rb|osm)\s*$')
+    test_pat = re.compile(r'^\s*def test_(.+)_(rb|osm|osw)\s*$')
     # The intersect tests are special, so we only parse autosizing and sim
-    res_pat = re.compile(r"^\s*result\s*=\s*(?:autosizing|sim)_test\('(.*)\.(rb|osm)'\)\s*")
+    res_pat = re.compile(r"^\s*result\s*=\s*(?:autosizing|sim)_test"
+                         r"\('(.*)\.(rb|osm|osw)'\)\s*")
 
     # minitests = []
     tests = []
@@ -354,7 +355,7 @@ def find_info_osws(compat_matrix=None, test_dir=None):
 
     df_files = pd.DataFrame(files, columns=['path'])
     # With this pattern, we exclude the custom-tagged out.osw files
-    filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb)_'
+    filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw)_'
                    r'(?P<version>\d+\.\d+\.\d+)_out\.osw')
     version = (df_files['path'].apply(lambda p: os.path.relpath(p, test_dir))
                                .str.extract(pat=filepattern, expand=True))
@@ -414,7 +415,9 @@ def find_info_osws_with_tags(compat_matrix=None,
                              test_dir=None,
                              tags_only=True):
     """
-    Looks for files in the test/ folder, and parses version and type (rb, osm)
+    Looks for files in the test/ folder, and parses version
+    and type (rb, osm, or osw)
+
     Constructs a dataframe that has E+/OS versions in column (by looking E+
     version in compat_matrix)
 
@@ -449,17 +452,15 @@ def find_info_osws_with_tags(compat_matrix=None,
     if compat_matrix is None:
         compat_matrix = parse_compatibility_matrix()
 
-    files = gb.glob(os.path.join(test_dir, '*out*.osw'))
-
     if tags_only:
         files = gb.glob(os.path.join(test_dir, '*out_*.osw'))
 
-        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb)_'
+        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw)_'
                        r'(?P<version>\d+\.\d+\.\d+)_out_(?P<Tag>.*?)\.osw')
     else:
         files = gb.glob(os.path.join(test_dir, '*out*.osw'))
 
-        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb)_'
+        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw)_'
                        r'(?P<version>\d+\.\d+\.\d+)_out_?(?P<Tag>.*?)?\.osw')
 
     df_files = pd.DataFrame(files, columns=['path'])
@@ -597,7 +598,6 @@ def parse_success(out_osw_path):
     """
     if out_osw_path is None:
         return ''
-
 
     data = load_osw(out_osw_path)
     if data is None:
@@ -801,6 +801,8 @@ def test_implemented_sheet(df_files, success=None, model_test_cases=None,
     test_impl = test_impl.pivot(index='Test', columns='Type',
                                 values='Has_Test').fillna(False)
 
+    # Filter out OSW:
+    test_impl = test_impl[[x for x in test_impl.columns if x != 'osw']]
     test_impl = test_impl.join(model_test_cases[['OSM version', 'Major',
                                                  'Minor', 'Patch']]).fillna('')
 
@@ -1108,7 +1110,7 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     # on the bottom axis
     title = "Percent difference total site kBTU from one version to the next"
 
-    axes[0].annotate(s=title, xy=(0.5, 1.0), xycoords='axes fraction',
+    axes[0].annotate(title, xy=(0.5, 1.0), xycoords='axes fraction',
                      ha='center', va='top',
                      xytext=(0, 60), textcoords='offset points',
                      weight='bold', fontsize=16)
@@ -1128,12 +1130,12 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     style = 'italic'
     style = None
     if annotate_in_axes_coord:
-        axes[-1].annotate(s=ann, xy=(0.0, 0.0), xycoords='axes fraction',
+        axes[-1].annotate(ann, xy=(0.0, 0.0), xycoords='axes fraction',
                           ha='left', va='top',
                           xytext=(0, -80), textcoords='offset points',
                           style=style)
     else:
-        axes[-1].annotate(s=ann, xy=(0.0, 0.0), xycoords='figure fraction',
+        axes[-1].annotate(ann, xy=(0.0, 0.0), xycoords='figure fraction',
                           ha='left', va='bottom', style=style)
     if savefig:
         if figname is None:
@@ -1192,7 +1194,7 @@ def test_os_cli(os_cli=None):
     Make sure the CLI is configured properly, and return the version if worked
     False otherwise.
     """
-     # Check correct CLI
+    # Check correct CLI
     if os_cli is None:
         os_cli = 'openstudio'
 
@@ -1300,7 +1302,7 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
           "{}".format(EXPLICIT_COMMAND.format(c=example_tag, s=save_idf,
                                               e=eplus_exe,
                                               m=os.path.join(ROOT_DIR,
-                                                    'model_tests.rb'),
+                                                             'model_tests.rb'),
                                               cli=os_cli, filt=filt)))
 
     # Actual command, env variables are passed as such (env parameter)
@@ -1363,7 +1365,7 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
                   "returncode of {}".format(returncode))
             print("Command: {}".format(c_args))
             print("Custom ENV variables: "
-                  "{}".format({k:my_env[k] for k in my_env
+                  "{}".format({k: my_env[k] for k in my_env
                                if k in ['CUSTOMTAG', 'SAVE_IDF',
                                         'ENERGYPLUS_EXE_PATH']}))
             raise subprocess.CalledProcessError(returncode=1, cmd=c_args)
@@ -1419,7 +1421,8 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
         all_tests = parse_model_tests_rb()
         totally_failing_tests = set(all_tests) - set(df_files.index.tolist())
         if totally_failing_tests:
-            print("The following tests may have failed in all openstudio versions")
+            print("The following tests may have failed in all "
+                  "openstudio versions")
             print(totally_failing_tests)
 
     success = success_sheet(df_files)
@@ -1442,7 +1445,8 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
             caption = 'Test Success - Failed only'
 
     html = (success.style
-                   .set_table_attributes('style="border:1px solid black;border-collapse:collapse;"')
+                   .set_table_attributes('style="border:1px solid black;'
+                                         'border-collapse:collapse;"')
                    .set_properties(**{'border': '1px solid black',
                                       'border-collapse': 'collapse',
                                       'border-spacing': '0px'})

@@ -62,6 +62,7 @@ def new_evap_cooling_coil_dx_twospeed(model)
   clg_coil.setHighSpeedEvaporativeCondenserAirFlowRate(OpenStudio::OptionalDouble.new)
   clg_coil.setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(OpenStudio::OptionalDouble.new)
   clg_coil.setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(OpenStudio::OptionalDouble.new)
+  clg_coil.setRatedLowSpeedSensibleHeatRatio(OpenStudio::OptionalDouble.new)
   return clg_coil
 end
 ### High level constructs
@@ -354,10 +355,10 @@ htg_coil.addToNode(out_1)
 hw_loop.addDemandBranchForComponent(htg_coil)
 OpenStudio::Model::CoilHeatingElectric.new(model).addToNode(out_1)
 OpenStudio::Model::CoilHeatingGas.new(model).addToNode(out_1)
-clg_coil = OpenStudio::Model::CoilHeatingDXVariableSpeed.new(model)
+htg_coil = OpenStudio::Model::CoilHeatingDXVariableSpeed.new(model)
 coil_data = OpenStudio::Model::CoilHeatingDXVariableSpeedSpeedData.new(model)
-clg_coil.addSpeed(coil_data)
-clg_coil.addToNode(out_1)
+htg_coil.addSpeed(coil_data)
+htg_coil.addToNode(out_1)
 
 ### Dual Duct Air loop ###
 air_loop_dual_duct = OpenStudio::Model::AirLoopHVAC.new(model)
