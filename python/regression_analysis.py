@@ -270,7 +270,7 @@ def find_osm_test_versions():
 
 def parse_model_tests_rb():
     """
-    This functions looks for `def test_xxx_(rb|osm)` in model_tests.rb and
+    This functions looks for `def test_xxx_(rb|osm|osw)` in model_tests.rb and
     returns the name of the actual file called on the following line
 
     eg:
@@ -292,10 +292,10 @@ def parse_model_tests_rb():
     with open(os.path.join(ROOT_DIR, 'model_tests.rb'), 'r') as f:
         lines = f.read().splitlines()
 
-    test_pat = re.compile(r'^\s*def test_(.+)_(rb|osm)\s*$')
+    test_pat = re.compile(r'^\s*def test_(.+)_(rb|osm|osw)\s*$')
     # The intersect tests are special, so we only parse autosizing and sim
     res_pat = re.compile(r"^\s*result\s*=\s*(?:autosizing|sim)_test"
-                         r"\('(.*)\.(rb|osm)'\)\s*")
+                         r"\('(.*)\.(rb|osm|osw)'\)\s*")
 
     # minitests = []
     tests = []
@@ -355,7 +355,7 @@ def find_info_osws(compat_matrix=None, test_dir=None):
 
     df_files = pd.DataFrame(files, columns=['path'])
     # With this pattern, we exclude the custom-tagged out.osw files
-    filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb)_'
+    filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw)_'
                    r'(?P<version>\d+\.\d+\.\d+)_out\.osw')
     version = (df_files['path'].apply(lambda p: os.path.relpath(p, test_dir))
                                .str.extract(pat=filepattern, expand=True))
@@ -415,7 +415,9 @@ def find_info_osws_with_tags(compat_matrix=None,
                              test_dir=None,
                              tags_only=True):
     """
-    Looks for files in the test/ folder, and parses version and type (rb, osm)
+    Looks for files in the test/ folder, and parses version
+    and type (rb, osm, or osw)
+
     Constructs a dataframe that has E+/OS versions in column (by looking E+
     version in compat_matrix)
 
