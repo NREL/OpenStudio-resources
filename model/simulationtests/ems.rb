@@ -128,6 +128,13 @@ fan_program_3.setLines(fan_program_3_lines)
 # Assertion for the new number of invalid objects
 #assert_equal(1, fan_program_3.invalidReferencedObjects.size)
 
+#test EMS:outputVariable and EMS:MeteredOutputVariable attachment to programs
+ems_out = OpenStudio::Model::EnergyManagementSystemOutputVariable.new(model,'test1')
+ems_out.setEMSProgramOrSubroutineName(fan_program_1)
+
+elec_mtr_out_var = OpenStudio::Model::EnergyManagementSystemMeteredOutputVariable.new(model,"test2")
+elec_mtr_out_var.setEMSProgramOrSubroutineName(fan_program_3)
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})
