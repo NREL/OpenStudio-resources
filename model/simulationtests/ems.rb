@@ -129,12 +129,14 @@ fan_program_3.setLines(fan_program_3_lines)
 #assert_equal(1, fan_program_3.invalidReferencedObjects.size)
 
 #test EMS:outputVariable and EMS:MeteredOutputVariable attachment to programs
-ems_out = OpenStudio::Model::EnergyManagementSystemOutputVariable.new(model,'mult')
-ems_out.setEMSProgramOrSubroutineName(fan_program_1)
+if Gem::Version.new(OpenStudio::openStudioVersion) > Gem::Version.new("2.7.1")
+  # Add the variables (it wouldn't work prior to OpenStudio PR#3339
+  ems_out = OpenStudio::Model::EnergyManagementSystemOutputVariable.new(model,'mult')
+  ems_out.setEMSProgramOrSubroutineName(fan_program_1)
 
-elec_mtr_out_var = OpenStudio::Model::EnergyManagementSystemMeteredOutputVariable.new(model,"mult")
-elec_mtr_out_var.setEMSProgramOrSubroutineName(fan_program_3)
-
+  elec_mtr_out_var = OpenStudio::Model::EnergyManagementSystemMeteredOutputVariable.new(model,"mult")
+  elec_mtr_out_var.setEMSProgramOrSubroutineName(fan_program_3)
+end
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})
