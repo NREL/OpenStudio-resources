@@ -129,7 +129,7 @@ fan_program_3.setLines(fan_program_3_lines)
 #assert_equal(1, fan_program_3.invalidReferencedObjects.size)
 
 #test EMS:outputVariable and EMS:MeteredOutputVariable attachment to programs
-if Gem::Version.new(OpenStudio::openStudioVersion) > Gem::Version.new("2.7.1")
+if Gem::Version.new(OpenStudio::openStudioVersion) > Gem::Version.new("2.7.0")
   # Add the variables (it wouldn't work prior to OpenStudio PR#3339
   ems_out = OpenStudio::Model::EnergyManagementSystemOutputVariable.new(model,'mult')
   ems_out.setEMSProgramOrSubroutineName(fan_program_1)
