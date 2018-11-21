@@ -1,5 +1,3 @@
-# This tests the classes that derive from ExteriorLoadDefinition and ExteriorLoadInstance
-
 require 'openstudio'
 require 'lib/baseline_model'
 
@@ -7,20 +5,20 @@ model = BaselineModel.new
 
 #make a 2 story, 100m X 50m, 10 zone core/perimeter building
 model.add_geometry({"length" => 100,
-              "width" => 50,
-              "num_floors" => 1,
-              "floor_to_floor_height" => 4,
-              "plenum_height" => 1,
-              "perimeter_zone_depth" => 10})
+                    "width" => 50,
+                    "num_floors" => 1,
+                    "floor_to_floor_height" => 4,
+                    "plenum_height" => 1,
+                    "perimeter_zone_depth" => 10})
 
 #add windows at a 40% window-to-wall ratio
 model.add_windows({"wwr" => 0.4,
-                  "offset" => 1,
-                  "application_type" => "Above Floor"})
+                   "offset" => 1,
+                   "application_type" => "Above Floor"})
 
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 15,
-                      "cooling_setpoint" => 28})
+                       "cooling_setpoint" => 28})
 
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
@@ -31,16 +29,15 @@ model.set_space_type()
 #add design days to the model (Chicago)
 model.add_design_days()
 
+# set HVAC for the IT equipment zone
+model.add_hvac({"ashrae_sys_num" => '07'})
 
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
-zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+# zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 
 # Get spaces, ordered by name to ensure consistency
 spaces = model.getSpaces.sort_by{|s| s.name.to_s}
-
-# set HVAC for the IT equipment zone
-model.add_hvac({"ashrae_sys_num" => '07'})
 
 
 spaces.each_with_index do |space, i|
@@ -83,7 +80,7 @@ spaces.each_with_index do |space, i|
     airflow_curve.setMaximumValueofx(1.5)
     airflow_curve.setMinimumValueofy(-10)
     airflow_curve.setMaximumValueofy(99.0)
-    
+
     fan_power_curve = OpenStudio::Model::CurveQuadratic.new(model)
     fan_power_curve.setCoefficient1Constant(0.0)
     fan_power_curve.setCoefficient2x(1.0)
