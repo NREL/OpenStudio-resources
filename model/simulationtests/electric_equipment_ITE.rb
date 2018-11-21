@@ -39,9 +39,7 @@ zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 # Get spaces, ordered by name to ensure consistency
 spaces = model.getSpaces.sort_by{|s| s.name.to_s}
 
-# TODO
 # set HVAC for the IT equipment zone
-# OpenStudio Core: Forward translator => add node from zoneHVAC as well
 model.add_hvac({"ashrae_sys_num" => '07'})
 
 
@@ -54,30 +52,6 @@ spaces.each_with_index do |space, i|
     it_equipment_def.setDesignFanAirFlowRateperPowerInput(0.0001)
     it_equipment_def.setDesignEnteringAirTemperature(22.5)    # recommended SAT 18-27C, use the middle T as design
     it_equipment_def.setDesignFanPowerInputFraction(0.4)
-
-=begin
-    # TODO
-    # temporary solution for E+ bug in the two curves (recirculation function and electric power supply)
-    recirc_curve = OpenStudio::Model::CurveBiquadratic.new(model)
-    recirc_curve.setCoefficient1Constant(1.0)
-    recirc_curve.setCoefficient2x(0.0)
-    recirc_curve.setCoefficient3xPOW2(0.0)
-    recirc_curve.setCoefficient4y(0.0)
-    recirc_curve.setCoefficient5yPOW2(0.0)
-    recirc_curve.setCoefficient6xTIMESY(0.0)
-    recirc_curve.setMinimumValueofx(0.0)
-    recirc_curve.setMaximumValueofx(1.5)
-    recirc_curve.setMinimumValueofy(-10)
-    recirc_curve.setMaximumValueofy(99.0)
-    ups_efficiency_curve = OpenStudio::Model::CurveQuadratic.new(model)
-    ups_efficiency_curve.setCoefficient1Constant(1.0)
-    ups_efficiency_curve.setCoefficient2x(0.0)
-    ups_efficiency_curve.setCoefficient3xPOW2(0.0)
-    ups_efficiency_curve.setMinimumValueofx(0.0)
-    ups_efficiency_curve.setMaximumValueofx(99.0)
-    it_equipment_def.setRecirculationFunctionofLoadingandSupplyTemperatureCurve(recirc_curve)
-    it_equipment_def.setElectricPowerSupplyEfficiencyFunctionofPartLoadRatioCurve(ups_efficiency_curve)
-=end
 
     it_equipment = OpenStudio::Model::ElectricEquipmentITEAirCooled.new(it_equipment_def)
     it_equipment.setSpace(space)
@@ -127,30 +101,6 @@ spaces.each_with_index do |space, i|
     it_equipment_def.setDesignFanPowerInputFraction(0.4)
     it_equipment_def.setDesignEnteringAirTemperature(22.5)    # recommended SAT 18-27C, use the middle T as design
     it_equipment_def.setAirFlowCalculationMethod("FlowControlWithApproachTemperatures")
-
-=begin
-    # TODO
-    # temporary solution for E+ bug in the two curves (recirculation function and electric power supply)
-    recirc_curve = OpenStudio::Model::CurveBiquadratic.new(model)
-    recirc_curve.setCoefficient1Constant(1.0)
-    recirc_curve.setCoefficient2x(0.0)
-    recirc_curve.setCoefficient3xPOW2(0.0)
-    recirc_curve.setCoefficient4y(0.0)
-    recirc_curve.setCoefficient5yPOW2(0.0)
-    recirc_curve.setCoefficient6xTIMESY(0.0)
-    recirc_curve.setMinimumValueofx(0.0)
-    recirc_curve.setMaximumValueofx(1.5)
-    recirc_curve.setMinimumValueofy(-10)
-    recirc_curve.setMaximumValueofy(99.0)
-    ups_efficiency_curve = OpenStudio::Model::CurveQuadratic.new(model)
-    ups_efficiency_curve.setCoefficient1Constant(1.0)
-    ups_efficiency_curve.setCoefficient2x(0.0)
-    ups_efficiency_curve.setCoefficient3xPOW2(0.0)
-    ups_efficiency_curve.setMinimumValueofx(0.0)
-    ups_efficiency_curve.setMaximumValueofx(99.0)
-    it_equipment_def.setRecirculationFunctionofLoadingandSupplyTemperatureCurve(recirc_curve)
-    it_equipment_def.setElectricPowerSupplyEfficiencyFunctionofPartLoadRatioCurve(ups_efficiency_curve)
-=end
 
     it_equipment = OpenStudio::Model::ElectricEquipmentITEAirCooled.new(it_equipment_def)
     it_equipment.setSpace(space)
