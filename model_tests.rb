@@ -140,38 +140,46 @@ ensure
 end
 
 # run a command in directory dir, throws exception on timeout or exit status != 0, always returns to initial directory
-def run_command(command, dir, timeout = Float::INFINITY)
-  pwd = Dir.pwd
-  Dir.chdir(dir)
+def run_command(command, dir, timeout)  
+  begin
+    pwd = Dir.pwd
+    Dir.chdir(dir)
 
-  result = nil
-  Open3.popen3(command) do |i,o,e,w|
-    out = ""
-    begin
-      Timeout.timeout(timeout) do
-        # process output of the process. it will produce EOF when done.
-        until o.eof? do
-          out += o.read_nonblock(100)
+    result = nil
+    Open3.popen3(command) do |i,o,e,w|
+      out = ""
+      begin
+        Timeout.timeout(timeout) do
+          # process output of the process. it will produce EOF when done.
+          until o.eof? do
+            out += o.readpartial(100)
+          end
+          until e.eof? do
+            out += e.readpartial(100)
+          end        
         end
-        until e.eof? do
-          out += e.read_nonblock(100)
-        end
-      end
 
-      result = w.value.exitstatus
-      if result != 0
+        result = w.value.exitstatus
+        if result != 0
+          Dir.chdir(pwd)
+          fail "Exit code #{result}:\n#{out}"
+        end
+
+      rescue Timeout::Error
+        # Process.kill does not work on Windows
+        #https://blog.simplificator.com/2016/01/18/how-to-kill-processes-on-windows-using-ruby/
+        if Gem.win_platform?
+          system("taskkill /f /pid #{w.pid}") 
+        else
+          Process.kill("KILL", w.pid)
+        end
         Dir.chdir(pwd)
-        fail "Exit code #{result}:\n#{out}"
+        fail "Timeout #{timeout}:\n#{out}"
       end
-
-    rescue Timeout::Error
-      Process.kill("KILL", w.pid)
-      Dir.chdir(pwd)
-      fail "Timeout #{timeout}:\n#{out}"
     end
+  ensure
+    Dir.chdir(pwd)
   end
-
-  Dir.chdir(pwd)
 end
 
 # Helper function to post-process the out.osw and save it in test/ with
@@ -1677,10 +1685,10 @@ class ModelTests < MiniTest::Unit::TestCase
     end
     assert(standards.is_a? String)
     assert(workflow.is_a? String)
-    puts "standards = #{standards}"
-    puts "workflow = #{workflow}"
+    #puts "standards = #{standards}"
+    #puts "workflow = #{workflow}"
 
-    assert(/0.2.2/.match(standards))
+    assert(/0.2.7/.match(standards))
     assert(/1.3.2/.match(workflow))
   end
 
@@ -1708,8 +1716,8 @@ class ModelTests < MiniTest::Unit::TestCase
     end
     assert(standards.is_a? String)
     assert(workflow.is_a? String)
-    puts "standards = #{standards}"
-    puts "workflow = #{workflow}"
+    #puts "standards = #{standards}"
+    #puts "workflow = #{workflow}"
 
     #assert(/0.2.2/.match(standards))
     #assert(/1.3.2/.match(workflow))
