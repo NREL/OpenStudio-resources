@@ -1084,6 +1084,16 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('ducts_and_pipes.osm')
   end
 
+  def test_electric_equipment_ITE_rb
+    result = sim_test('electric_equipment_ITE.rb')
+  end
+
+  # TODO : To be added once the next official release
+  # including this object is out : 2.7.2
+  # def test_electric_equipment_ITE_osm
+  #   result = sim_test('electric_equipment_ITE.osm')
+  # end
+
   def test_ems_osm
     result = sim_test('ems.osm')
   end
