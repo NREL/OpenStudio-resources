@@ -326,10 +326,20 @@ def sim_test(filename, options = {})
       # We need to manually copy the supporting schedule into
       # the testruns folder for the simulation to be able to find it
       sch_ori_path = File.join(File.dirname(__FILE__),
-                            'model/simulationtests/lib/schedulefile.csv')
+                               'model/simulationtests/lib/schedulefile.csv')
       sch_ori_path = File.realpath(sch_ori_path)
 
-      sch_target_path  = File.join(dir, File.basename(sch_ori_path))
+      if Gem::Version.new($SdkVersion) == Gem::Version.new("2.7.0")
+        # in 2.7.0, it needs to be at the same level as the OSM
+        sch_target_path  = File.join(dir, File.basename(sch_ori_path))
+      else
+        # Going forward, it's inside the files/ subdirectory
+        # Have to make the directory first
+        files_dir = File.join(dir, 'files/')
+        FileUtils.mkdir_p(files_dir)
+        sch_target_path  = File.join(files_dir, File.basename(sch_ori_path))
+      end
+
       FileUtils.cp(sch_ori_path, sch_target_path)
     end
 
