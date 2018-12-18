@@ -329,7 +329,7 @@ def sim_test(filename, options = {})
                             'model/simulationtests/lib/schedulefile.csv')
       sch_ori_path = File.realpath(sch_ori_path)
 
-      sch_target_path  = File.join(dir, File.basename(ssch_ori_path))
+      sch_target_path  = File.join(dir, File.basename(sch_ori_path))
       FileUtils.cp(sch_ori_path, sch_target_path)
     end
 
@@ -1426,15 +1426,13 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('schedule_file.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 2.7.0
-  #def test_schedule_file_osm
-    # Note: there is a special case in sim_test for this test to copy the
+  def test_schedule_file_osm
+    # Note JM: there is a special case in sim_test for this test to copy the
     # necessary CSV file to the testruns/schedule_file.osm/ folder
     # We cannot do it here since sim_test starts by deleting and recreating
     # this folder
-    #result = sim_test('schedule_file.osm')
-  #end
+    result = sim_test('schedule_file.osm')
+  end
 
   def test_setpoint_managers_rb
     result = sim_test('setpoint_managers.rb')
