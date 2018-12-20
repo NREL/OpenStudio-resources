@@ -326,10 +326,20 @@ def sim_test(filename, options = {})
       # We need to manually copy the supporting schedule into
       # the testruns folder for the simulation to be able to find it
       sch_ori_path = File.join(File.dirname(__FILE__),
-                            'model/simulationtests/lib/schedulefile.csv')
+                               'model/simulationtests/lib/schedulefile.csv')
       sch_ori_path = File.realpath(sch_ori_path)
 
-      sch_target_path  = File.join(dir, File.basename(ssch_ori_path))
+      if Gem::Version.new($SdkVersion) == Gem::Version.new("2.7.0")
+        # in 2.7.0, it needs to be at the same level as the OSM
+        sch_target_path  = File.join(dir, File.basename(sch_ori_path))
+      else
+        # Going forward, it's inside the files/ subdirectory
+        # Have to make the directory first
+        files_dir = File.join(dir, 'files/')
+        FileUtils.mkdir_p(files_dir)
+        sch_target_path  = File.join(files_dir, File.basename(sch_ori_path))
+      end
+
       FileUtils.cp(sch_ori_path, sch_target_path)
     end
 
@@ -1302,10 +1312,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('multiple_loops_w_plenums.rb')
   end
 
-  # TODO: add when official 2.7.0 is out
-  # def test_multiple_loops_w_plenums_osm
-  #   result = sim_test('multiple_loops_w_plenums.osm')
-  # end
+  def test_multiple_loops_w_plenums_osm
+    result = sim_test('multiple_loops_w_plenums.osm')
+  end
 
   def test_photovoltaics_rb
     result = sim_test('photovoltaics.rb')
@@ -1427,15 +1436,13 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('schedule_file.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 2.7.0
-  #def test_schedule_file_osm
-    # Note: there is a special case in sim_test for this test to copy the
+  def test_schedule_file_osm
+    # Note JM: there is a special case in sim_test for this test to copy the
     # necessary CSV file to the testruns/schedule_file.osm/ folder
     # We cannot do it here since sim_test starts by deleting and recreating
     # this folder
-    #result = sim_test('schedule_file.osm')
-  #end
+    result = sim_test('schedule_file.osm')
+  end
 
   def test_setpoint_managers_rb
     result = sim_test('setpoint_managers.rb')
