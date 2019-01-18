@@ -221,9 +221,10 @@ def parse_compatibility_matrix(force_latest=False):
     return compat_matrix
 
 
-def find_osm_test_versions():
+def find_osm_test_versions(base_dir='model/simulationtests/'):
     """
-    Globs the model/simulationtests/*.osm and parse the Version String
+    Globs the model/simulationtests/*.osm (or base_dir/*.osm)
+    and parse the Version String
     Constructs a dataframe
 
     Args:
@@ -240,7 +241,7 @@ def find_osm_test_versions():
     v_regex = re.compile(r'\s+(\d+\.\d+\.\d+);\s+!-? Version Identifier')
 
     model_version_lists = []
-    osms = gb.glob(os.path.join(ROOT_DIR, 'model/simulationtests/*.osm'))
+    osms = gb.glob(os.path.join(ROOT_DIR, base_dir, '*.osm'))
     for osm in osms:
         found = False
         test = os.path.splitext(os.path.split(osm)[1])[0]
