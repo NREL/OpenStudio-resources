@@ -8,10 +8,12 @@ Each new OpenStudio Model object should ideally have two simulation tests associ
 * an OSM one that verifies the OSM file can be loaded with future versions of OpenStudio.
 
 Both tests should result in a simulation-ready OpenStudio Model that can be simulated using EnergyPlus.
-Both of these tests are located in the `\model\simulationtests` directory, the easiest way to add a new test is to find a related existing test and modify it.
+Both of these tests are located in the `/model/simulationtests` directory, the easiest way to add a new test is to find a related existing test and modify it.
 When new tests are added they must be added to the `model_tests.rb` file.
 
 ## Running the tests
+
+### Model Tests (core testing)
 
 Using the OpenStudio CLI:
 ```
@@ -31,6 +33,23 @@ ruby -I \path\to\openstudio.rb\dir\ model_tests.rb
 ```
 
 *Optional:* if you use your system ruby, you can do `gem install minitest-reporters` and enjoy a cleaner output.
+
+### High Level tests
+
+`highlevel_tests.rb` has tests that ensure all XML/OSM/RB are actually used in a test, and that all simulation/ ruby tests have a matching OSM test.
+
+```
+openstudio highlevel_tests.rb.rb
+```
+
+### SDD tests
+
+`SDD_tests.rb` has two classes:
+
+* `SddReverseTranslatorTests`: this loads `simulationtests/sddtests/*.xml` files and does:
+    * RT from XML > OSM, and assert that this works. These are SIM SDD XML files (produces after a CBECC-COM run).
+    * Simulate the resulting OSM via `sim_tests` (just like OSM ModelTests does). The resulting OSW is saved in `test/`.
+* `SddForwardTanslatorTests`: this loads the `simulationtests/model/*.osm` files and does OSM > XML and asserts that this works. It saves the resulting XML in `test/`.
 
 ### Environment variables
 
