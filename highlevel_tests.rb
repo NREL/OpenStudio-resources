@@ -1,22 +1,9 @@
 # require 'minitest'
 
-require 'minitest/autorun'
-begin
-  require "minitest/reporters"
-  require "minitest/reporters/default_reporter"
-  reporter = Minitest::Reporters::DefaultReporter.new
-  reporter.start # had to call start manually otherwise was failing when trying to report elapsed time when run in CLI
-  Minitest::Reporters.use! reporter
-rescue LoadError
-  puts "Minitest Reporters not installed"
-end
+require 'openstudio' unless defined?(OpenStudio)
 
-# Backward compat
-Minitest::Test = MiniTest::Unit::TestCase unless defined?(Minitest::Test)
-
-$RootDir = File.absolute_path(File.dirname(__FILE__))
-$ModelDir = File.join($RootDir, 'model/simulationtests/')
-$SddSimDir = File.join($RootDir, 'model/sddtests/')
+# The config and helpers are inside this file
+require_relative 'test_helpers.rb'
 
 
 class HighLevelTests < MiniTest::Test
@@ -60,6 +47,49 @@ class HighLevelTests < MiniTest::Test
     missing_rbs = missing_rbs - expected_sim_missing
 
     assert missing_rbs.empty?, "Error in model_tests.rb: The following Ruby tests are not in any sim_tests:\n  * #{missing_rbs.join("\n  * ")}"
+  end
+
+  def test_rbs_have_matching_osm_tests
+    # List of tests that don't have a matching OSM test for a valid reason
+    # No "Warn" will be issued for these
+    # input the ruby file name, eg `xxxx.rb` NOT `test_xxx_rb`
+    noMatchingOSMTests = ['ExampleModel.rb',
+                          'autosize_hvac.rb',]
+
+    base_dir = $ModelDir
+    all_ruby_paths = Dir.glob(File.join(base_dir, '*.rb'));
+    all_ruby_filenames = all_ruby_paths.map{|p| File.basename(p)};
+
+    all_ruby_filenames.each do |filename|
+      if !noMatchingOSMTests.include?(filename)
+        # Check if there is a matching OSM file
+        matching_osm = File.join(base_dir, filename.sub('.rb', '.osm'))
+
+        # If you want to be stricter than warn, uncomment this
+        # assert File.exists?(matching_osm), "There is no matching OSM test for #{filename}"
+
+        if File.exists?(matching_osm)
+          v = OpenStudio::IdfFile.loadVersionOnly(matching_osm)
+          # Seems like something we should definitely fix anyways, so throwing
+          if not v
+            fail "Cannot find versionString in #{matching_osm}"
+          end
+
+          # If there is a version, check that it's not newer than current bindings
+          model_version = v.get.str
+
+          if Gem::Version.new(model_version) > Gem::Version.new($SdkVersion)
+            # Skip instead of fail
+            skip "Matching OSM Model version is newer than the SDK version used (#{model_version} versus #{$SdkVersion})"
+          end
+        else
+          # If there isn't a matching, we warn, but we'll still run it
+          # It might make sense if you have just added it recently
+          warn "There is no matching OSM test for #{filename}"
+        end
+      end
+    end
+
   end
 
   def test_osms_are_defined_sdd_ft_tests

@@ -399,30 +399,6 @@ def sim_test(filename, options = {})
     # running the measure to generate the OSM, and then of course for the sim
     FileUtils.cp($OswFile, in_osw)
 
-    if !$NoMatchingOSMTests.include?(filename)
-      # Check if there is a matching OSM file
-      matching_osm = File.join(base_dir, filename.sub('.rb', '.osm'))
-      if File.exists?(matching_osm)
-        v = OpenStudio::IdfFile.loadVersionOnly(matching_osm)
-        # Seems like something we should definitely fix anyways, so throwing
-        if not v
-          fail "Cannot find versionString in #{matching_osm}"
-        end
-
-        # If there is a version, check that it's not newer than current bindings
-        model_version = v.get.str
-
-        if Gem::Version.new(model_version) > Gem::Version.new($SdkVersion)
-          # Skip instead of fail
-          skip "Matching OSM Model version is newer than the SDK version used (#{model_version} versus #{$SdkVersion})"
-        end
-      else
-        # If there isn't a matching, we warn, but we'll still run it
-        # It might make sense if you have just added it recently
-        warn "There is no matching OSM test for #{filename}"
-      end
-    end
-
     # command to generate the initial osm
     command = "\"#{$OpenstudioCli}\" \"#{File.join(base_dir, filename)}\""
     run_command(command, dir, 3600)

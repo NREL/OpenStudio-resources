@@ -15,13 +15,6 @@ require_relative 'test_helpers.rb'
 #end
 
 
-# List of tests that don't have a matching OSM test for a valid reason
-# No "Warn" will be issued for these
-# input the ruby file name, eg `xxxx.rb` NOT `test_xxx_rb`
-$NoMatchingOSMTests = ['ExampleModel.rb',
-                       'autosize_hvac.rb',
-                      ]
-
 # the tests
 class ModelTests < Minitest::Test
   parallelize_me!
