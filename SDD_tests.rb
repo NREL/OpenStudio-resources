@@ -1,12 +1,9 @@
-require 'openstudio'
-require 'equivalent-xml'
-require 'etc'
+require 'openstudio' unless defined?(OpenStudio)
+# TODO not in openstudio gems...
+# require 'equivalent-xml'
 
-# Environment variables
-if ENV['N'].nil?
-  # Number of parallel runs caps to nproc - 1
-  ENV['N'] = [1, Etc.nprocessors - 1].max.to_s
-end
+# The config and helpers are inside this file
+require_relative 'test_helpers.rb'
 
 require 'minitest/autorun'
 
@@ -20,42 +17,6 @@ rescue LoadError
   puts "Minitest Reporters not installed"
 end
 
-# config stuff
-$OpenstudioCli = OpenStudio::getOpenStudioCLI
-$RootDir = File.absolute_path(File.dirname(__FILE__))
-$ModelDir = File.join($RootDir, 'model/simulationtests/')
-$SddSimDir = File.join($RootDir, 'model/sddtests/')
-$TestDirSddFT = File.join($RootDir, 'testruns/SddForwardTranslator/')
-$TestDirSddRT = File.join($RootDir, 'testruns/SddReverseTranslator/')
-
-if File.exists?($TestDirSddFT)
-  FileUtils.mkdir_p($TestDirSddFT)
-end
-
-if File.exists?($TestDirSddRT)
-  FileUtils.mkdir_p($TestDirSddRT)
-end
-
-$SdkVersion = OpenStudio.openStudioVersion
-$SdkLongVersion = OpenStudio::openStudioLongVersion
-$Build_Sha = $SdkLongVersion.split('.')[-1]
-
-puts "Running for OpenStudio #{$SdkLongVersion}"
-
-$Custom_tag=''
-if !ENV["CUSTOMTAG"].nil?
-  $Custom_tag = ENV['CUSTOMTAG']
-  # Debug
-  # puts "Setting custom tag to #{$Custom_tag}"
-end
-
-if not $Custom_tag.empty?
-  if $Custom_tag.downcase == 'sha'
-    $Custom_tag = $Build_Sha
-  end
-  $Custom_tag = "_#{$Custom_tag}"
-  puts "Custom tag will be appended, files will be named like 'testname_#{$SdkVersion}_out#{$Custom_tag}.osw'\n"
-end
 
 ###############################################################################
 #                     For comparison, pass ENV variables                      #
@@ -77,24 +38,7 @@ end
 $all_model_paths = Dir.glob(File.join($ModelDir, '*.osm'));
 $all_sddsimxml_paths = Dir.glob(File.join($SddSimDir, '*.xml'));
 
-# Helper to load a model in one line
-# It will raise if the path (or the model) isn't valid
-#
-# @param path [String] The path to the osm
-# @return [OpenStudio::Model::Model] the resulting model.
-def osload(path)
-  translator = OpenStudio::OSVersion::VersionTranslator.new
-  ospath = OpenStudio::Path.new(path)
-  model = translator.loadModel(ospath)
-  if model.empty?
-      raise "Path '#{path}' is not a valid path to an OpenStudio Model"
-  else
-      model = model.get
-  end
-  return model
-end
-
-def apply_known_changes(doc_new)
+def apply_known_ft_changes(doc_new)
   # Previously, CoilHtg was incorrectly mapped to CoilClg
   doc_new.xpath("//CoilHtg").each do |node|
     node.name = 'CoilClg'
@@ -108,31 +52,40 @@ OpenStudio::Logger.instance.standardOutLogger.disable
 # If enabled, set the LogLevel (Error, Warn, Info, Debug, Trace)
 OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 
+# This is the sanitzed filename, with ' - ap.xml'
 $Disabled_RT_Tests = [
   # These make both 2.7.1 and 2.7.2 hard crash
   #'OffSml_MiniSplit',
 
 ]
 
-def escapeName(filename)
-  return filename.gsub('-','_')
-                 .gsub('+','_')
-                 .gsub(' ','_')
-                 .gsub("=",'_')
-end
-
+# Runs a single SddReverseTranslator path given the name of a SDD SIM XML file
+# It will raise if the path (or the model) isn't valid
+#
+# @param sddsimxml_path [String] The name of the XML, eg: 'blabla.xml'
+# It will go look in SddSimDir for this will
+# @return None. Will assert that the model can be RT'ed, and save it in
+# $TestDirSddRT for comparison
 def sdd_ft_test(osm_path)
   full_path = File.join($ModelDir, osm_path)
 
-  filename = File.basename(osm_path).gsub('.osm', '')
-  #$i_ft += 1
-  #puts "\n\n[#{$i_ft}/#{$all_model_paths.size}] Running for #{model_path}"
-  m = osload(full_path)
+  filename = File.basename(osm_path) # .gsub('.osm', '')
+
+  # Load Model
+  translator = OpenStudio::OSVersion::VersionTranslator.new
+  _m = translator.loadModel(OpenStudio::Path.new(full_path))
+  assert _m.is_initialized, "Could not Load #{osm_path}"
+  m = _m.get
+
+  # We save in the test/ folder like the OSW for sim_tests
   sdd_out = File.join($TestDirSddFT, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.xml")
   ft = OpenStudio::SDD::SddForwardTranslator.new
   test = ft.modelToSDD(m, sdd_out);
   assert test, "Failed SDD FT for #{filename}"
 end
+
+
+
 
 # Runs a single SddReverseTranslator path given the name of a SDD SIM XML file
 # It will raise if the path (or the model) isn't valid
@@ -145,7 +98,7 @@ def sdd_rt_test(sddsimxml_path)
 
   full_path = File.join($SddSimDir, sddsimxml_path)
 
-  filename = escapeName(sddsimxml_path.gsub(' - ap.xml', ''))
+  filename = escapeName(sddsimxml_path.gsub(' - ap.xml', '.xml'))
 
   #puts "\nRunning for #{filename}"
   #puts "Loading #{full_path}"
@@ -153,39 +106,42 @@ def sdd_rt_test(sddsimxml_path)
   if $Disabled_RT_Tests.include?(filename)
     skip "Test is disabled for #{filename}"
   end
-  # Remove the semi colon to see the RT warnings/Errors
   rt = OpenStudio::SDD::SddReverseTranslator.new
-  _m = rt.loadModel(full_path);
+  _m = rt.loadModel(full_path)
   # Test that RT Worked
   assert _m.is_initialized, "Failed SDD RT for #{filename}"
 
+
+  # Need to add the DDY
+  m = add_design_days(_m.get())
+
   # If so, then save resulting OSM for diffing
-  m_out = File.join($TestDirSddRT, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.osm")
-  _m.get.save(m_out, true)
+  m_out = File.join($TestDirSddRT, filename)
+  puts "Saving at #{m_out}"
+
+  m.save(m_out, true)
+
+  # Now do the sim_test portion!
+  sim_test(filename, {:base_dir => $TestDirSddRT})
+  # m_out = File.join($TestDirSddRT, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.osm")
+
 end
 
 
-# the tests
-class SddTests < Minitest::Test
+class SddForwardTranslatorTests < Minitest::Test
   parallelize_me!
-  # i_suck_and_my_tests_are_order_dependent! # To debug a crash
 
-  # Dynamically create the SddForwardTranslator tests
-  # by discovering all OSMs in model/simulationtests
-  $all_model_paths.each do |model_path|
-    filename = escapeName(File.basename(model_path).gsub('.osm', ''))
-    define_method("test_FT_#{filename}") do
-      sdd_ft_test(File.basename(model_path))
-    end
-  end
-
+  # TODO: re-enable
   # To be called manually after both the old and new have run
+=begin
   def test_FT_compare
 
-    assert $IsCompareOK, "You must pass the environment variables " +
-                         "OLD_VERSION & NEW_VERSION in order to run " +
-                         "the SddForwardTranslator_compare test.\n" +
-                         "eg: `OLD_VERSION=2.7.1 NEW_VERSION=2.7.2 ruby SDD_tests.rb -n /compare/`"
+    if not $IsCompareOK
+      skip "You must pass the environment variables " +
+           "OLD_VERSION & NEW_VERSION in order to run " +
+           "the SddForwardTranslator_compare test.\n" +
+           "eg: `OLD_VERSION=2.7.1 NEW_VERSION=2.7.2 ruby SDD_tests.rb -n /compare/`"
+    end
 
     puts "Running XML Diffs for #{$Old_Version} > #{$New_Version}"
 
@@ -198,7 +154,7 @@ class SddTests < Minitest::Test
       doc_new = File.open(sdd_new) {|f| Nokogiri::XML(f) };
 
       # Known-changes to XML structure itself
-      doc_new = apply_known_changes(doc_new)
+      doc_new = apply_known_ft_changes(doc_new)
 
       # Local only ignores
       opts = { :element_order => false, :normalize_whitespace => true }
@@ -212,6 +168,427 @@ class SddTests < Minitest::Test
 
     end
   end
+=end
+
+
+  #  Note: JM 2019-01-18
+  #  Not used because you can't parallelize this
+  #
+
+  # Dynamically create the SddForwardTranslator tests
+  # by discovering all OSMs in model/simulationtests
+  #$all_model_paths.each do |model_path|
+  #  filename = escapeName(File.basename(model_path).gsub('.osm', ''))
+  #  define_method("test_FT_#{filename}") do
+  #    sdd_ft_test(File.basename(model_path))
+  #  end
+  #end
+
+###############################################################################
+#                           Hardcoded SDD FT Tests                            #
+###############################################################################
+
+  def test_FT_absorption_chillers
+    sdd_ft_test('absorption_chillers.osm')
+  end
+
+  def test_FT_additional_props
+    sdd_ft_test('additional_props.osm')
+  end
+
+  def test_FT_afn_single_zone_nv
+    sdd_ft_test('afn_single_zone_nv.osm')
+  end
+
+  def test_FT_air_chillers
+    sdd_ft_test('air_chillers.osm')
+  end
+
+  def test_FT_air_terminals
+    sdd_ft_test('air_terminals.osm')
+  end
+
+  def test_FT_airloop_and_zonehvac
+    sdd_ft_test('airloop_and_zonehvac.osm')
+  end
+
+  def test_FT_airloop_avms
+    sdd_ft_test('airloop_avms.osm')
+  end
+
+  def test_FT_airterminal_cooledbeam
+    sdd_ft_test('airterminal_cooledbeam.osm')
+  end
+
+  def test_FT_airterminal_fourpipebeam
+    sdd_ft_test('airterminal_fourpipebeam.osm')
+  end
+
+  def test_FT_asymmetric_interior_constructions
+    sdd_ft_test('asymmetric_interior_constructions.osm')
+  end
+
+  def test_FT_availability_managers
+    sdd_ft_test('availability_managers.osm')
+  end
+
+  def test_FT_baseline_sys01
+    sdd_ft_test('baseline_sys01.osm')
+  end
+
+  def test_FT_baseline_sys02
+    sdd_ft_test('baseline_sys02.osm')
+  end
+
+  def test_FT_baseline_sys03
+    sdd_ft_test('baseline_sys03.osm')
+  end
+
+  def test_FT_baseline_sys04
+    sdd_ft_test('baseline_sys04.osm')
+  end
+
+  def test_FT_baseline_sys05
+    sdd_ft_test('baseline_sys05.osm')
+  end
+
+  def test_FT_baseline_sys06
+    sdd_ft_test('baseline_sys06.osm')
+  end
+
+  def test_FT_baseline_sys07
+    sdd_ft_test('baseline_sys07.osm')
+  end
+
+  def test_FT_baseline_sys08
+    sdd_ft_test('baseline_sys08.osm')
+  end
+
+  def test_FT_baseline_sys09
+    sdd_ft_test('baseline_sys09.osm')
+  end
+
+  def test_FT_baseline_sys10
+    sdd_ft_test('baseline_sys10.osm')
+  end
+
+  def test_FT_centralheatpumpsystem
+    sdd_ft_test('centralheatpumpsystem.osm')
+  end
+
+  def test_FT_cooling_coils
+    sdd_ft_test('cooling_coils.osm')
+  end
+
+  def test_FT_coolingtowers
+    sdd_ft_test('coolingtowers.osm')
+  end
+
+  def test_FT_daylighting_no_shades
+    sdd_ft_test('daylighting_no_shades.osm')
+  end
+
+  def test_FT_daylighting_shades
+    sdd_ft_test('daylighting_shades.osm')
+  end
+
+  def test_FT_dist_ht_cl
+    sdd_ft_test('dist_ht_cl.osm')
+  end
+
+  def test_FT_dsn_oa_w_ideal_loads
+    sdd_ft_test('dsn_oa_w_ideal_loads.osm')
+  end
+
+  def test_FT_dual_duct
+    sdd_ft_test('dual_duct.osm')
+  end
+
+  def test_FT_ducts_and_pipes
+    sdd_ft_test('ducts_and_pipes.osm')
+  end
+
+  def test_FT_ems
+    sdd_ft_test('ems.osm')
+  end
+
+  def test_FT_ems_1floor_SpaceType_1space
+    sdd_ft_test('ems_1floor_SpaceType_1space.osm')
+  end
+
+  def test_FT_ems_scott
+    sdd_ft_test('ems_scott.osm')
+  end
+
+  def test_FT_epw_design_conditions
+    sdd_ft_test('epw_design_conditions.osm')
+  end
+
+  def test_FT_evaporative_cooling
+    sdd_ft_test('evaporative_cooling.osm')
+  end
+
+  def test_FT_exterior_equipment
+    sdd_ft_test('exterior_equipment.osm')
+  end
+
+  def test_FT_fan_on_off
+    sdd_ft_test('fan_on_off.osm')
+  end
+
+  def test_FT_fluid_coolers
+    sdd_ft_test('fluid_coolers.osm')
+  end
+
+  def test_FT_foundation_kiva
+    sdd_ft_test('foundation_kiva.osm')
+  end
+
+  def test_FT_fuelcell
+    sdd_ft_test('fuelcell.osm')
+  end
+
+  def test_FT_generator_microturbine
+    sdd_ft_test('generator_microturbine.osm')
+  end
+
+  def test_FT_headered_pumps
+    sdd_ft_test('headered_pumps.osm')
+  end
+
+  def test_FT_heatexchanger_airtoair_sensibleandlatent
+    sdd_ft_test('heatexchanger_airtoair_sensibleandlatent.osm')
+  end
+
+  def test_FT_heatpump_hot_water
+    sdd_ft_test('heatpump_hot_water.osm')
+  end
+
+  def test_FT_hightemprad
+    sdd_ft_test('hightemprad.osm')
+  end
+
+  def test_FT_hot_water
+    sdd_ft_test('hot_water.osm')
+  end
+
+  def test_FT_humidity_control
+    sdd_ft_test('humidity_control.osm')
+  end
+
+  def test_FT_ideal_loads_w_plenums
+    sdd_ft_test('ideal_loads_w_plenums.osm')
+  end
+
+  def test_FT_ideal_plant
+    sdd_ft_test('ideal_plant.osm')
+  end
+
+  def test_FT_interior_partitions
+    sdd_ft_test('interior_partitions.osm')
+  end
+
+  def test_FT_lifecyclecostparameters
+    sdd_ft_test('lifecyclecostparameters.osm')
+  end
+
+  def test_FT_lowtemprad_constflow
+    sdd_ft_test('lowtemprad_constflow.osm')
+  end
+
+  def test_FT_lowtemprad_electric
+    sdd_ft_test('lowtemprad_electric.osm')
+  end
+
+  def test_FT_lowtemprad_varflow
+    sdd_ft_test('lowtemprad_varflow.osm')
+  end
+
+  def test_FT_meters
+    sdd_ft_test('meters.osm')
+  end
+
+  def test_FT_moisture_settings
+    sdd_ft_test('moisture_settings.osm')
+  end
+
+  def test_FT_multi_stage
+    sdd_ft_test('multi_stage.osm')
+  end
+
+  def test_FT_multiple_airloops
+    sdd_ft_test('multiple_airloops.osm')
+  end
+
+  def test_FT_multiple_loops_w_plenums
+    sdd_ft_test('multiple_loops_w_plenums.osm')
+  end
+
+  def test_FT_photovoltaics
+    sdd_ft_test('photovoltaics.osm')
+  end
+
+  def test_FT_plant_op_deltatemp_schemes
+    sdd_ft_test('plant_op_deltatemp_schemes.osm')
+  end
+
+  def test_FT_plant_op_schemes
+    sdd_ft_test('plant_op_schemes.osm')
+  end
+
+  def test_FT_plant_op_temp_schemes
+    sdd_ft_test('plant_op_temp_schemes.osm')
+  end
+
+  def test_FT_plantloop_avms
+    sdd_ft_test('plantloop_avms.osm')
+  end
+
+  def test_FT_plantloop_avms_temp
+    sdd_ft_test('plantloop_avms_temp.osm')
+  end
+
+  def test_FT_plenums
+    sdd_ft_test('plenums.osm')
+  end
+
+  def test_FT_pv_and_storage_demandleveling
+    sdd_ft_test('pv_and_storage_demandleveling.osm')
+  end
+
+  def test_FT_pv_and_storage_facilityexcess
+    sdd_ft_test('pv_and_storage_facilityexcess.osm')
+  end
+
+  def test_FT_pvwatts
+    sdd_ft_test('pvwatts.osm')
+  end
+
+  def test_FT_refrigeration_system
+    sdd_ft_test('refrigeration_system.osm')
+  end
+
+  def test_FT_roof_vegetation
+    sdd_ft_test('roof_vegetation.osm')
+  end
+
+  def test_FT_schedule_file
+    sdd_ft_test('schedule_file.osm')
+  end
+
+  def test_FT_schedule_ruleset_2012_LeapYear
+    sdd_ft_test('schedule_ruleset_2012_LeapYear.osm')
+  end
+
+  def test_FT_schedule_ruleset_2012_NonLeapYear
+    sdd_ft_test('schedule_ruleset_2012_NonLeapYear.osm')
+  end
+
+  def test_FT_schedule_ruleset_2013
+    sdd_ft_test('schedule_ruleset_2013.osm')
+  end
+
+  def test_FT_scheduled_infiltration
+    sdd_ft_test('scheduled_infiltration.osm')
+  end
+
+  def test_FT_setpoint_managers
+    sdd_ft_test('setpoint_managers.osm')
+  end
+
+  def test_FT_solar_collector_flat_plate_water
+    sdd_ft_test('solar_collector_flat_plate_water.osm')
+  end
+
+  def test_FT_space_load_instances
+    sdd_ft_test('space_load_instances.osm')
+  end
+
+  def test_FT_surface_properties
+    sdd_ft_test('surface_properties.osm')
+  end
+
+  def test_FT_thermal_storage
+    sdd_ft_test('thermal_storage.osm')
+  end
+
+  def test_FT_transformer
+    sdd_ft_test('transformer.osm')
+  end
+
+  def test_FT_unitary_system
+    sdd_ft_test('unitary_system.osm')
+  end
+
+  def test_FT_unitary_system_performance_multispeed
+    sdd_ft_test('unitary_system_performance_multispeed.osm')
+  end
+
+  def test_FT_unitary_systems_airloop_and_zonehvac
+    sdd_ft_test('unitary_systems_airloop_and_zonehvac.osm')
+  end
+
+  def test_FT_unitary_test
+    sdd_ft_test('unitary_test.osm')
+  end
+
+  def test_FT_unitary_vav_bypass
+    sdd_ft_test('unitary_vav_bypass.osm')
+  end
+
+  def test_FT_utility_bill01
+    sdd_ft_test('utility_bill01.osm')
+  end
+
+  def test_FT_utility_bill02
+    sdd_ft_test('utility_bill02.osm')
+  end
+
+  def test_FT_vrf
+    sdd_ft_test('vrf.osm')
+  end
+
+  def test_FT_water_economizer
+    sdd_ft_test('water_economizer.osm')
+  end
+
+  def test_FT_water_heaters
+    sdd_ft_test('water_heaters.osm')
+  end
+
+  def test_FT_zone_air_movement
+    sdd_ft_test('zone_air_movement.osm')
+  end
+
+  def test_FT_zone_control_contaminant_controller
+    sdd_ft_test('zone_control_contaminant_controller.osm')
+  end
+
+  def test_FT_zone_fan_exhaust
+    sdd_ft_test('zone_fan_exhaust.osm')
+  end
+
+  def test_FT_zone_hvac
+    sdd_ft_test('zone_hvac.osm')
+  end
+
+  def test_FT_zone_hvac2
+    sdd_ft_test('zone_hvac2.osm')
+  end
+
+  def test_FT_zone_mixing
+    sdd_ft_test('zone_mixing.osm')
+  end
+
+end
+
+# the tests
+class SddReverseTranslatorTests < Minitest::Test
+  parallelize_me!
+  # i_suck_and_my_tests_are_order_dependent! # To debug a crash
+
+
+
 
   #  Note: JM 2019-01-18
   #  Not used because you can't parallelize this
