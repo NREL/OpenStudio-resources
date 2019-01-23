@@ -121,7 +121,15 @@ The `model_tests.rb` is responsible to run the tests you have requested (or all 
 * Round values to 2 digits to avoid excessive diffing
 
 The `model_tests.rb`  outputs this modified `out.osw` in the right folder with the right naming convention: `testname_X.Y.Z_out.osw` (eg: `air_chillers.rb_2.3.1_out.osw`):
-a given user can run the regression suite against his OpenStudio version exactly like he used to. Currently every test output is commited to the `test/` folder.
+a given user can run the regression suite against his OpenStudio version exactly like he used to. Currently every test output is committed to the `test/` folder.
+
+After this post-processing step, it also checks the `total_site_energy` (in kBTU) from the `openstudio_results` measure and compares it with the previous **official** run.
+
+**eg:** if you run `test_baseline_sys01.osm` (which tests the file `model/simulationtests/baseline_sys01.osm`), with a `CUSTOM_TAG=develop3` in OpenStudio 2.7.2,
+
+* Your current OSW is generated at `test/baseline_sys01.osm_2.7.2_out_develop3.osw`
+* The test will look for a file named `baseline_sys01.osm_2.7.1_out.osw` since it identified that the previous version was 2.7.1, and it stripped the custom tag portion to find an official run
+* It parses the old_eui and the new_eui, and does `pct_diff = 100*(new_eui - old_eui) / old_eui.to_f` then `assert (pct_diff < $EuiPctThreshold)` (currently set to 0.5%)
 
 ### Parsing and analyzing
 
