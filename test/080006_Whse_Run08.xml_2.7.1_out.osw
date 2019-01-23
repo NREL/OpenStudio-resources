@@ -4,23 +4,103 @@
   "eplusout_err": [
     "Program Version,EnergyPlus, Version 9.0.1-bb7ca4f0da, ",
     "   ************* Beginning Zone Sizing Calculations",
-    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 2\", Blank Schedule Type Limits Name input -- will not be validated.",
-    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 3\", Blank Schedule Type Limits Name input -- will not be validated.",
-    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 4\", Blank Schedule Type Limits Name input -- will not be validated.",
-    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 5\", Blank Schedule Type Limits Name input -- will not be validated.",
-    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 6\", Blank Schedule Type Limits Name input -- will not be validated.",
-    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 7\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"{2C46EBCB-3E13-417C-B48F-856993196844}\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"{6566AFF9-0F59-46B6-A857-EAE6CD3D3BD0}\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"{BA472495-80A8-4DAB-B7AB-A39D6647A49C}\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Year=\"ZONE1 OFFICE TARGET SHW TEMP\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Year=\"ZONE2 FINE STORAGE TARGET SHW TEMP\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Year=\"ZONE3 BULK STORAGE TARGET SHW TEMP\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.",
     "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.",
-    "   ** Warning ** GetHTSurfaceData: Surfaces with interface to Ground found but no \"Ground Temperatures\" were input.",
-    "   **   ~~~   ** Found first in surface=SURFACE 25",
-    "   **   ~~~   ** Defaults, constant throughout the year of (18.0) will be used.",
-    "   ** Warning ** CheckUsedConstructions: There are 6 nominally unused constructions in input.",
-    "   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;",
-    "   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"STORY 1 CORE THERMAL ZONE BASELINE MODEL INFILTRATION\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Surface Area = 0.  0 Infiltration will result.",
+    "   ** Warning ** Weather file location will be used rather than entered (IDF) Location object.",
+    "   **   ~~~   ** ..Location object={1012E855-B105-4E5E-8E5B-4663C7E16604}",
+    "   **   ~~~   ** ..Weather File Location=Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300",
+    "   **   ~~~   ** ..due to location differences, Latitude difference=[8.03] degrees, Longitude difference=[30.48] degrees.",
+    "   **   ~~~   ** ..Time Zone difference=[2.0] hour(s), Elevation difference=[572.91] percent, [171.13] meters.",
+    "   ** Warning ** GetDaylightingControls: Fraction of Zone controlled by the Daylighting reference points is < 1.0.",
+    "   **   ~~~   ** ..discovered in \"Daylighting:Controls\" for Zone=\"ZONE1 OFFICE THERMAL ZONE\", only 0.21 of the zone is controlled.",
+    "   ** Warning ** GetDaylightingControls: Fraction of Zone controlled by the Daylighting reference points is < 1.0.",
+    "   **   ~~~   ** ..discovered in \"Daylighting:Controls\" for Zone=\"ZONE2 FINE STORAGE THERMAL ZONE\", only 0.99 of the zone is controlled.",
+    "   ** Warning ** GetDaylightingControls: Fraction of Zone controlled by the Daylighting reference points is < 1.0.",
+    "   **   ~~~   ** ..discovered in \"Daylighting:Controls\" for Zone=\"ZONE3 BULK STORAGE THERMAL ZONE\", only 0.99 of the zone is controlled.",
+    "   ** Warning ** Calculated design cooling load for zone=ZONE2 FINE STORAGE THERMAL ZONE is zero.",
+    "   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.",
+    "   ** Warning ** Calculated design cooling load for zone=ZONE3 BULK STORAGE THERMAL ZONE is zero.",
+    "   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.",
+    "   ************* Beginning System Sizing Calculations",
+    "   ** Warning ** GetAirPathData: AirLoopHVAC=\"BULKSTORAGE_HTGVENT\" has no Controllers.",
+    "   ** Warning ** GetAirPathData: AirLoopHVAC=\"FINESTORAGE_HTGVENT\" has no Controllers.",
     "   ************* Beginning Plant Sizing Calculations",
+    "   ** Warning ** InitOAController: Maximum Outdoor Air Flow Rate for Controller:OutdoorAir=OFFICE_OACTRL is greater than Design Supply Air Flow Rate for AirLoopHVAC=OFFICE_SZAC.",
+    "   **   ~~~   ** ...Maximum Outdoor Air Flow Rate=1.432714 will be reset to loop Design Supply Air Flow Rate=1.203348",
+    "   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = OFFICE_COILCLG but not at the AHRI test condition due to curve out of bound.",
+    "   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.",
+    "   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump={384028E4-9D1D-407A-893E-5037191FEFFC}",
     "   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTCOOLING:FACILITY\" - not found.",
     "   ** Warning ** Output:Meter: invalid Key Name=\"DISTRICTHEATING:FACILITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"HEATREJECTION:DISTRICTCOOLING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"HUMIDIFIER:DISTRICTHEATING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"INTERIOREQUIPMENT:GAS\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"PUMPS:DISTRICTCOOLING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"REFRIG:EXTERIOREQUIPMENT:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"PUMPS:DISTRICTHEATING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"PROCESS:INTERIOREQUIPMENT:GAS\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"RECEPTACLE:EXTERIOREQUIPMENT:GAS\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"COGENERATION:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"EXTERIORLIGHTS:DISTRICTHEATING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"NONCOMPLIANCELTG:INTERIORLIGHTS:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"EXTERIORLIGHTS:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"REG LTG:EXTERIORLIGHTS:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"REFRIGERATION:DISTRICTCOOLING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"COOLING:DISTRICTHEATING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"REFRIG:INTERIOREQUIPMENT:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"COGENERATION:DISTRICTCOOLING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"EXTERIOREQUIPMENT:DISTRICTCOOLING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"HUMIDIFIER:GAS\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"DISTRICTHEATING:FACILITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"WATERSYSTEMS:DISTRICTHEATING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"COGENERATION:GAS\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"REFRIGERATION:GAS\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"DISTRICTCOOLING:FACILITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"FANS:DISTRICTCOOLING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"INTERIORLIGHTS:DISTRICTCOOLING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"INTERIOREQUIPMENT:DISTRICTCOOLING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"HEATING:DISTRICTCOOLING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"COOLING:DISTRICTCOOLING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"INTERIOREQUIPMENT:DISTRICTHEATING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"EXTERIOREQUIPMENT:DISTRICTHEATING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"EXTERIORLIGHTS:GAS\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"HEATRECOVERY:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"PROCESS:EXTERIOREQUIPMENT:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"HEATING:DISTRICTHEATING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"HUMIDIFIER:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"INTERNAL TRANSPORT:INTERIOREQUIPMENT:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"HEATREJECTION:GAS\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"COOLING:GAS\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"PUMPS:GAS\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"FANS:GAS\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"EXTERIOREQUIPMENT:GAS\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"INTERIORLIGHTS:GAS\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"WATERSYSTEMS:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"PROCESS:EXTERIOREQUIPMENT:GAS\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"HEATREJECTION:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"EXTERIOREQUIPMENT:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"HEATRECOVERY:DISTRICTHEATING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"REFRIGERATION:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"WATERSYSTEMS:DISTRICTCOOLING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"RECEPTACLE:EXTERIOREQUIPMENT:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"NONREG LTG:EXTERIORLIGHTS:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"HEATRECOVERY:GAS\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"COGENERATION:DISTRICTHEATING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"EXTERIORLIGHTS:DISTRICTCOOLING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"HUMIDIFIER:DISTRICTCOOLING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"PROCESS:INTERIOREQUIPMENT:ELECTRICITY\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"HEATRECOVERY:DISTRICTCOOLING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"HEATREJECTION:DISTRICTHEATING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"INTERIORLIGHTS:DISTRICTHEATING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"REFRIGERATION:DISTRICTHEATING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"FANS:DISTRICTHEATING\" - not found.",
+    "   ** Warning ** Output:Meter:MeterFileOnly: invalid Key Name=\"RECEPTACLE:INTERIOREQUIPMENT:GAS\" - not found.",
     "   ** Warning ** Output:Meter:MeterFileOnly requested for \"Electricity:Facility\" (TimeStep), already on \"Output:Meter\". Will report to both eplusout.eso and eplusout.mtr",
     "   ************* Testing Individual Branch Integrity",
     "   ************* All Branches passed integrity testing",
@@ -30,39 +110,8 @@
     "   ************* All Return Air Paths passed integrity testing",
     "   ************* No node connection errors were found.",
     "   ************* Beginning Simulation",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 10\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -8.17",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 09:15 - 09:20",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 10\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -17.77 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 09:15 - 09:20",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 4.555 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 4\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -6.42",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 10:05 - 10:10",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 8\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -6.13",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 10:10 - 10:15",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 8\" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -5.20 C.",
-    "   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 10:10 - 10:15",
-    "   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil",
-    "   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 18.873 C.",
-    "   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.",
-    "   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 6\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -4.72",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 11:05 - 11:10",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 9\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -10.20",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 02/06 15:10 - 15:20",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 2\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -5.97",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 02/16 10:30 - 10:35",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
-    "   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed \"COIL COOLING DX SINGLE SPEED 7\" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -3.30",
-    "   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 02/16 15:20 - 15:30",
-    "   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.",
+    "   ** Warning ** Processing Monthly Tabular Reports: Variable names not valid for this simulation",
+    "   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual variables.",
     "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-ELECTRICITY\" has no energy cost. ",
     "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
     "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-DISTILLATE OIL\" has no energy cost. ",
@@ -74,79 +123,13 @@
     "   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= \"U.S. AVG  COMMERCIAL-COAL\" has no energy cost. ",
     "   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.",
     "   ************* Simulation Error Summary *************",
-    "   ************* There are 2 unused schedules in input.",
-    "   ************* There are 2 unused week schedules in input.",
-    "   ************* There are 8 unused day schedules in input.",
+    "   ************* There are 11 unused schedules in input.",
+    "   ************* There are 11 unused week schedules in input.",
+    "   ************* There are 40 unused day schedules in input.",
     "   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.",
-    "   *************",
-    "   ************* ===== Recurring Error Summary =====",
-    "   ************* The following recurring error messages occurred.",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 10\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 2156 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-3.333333E-002 [C]  Min=-18.9 [C]",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 10\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 6969 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.996235  Min=-25.861735",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 4\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 1283 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-3.333333E-002 [C]  Min=-17.433333 [C]",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 8\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 1733 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-3.333333E-002 [C]  Min=-17.2 [C]",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 8\" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:",
-    "   *************  **   ~~~   **   This error occurred 4728 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=1.998132  Min=-6.475449",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 6\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 984 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-0.1 [C]  Min=-16.4 [C]",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 9\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 57 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-0.183333 [C]  Min=-10.5 [C]",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 2\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 42 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-0.183333 [C]  Min=-5.966667 [C]",
-    "   *************",
-    "   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed=\"COIL COOLING DX SINGLE SPEED 7\" - Low condenser dry-bulb temperature error continues...",
-    "   *************  **   ~~~   **   This error occurred 20 total times;",
-    "   *************  **   ~~~   **   during Warmup 0 times;",
-    "   *************  **   ~~~   **   during Sizing 0 times.",
-    "   *************  **   ~~~   **   Max=-0.366667 [C]  Min=-4.4 [C]",
-    "   *************",
-    "   *************",
-    "   ************* ===== Final Error Summary =====",
-    "   ************* The following error categories occurred.  Consider correcting or noting.",
-    "   ************* Nominally Unused Constructions",
-    "   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause",
-    "   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm",
-    "   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).",
-    "   *************",
     "   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.",
-    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 11 Warning; 0 Severe Errors.",
-    "   ************* EnergyPlus Completed Successfully-- 17991 Warning; 0 Severe Errors; "
+    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 16 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Completed Successfully-- 91 Warning; 0 Severe Errors; "
   ],
   "seed_file": "in.osm",
   "steps": [
@@ -262,86 +245,86 @@
           },
           {
             "name": "standards_gem_version",
-            "value": "0.2.6"
+            "value": "0.2.7"
           },
           {
             "name": "workflow_gem_version",
             "value": "1.3.3"
           },
           {
-            "display_name": "Building 1",
+            "display_name": "Warehouse",
             "name": "building_name",
             "value": "n/a"
           },
           {
             "name": "total_site_energy",
             "units": "kBtu",
-            "value": 652079.92
+            "value": 2489375.32
           },
           {
             "name": "net_site_energy",
             "units": "kBtu",
-            "value": 5652079.92
+            "value": 2489375.32
           },
           {
             "name": "total_building_area",
             "units": "ft^2",
-            "value": 107639.1
+            "value": 52045.01
           },
           {
             "name": "total_site_eui",
             "units": "kBtu/ft^2",
-            "value": 52.51
+            "value": 47.83
           },
           {
             "name": "eui",
             "units": "kBtu/ft^2",
-            "value": 52.51
+            "value": 47.83
           },
           {
             "name": "unmet_hours_during_heating",
             "units": "hr",
-            "value": 83.83
+            "value": 1519.75
           },
           {
             "name": "unmet_hours_during_cooling",
             "units": "hr",
-            "value": 2
+            "value": 28.25
           },
           {
             "name": "unmet_hours_during_occupied_heating",
             "units": "hr",
-            "value": 12
+            "value": 376.25
           },
           {
             "name": "unmet_hours_during_occupied_cooling",
             "units": "hr",
-            "value": 2
+            "value": 0
           },
           {
             "name": "unmet_hours_tolerance_heating",
             "units": "F",
-            "value": 0.36
+            "value": 1.01
           },
           {
             "name": "unmet_hours_tolerance_cooling",
             "units": "F",
-            "value": 0.36
+            "value": 1.01
           },
           {
             "name": "end_use_heating",
             "units": "kBtu",
-            "value": 3059828.53
+            "value": 1904496.33
           },
           {
             "name": "end_use_cooling",
             "units": "kBtu",
-            "value": 277046.94
+            "value": 9828.86
           },
           {
             "name": "end_use_interior_lighting",
             "units": "kBtu",
-            "value": 1044617.68
+            "value": 76678.41
           },
           {
             "name": "end_use_exterior_lighting",
@@ -351,7 +334,7 @@
           {
             "name": "end_use_interior_equipment",
             "units": "kBtu",
-            "value": 1044617.68
+            "value": 120353.82
           },
           {
             "name": "end_use_exterior_equipment",
@@ -361,12 +344,12 @@
           {
             "name": "end_use_fans",
             "units": "kBtu",
-            "value": 140096.85
+            "value": 366435.58
           },
           {
             "name": "end_use_pumps",
             "units": "kBtu",
-            "value": 85862.75
+            "value": 0
           },
           {
             "name": "end_use_heat_rejection",
@@ -386,7 +369,7 @@
           {
             "name": "end_use_water_systems",
             "units": "kBtu",
-            "value": 0
+            "value": 11582.33
           },
           {
             "name": "end_use_refrigeration",
@@ -401,12 +384,12 @@
           {
             "name": "fuel_electricity",
             "units": "kBtu",
-            "value": 2592251.39
+            "value": 573296.66
           },
           {
             "name": "fuel_natural_gas",
             "units": "kBtu",
-            "value": 3059828.53
+            "value": 1916078.66
           },
           {
             "name": "fuel_additional_fuel",
@@ -431,12 +414,12 @@
           {
             "name": "end_use_electricity_cooling",
             "units": "kWh",
-            "value": 81194.44
+            "value": 2880.56
           },
           {
             "name": "end_use_electricity_interior_lighting",
             "units": "kWh",
-            "value": 306147.22
+            "value": 22472.22
           },
           {
             "name": "end_use_electricity_exterior_lighting",
@@ -446,7 +429,7 @@
           {
             "name": "end_use_electricity_interior_equipment",
             "units": "kWh",
-            "value": 306147.22
+            "value": 35272.22
           },
           {
             "name": "end_use_electricity_exterior_equipment",
@@ -456,12 +439,12 @@
           {
             "name": "end_use_electricity_fans",
             "units": "kWh",
-            "value": 41058.33
+            "value": 107391.67
           },
           {
             "name": "end_use_electricity_pumps",
             "units": "kWh",
-            "value": 25163.89
+            "value": 0
           },
           {
             "name": "end_use_electricity_heat_rejection",
@@ -496,7 +479,7 @@
           {
             "name": "end_use_natural_gas_heating",
             "units": "therms",
-            "value": 30604.19
+            "value": 19048.64
           },
           {
             "name": "end_use_natural_gas_cooling",
@@ -551,7 +534,7 @@
           {
             "name": "end_use_natural_gas_water_systems",
             "units": "therms",
-            "value": 0
+            "value": 115.85
           },
           {
             "name": "end_use_natural_gas_refrigeration",
@@ -571,12 +554,12 @@
           {
             "name": "electricity_cooling_ip",
             "units": "kWh",
-            "value": 81195.81
+            "value": 2879.76
           },
           {
             "name": "electricity_interior_lighting_ip",
             "units": "kWh",
-            "value": 306147.14
+            "value": 22471.59
           },
           {
             "name": "electricity_exterior_lighting_ip",
@@ -586,7 +569,7 @@
           {
             "name": "electricity_interior_equipment_ip",
             "units": "kWh",
-            "value": 306147.14
+            "value": 35273.23
           },
           {
             "name": "electricity_exterior_equipment_ip",
@@ -596,12 +579,12 @@
           {
             "name": "electricity_fans_ip",
             "units": "kWh",
-            "value": 41059.28
+            "value": 107391.36
           },
           {
             "name": "electricity_pumps_ip",
             "units": "kWh",
-            "value": 25163.56
+            "value": 0
           },
           {
             "name": "electricity_heat_rejection_ip",
@@ -636,12 +619,12 @@
           {
             "name": "electricity_ip",
             "units": "kWh",
-            "value": 759712.93
+            "value": 168015.95
           },
           {
             "name": "natural_gas_heating_ip",
             "units": "MBtu",
-            "value": 3059.83
+            "value": 1904.5
           },
           {
             "name": "natural_gas_cooling_ip",
@@ -696,7 +679,7 @@
           {
             "name": "natural_gas_water_systems_ip",
             "units": "MBtu",
-            "value": 0
+            "value": 11.58
           },
           {
             "name": "natural_gas_refrigeration_ip",
@@ -711,7 +694,7 @@
           {
             "name": "natural_gas_ip",
             "units": "MBtu",
-            "value": 3059.83
+            "value": 1916.08
           },
           {
             "name": "additional_fuel_heating_ip",
@@ -1014,39 +997,64 @@
             "value": 0
           },
           {
-            "name": "ashrae_189_1_2009_ext_roof_iead_climate_zone_2_5",
+            "name": "nacm_metal_framed_wall",
             "units": "ft^2",
-            "value": 53819.55
+            "value": 9503.94
           },
           {
-            "name": "ashrae_189_1_2009_ext_wall_steel_frame_climate_zone_4_8",
+            "name": "nacm_roof",
             "units": "ft^2",
-            "value": 15500.03
+            "value": 12822.57
           },
           {
-            "name": "ashrae_189_1_2009_ext_window_climate_zone_4_5",
+            "name": "nacm_semi_ht_ext_wall",
             "units": "ft^2",
-            "value": 10333.35
+            "value": 16455.4
+          },
+          {
+            "name": "nacm_semi_ht_roof",
+            "units": "ft^2",
+            "value": 29696.72
+          },
+          {
+            "name": "fixed_window",
+            "units": "ft^2",
+            "value": 190.11
+          },
+          {
+            "name": "overhead_door",
+            "units": "ft^2",
+            "value": 559.94
+          },
+          {
+            "name": "sky_light",
+            "units": "ft^2",
+            "value": 6976.0
+          },
+          {
+            "name": "swinging_door",
+            "units": "ft^2",
+            "value": 167.98
           },
           {
             "name": "gross_window_wall_ratio",
             "units": "%",
-            "value": 40
+            "value": 0.71
           },
           {
             "name": "gross_window_wall_ratio_conditioned",
             "units": "%",
-            "value": 40
+            "value": 0.71
           },
           {
             "name": "skylight_roof_ratio",
             "units": "%",
-            "value": 0
+            "value": 14.09
           },
           {
-            "name": "space_type_baseline_model_space_type",
+            "name": "space_type_no_space_type",
             "units": "ft^2",
-            "value": 107639.1
+            "value": 52045.04
           },
           {
             "name": "exterior_lighting_total_power",
@@ -1056,7 +1064,22 @@
           {
             "name": "exterior_lighting_total_consumption",
             "units": "kWh",
-            "value": 1656461.11
+            "value": 729563.89
+          },
+          {
+            "name": "zone_1_office_water_use_equipment",
+            "units": "gal/min",
+            "value": 0.04
+          },
+          {
+            "name": "zone_2_fine_storage_water_use_equipment",
+            "units": "gal/min",
+            "value": 0.04
+          },
+          {
+            "name": "zone_3_bulk_storage_water_use_equipment",
+            "units": "gal/min",
+            "value": 0.1
           },
           {
             "name": "inflation_approach",
@@ -1070,7 +1093,7 @@
           {
             "name": "annual_peak_electric_demand",
             "units": "kW",
-            "value": 334.61
+            "value": 54.3
           },
           {
             "name": "first_year_capital_cost",
