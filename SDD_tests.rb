@@ -120,6 +120,8 @@ class SddForwardTranslatorTests < Minitest::Test
 
   # TODO: re-enable
   # To be called manually after both the old and new have run
+  # TODO: Should also probably make it a method that would be called at the end
+  # of each sdd_ft_test (similar to what I've done for sim_tests)
 =begin
   def test_FT_compare
 
