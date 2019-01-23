@@ -5,19 +5,6 @@ require 'openstudio' unless defined?(OpenStudio)
 # The config and helpers are inside this file
 require_relative 'test_helpers.rb'
 
-require 'minitest/autorun'
-
-begin
-  require "minitest/reporters"
-  require "minitest/reporters/default_reporter"
-  reporter = Minitest::Reporters::DefaultReporter.new
-  reporter.start # had to call start manually otherwise was failing when trying to report elapsed time when run in CLI
-  Minitest::Reporters.use! reporter
-rescue LoadError
-  puts "Minitest Reporters not installed"
-end
-
-
 ###############################################################################
 #                     For comparison, pass ENV variables                      #
 ###############################################################################
@@ -117,7 +104,7 @@ def sdd_rt_test(sddsimxml_path)
 
   # If so, then save resulting OSM for diffing
   m_out = File.join($TestDirSddRT, filename)
-  puts "Saving at #{m_out}"
+  # puts "Saving at #{m_out}"
 
   m.save(m_out, true)
 

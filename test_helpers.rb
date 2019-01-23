@@ -69,8 +69,8 @@ $SdkVersion = OpenStudio.openStudioVersion
 $SdkLongVersion = OpenStudio::openStudioLongVersion
 $Build_Sha = $SdkLongVersion.split('.')[-1]
 
-
-puts "Running for OpenStudio #{$SdkLongVersion}"
+# Acceptable deviation in EUI = 0.5%
+$EuiPctThreshold = 0.5
 
 # Where to cp the out.osw for regression
 # Depends on whether you are in a docker env or not
@@ -126,6 +126,95 @@ $:.unshift($ModelDir)
 ENV['RUBYLIB'] = $ModelDir
 ENV['RUBYPATH'] = $ModelDir
 
+# Sanitizes a filename replaces any of '-+= ' with '_'
+#
+# @param filename [String] The filename to sanitize
+# @return [String] Sanitized filename
+def escapeName(filename)
+  return filename.gsub('-','_')
+                 .gsub('+','_')
+                 .gsub(' ','_')
+                 .gsub("=",'_')
+end
+
+# This globs all OSW tests to find all known versions to date
+# and finds the previous one before the current SdkVersion uses to run the
+# script. If SdkVersion isn't know, returns the last known one. If the
+# SdkVersion is the oldest known to date, returns nil. If the SdkVersion is
+# already know, returns the one just before.
+#
+# @return previousVersion [String] the string of the previous version if found,
+# nil otherwise
+def find_previous_version()
+
+  thisVersion = Gem::Version.new($SdkVersion)
+
+  # We parse the test/ folder for all osm tests
+  out_files = Dir.glob(File.join($OutOSWDir, "*"));
+  re_version = Regexp.new('.*\.osm_(\d\.\d\.\d)_out\.osw');
+  version_strings = out_files.select{|f| f.match(re_version)}.map{|f| f.scan(re_version).first.last}.uniq;
+  # We sort them by the actual version
+  versions = version_strings.map{|v| Gem::Version.new(v)}.sort;
+
+  if versions.include?(thisVersion)
+    thisIndex = versions.index(thisVersion)
+    if thisIndex > 0
+      previousVersion = versions[thisIndex-1]
+      return previousVersion
+    else
+      puts "Cannot find a previous version for #{$SdkVersion} as it's the oldest known"
+      return nil
+    end
+  else
+    lastVersion = versions.last
+    if thisVersion > lastVersion
+      return lastVersion
+    else
+      puts "Cannot find a previous version for #{$SdkVersion} as it's older than the oldest known"
+      return nil
+    end
+  end
+end
+
+
+$SdkPreviousVersion = find_previous_version()
+puts "Running for OpenStudio #{$SdkLongVersion} (Previous=#{$SdkPreviousVersion})"
+
+# Add Chicago Design days to an OpenStudio Model
+# Used to add DDays to a SddReverseTranslated (from XML) OSM
+#
+# @param path [OpenStudio::Model::Model] the model to add the ddy to
+# @return model [OpenStudio::Model::Model].
+def add_design_days(model)
+
+  ddy_path = OpenStudio::Path.new(File.join($RootDir, 'weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.ddy'))
+
+  ddy_idf = OpenStudio::IdfFile::load(ddy_path, "EnergyPlus".to_IddFileType).get
+  ddy_workspace = OpenStudio::Workspace.new(ddy_idf)
+  reverse_translator = OpenStudio::EnergyPlus::ReverseTranslator.new()
+  ddy_model = reverse_translator.translateWorkspace(ddy_workspace)
+
+  # Try to limit to the two main design days
+  ddy_objects = ddy_model.getDesignDays().select { |d| d.name.get.include?('.4% Condns DB') || d.name.get.include?('99.6% Condns DB') }
+  # Otherwise, get all .4% and 99.6%
+  if ddy_objects.size < 2
+    ddy_objects = ddy_model.getDesignDays().select { |d| d.name.get.include?('.4%') || d.name.get.include?('99.6%') }
+  end
+  #add the objects in the ddy file to the model
+  model.addObjects(ddy_objects)
+
+
+  # Do a couple more things
+  sc = model.getSimulationControl
+  sc.setRunSimulationforSizingPeriods(false)
+  sc.setRunSimulationforWeatherFileRunPeriods(true)
+
+  timestep = model.getTimestep
+  timestep.setNumberOfTimestepsPerHour(4)
+
+  return model
+
+end
 
 # bundle install a gemfile identified by directory name inside of 'gemfiles'
 # returns full directory name gemfile_dir
@@ -199,9 +288,86 @@ def run_command(command, dir, timeout)
   end
 end
 
+# Finds the 'total_site_energy' (kBTU) in an out_osw_path that has the
+# OpenStudio results measure in the workflow
+#
+# @param out_osw_path [String]: Any path to a valid OSW file
+# @return site_kbtu [Float]: the 'total_site_energy' from the openstudio_results
+# measure. Returns nil if cannot find file or cannot find the entry in question
+def parse_total_site_energy(out_osw_path)
+  if !File.exists?(out_osw_path)
+    puts "Cannot find file #{out_osw_path}"
+    return nil
+  end
+
+  result_osw = nil
+  File.open(out_osw_path, 'r') do |f|
+    result_osw = JSON::parse(f.read, :symbolize_names=>true)
+  end
+
+  if out_osw_path.include?('2.0.4')
+    os_results = result_osw[:steps].select{|s| s[:measure_dir_name] == 'openstudio_results'}
+  else
+    # This works from 2.0.5 onward...
+    os_results = result_osw[:steps].select{|s| s[:result][:measure_name] == 'openstudio_results'}
+  end
+
+  if os_results.size == 0
+    puts "There are no OpenStudio results for #{out_osw_path}"
+    return nil
+
+  elsif  os_results.size != 1
+    puts("Warning: there are more than one openstudio_results measure " +
+         "for #{out_osw_path}")
+  end
+
+  os_result = os_results[0][:result]
+
+  site_kbtu = os_result[:step_values].select{|s| s[:name] == 'total_site_energy'}[0][:value]
+  return site_kbtu
+end
+
+
+# Checks that % diff of EUI didn't vary too much compared to previous version
+#
+# @param cp_out_osw [String]: path to the test/*.osw to be compared
+# Will look for the previous one in there based on $SdkPreviousVersion
+# Will remove custom tags to find previous version, so that it uses the
+# previous **official** run
+def compare_osw_eui_with_previous_version(cp_out_osw)
+
+  # We can't just replace the versions, in case there's a custom tag
+  # which is almost guaranteed to not exist in the previous version
+  # So instead, we try to compare to the last **official** run
+  filename = File.basename(cp_out_osw).scan(/(.*)_#{$SdkVersion}/).first.first
+  previous_out_osw = File.join(File.dirname(cp_out_osw),
+                               "#{filename}_#{$SdkPreviousVersion}_out.osw")
+
+  old_eui = parse_total_site_energy(previous_out_osw)
+  new_eui = parse_total_site_energy(cp_out_osw)
+
+  if old_eui.nil? || new_eui.nil?
+    if old_eui.nil?
+      skip "Cannot compare EUIs because couldn't find old EUI"
+    end
+    if new_eui.nil?
+      skip "Cannot compare EUIs because couldn't find new EUI"
+    end
+    return
+  end
+
+  pct_diff = 100*(new_eui - old_eui) / old_eui.to_f
+
+  assert (pct_diff < $EuiPctThreshold), "#{pct_diff.round(3)}% difference in EUI is too large for #{cp_out_osw}" +
+                                        " between #{$SdkPreviousVersion} and #{$SdkVersion}"
+
+end
+
+
 # Helper function to post-process the out.osw and save it in test/ with
 # the right naming pattern
-# It also asserts whether the run was successful
+# It also asserts whether the run was successful, and compares EUI with
+# previous version by calling compare_osw_eui_with_previous_version
 #
 # Cleaning includes removing timestamp and deleting :eplusout_err key if
 # bigger than 100 KiB
@@ -281,6 +447,9 @@ def postprocess_out_osw_and_copy(out_osw, cp_out_osw)
   # standard checks
   assert_equal("Success", result_osw[:completed_status])
 
+  # Assert that EUI didn't change too much
+  compare_osw_eui_with_previous_version(cp_out_osw)
+
   return result_osw
 
 end
@@ -299,12 +468,12 @@ def sim_test(filename, options = {})
   end
   if options[:base_dir]
     base_dir = options[:base_dir]
-    puts "Setting base_dir to #{base_dir}"
+    # puts "Setting base_dir to #{base_dir}"
   else
     base_dir = $ModelDir
   end
 
-  puts "Running sim_test(#{filename})"
+  # puts "Running sim_test(#{filename})"
 
   in_osw = File.join(dir, 'in.osw')
   out_osw = File.join(dir, 'out.osw')
@@ -344,9 +513,8 @@ def sim_test(filename, options = {})
       FileUtils.mv(File.join(base_dir, filename),
                    File.join(base_dir, new_filename))
       filename = new_filename
-      puts "Filename is now #{filename}"
+      # puts "Filename is now #{filename}"
 
-      # Need to add design days...
     end
 
     # Copy the generic OSW needed for sim
@@ -865,95 +1033,5 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
 
   # Assert that all fields were set back to autosized
   assert_equal(autosized_fields_before_hard_size.size, autosized_fields_after_auto_size.size, "The number of autosized fields before hard sizing and after autosizing don't match.")
-
-end
-
-
-
-# This globs all OSW tests to find all known versions to date
-# and finds the previous one before the current SdkVersion uses to run the
-# script. If SdkVersion isn't know, returns the last known one. If the
-# SdkVersion is the oldest known to date, returns nil. If the SdkVersion is
-# already know, returns the one just before.
-#
-# @return previousVersion [String] the string of the previous version if found,
-# nil otherwise
-def find_previous_version()
-
-  thisVersion = Gem::Version.new($SdkVersion)
-
-  # We parse the test/ folder for all osm tests
-  out_files = Dir.glob(File.join($OutOSWDir, "*"));
-  re_version = Regexp.new('.*\.osm_(\d\.\d\.\d)_out\.osw');
-  version_strings = out_files.select{|f| f.match(re_version)}.map{|f| f.scan(re_version).first.last}.uniq;
-  # We sort them by the actual version
-  versions = version_strings.map{|v| Gem::Version.new(v)}.sort;
-
-  if versions.include?(thisVersion)
-    thisIndex = versions.index(thisVersion)
-    if thisIndex > 0
-      previousVersion = versions[thisIndex-1]
-      return previousVersion
-    else
-      puts "Cannot find a previous version for #{$SdkVersion} as it's the oldest known"
-      return nil
-    end
-  else
-    lastVersion = versions.last
-    if thisVersion > lastVersion
-      return lastVersion
-    else
-      puts "Cannot find a previous version for #{$SdkVersion} as it's older than the oldest known"
-      return nil
-    end
-  end
-end
-
-
-# Sanitizes a filename replaces any of '-+= ' with '_'
-#
-# @param filename [String] The filename to sanitize
-# @return [String] Sanitized filename
-def escapeName(filename)
-  return filename.gsub('-','_')
-                 .gsub('+','_')
-                 .gsub(' ','_')
-                 .gsub("=",'_')
-end
-
-
-# Add Chicago Design days to an OpenStudio Model
-# Used to add DDays to a SddReverseTranslated (from XML) OSM
-#
-# @param path [OpenStudio::Model::Model] the model to add the ddy to
-# @return model [OpenStudio::Model::Model].
-def add_design_days(model)
-
-  ddy_path = OpenStudio::Path.new(File.join($RootDir, 'weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.ddy'))
-
-  ddy_idf = OpenStudio::IdfFile::load(ddy_path, "EnergyPlus".to_IddFileType).get
-  ddy_workspace = OpenStudio::Workspace.new(ddy_idf)
-  reverse_translator = OpenStudio::EnergyPlus::ReverseTranslator.new()
-  ddy_model = reverse_translator.translateWorkspace(ddy_workspace)
-
-  # Try to limit to the two main design days
-  ddy_objects = ddy_model.getDesignDays().select { |d| d.name.get.include?('.4% Condns DB') || d.name.get.include?('99.6% Condns DB') }
-  # Otherwise, get all .4% and 99.6%
-  if ddy_objects.size < 2
-    ddy_objects = ddy_model.getDesignDays().select { |d| d.name.get.include?('.4%') || d.name.get.include?('99.6%') }
-  end
-  #add the objects in the ddy file to the model
-  model.addObjects(ddy_objects)
-
-
-  # Do a couple more things
-  sc = model.getSimulationControl
-  sc.setRunSimulationforSizingPeriods(false)
-  sc.setRunSimulationforWeatherFileRunPeriods(true)
-
-  timestep = model.getTimestep
-  timestep.setNumberOfTimestepsPerHour(4)
-
-  return model
 
 end

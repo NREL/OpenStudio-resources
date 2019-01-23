@@ -46,7 +46,8 @@ openstudio highlevel_tests.rb.rb
 
 `SDD_tests.rb` has two classes:
 
-* `SddReverseTranslatorTests`: this loads `simulationtests/sddtests/*.xml` files and does:
+* `SddReverseTranslatorTests`: this loads `simulationtests/sddtests/*.xml` files. These are SIM SDD XML files produced after a CBECC-COM run.
+Please see [model/sddtests/README.md](model/sddtests/README.md) for more info. With these XML files it does:
     * RT from XML > OSM, and assert that this works. These are SIM SDD XML files (produces after a CBECC-COM run).
     * Simulate the resulting OSM via `sim_tests` (just like OSM ModelTests does). The resulting OSW is saved in `test/`.
 * `SddForwardTanslatorTests`: this loads the `simulationtests/model/*.osm` files and does OSM > XML and asserts that this works. It saves the resulting XML in `test/`.
