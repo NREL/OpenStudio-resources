@@ -67,6 +67,7 @@ zones = m.getThermalZones.sort_by{|z| z.name.to_s}
 zone = zones[0]
 zone.airLoopHVAC.get.removeBranchForZone(zone)
 airloop = OpenStudio::Model::addSystemType3(m).to_AirLoopHVAC.get
+airloop.setName("AirLoopHVAC CoilCoolingDXTwoStageWithHumidityControlMode")
 airloop.addBranchForZone(zone)
 coil = airloop.supplyComponents(OpenStudio::Model::CoilCoolingDXSingleSpeed::iddObjectType()).first.to_StraightComponent.get
 node = coil.outletModelObject.get.to_Node.get
@@ -78,6 +79,7 @@ coil.remove()
 zone = zones[1]
 zone.airLoopHVAC.get.removeBranchForZone(zone)
 airloop = OpenStudio::Model::AirLoopHVAC.new(m)
+airloop.setName("AirLoopHVAC Unitary with CoilSystemCoolingDXHX")
 alwaysOn = m.alwaysOnDiscreteSchedule()
 # Starting with E 9.0.0, Uncontrolled is deprecated and replaced with
 # ConstantVolume:NoReheat
@@ -102,6 +104,7 @@ unitary.setControllingZoneorThermostatLocation(zone)
 zone = zones[2]
 zone.airLoopHVAC.get.removeBranchForZone(zone)
 airloop = OpenStudio::Model::addSystemType7(m).to_AirLoopHVAC.get
+airloop.setName("AirLoopHVAC Coil DX VariableSpeeds")
 airloop.addBranchForZone(zone)
 coil = airloop.supplyComponents(OpenStudio::Model::CoilCoolingWater::iddObjectType).first.to_CoilCoolingWater.get
 newcoil = OpenStudio::Model::CoilCoolingDXVariableSpeed.new(m)
@@ -119,27 +122,35 @@ newcoil.addSpeed(coildata)
 newcoil.addToNode(node)
 
 
-##CoilSystemCoolingWaterHeatExchangerAssisted
-##zone = zones[3]
-##zone.airLoopHVAC.get.removeBranchForZone(zone)
-#zone = OpenStudio::Model::ThermalZone.new(m)
-#airloop = OpenStudio::Model::AirLoopHVAC.new(m)
-#terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(m,m.alwaysOnDiscreteSchedule())
-#airloop.addBranchForZone(zone,terminal)
-#fan = OpenStudio::Model::FanConstantVolume.new(m)
-#fan.addToNode(airloop.supplyOutletNode)
-#heating_coil = OpenStudio::Model::CoilHeatingGas.new(m)
-#heating_coil.addToNode(airloop.supplyOutletNode)
-#coil_system = OpenStudio::Model::CoilSystemCoolingWaterHeatExchangerAssisted.new(m)
-#coil_system.addToNode(airloop.supplyOutletNode)
-##spm = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(m)
-##spm.setControlZone(zone)
-##spm.addToNode(airloop.supplyOutletNode)
-#water_coil = coil_system.coolingCoil
-#chiller = m.getChillerElectricEIRs.first
-#plant = chiller.plantLoop.get
-#plant.addDemandBranchForComponent(water_coil)
+#CoilSystemCoolingWaterHeatExchangerAssisted
+zone = zones[3]
+zone.airLoopHVAC.get.removeBranchForZone(zone)
 
+airloop = OpenStudio::Model::addSystemType7(m).to_AirLoopHVAC.get
+airloop.setName("AirLoopHVAC CoilSystemCoolingWaterHeatExchangerAssisted")
+airloop.addBranchForZone(zone)
+
+# create a CoilSystem object, that creates both a Water Coil and a HX
+coil_system = OpenStudio::Model::CoilSystemCoolingWaterHeatExchangerAssisted.new(m)
+coil_system.setName("CoilSystemCoolingWaterHeatExchangerAssisted")
+
+# Replace the default CoilCoolingWater with ours, then remove the default one
+water_coil = coil_system.coolingCoil
+water_coil.setName("CoilSystemCoolingWaterHeatExchangerAssisted CoolingCoil")
+coil = airloop.supplyComponents(OpenStudio::Model::CoilCoolingWater::iddObjectType).first.to_CoilCoolingWater.get
+water_coil.addToNode(coil.airOutletModelObject.get.to_Node.get)
+plant = coil.plantLoop.get
+plant.addDemandBranchForComponent(water_coil)
+coil.remove
+
+# Now we need to connect the Air To Air HX to the Outdoor Air System
+hx = coil_system.heatExchanger
+hx.setName("CoilSystemCoolingWaterHeatExchangerAssisted HX")
+oa_node = airloop.airLoopHVACOutdoorAirSystem.get.outboardOANode.get
+hx.addToNode(oa_node)
+spm = OpenStudio::Model::SetpointManagerMixedAir.new(m)
+outlet_node = hx.primaryAirOutletModelObject.get.to_Node.get
+spm.addToNode(outlet_node)
 
 #save the OpenStudio model (.osm)
 m.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
