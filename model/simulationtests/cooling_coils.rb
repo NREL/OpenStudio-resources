@@ -3,33 +3,7 @@ require 'openstudio'
 require 'lib/baseline_model'
 
 m = BaselineModel.new
-#m = OpenStudio::Model::Model.new
-#airloop = OpenStudio::Model::AirLoopHVAC.new(m)
 
-# long standing issue with this coil
-#coil = OpenStudio::Model::CoilSystemCoolingWaterHeatExchangerAssisted.new(m)
-#coil.addToNode(airloop.supplyOutletNode)
-
-#zone = OpenStudio::Model::ThermalZone.new(m)
-#terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(m,m.alwaysOnDiscreteSchedule())
-#airloop.addBranchForZone(zone,terminal)
-#fan = OpenStudio::Model::FanConstantVolume.new(m)
-#fan.addToNode(airloop.supplyOutletNode)
-#heating_coil = OpenStudio::Model::CoilHeatingGas.new(m)
-#heating_coil.addToNode(airloop.supplyOutletNode)
-#cooling_coil = OpenStudio::Model::CoilCoolingDXTwoSpeed.new(m)
-#cooling_coil.addToNode(airloop.supplyOutletNode)
-##coil_system = OpenStudio::Model::CoilSystemCoolingWaterHeatExchangerAssisted.new(m)
-##coil_system.addToNode(airloop.supplyOutletNode)
-#spm = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(m)
-#spm.setControlZone(zone)
-#spm.addToNode(airloop.supplyOutletNode)
-##water_coil = coil_system.coolingCoil
-#plant = OpenStudio::Model::PlantLoop.new(m)
-##plant.addDemandBranchForComponent(water_coil)
-
-
-#
 #make a 2 story, 100m X 50m, 10 zone core/perimeter building
 m.add_geometry({"length" => 100,
                 "width" => 50,
@@ -121,36 +95,9 @@ coildata = OpenStudio::Model::CoilHeatingDXVariableSpeedSpeedData.new(m)
 newcoil.addSpeed(coildata)
 newcoil.addToNode(node)
 
-
-#CoilSystemCoolingWaterHeatExchangerAssisted
-zone = zones[3]
-zone.airLoopHVAC.get.removeBranchForZone(zone)
-
-airloop = OpenStudio::Model::addSystemType7(m).to_AirLoopHVAC.get
-airloop.setName("AirLoopHVAC CoilSystemCoolingWaterHeatExchangerAssisted")
-airloop.addBranchForZone(zone)
-
-# create a CoilSystem object, that creates both a Water Coil and a HX
-coil_system = OpenStudio::Model::CoilSystemCoolingWaterHeatExchangerAssisted.new(m)
-coil_system.setName("CoilSystemCoolingWaterHeatExchangerAssisted")
-
-# Replace the default CoilCoolingWater with ours, then remove the default one
-water_coil = coil_system.coolingCoil
-water_coil.setName("CoilSystemCoolingWaterHeatExchangerAssisted CoolingCoil")
-coil = airloop.supplyComponents(OpenStudio::Model::CoilCoolingWater::iddObjectType).first.to_CoilCoolingWater.get
-water_coil.addToNode(coil.airOutletModelObject.get.to_Node.get)
-plant = coil.plantLoop.get
-plant.addDemandBranchForComponent(water_coil)
-coil.remove
-
-# Now we need to connect the Air To Air HX to the Outdoor Air System
-hx = coil_system.heatExchanger
-hx.setName("CoilSystemCoolingWaterHeatExchangerAssisted HX")
 oa_node = airloop.airLoopHVACOutdoorAirSystem.get.outboardOANode.get
-hx.addToNode(oa_node)
-spm = OpenStudio::Model::SetpointManagerMixedAir.new(m)
-outlet_node = hx.primaryAirOutletModelObject.get.to_Node.get
-spm.addToNode(outlet_node)
+coil_system.addToNode(oa_node)
+
 
 #save the OpenStudio model (.osm)
 m.save_openstudio_osm({"osm_save_directory" => Dir.pwd,

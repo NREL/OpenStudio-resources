@@ -1022,6 +1022,24 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('centralheatpumpsystem.rb')
   end
 
+  def test_coilsystem_waterhx_rb
+    result = sim_test('coilsystem_waterhx.rb')
+  end
+
+  # TODO: add later
+  #def test_coilsystem_waterhx_osm
+    #result = sim_test('coilsystem_waterhx.osm')
+  #end
+
+  def test_coilsystem_dxhx_rb
+    result = sim_test('coilsystem_dxhx.rb')
+  end
+
+  # TODO: add later
+  #def test_coilsystem_dxhx_osm
+    #result = sim_test('coilsystem_dxhx.osm')
+  #end
+
   def test_coolingtowers_osm
     result = sim_test('coolingtowers.osm')
   end
