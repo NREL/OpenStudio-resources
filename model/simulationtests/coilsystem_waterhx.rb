@@ -47,6 +47,9 @@ coil_system = OpenStudio::Model::CoilSystemCoolingWaterHeatExchangerAssisted.new
 coil_system.setName("CoilSystemWaterHX")
 
 # Replace the default CoilCoolingWater with CoilSystem, then remove the default one
+# Note: it's probably going to end up badly controlled when you place the
+# CoilSystem directly on the AirLoopHVAC path and not inside another component
+# (such as UnitarySys, cf: https://github.com/NREL/EnergyPlus/issues/7222)
 water_coil = coil_system.coolingCoil.to_CoilCoolingWater.get
 water_coil.setName("CoilSystemWaterHX CoolingCoil")
 
@@ -60,21 +63,6 @@ coil.remove
 
 hx = coil_system.heatExchanger
 hx.setName("CoilSystemWaterHX HX")
-
-=begin
-# Now we need to connect the Air To Air HX to the Outdoor Air System
-
-oa_node = airloop.airLoopHVACOutdoorAirSystem.get.outboardOANode.get
-hx.addToNode(oa_node)
-spm = OpenStudio::Model::SetpointManagerMixedAir.new(m)
-outlet_node = hx.primaryAirOutletModelObject.get.to_Node.get
-spm.addToNode(outlet_node)
-
-
-
-oa_node = airloop.airLoopHVACOutdoorAirSystem.get.outboardOANode.get
-coil_system.addToNode(oa_node)
-=end
 
 # Rename some nodes and such, for ease of debugging
 airloop.supplyInletNode.setName("#{airloop.name.to_s} Supply Inlet Node")
@@ -92,10 +80,6 @@ heating_coil.waterInletModelObject.get.setName("#{airloop.name.to_s} Heating Coi
 heating_coil.waterOutletModelObject.get.setName("#{airloop.name.to_s} Heating Coil Water Outlet Node")
 heating_coil.controllerWaterCoil.get.setName("#{airloop.name.to_s} Heating Coil Controller")
 heating_coil.airOutletModelObject.get.setName("#{airloop.name.to_s} Heating Coil Air Outlet to Fan Inlet Node")
-
-
-# TODO Add a CoilSystemCoolingDXHeatExchangerAssisted too
-
 
 #save the OpenStudio model (.osm)
 m.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
