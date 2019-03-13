@@ -95,9 +95,6 @@ coildata = OpenStudio::Model::CoilHeatingDXVariableSpeedSpeedData.new(m)
 newcoil.addSpeed(coildata)
 newcoil.addToNode(node)
 
-oa_node = airloop.airLoopHVACOutdoorAirSystem.get.outboardOANode.get
-coil_system.addToNode(oa_node)
-
 
 #save the OpenStudio model (.osm)
 m.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
