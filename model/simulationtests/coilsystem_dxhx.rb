@@ -29,67 +29,50 @@ m.set_space_type()
 #add design days to the model (Chicago)
 m.add_design_days()
 
-#add ASHRAE System type 07, VAV w/ Reheat
-m.add_hvac({"ashrae_sys_num" => '07'})
+#add ASHRAE System type 03, PSZ-AC
+m.add_hvac({"ashrae_sys_num" => '03'})
 
 # In order to produce more consistent results between different runs,
 # we sort the zones by names (only one here anyways...)
 zones = m.getThermalZones.sort_by{|z| z.name.to_s}
 
 
-#CoilSystemCoolingDXHeatExchangerAssisted
+# CoilSystemCoolingDXHeatExchangerAssisted
 zone = zones[0]
 airloop = zone.airLoopHVAC.get
 airloop.setName("AirLoopHVAC CoilSystemDXHX")
 
-# create a CoilSystem object, that creates both a Water Coil and a HX
+# create a CoilSystem object, that creates both a DX Cooling Coil and a HX
 coil_system = OpenStudio::Model::CoilSystemCoolingDXHeatExchangerAssisted.new(m)
 coil_system.setName("CoilSystemDXHX")
-
-# Replace the default CoilCoolingWater with CoilSystem, then remove the default one
 dx_coil = coil_system.coolingCoil.to_CoilCoolingDXSingleSpeed.get
 dx_coil.setName("CoilSystemDXHX CoolingCoil")
-
-coil = airloop.supplyComponents(OpenStudio::Model::CoilCoolingWater::iddObjectType).first.to_CoilCoolingWater.get
-# Note that we connect the CoilSystem, NOT the underlying CoilCoolingDXSingleSpeed
-coil_system.addToNode(coil.airOutletModelObject.get.to_Node.get)
-plant = coil.plantLoop.get
-coil.remove
-plant.remove
-
 hx = coil_system.heatExchanger
 hx.setName("CoilSystemDXHX HX")
 
-=begin
-# Now we need to connect the Air To Air HX to the Outdoor Air System
+# Note JM 2019-03-13: At this point in time
+# CoilSystemCoolingDXHeatExchangerAssisted is NOT allowed on a Branch directly
+# and should be placed inside one of the Unitary systems
+# cf https://github.com/NREL/EnergyPlus/issues/7222
+unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(m)
+unitary.setCoolingCoil(coil_system)
+unitary.setControllingZoneorThermostatLocation(zone)
 
-oa_node = airloop.airLoopHVACOutdoorAirSystem.get.outboardOANode.get
-hx.addToNode(oa_node)
-spm = OpenStudio::Model::SetpointManagerMixedAir.new(m)
-outlet_node = hx.primaryAirOutletModelObject.get.to_Node.get
-spm.addToNode(outlet_node)
-
-
-
-oa_node = airloop.airLoopHVACOutdoorAirSystem.get.outboardOANode.get
-coil_system.addToNode(oa_node)
-=end
+# Replace the default CoilCoolingWater with the Unitary, then remove the default one
+coil = airloop.supplyComponents(OpenStudio::Model::CoilCoolingDXSingleSpeed::iddObjectType).first.to_CoilCoolingDXSingleSpeed.get
+# Note that we connect the CoilSystem, NOT the underlying CoilCoolingDXSingleSpeed
+unitary.addToNode(coil.outletModelObject.get.to_Node.get)
+coil.remove
 
 # Rename some nodes and such, for ease of debugging
 airloop.supplyInletNode.setName("#{airloop.name.to_s} Supply Inlet Node")
 airloop.supplyOutletNode.setName("#{airloop.name.to_s} Supply Outlet Node")
 airloop.mixedAirNode.get.setName("#{airloop.name.to_s} Mixed Air Node")
-coil_system.outletModelObject.get.to_Node.get.setName("#{airloop.name.to_s} HX Outlet to Heating Coil Inlet Node")
+# coil_system.outletModelObject.get.to_Node.get.setName("#{airloop.name.to_s} HX Outlet to Heating Coil Inlet Node")
+unitary.outletNode.get.setName("#{airloop.name.to_s} Unitary Outlet to Heating Coil Node")
 
-heating_coil = airloop.supplyComponents(OpenStudio::Model::CoilHeatingWater::iddObjectType).first.to_CoilHeatingWater.get
-heating_coil.waterInletModelObject.get.setName("#{airloop.name.to_s} Heating Coil Water Inlet Node")
-heating_coil.waterOutletModelObject.get.setName("#{airloop.name.to_s} Heating Coil Water Outlet Node")
-heating_coil.controllerWaterCoil.get.setName("#{airloop.name.to_s} Heating Coil Controller")
-heating_coil.airOutletModelObject.get.setName("#{airloop.name.to_s} Heating Coil Air Outlet to Fan Inlet Node")
-
-
-# TODO Add a CoilSystemCoolingDXHeatExchangerAssisted too
-
+heating_coil = airloop.supplyComponents(OpenStudio::Model::CoilHeatingGas::iddObjectType).first.to_CoilHeatingGas.get
+heating_coil.outletModelObject.get.setName("#{airloop.name.to_s} Heating Coil Outlet to Fan Inlet Node")
 
 #save the OpenStudio model (.osm)
 m.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
