@@ -1001,7 +1001,6 @@ def sql_test(options = {})
   # Load the model
   versionTranslator = OpenStudio::OSVersion::VersionTranslator.new
 
-  puts in_osm
   model = versionTranslator.loadModel(in_osm)
   if model.empty?
     assert(model.is_initialized, "Could not load the resulting model, #{in_osm}")
