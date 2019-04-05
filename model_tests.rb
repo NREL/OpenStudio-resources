@@ -1697,7 +1697,7 @@ class ModelTests < MiniTest::Unit::TestCase
     puts "standards = #{standards}"
     puts "workflow = #{workflow}"
 
-    assert(/0.2.2/.match(standards))
+    assert(/0.2.6/.match(standards))
     assert(/1.3.2/.match(workflow))
   end
 
@@ -1728,8 +1728,8 @@ class ModelTests < MiniTest::Unit::TestCase
     puts "standards = #{standards}"
     puts "workflow = #{workflow}"
 
-    #assert(/0.2.2/.match(standards))
-    #assert(/1.3.2/.match(workflow))
+    assert(/0.2.6/.match(standards))
+    assert(/1.3.2/.match(workflow))
   end
 
   # intersection tests
