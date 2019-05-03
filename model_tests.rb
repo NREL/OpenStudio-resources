@@ -384,8 +384,6 @@ def sim_test(filename, options = {})
       FileUtils.mv(out_osm, in_osm)
     end
 
-    FileUtils.cp($OswFile, osw)
-
   elsif (ext == '.osw')
 
     # make an empty osm
@@ -1042,10 +1040,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('coilsystem_dxhx.rb')
   end
 
-  # TODO: add when 2.8.0 is out (https://github.com/NREL/OpenStudio/pull/3449)
-  #def test_coilsystem_dxhx_osm
-    #result = sim_test('coilsystem_dxhx.osm')
-  #end
+  def test_coilsystem_dxhx_osm
+    result = sim_test('coilsystem_dxhx.osm')
+  end
 
   def test_coolingtowers_osm
     result = sim_test('coolingtowers.osm')
