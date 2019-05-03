@@ -874,6 +874,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('absorption_chillers.osm')
   end
 
+  def test_adiabatic_construction_set_rb
+    result = sim_test('adiabatic_construction_set.rb')
+  end
+
+  def test_adiabatic_construction_set_osm
+    result = sim_test('adiabatic_construction_set.osm')
+  end
+
   def test_airterminal_cooledbeam_osm
     result = sim_test('airterminal_cooledbeam.osm')
   end
@@ -1715,7 +1723,7 @@ class ModelTests < MiniTest::Unit::TestCase
     puts "standards = #{standards}"
     puts "workflow = #{workflow}"
 
-    assert(/0.2.2/.match(standards))
+    assert(/0.2.6/.match(standards))
     assert(/1.3.2/.match(workflow))
   end
 
@@ -1746,8 +1754,8 @@ class ModelTests < MiniTest::Unit::TestCase
     puts "standards = #{standards}"
     puts "workflow = #{workflow}"
 
-    #assert(/0.2.2/.match(standards))
-    #assert(/1.3.2/.match(workflow))
+    assert(/0.2.6/.match(standards))
+    assert(/1.3.2/.match(workflow))
   end
 
   # intersection tests
