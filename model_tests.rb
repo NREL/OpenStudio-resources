@@ -1034,10 +1034,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('coilsystem_waterhx.rb')
   end
 
-  # TODO: add when 2.8.0 is out (https://github.com/NREL/OpenStudio/pull/3449)
-  #def test_coilsystem_waterhx_osm
-    #result = sim_test('coilsystem_waterhx.osm')
-  #end
+  def test_coilsystem_waterhx_osm
+    result = sim_test('coilsystem_waterhx.osm')
+  end
 
   def test_coilsystem_dxhx_rb
     result = sim_test('coilsystem_dxhx.rb')
