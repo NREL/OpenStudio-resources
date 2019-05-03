@@ -33,6 +33,7 @@ fi
 echo
 echo "Launching command: 'ruby $test_file $test_filter'"
 
+# TODO: shouldn't we just call the CLI?
 if [ "$OSVERSION" = 2.0.4 ]; then
   # This version is weird, I directly require /usr/Ruby/openstudio.so in the model_tests.rb, done in docker exec via sed
   ~/.rbenv/shims/ruby $test_file $test_filter
