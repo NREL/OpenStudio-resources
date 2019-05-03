@@ -384,8 +384,6 @@ def sim_test(filename, options = {})
       FileUtils.mv(out_osm, in_osm)
     end
 
-    FileUtils.cp($OswFile, osw)
-
   elsif (ext == '.osw')
 
     # make an empty osm
@@ -1028,6 +1026,22 @@ class ModelTests < MiniTest::Unit::TestCase
 
   def test_centralheatpumpsystem_rb
     result = sim_test('centralheatpumpsystem.rb')
+  end
+
+  def test_coilsystem_waterhx_rb
+    result = sim_test('coilsystem_waterhx.rb')
+  end
+
+  def test_coilsystem_waterhx_osm
+    result = sim_test('coilsystem_waterhx.osm')
+  end
+
+  def test_coilsystem_dxhx_rb
+    result = sim_test('coilsystem_dxhx.rb')
+  end
+
+  def test_coilsystem_dxhx_osm
+    result = sim_test('coilsystem_dxhx.osm')
   end
 
   def test_coolingtowers_osm
