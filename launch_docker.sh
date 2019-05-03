@@ -53,6 +53,14 @@ fi
 echo -e "Running docker script for version ${BRed}$os_version${Color_Off}"
 
 
+test_file=$2
+if [ -z "$test_file" ]
+then
+  test_file="model_tests.rb"
+  echo "Defaulted to $test_file"
+fi
+
+
 # Hardcoded arg
 # Use mongo?
 use_mongo=false
@@ -355,7 +363,6 @@ fi
 # Chmod execute the script
 docker exec $os_container_name chmod +x docker_container_script.sh
 
-
 if [ "$os_version" = 2.0.4 ]; then
   echo -e "${On_Red}CUSTOM WORKAROUND FOR BROKEN 2.0.4${Color_Off}"
   # This one has missing dependencies
@@ -375,12 +382,12 @@ read -n 1 -r
 echo    # (optional) move to a new line
 # Default is yes
 if [[ ! $REPLY =~ ^[Nn]$ ]]; then
-  echo "Do you want to pass a filter 'pattern' passed to 'model_tests.rb -n /pattern/'"
+  echo "Do you want to pass a filter 'pattern' passed to '$test_file -n /pattern/'"
   echo "Leave empty for all tests, or input a pattern. Follow by [ENTER] in both cases"
   read filter
   echo -e "\nRunning docker_container_script.sh:"
   echo "------------------------------------"
-  docker exec $os_container_name /bin/bash ./docker_container_script.sh $filter
+  docker exec $os_container_name /bin/bash ./docker_container_script.sh $test_file $filter
 
 fi
 
