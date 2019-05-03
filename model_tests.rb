@@ -878,11 +878,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('adiabatic_construction_set.rb')
   end
 
-  # TODO: Add once > 2.7.1 is out (2.7.2 or 2.8.0)
-  # cf https://github.com/NREL/OpenStudio/pull/3439
-  #def test_adiabatic_construction_set_osm
-    #result = sim_test('adiabatic_construction_set.osm')
-  #end
+  def test_adiabatic_construction_set_osm
+    result = sim_test('adiabatic_construction_set.osm')
+  end
 
   def test_airterminal_cooledbeam_osm
     result = sim_test('airterminal_cooledbeam.osm')
