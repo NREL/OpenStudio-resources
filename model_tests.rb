@@ -874,6 +874,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('absorption_chillers.osm')
   end
 
+  def test_adiabatic_construction_set_rb
+    result = sim_test('adiabatic_construction_set.rb')
+  end
+
+  def test_adiabatic_construction_set_osm
+    result = sim_test('adiabatic_construction_set.osm')
+  end
+
   def test_airterminal_cooledbeam_osm
     result = sim_test('airterminal_cooledbeam.osm')
   end
