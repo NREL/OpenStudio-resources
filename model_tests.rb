@@ -386,8 +386,6 @@ def sim_test(filename, options = {})
       FileUtils.mv(out_osm, in_osm)
     end
 
-    FileUtils.cp($OswFile, osw)
-
   elsif (ext == '.osw')
 
     # make an empty osm
@@ -1074,6 +1072,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('absorption_chillers.osm')
   end
 
+  def test_adiabatic_construction_set_rb
+    result = sim_test('adiabatic_construction_set.rb')
+  end
+
+  def test_adiabatic_construction_set_osm
+    result = sim_test('adiabatic_construction_set.osm')
+  end
+
   def test_airterminal_cooledbeam_osm
     result = sim_test('airterminal_cooledbeam.osm')
   end
@@ -1222,6 +1228,22 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('centralheatpumpsystem.rb')
   end
 
+  def test_coilsystem_waterhx_rb
+    result = sim_test('coilsystem_waterhx.rb')
+  end
+
+  def test_coilsystem_waterhx_osm
+    result = sim_test('coilsystem_waterhx.osm')
+  end
+
+  def test_coilsystem_dxhx_rb
+    result = sim_test('coilsystem_dxhx.rb')
+  end
+
+  def test_coilsystem_dxhx_osm
+    result = sim_test('coilsystem_dxhx.osm')
+  end
+
   def test_coolingtowers_osm
     result = sim_test('coolingtowers.osm')
   end
@@ -1298,11 +1320,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('electric_equipment_ITE.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 2.7.2
-  # def test_electric_equipment_ITE_osm
-  #   result = sim_test('electric_equipment_ITE.osm')
-  # end
+  def test_electric_equipment_ITE_osm
+    result = sim_test('electric_equipment_ITE.osm')
+  end
 
   def test_ems_osm
     result = sim_test('ems.osm')
@@ -1897,7 +1917,7 @@ class ModelTests < MiniTest::Unit::TestCase
     puts "standards = #{standards}"
     puts "workflow = #{workflow}"
 
-    assert(/0.2.2/.match(standards))
+    assert(/0.2.6/.match(standards))
     assert(/1.3.2/.match(workflow))
   end
 
@@ -1928,8 +1948,8 @@ class ModelTests < MiniTest::Unit::TestCase
     puts "standards = #{standards}"
     puts "workflow = #{workflow}"
 
-    #assert(/0.2.2/.match(standards))
-    #assert(/1.3.2/.match(workflow))
+    assert(/0.2.6/.match(standards))
+    assert(/1.3.2/.match(workflow))
   end
 
   # intersection tests
