@@ -13,8 +13,8 @@ source colors.sh
 ########################################################################################
 
 # All versions you want to run
-declare -a all_versions=("2.0.4" "2.0.5" "2.1.0" "2.1.1" "2.1.2" "2.2.0" "2.2.1" "2.2.2" "2.3.0" "2.3.1" "2.4.0" "2.4.1" "2.5.0" "2.5.1" "2.5.2" "2.6.0" "2.6.1" "2.7.0" "2.7.1")
-#declare -a  all_versions=("2.4.0" "2.4.1")
+declare -a all_versions=("2.0.4" "2.0.5" "2.1.0" "2.1.1" "2.1.2" "2.2.0" "2.2.1" "2.2.2" "2.3.0" "2.3.1" "2.4.0" "2.4.1" "2.5.0" "2.5.1" "2.5.2" "2.6.0" "2.6.1" "2.7.0" "2.7.1" "2.8.0")
+#declare -a  all_versions=("2.7.0" "2.7.1")
 
 # Do you want to ask the user to set these arguments?
 # If false, will just use the hardcoded ones
