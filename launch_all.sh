@@ -14,7 +14,7 @@ source colors.sh
 
 # All versions you want to run
 declare -a all_versions=("2.0.4" "2.0.5" "2.1.0" "2.1.1" "2.1.2" "2.2.0" "2.2.1" "2.2.2" "2.3.0" "2.3.1" "2.4.0" "2.4.1" "2.5.0" "2.5.1" "2.5.2" "2.6.0" "2.6.1" "2.7.0" "2.7.1" "2.8.0")
-#declare -a  all_versions=("2.7.0" "2.7.1")
+#declare -a  all_versions=("2.3.1" "2.4.0" "2.4.1" "2.5.0" "2.5.1" "2.5.2" "2.6.0" "2.6.1" "2.7.0" "2.7.1")
 
 # Do you want to ask the user to set these arguments?
 # If false, will just use the hardcoded ones
@@ -23,6 +23,8 @@ ask_user=true
 # If image custom/openstudio:$os_version already exists, do you want to force rebuild?
 # Otherwise will use this one
 force_rebuild=false
+
+test_file="model_tests.rb"
 
 # Test filter: passed as model_tests -n /$filter/
 filter=""
@@ -64,7 +66,12 @@ if [ "$ask_user" = true ]; then
     force_rebuild=true
   fi
 
-  echo -e "Do you want to pass a ${BCyan}filter 'pattern'${Color_Off} passed to 'model_tests.rb -n /pattern/'"
+  echo -e "Which ${BCyan}ruby test file${Color_Off}  do you want to run?"
+  echo -e "Leave empty for ${URed}model_tests.rb${Color_Off}, or input a pattern. Follow by [ENTER] in both cases"
+  read test_file
+
+
+  echo -e "Do you want to pass a ${BCyan}filter 'pattern'${Color_Off} passed to '$test_file -n /pattern/'"
   echo "Leave empty for all tests, or input a pattern. Follow by [ENTER] in both cases"
   read filter
 
@@ -97,6 +104,7 @@ if [ "$ask_user" = true ]; then
   echo    # (optional) move to a new line
   # Default is No
   if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo -n "Please enter number: "
     read n_cores
     # Ensure it is a number (float or int)
     while ! [[ "$n_cores" =~ ^[0-9.]+$ ]]; do
@@ -116,6 +124,12 @@ if [ "$ask_user" = true ]; then
   echo "Global options have been set as follows:"
   echo "-----------------------------------------"
   echo "force_rebuild=$force_rebuild"
+  if [ -z $test_file ]; then
+    echo "test_file defaulted to model_tests.rb"
+    test_file="model_tests.rb"
+  else
+    echo "test_file=$test_file"
+  fi
   if [ -z $filter ]; then
     echo "filter=NONE"
   else
@@ -265,7 +279,7 @@ for os_version in "${all_versions[@]}"; do
   fi
   # Execute it
   # Launch the regression tests
-  docker exec $os_container_name /bin/bash ./docker_container_script.sh $filter
+  docker exec $os_container_name /bin/bash ./docker_container_script.sh $test_file $filter
 
 
   # Clean up
