@@ -1691,7 +1691,7 @@ class ModelTests < MiniTest::Unit::TestCase
   end
 
   def test_model_articulation1_bundle_no_git_osw
-    gemfile_dir = bundle_install('bundle_no_git', false)
+    gemfile_dir = bundle_install('bundle_no_git', true)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
     extra_options = {:outdir => 'model_articulation1_bundle_no_git.osw',
@@ -1722,7 +1722,7 @@ class ModelTests < MiniTest::Unit::TestCase
   end
 
   def test_model_articulation1_bundle_git_osw
-    gemfile_dir = bundle_install('bundle_git', false)
+    gemfile_dir = bundle_install('bundle_git', true)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
     extra_options = {:outdir => 'model_articulation1_bundle_git.osw',
