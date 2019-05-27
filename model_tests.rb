@@ -29,6 +29,14 @@ class ModelTests < Minitest::Test
     result = sim_test('absorption_chillers.osm')
   end
 
+  def test_adiabatic_construction_set_rb
+    result = sim_test('adiabatic_construction_set.rb')
+  end
+
+  def test_adiabatic_construction_set_osm
+    result = sim_test('adiabatic_construction_set.osm')
+  end
+
   def test_airterminal_cooledbeam_osm
     result = sim_test('airterminal_cooledbeam.osm')
   end
@@ -177,6 +185,22 @@ class ModelTests < Minitest::Test
     result = sim_test('centralheatpumpsystem.rb')
   end
 
+  def test_coilsystem_waterhx_rb
+    result = sim_test('coilsystem_waterhx.rb')
+  end
+
+  def test_coilsystem_waterhx_osm
+    result = sim_test('coilsystem_waterhx.osm')
+  end
+
+  def test_coilsystem_dxhx_rb
+    result = sim_test('coilsystem_dxhx.rb')
+  end
+
+  def test_coilsystem_dxhx_osm
+    result = sim_test('coilsystem_dxhx.osm')
+  end
+
   def test_coolingtowers_osm
     result = sim_test('coolingtowers.osm')
   end
@@ -253,11 +277,9 @@ class ModelTests < Minitest::Test
     result = sim_test('electric_equipment_ITE.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 2.7.2
-  # def test_electric_equipment_ITE_osm
-  #   result = sim_test('electric_equipment_ITE.osm')
-  # end
+  def test_electric_equipment_ITE_osm
+    result = sim_test('electric_equipment_ITE.osm')
+  end
 
   def test_ems_osm
     result = sim_test('ems.osm')
@@ -826,7 +848,7 @@ class ModelTests < Minitest::Test
   end
 
   def test_model_articulation1_bundle_no_git_osw
-    gemfile_dir = bundle_install('bundle_no_git', false)
+    gemfile_dir = bundle_install('bundle_no_git', true)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
     extra_options = {:outdir => 'model_articulation1_bundle_no_git.osw',
@@ -852,12 +874,12 @@ class ModelTests < Minitest::Test
     #puts "standards = #{standards}"
     #puts "workflow = #{workflow}"
 
-    assert(/0.2.7/.match(standards))
+    assert(/0.2.6/.match(standards))
     assert(/1.3.2/.match(workflow))
   end
 
   def test_model_articulation1_bundle_git_osw
-    gemfile_dir = bundle_install('bundle_git', false)
+    gemfile_dir = bundle_install('bundle_git', true)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
     extra_options = {:outdir => 'model_articulation1_bundle_git.osw',
@@ -883,8 +905,8 @@ class ModelTests < Minitest::Test
     #puts "standards = #{standards}"
     #puts "workflow = #{workflow}"
 
-    #assert(/0.2.2/.match(standards))
-    #assert(/1.3.2/.match(workflow))
+    assert(/0.2.6/.match(standards))
+    assert(/1.3.2/.match(workflow))
   end
 
   # intersection tests
@@ -940,5 +962,99 @@ class ModelTests < Minitest::Test
 
   # TODO: model/refbuildingtests/CreateRefBldgModel.rb is unused
   # Either implement as a test, or delete
+
+end
+
+# the tests
+class SqlTests < MiniTest::Unit::TestCase
+  parallelize_me!
+
+  def test_sql_default_fullyear
+    # Full year, calendar year not specified
+    options = {
+      :start => nil,
+      :end => nil,
+      :isLeapYear => false,
+      :type => 'Full',
+    }
+    result = sql_test(options)
+  end
+
+  def test_sql_specific_fullyear_nonleap
+    # Full year, calendar year hard assigned to a non-leap year
+    options = {
+      :start => '2013-01-01',
+      :end => '2013-12-31',
+      :isLeapYear => false,
+      :type => 'Full',
+    }
+    result = sql_test(options)
+  end
+
+  def test_sql_specific_fullyear_leap
+    # Full year, calendar year hard assigned to a leap year
+    options = {
+      :start => '2012-01-01',
+      :end => '2012-12-31',
+      :isLeapYear => true,
+      :type => 'Full',
+    }
+    result = sql_test(options)
+  end
+
+  def test_sql_partial_leap_mid
+    # Partial with leap day in middle
+    options = {
+      :start => '2012-02-10',
+      :end => '2012-03-10',
+      :isLeapYear => true,
+      :type => 'Partial',
+    }
+    result = sql_test(options)
+  end
+
+  def test_sql_partial_leap_end
+    # Partial with leap day at end
+    options = {
+      :start => '2012-02-01',
+      :end => '2012-02-29',
+      :isLeapYear => true,
+      :type => 'Partial',
+    }
+    result = sql_test(options)
+  end
+
+  def test_sql_partial_leap_start
+    # Partial with leap day at start
+    options = {
+      :start => '2012-02-29',
+      :end => '2012-03-10',
+      :isLeapYear => true,
+      :type => 'Partial',
+    }
+    result = sql_test(options)
+  end
+
+  def test_sql_wrap_nonleap
+    # Wrap-around with no leap days
+    options = {
+      :start => '2013-02-10',
+      :end => '2014-02-09',
+      :isLeapYear => false,
+      :type => 'Wrap-around',
+    }
+    result = sql_test(options)
+  end
+
+  def test_sql_wrap_leap
+    # Wrap-around with leap day
+    options = {
+      :start => '2012-02-10',
+      :end => '2013-02-09',
+      :isLeapYear => true,
+      :type => 'Wrap-around',
+    }
+    result = sql_test(options)
+  end
 
 end
