@@ -69,6 +69,8 @@ $SdkVersion = OpenStudio.openStudioVersion
 $SdkLongVersion = OpenStudio::openStudioLongVersion
 $Build_Sha = $SdkLongVersion.split('.')[-1]
 
+puts "Running for OpenStudio #{$SdkLongVersion}"
+
 # Acceptable deviation in EUI = 0.5%
 $EuiPctThreshold = 0.5
 
@@ -125,6 +127,48 @@ end
 $:.unshift($ModelDir)
 ENV['RUBYLIB'] = $ModelDir
 ENV['RUBYPATH'] = $ModelDir
+
+# Determines the test plaftorm that is being used
+# It will try to use the 'os' gem, and if not available falls back on RbConfig
+#
+# @param None
+# @return [String] Plaftorm name, one of ['Windows', 'Darwin', 'Linux']
+def get_test_platform()
+
+  platform = "Unknown"
+
+  begin
+    require 'os'
+
+    if OS.mac?
+      platform = "Darwin"
+    elsif OS.linux?
+      platform = "Linux"
+    elsif OS.windows?
+      platform = "Windows"
+    else
+      puts "Unknown Plaftorm?!"
+    end
+  rescue Exception
+    require 'rbconfig'
+
+    host_os = RbConfig::CONFIG['host_os']
+    case host_os
+    when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+      platform = "Windows"
+    when /darwin|mac os/
+      platform = "Darwin"
+    when /linux|solaris|bsd/
+      platform = "Linux"
+    else
+      puts "Unknown Plaftorm?! #{host_os.inspect}"
+    end
+
+  end
+  return platform
+end
+
+$Platform = get_test_platform()
 
 # Sanitizes a filename replaces any of '-+= ' with '_'
 #
