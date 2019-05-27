@@ -3,12 +3,15 @@ require 'openstudio' unless defined?(OpenStudio)
 # The config and helpers are inside this file
 require_relative 'test_helpers.rb'
 
-
+# Some High level tests, that should help us in maintaining the repo/test suite
+# in an orderly fashion. These tests should ALWAYS pass, and other tests should
+# probably not be run until these do.
 class HighLevelTests < MiniTest::Test
   parallelize_me!
 
   puts "Running HighLevelTests"
 
+  # Ensures that all OSM files are included in an actual model_test
   def test_osms_are_defined_sim_tests
     all_model_paths = Dir.glob(File.join($ModelDir, '*.osm'));
     all_model_filenames = all_model_paths.map{|p| File.basename(p)};
@@ -23,10 +26,9 @@ class HighLevelTests < MiniTest::Test
     missing_osms = missing_osms - expected_sim_missing
 
     assert missing_osms.empty?, "Error in model_tests.rb: The following OSMs are not in any sim_tests:\n  * #{missing_osms.join("\n  * ")}"
-
-
   end
 
+  # Ensures that all Ruby files are included in an actual model_test
   def test_rbs_are_defined_sim_tests
     all_ruby_paths = Dir.glob(File.join($ModelDir, '*.rb'));
     all_ruby_filenames = all_ruby_paths.map{|p| File.basename(p)};
@@ -47,6 +49,8 @@ class HighLevelTests < MiniTest::Test
     assert missing_rbs.empty?, "Error in model_tests.rb: The following Ruby tests are not in any sim_tests:\n  * #{missing_rbs.join("\n  * ")}"
   end
 
+  # Ensures that all Ruby tests have a matching OSM tests in model_tests,
+  # unless explicitly expected
   def test_rbs_have_matching_osm_tests
     # List of tests that don't have a matching OSM test for a valid reason
     # No "Warn" will be issued for these
@@ -89,9 +93,10 @@ class HighLevelTests < MiniTest::Test
         end
       end
     end
-
   end
 
+  # Ensures that all OSM files are included in an actual
+  # SDD ForwardTranslator test
   def test_osms_are_defined_sdd_ft_tests
     all_model_paths = Dir.glob(File.join($ModelDir, '*.osm'));
     all_model_filenames = all_model_paths.map{|p| File.basename(p)};
@@ -109,6 +114,8 @@ class HighLevelTests < MiniTest::Test
     assert missing_osms.empty?, "Error in SDD_tests.rb: The following OSMs are not in any sdd_ft_tests:\n  * #{missing_osms.join("\n  * ")}"
   end
 
+  # Ensures that all SDD XML files are included in an actual
+  # SDD ReverseTranslator test
   def test_simsddxmls_are_defined_sdd_rt_tests
     all_sddsimxml_paths = Dir.glob(File.join($SddSimDir, '*.xml'));
     all_sdd_simxml_filenames = all_sddsimxml_paths.map{|p| File.basename(p)};
