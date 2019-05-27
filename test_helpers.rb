@@ -622,8 +622,6 @@ def sim_test(filename, options = {})
       FileUtils.mv(out_osm, in_osm)
     end
 
-    FileUtils.cp($OswFile, in_osw)
-
   elsif (ext == '.osw')
 
     # make an empty osm
@@ -705,6 +703,9 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
   $OPENSTUDIO_LOG.setLogLevel(OpenStudio::Debug)
 
   # Run the workflow
+  # Switch this to to false if you're just modifying the code below
+  # (= the checks) after a successful first run as you don't have to wait
+  # for the simulation itself to rerun
   run_sim = true
   if run_sim
     FileUtils.rm_rf(dir) if File.exists?(dir)
