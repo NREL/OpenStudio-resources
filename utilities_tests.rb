@@ -3,6 +3,11 @@ require 'openstudio' unless defined?(OpenStudio)
 # The config and helpers are inside this file
 require_relative 'test_helpers.rb'
 
+# Name the resulting file for a given test
+# Get caller (name of test), remove the "test_" portion, then append some stuff
+# like version, platform, and custom tag.
+#
+# @Return [String]: Full path to the resulting file
 def name_result()
   test_name = caller[0][/`.*'/][1..-2].gsub('test_', '')
   file_name = "#{test_name}_#{$SdkVersion}_#{$Platform}_out#{$Custom_tag}.status"
@@ -23,6 +28,7 @@ class UtilitiesTest < MiniTest::Unit::TestCase
 
   # simulation tests
 
+  # A pure UTF-8 test
   def test_path_special_chars_str
 
     test_result_file = name_result
@@ -60,6 +66,7 @@ class UtilitiesTest < MiniTest::Unit::TestCase
 
   end
 
+  # Rely on Dir.pwd which would have external encoding
   def test_path_special_chars_pwd
 
     original_dir = Dir.pwd
@@ -76,6 +83,8 @@ class UtilitiesTest < MiniTest::Unit::TestCase
     FileUtils.mkdir_p(dir_str)
     assert File.exists?(dir_str), "dir_str doesn't exists... '#{dir_str}'"
 
+    # Dir.pwd would return UTF-8 on Linux, and something else on Windows
+    # like Windows-1252
     Dir.chdir(dir_str)
     dir_str = Dir.pwd
     result_h['Dir.pwd_Encoding'] = dir_str.encoding
