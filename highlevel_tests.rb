@@ -1,5 +1,3 @@
-# require 'minitest'
-
 require 'openstudio' unless defined?(OpenStudio)
 
 # The config and helpers are inside this file

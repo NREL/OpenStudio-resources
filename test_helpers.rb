@@ -1079,3 +1079,210 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
   assert_equal(autosized_fields_before_hard_size.size, autosized_fields_after_auto_size.size, "The number of autosized fields before hard sizing and after autosizing don't match.")
 
 end
+
+
+# run a sql test
+# @param options [Hash]: can specify the following values:
+#   options = {
+#         :start => '2013-01-01', # or nil
+#         :end => '2013-12-31',   # or nil
+#         :isLeapYear => false,   # or true
+#         :type => 'Full',        # or 'Partial'
+#       }
+def sql_test(options = {})
+
+  # Get name of calling method and remove the 'test_' portion
+  filename = caller[0][/`.*'/][1..-2].gsub('test_', '')
+
+  # We start by outputing a simple "Fail" into the output file
+  # If everything passes, and we hit no assert, then we overwrite with
+  # "Success"
+  test_result_file = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.sqltest")
+
+  File.write(test_result_file, "Fail", mode: 'w')
+
+  # Create a model
+  m = OpenStudio::Model::Model.new
+  # Add one output variable from EPW
+  out_var = OpenStudio::Model::OutputVariable.new("Site Outdoor Air Drybulb Temperature", m)
+  out_var.setReportingFrequency("Daily")
+
+  yd = m.getYearDescription
+  r = m.getRunPeriod
+
+  # Deal with input
+  if (options[:start] && !options[:end]) || (!options[:start] && options[:end])
+    fail "If you specify start date, you must specify end date and vice versa"
+  end
+  if options[:start]
+    # Ruby dates
+    dr_start = Date.iso8601(options[:start])
+    dr_end = Date.iso8601(options[:end])
+    start_day = dr_start.day
+    start_month = dr_start.month
+    start_year = dr_start.year
+    end_day = dr_end.day
+    end_month = dr_end.month
+    end_year = dr_end.year
+
+    # Day/Month goes into Runperiod
+    r.setBeginDayOfMonth(start_day)
+    r.setBeginMonth(start_month)
+    r.setEndDayOfMonth(end_day)
+    r.setEndMonth(end_month)
+
+    # Year goes into YearDescription
+    yd.setCalendarYear(start_year)
+  else
+    # Defaults to full year, with assumed base year (2009)
+    start_year = yd.assumedYear
+    end_year = start_year
+
+    start_day = r.getBeginDayOfMonth
+    start_month = r.getBeginMonth
+    end_day = r.getEndDayOfMonth
+    end_month = r.getEndMonth
+
+    # Double check that we have the right defaults
+    assert_equal(1, start_day)
+    assert_equal(1, start_month)
+    assert_equal(31, end_day)
+    assert_equal(12, end_month)
+    assert_equal(2009, start_year)
+
+  end
+
+  # OpenStudio dates
+  d_start = OpenStudio::Date.new(OpenStudio::MonthOfYear.new(start_month),
+                                 start_day, start_year)
+  d_end = OpenStudio::Date.new(OpenStudio::MonthOfYear.new(end_month),
+                               end_day, end_year)
+
+
+
+  dir = File.join($TestDir, filename)
+  osw = File.join(dir, 'in.osw')
+  out_osw = File.join(dir, 'out.osw')
+  in_osm = File.join(dir, 'in.osm')
+  sql_path = File.join(dir, 'run', 'eplusout.sql')
+
+  # Run the workflow
+  # Switch this to to false if you're just modifying the code below
+  # (= the checks) after a successful first run as you don't have to wait
+  # for the simulation itself to rerun
+  run_sim = true
+  if run_sim
+    FileUtils.rm_rf(dir) if File.exists?(dir)
+    FileUtils.mkdir_p(dir)
+    # FileUtils.cp($OswFile, osw)
+
+    # Note: If you give E+ a weather file that doesn't have a leap day
+    # It won't give you an output that has a leap day...
+    # And it doesn't appear to let you know about it either
+    if options[:isLeapYear]
+      weather_file = "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_LeapYear.epw"
+    else
+      # If we have a start date, assume an AMY
+      if [:start]
+        weather_file = "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_NonLeapYear.epw"
+      else
+        # Otherwise a TMY
+        weather_file = "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"
+      end
+    end
+
+
+    osw_content = {
+      "weather_file": "../../weatherdata/#{weather_file}",
+      "seed_file": "in.osm",
+      # "steps": [],
+    }
+
+    File.write(osw, JSON.pretty_generate(osw_content))
+
+
+    # Save to above model into dir
+    m.save(in_osm, true)
+
+    # Run it
+    command = "\"#{$OpenstudioCli}\" run -w \"#{osw}\""
+    #command = "\"#{$OpenstudioCli}\" run --debug -w \"#{osw}\""
+
+    run_command(command, dir, 3600)
+  end
+
+  # Typically we do this:
+  # result_osw = postprocess_out_osw_and_copy(filename)
+  # Here we actually don't care about the OSW at all,
+  # just want to make sure that E+ completed successfully
+  # (though I don't see a reason it wouldn't)
+  fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
+
+  result_osw = nil
+  File.open(out_osw, 'r') do |f|
+    result_osw = JSON::parse(f.read, :symbolize_names=>true)
+  end
+
+  assert_equal("Success", result_osw[:completed_status])
+
+  # Load the model
+  versionTranslator = OpenStudio::OSVersion::VersionTranslator.new
+
+  model = versionTranslator.loadModel(in_osm)
+  if model.empty?
+    assert(model.is_initialized, "Could not load the resulting model, #{in_osm}")
+  end
+  model = model.get
+
+  # Load and attach the sql file to the model
+  sql_path = OpenStudio::Path.new(sql_path)
+  if OpenStudio.exists(sql_path)
+    sql = OpenStudio::SqlFile.new(sql_path)
+    # Check to make sure the sql file is readable,
+    # which won't be true if EnergyPlus crashed during simulation.
+    unless sql.connectionOpen
+      OpenStudio.logFree(OpenStudio::Error, 'openstudio.model.Model', "The run failed, cannot create model.  Look at the eplusout.err file in #{File.dirname(sql_path.to_s)} to see the cause.")
+      return false
+    end
+    # Attach the sql file from the run to the model
+    model.setSqlFile(sql)
+  else
+    OpenStudio.logFree(OpenStudio::Error, 'openstudio.model.Model', "Results for the run couldn't be found here: #{sql_path}.")
+    return false
+  end
+
+  # Assert that the sizing run succeeded
+  assert_equal("Success", result_osw[:completed_status])
+
+  # Now do actual stuff!
+
+  # Get the daily series
+  ts = sql.timeSeries(sql.availableEnvPeriods[0], "Daily", "Site Outdoor Air Drybulb Temperature", "Environment")
+  assert(ts.is_initialized, "Timeseries isn't initialized")
+  ts = ts.get
+
+
+  # End date minus start date, + 1 because we count the start AND the end day
+  n_days = (d_end - d_start).totalDays + 1
+  assert_equal(n_days, ts.values.size, "Bad number of days!")
+
+  # E+ reports with an end convention, meaning that for a daily timeseries
+  # each entry is labeled as the next day
+  # eg: if you start on 2009-01-01, eplus reports as 2009-01-02 00:00
+  sql_start_dt = ts.firstReportDateTime
+  sql_end_dt = ts.dateTimes[-1]
+
+  # Easy check first, check that the year was correctly sent to E+
+  assert_equal(start_year, sql_start_dt.date.year, "Start year doesn't match")
+
+  # Remove 1 day so we can compare with the above
+  sql_start_date = (sql_start_dt - OpenStudio::Time.new(1)).date
+  sql_end_date = (sql_end_dt - OpenStudio::Time.new(1)).date
+
+  assert_equal(d_start, sql_start_date, "Start date doesn't match")
+  assert_equal(d_end, sql_end_date, "End date doesn't match")
+
+  # If we got here, then all good
+  File.write(test_result_file, "Success", mode: 'w')
+
+end
