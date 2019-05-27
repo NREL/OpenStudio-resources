@@ -54,7 +54,9 @@ class HighLevelTests < MiniTest::Test
     # No "Warn" will be issued for these
     # input the ruby file name, eg `xxxx.rb` NOT `test_xxx_rb`
     noMatchingOSMTests = ['ExampleModel.rb',
-                          'autosize_hvac.rb',]
+                          'autosize_hvac.rb',
+                          # Not enabled
+                          'afn_single_zone_ac.rb']
 
     base_dir = $ModelDir
     all_ruby_paths = Dir.glob(File.join(base_dir, '*.rb'));

@@ -185,6 +185,15 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('additional_props.osm')
   end
 
+  def test_FT_adiabatic_construction_set
+    sdd_ft_test('adiabatic_construction_set.osm')
+  end
+
+  # TODO: not enabled in model_tests.rb yet
+  # def test_FT_afn_single_zone_ac
+  #   sdd_ft_test('afn_single_zone_ac.osm')
+  # end
+
   def test_FT_afn_single_zone_nv
     sdd_ft_test('afn_single_zone_nv.osm')
   end
@@ -265,6 +274,14 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('centralheatpumpsystem.osm')
   end
 
+  def test_FT_coilsystem_dxhx
+    sdd_ft_test('coilsystem_dxhx.osm')
+  end
+
+  def test_FT_coilsystem_waterhx
+    sdd_ft_test('coilsystem_waterhx.osm')
+  end
+
   def test_FT_cooling_coils
     sdd_ft_test('cooling_coils.osm')
   end
@@ -295,6 +312,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_ducts_and_pipes
     sdd_ft_test('ducts_and_pipes.osm')
+  end
+
+  def test_FT_electric_equipment_ITE
+    sdd_ft_test('electric_equipment_ITE.osm')
   end
 
   def test_FT_ems
