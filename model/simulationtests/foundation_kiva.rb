@@ -50,6 +50,11 @@ foundation_kiva.setWallHeightAboveGrade(0.2032)
 foundation_kiva.setWallDepthBelowSlab(0.2032)
 foundation_kiva.setFootingWallConstruction(construction)
 
+#attach custom blocks
+foundation_kiva.addCustomBlock(material, 1, 0, 0)
+foundation_kiva.addCustomBlock(material, 2, 1, 1)
+foundation_kiva.addCustomBlock(material, 3, -1, -1)
+
 #attach foundation kiva object to floor surfaces
 model.getSurfaces.each_with_index do |surface, i|
   next if surface.surfaceType.downcase != "floor"
