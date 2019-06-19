@@ -58,7 +58,8 @@ custom_block = OpenStudio::Model::CustomBlock.new(material, 2, 2, 4)
 foundation_kiva.addCustomBlock(custom_block)
 
 #attach foundation kiva object to floor surfaces
-model.getSurfaces.each_with_index do |surface, i|
+i = 0
+model.getSurfaces.each do |surface|
   next if surface.surfaceType.downcase != "floor"
   next if surface.outsideBoundaryCondition.downcase != "ground"
   surface.setAdjacentFoundation(foundation_kiva)
@@ -66,6 +67,7 @@ model.getSurfaces.each_with_index do |surface, i|
   if i == 0 # try creating one with no default properties
     surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 4 * ( surface.grossArea ** 0.5 ))
   end
+  i += 1
 end
        
 # save the OpenStudio model (.osm)
