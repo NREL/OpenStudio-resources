@@ -1831,6 +1831,14 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_zone_hvac2_osm
     result = sim_test('zone_hvac2.osm')
   end
+  
+  def test_zone_hvac_equipment_list_rb
+    result = sim_test('zone_hvac_equipment_list.rb')
+  end
+
+  def test_zone_hvac_equipment_list_osm
+    result = sim_test('zone_hvac_equipment_list.osm')
+  end
 
   def test_zone_mixing_osm
     result = sim_test('zone_mixing.osm')
