@@ -35,6 +35,8 @@ model.add_design_days()
 #create schedule object
 schedule_constant = OpenStudio::Model::ScheduleConstant.new(model)
 
+# (1) test gshp
+
 #create desuperheater object
 coil_water_heating_desuperheater = OpenStudio::Model::CoilWaterHeatingDesuperheater.new(model, schedule_constant)
 
@@ -54,6 +56,26 @@ coil_cooling_water_to_air_heat_pump_equation_fit = OpenStudio::Model::CoilCoolin
 plant_loop.addDemandBranchForComponent(coil_cooling_water_to_air_heat_pump_equation_fit)
 air_loop_unitary.setCoolingCoil(coil_cooling_water_to_air_heat_pump_equation_fit)
 coil_water_heating_desuperheater.setHeatingSource(coil_cooling_water_to_air_heat_pump_equation_fit)
+
+# (2) test multispeed ac
+
+#create desuperheater object
+coil_water_heating_desuperheater = OpenStudio::Model::CoilWaterHeatingDesuperheater.new(model, schedule_constant)
+
+#create mixed water heater
+water_heater_mixed = OpenStudio::Model::WaterHeaterMixed.new(model)
+coil_water_heating_desuperheater.addToHeatRejectionTarget(water_heater_mixed)
+
+#create loops
+air_loop_unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
+air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
+air_supply_inlet_node = air_loop.supplyInletNode
+air_loop_unitary.addToNode(air_supply_inlet_node)
+
+#create multispeed dx cooling coil
+coil_cooling_dx_multispeed = OpenStudio::Model::CoilCoolingDXMultiSpeed.new(model)
+air_loop_unitary.setCoolingCoil(coil_cooling_dx_multispeed)
+coil_water_heating_desuperheater.setHeatingSource(coil_cooling_dx_multispeed)
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})
