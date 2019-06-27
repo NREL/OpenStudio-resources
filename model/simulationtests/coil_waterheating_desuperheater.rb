@@ -74,6 +74,10 @@ air_loop_unitary.addToNode(air_supply_inlet_node)
 
 #create multispeed dx cooling coil
 coil_cooling_dx_multispeed = OpenStudio::Model::CoilCoolingDXMultiSpeed.new(model)
+cool_stage_1 = OpenStudio::Model::CoilCoolingDXMultiSpeedStageData.new(model)
+cool_stage_2 = OpenStudio::Model::CoilCoolingDXMultiSpeedStageData.new(model)
+coil_cooling_dx_multispeed.addStage(cool_stage_1)
+coil_cooling_dx_multispeed.addStage(cool_stage_2)
 air_loop_unitary.setCoolingCoil(coil_cooling_dx_multispeed)
 coil_water_heating_desuperheater.setHeatingSource(coil_cooling_dx_multispeed)
 
