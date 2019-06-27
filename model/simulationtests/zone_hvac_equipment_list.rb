@@ -16,9 +16,6 @@ model.add_windows({"wwr" => 0.4,
                    "offset" => 1,
                    "application_type" => "Above Floor"})
 
-#add ASHRAE System type 01, PTAC, Residential
-model.add_hvac({"ashrae_sys_num" => '01'})
-
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                        "cooling_setpoint" => 28})
@@ -61,7 +58,6 @@ model.getThermalZones.each_with_index do |thermal_zone, i|
 
   air_terminal_living = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, model.alwaysOnDiscreteSchedule)
   air_loop.multiAddBranchForZone(thermal_zone, air_terminal_living)
-  air_loop.multiAddBranchForZone(thermal_zone)
   
   thermal_zone.setSequentialHeatingFraction(air_terminal_living, heating_schedule)
   thermal_zone.setSequentialCoolingFraction(air_terminal_living, cooling_schedule)
