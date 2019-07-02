@@ -50,12 +50,16 @@ foundation_kiva.setWallHeightAboveGrade(0.2032)
 foundation_kiva.setWallDepthBelowSlab(0.2032)
 foundation_kiva.setFootingWallConstruction(construction)
 
-#attach custom blocks
+#add custom blocks
 foundation_kiva.addCustomBlock(material, 1, 0, 1)
 foundation_kiva.addCustomBlock(material, 1, 1, 2)
 foundation_kiva.addCustomBlock(material, 2, -1, 3)
 custom_block = OpenStudio::Model::CustomBlock.new(material, 2, 2, 4)
 foundation_kiva.addCustomBlock(custom_block)
+custom_blocks = []
+custom_blocks << OpenStudio::Model::CustomBlock.new(material, 3, 2, 5)
+custom_blocks << OpenStudio::Model::CustomBlock.new(material, 4, 2, 6)
+foundation_kiva.addCustomBlocks(custom_blocks)
 
 #attach foundation kiva object to floor surfaces
 i = 0
