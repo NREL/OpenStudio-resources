@@ -1,0 +1,70 @@
+
+require 'openstudio'
+require 'lib/baseline_model'
+
+model = BaselineModel.new
+
+#make a 2 story, 100m X 50m, 10 zone core/perimeter building
+model.add_geometry({"length" => 100,
+                    "width" => 50,
+                    "num_floors" => 2,
+                    "floor_to_floor_height" => 4,
+                    "plenum_height" => 1,
+                    "perimeter_zone_depth" => 3})
+
+#add windows at a 40% window-to-wall ratio
+model.add_windows({"wwr" => 0.4,
+                   "offset" => 1,
+                   "application_type" => "Above Floor"})
+
+#add ASHRAE System type 03, PSZ-AC
+model.add_hvac({"ashrae_sys_num" => '03'})
+
+#add thermostats
+model.add_thermostats({"heating_setpoint" => 24,
+                       "cooling_setpoint" => 28})
+
+#assign constructions from a local library to the walls/windows/etc. in the model
+model.set_constructions()
+
+#set whole building space type; simplified 90.1-2004 Large Office Whole Building
+model.set_space_type()
+
+#add design days to the model (Chicago)
+model.add_design_days()
+
+
+
+#save the OpenStudio model (.osm)
+model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
+                           "osm_name" => "in.osm"})
+
+# initialize some stuff
+year_description = model.getYearDescription
+start_date = year_description.makeDate(1, 1)
+interval = OpenStudio::Time.new(0, 1, 0, 0)
+
+# create some timeseries data
+values = []
+(1..8760).to_a.each do |value|
+  values << rand
+end
+timeseries = OpenStudio::TimeSeries.new(start_date, interval, OpenStudio::createVector(values), "")
+
+# create the schedule type limits
+schedule_type_limits = OpenStudio::Model::ScheduleTypeLimits.new(model)
+schedule_type_limits.setName("Fractional")
+schedule_type_limits.setLowerLimitValue(0)
+schedule_type_limits.setUpperLimitValue(1)
+schedule_type_limits.setNumericType("Continuous")
+
+# create the schedule fixed interval
+schedule_fixed_interval = OpenStudio::Model::ScheduleFixedInterval.new(model)
+schedule_fixed_interval.setTimeSeries(timeseries)
+schedule_fixed_interval.setTranslatetoScheduleFile(true)
+schedule_fixed_interval.setScheduleTypeLimits(schedule_type_limits)
+schedule_fixed_interval.setInterpolatetoTimestep(true)
+
+#save the OpenStudio model (.osm)
+model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
+                           "osm_name" => "in.osm"})
