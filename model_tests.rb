@@ -1776,6 +1776,15 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('vrf.rb')
   end
 
+  # TODO: Add this once next official version is out (Post 2.8.1)
+  # def test_vrf_watercooled_osm
+  #   result = sim_test('vrf_watercooled.osm')
+  # end
+
+  def test_vrf_watercooled_rb
+    result = sim_test('vrf_watercooled.rb')
+  end
+
   def test_water_economizer_osm
     result = sim_test('water_economizer.osm')
   end
