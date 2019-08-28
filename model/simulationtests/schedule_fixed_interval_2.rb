@@ -60,6 +60,7 @@ schedule_type_limits.setNumericType("Continuous")
 # create the schedule fixed interval
 schedule_fixed_interval = OpenStudio::Model::ScheduleFixedInterval.new(model)
 schedule_fixed_interval.setTimeSeries(timeseries)
+schedule_fixed_interval.setTranslatetoScheduleFile(true)
 schedule_fixed_interval.setScheduleTypeLimits(schedule_type_limits)
 
 # apply schedule to all lights

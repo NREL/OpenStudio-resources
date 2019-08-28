@@ -1671,6 +1671,14 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_schedule_fixed_interval_osm
     result = sim_test('schedule_fixed_interval.osm')
   end
+  
+  def test_schedule_fixed_interval_2_rb
+    result = sim_test('schedule_fixed_interval_2.rb')
+  end
+  
+  def test_schedule_fixed_interval_2_osm
+    result = sim_test('schedule_fixed_interval_2.osm')
+  end
 
   def test_setpoint_managers_rb
     result = sim_test('setpoint_managers.rb')
