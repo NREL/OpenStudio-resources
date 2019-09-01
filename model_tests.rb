@@ -1400,6 +1400,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('generator_microturbine.osm')
   end
 
+  def test_coil_waterheating_desuperheater_rb
+    result = sim_test('coil_waterheating_desuperheater.rb')
+  end
+
+  def test_coil_waterheating_desuperheater_osm
+    result = sim_test('coil_waterheating_desuperheater.osm')
+  end
+
   def test_headered_pumps_osm
     result = sim_test('headered_pumps.osm')
   end
