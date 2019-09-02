@@ -58,8 +58,10 @@ sizingPlant.setDesignLoopExitTemperature(29.4)
 sizingPlant.setLoopDesignTemperatureDifference(5.6)
 
 # Connect VRF to demand side of plant loop
+# We do not hardcode the condenserType, so in the FT it will see that it's
+# connected to a PlantLoop and set it to WaterCooled appropriately.
 condenserSystem.addDemandBranchForComponent(vrf)
-
+# condenserSystem.setCondenserType("WaterCooled")
 
 # Set up supply side of the CW Loop
 pump = OpenStudio::Model::PumpVariableSpeed.new(model)
