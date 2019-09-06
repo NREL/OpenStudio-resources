@@ -13,11 +13,9 @@ def create_condenser_loop(model)
   cw_loop.setName('Condenser Water Loop')
   cw_loop.setMaximumLoopTemperature(80)
   cw_loop.setMinimumLoopTemperature(5)
-  cw_temp_f = 70 # CW setpoint 70F
   cw_temp_sizing_f = 102 # CW sized to deliver 102F
   cw_delta_t_r = 10 # 10F delta-T
   cw_approach_delta_t_r = 7 # 7F approach
-  cw_temp_c = OpenStudio.convert(cw_temp_f, 'F', 'C').get
   cw_temp_sizing_c = OpenStudio.convert(cw_temp_sizing_f, 'F', 'C').get
   cw_delta_t_k = OpenStudio.convert(cw_delta_t_r, 'R', 'K').get
   cw_approach_delta_t_k = OpenStudio.convert(cw_approach_delta_t_r, 'R', 'K').get
@@ -51,7 +49,7 @@ end
 #
 # @param zone [OpenStudio::Model::ThermalZone] The control zone
 # @return [OpenStudio::Model::AirLoopHVACUnitarySystem] the unitary
-def create_unitary_on_airloophvac(zone)
+def create_unitary_on_airloophvac(model, zone)
 
   airloop = zone.airLoopHVAC.get
   airloop.setName("AirLoopHVAC for #{zone.name.to_s}")
@@ -81,8 +79,9 @@ end
 def create_gshp_test(model, zone)
 
   # create desuperheater object
-  setpoint_temp_sch = OpenStudio::Model::ScheduleConstant.new(model, 60)
+  setpoint_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model, 60)
   coil_water_heating_desuperheater_gshp = OpenStudio::Model::CoilWaterHeatingDesuperheater.new(model, setpoint_temp_sch)
+  coil_water_heating_desuperheater_gshp.setRatedHeatReclaimRecoveryEfficiency(0.25)
 
   #create a SWH Loop with a stratified water heater
   stratified_swh_loop = model.add_swh_loop("Stratified")
@@ -98,7 +97,7 @@ def create_gshp_test(model, zone)
   condenserLoop.addDemandBranchForComponent(coil_cooling_water_to_air_heat_pump_equation_fit)
 
   # Create a Unitary on the AirLoopHVAC for that zone
-  unitary = create_unitary_on_airloophvac(zone)
+  unitary = create_unitary_on_airloophvac(model, zone)
   # Set it as the coolingCoil of the Unitary
   unitary.setCoolingCoil(coil_cooling_water_to_air_heat_pump_equation_fit)
 
@@ -120,7 +119,7 @@ end
 def create_multispeedac_test(model, zone)
 
   # create desuperheater object
-  setpoint_temp_sch = OpenStudio::Model::ScheduleConstant.new(model, 60)
+  setpoint_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model, 60)
   coil_water_heating_desuperheater_multi = OpenStudio::Model::CoilWaterHeatingDesuperheater.new(model, setpoint_temp_sch)
 
   # Create a SHW Loop with a Mixed Water Heater
@@ -130,7 +129,7 @@ def create_multispeedac_test(model, zone)
   coil_water_heating_desuperheater_multi.addToHeatRejectionTarget(water_heater_mixed)
 
   # Create a Unitary on the AirLoopHVAC for that zone
-  unitary = create_unitary_on_airloophvac(zone)
+  unitary = create_unitary_on_airloophvac(model, zone)
 
   # create multispeed dx cooling coil
   coil_cooling_dx_multispeed = OpenStudio::Model::CoilCoolingDXMultiSpeed.new(model)
@@ -183,9 +182,6 @@ model.add_hvac({"ashrae_sys_num" => '03'})
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
 zones = model.getThermalZones.sort_by{|z| z.name.to_s}
-
-#create schedule object
-setpoint_temp_sch = OpenStudio::Model::ScheduleConstant.new(model, 60)
 
 ###############################################################################
 #                           (1) T E S T    G S H P                            #
