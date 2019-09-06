@@ -1546,6 +1546,16 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('multiple_loops_w_plenums.osm')
   end
 
+  def test_performanceprecisiontradeoffs_rb
+    result = sim_test('performanceprecisiontradeoffs.rb')
+  end
+
+  # TODO : To be added once the next official release
+  # including this object's latest changes is out : 2.9.0
+  # def test_performanceprecisiontradeoffs_osm
+  #   result = sim_test('performanceprecisiontradeoffs.osm')
+  # end
+
   def test_photovoltaics_rb
     result = sim_test('photovoltaics.rb')
   end
@@ -1673,19 +1683,19 @@ class ModelTests < MiniTest::Unit::TestCase
     # this folder
     result = sim_test('schedule_file.osm')
   end
-  
+
   def test_schedule_fixed_interval_rb
     result = sim_test('schedule_fixed_interval.rb')
   end
-  
+
   def test_schedule_fixed_interval_osm
     result = sim_test('schedule_fixed_interval.osm')
   end
-  
+
   def test_schedule_fixed_interval_2_rb
     result = sim_test('schedule_fixed_interval_2.rb')
   end
-  
+
   def test_schedule_fixed_interval_2_osm
     result = sim_test('schedule_fixed_interval_2.osm')
   end
