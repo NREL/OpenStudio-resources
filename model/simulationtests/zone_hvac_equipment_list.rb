@@ -57,6 +57,8 @@ zones.each_with_index do |thermal_zone, i|
   air_loop_unitary.setControllingZoneorThermostatLocation(thermal_zone)
 
   air_terminal_living = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, model.alwaysOnDiscreteSchedule)
+  # TODO: I don't think there's any reason to use the multiAddBranchForZone
+  # method, addBranchForZone is plenty fine here.
   air_loop.multiAddBranchForZone(thermal_zone, air_terminal_living)
 
   if i == 0 # test that the old methods still accept doubles
