@@ -1400,6 +1400,16 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('generator_microturbine.osm')
   end
 
+  # TODO : To be added once the next official release
+  # including this object is out : 2.9.0
+  # def test_coil_waterheating_desuperheater_osm
+  #   result = sim_test('coil_waterheating_desuperheater.osm')
+  # end
+
+  def test_coil_waterheating_desuperheater_rb
+    result = sim_test('coil_waterheating_desuperheater.rb')
+  end
+
   def test_headered_pumps_osm
     result = sim_test('headered_pumps.osm')
   end
@@ -1663,6 +1673,22 @@ class ModelTests < MiniTest::Unit::TestCase
     # this folder
     result = sim_test('schedule_file.osm')
   end
+  
+  def test_schedule_fixed_interval_rb
+    result = sim_test('schedule_fixed_interval.rb')
+  end
+  
+  def test_schedule_fixed_interval_osm
+    result = sim_test('schedule_fixed_interval.osm')
+  end
+  
+  def test_schedule_fixed_interval_2_rb
+    result = sim_test('schedule_fixed_interval_2.rb')
+  end
+  
+  def test_schedule_fixed_interval_2_osm
+    result = sim_test('schedule_fixed_interval_2.osm')
+  end
 
   def test_setpoint_managers_rb
     result = sim_test('setpoint_managers.rb')
@@ -1776,6 +1802,15 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('vrf.rb')
   end
 
+  # TODO: Add this once next official version is out (Post 2.8.1)
+  # def test_vrf_watercooled_osm
+  #   result = sim_test('vrf_watercooled.osm')
+  # end
+
+  def test_vrf_watercooled_rb
+    result = sim_test('vrf_watercooled.rb')
+  end
+
   def test_water_economizer_osm
     result = sim_test('water_economizer.osm')
   end
@@ -1831,6 +1866,16 @@ class ModelTests < MiniTest::Unit::TestCase
   def test_zone_hvac2_osm
     result = sim_test('zone_hvac2.osm')
   end
+
+  def test_zone_hvac_equipment_list_rb
+    result = sim_test('zone_hvac_equipment_list.rb')
+  end
+
+  # TODO : To be added once the next official release
+  # including this object's latest changes is out : 2.9.0
+  #def test_zone_hvac_equipment_list_osm
+  #  result = sim_test('zone_hvac_equipment_list.osm')
+  #end
 
   def test_zone_mixing_osm
     result = sim_test('zone_mixing.osm')
