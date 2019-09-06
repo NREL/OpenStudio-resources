@@ -46,6 +46,9 @@ zones.each_with_index do |thermal_zone, i|
 
   air_loop_unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
   air_loop_unitary.setSupplyFan(fan)
+  # Be explicit about the fanPlacement. If you have a fan, you MUST supply a
+  # fanPlacement. (FT currently Would default that to DrawThrough)
+  air_loop_unitary.setFanPlacement("BlowThrough")
   air_loop_unitary.setHeatingCoil(htg_coil)
   air_loop_unitary.setCoolingCoil(clg_coil)
   air_loop_unitary.setSupplementalHeatingCoil(htg_supp_coil)
