@@ -3,13 +3,13 @@ require 'lib/baseline_model'
 
 model = BaselineModel.new
 
-#make a 2 story, 100m X 50m, 10 zone core/perimeter building
+#make a 2 story, 100m X 50m, 2 zone core/perimeter building
 model.add_geometry({"length" => 100,
                     "width" => 50,
                     "num_floors" => 2,
                     "floor_to_floor_height" => 4,
                     "plenum_height" => 1,
-                    "perimeter_zone_depth" => 3})
+                    "perimeter_zone_depth" => 0})
 
 #add windows at a 40% window-to-wall ratio
 model.add_windows({"wwr" => 0.4,
