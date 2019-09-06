@@ -121,6 +121,7 @@ def create_multispeedac_test(model, zone)
   # create desuperheater object
   setpoint_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model, 60)
   coil_water_heating_desuperheater_multi = OpenStudio::Model::CoilWaterHeatingDesuperheater.new(model, setpoint_temp_sch)
+  coil_water_heating_desuperheater_multi.setRatedHeatReclaimRecoveryEfficiency(0.25)
 
   # Create a SHW Loop with a Mixed Water Heater
   mixed_swh_loop = model.add_swh_loop("Mixed")
