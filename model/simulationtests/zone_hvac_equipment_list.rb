@@ -29,15 +29,15 @@ model.set_space_type()
 #add design days to the model (Chicago)
 model.add_design_days()
 
-model.getThermalZones.each_with_index do |thermal_zone, i|
-  if i == 0 # test that the methods still accept doubles
-    heating_schedule = 0.9
-    cooling_schedule = 0.4
-  else # test new schedule arguments
-    heating_schedule = OpenStudio::Model::ScheduleConstant.new(model)
-    heating_schedule.setValue(0.75)
-    cooling_schedule = OpenStudio::Model::ScheduleRuleset.new(model, 0.995)
-  end
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+
+heating_schedule = OpenStudio::Model::ScheduleConstant.new(model)
+heating_schedule.setValue(0.75)
+cooling_schedule = OpenStudio::Model::ScheduleRuleset.new(model, 0.995)
+
+zones.each_with_index do |thermal_zone, i|
 
   htg_coil = OpenStudio::Model::CoilHeatingDXSingleSpeed.new(model)
   htg_supp_coil = OpenStudio::Model::CoilHeatingElectric.new(model)
@@ -56,11 +56,17 @@ model.getThermalZones.each_with_index do |thermal_zone, i|
   air_loop_unitary.addToNode(air_supply_inlet_node)
   air_loop_unitary.setControllingZoneorThermostatLocation(thermal_zone)
 
-  air_terminal_living = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, model.alwaysOnDiscreteSchedule)
+  air_terminal_living = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, model.alwaysOnDiscreteSchedule)
   air_loop.multiAddBranchForZone(thermal_zone, air_terminal_living)
 
-  thermal_zone.setSequentialHeatingFractionSchedule(air_terminal_living, heating_schedule)
-  thermal_zone.setSequentialHeatingFractionSchedule(air_terminal_living, cooling_schedule)
+  if i == 0 # test that the old methods still accept doubles
+    thermal_zone.setSequentialHeatingFraction(air_terminal_living, 0.9)
+    thermal_zone.setSequentialHeatingFraction(air_terminal_living, 0.4)
+  else # test new schedule arguments
+
+    thermal_zone.setSequentialHeatingFractionSchedule(air_terminal_living, heating_schedule)
+    thermal_zone.setSequentialHeatingFractionSchedule(air_terminal_living, cooling_schedule)
+  end
 end
 
 #save the OpenStudio model (.osm)
