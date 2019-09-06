@@ -10,7 +10,7 @@ model.add_geometry({"length" => 100,
                     "floor_to_floor_height" => 4,
                     "plenum_height" => 1,
                     "perimeter_zone_depth" => 3})
-                    
+
 #add windows at a 40% window-to-wall ratio
 model.add_windows({"wwr" => 0.4,
                    "offset" => 1,
@@ -19,7 +19,7 @@ model.add_windows({"wwr" => 0.4,
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                        "cooling_setpoint" => 28})
-                       
+
 #assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions()
 
@@ -38,7 +38,7 @@ model.getThermalZones.each_with_index do |thermal_zone, i|
     heating_schedule.setValue(0.75)
     cooling_schedule = OpenStudio::Model::ScheduleRuleset.new(model, 0.995)
   end
-  
+
   htg_coil = OpenStudio::Model::CoilHeatingDXSingleSpeed.new(model)
   htg_supp_coil = OpenStudio::Model::CoilHeatingElectric.new(model)
   clg_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
@@ -58,9 +58,9 @@ model.getThermalZones.each_with_index do |thermal_zone, i|
 
   air_terminal_living = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, model.alwaysOnDiscreteSchedule)
   air_loop.multiAddBranchForZone(thermal_zone, air_terminal_living)
-  
-  thermal_zone.setSequentialHeatingFraction(air_terminal_living, heating_schedule)
-  thermal_zone.setSequentialCoolingFraction(air_terminal_living, cooling_schedule)
+
+  thermal_zone.setSequentialHeatingFractionSchedule(air_terminal_living, heating_schedule)
+  thermal_zone.setSequentialHeatingFractionSchedule(air_terminal_living, cooling_schedule)
 end
 
 #save the OpenStudio model (.osm)
