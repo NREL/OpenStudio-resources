@@ -1688,17 +1688,19 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('schedule_fixed_interval.rb')
   end
 
-  def test_schedule_fixed_interval_osm
-    result = sim_test('schedule_fixed_interval.osm')
-  end
+  # TODO: Add once 2.9.0 is out
+  #def test_schedule_fixed_interval_osm
+    #result = sim_test('schedule_fixed_interval.osm')
+  #end
 
   def test_schedule_fixed_interval_2_rb
     result = sim_test('schedule_fixed_interval_2.rb')
   end
 
-  def test_schedule_fixed_interval_2_osm
-    result = sim_test('schedule_fixed_interval_2.osm')
-  end
+  # TODO: Add once 2.9.0 is out
+  #def test_schedule_fixed_interval_2_osm
+    #result = sim_test('schedule_fixed_interval_2.osm')
+  #end
 
   def test_setpoint_managers_rb
     result = sim_test('setpoint_managers.rb')
