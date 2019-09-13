@@ -84,7 +84,10 @@ end
 # view factors for surfaces to subsurfaces
 surfaces.each do |surface|
   sub_surfaces.each do |sub_surface|
+    # From surface to subsurface
     zone_property_user_view_factors_by_surface_name.addViewFactor(surface, sub_surface, 0.5)
+    # And from subsurface to surface
+    zone_property_user_view_factors_by_surface_name.addViewFactor(sub_surface, surface, 0.5)
   end
 end
 
