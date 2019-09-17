@@ -1376,13 +1376,23 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('fluid_coolers.osm')
   end
 
+  def test_foundation_kiva_rb
+    result = sim_test('foundation_kiva.rb')
+  end
+
   def test_foundation_kiva_osm
     result = sim_test('foundation_kiva.osm')
   end
 
-  def test_foundation_kiva_rb
-    result = sim_test('foundation_kiva.rb')
+  def test_foundation_kiva_customblocks_rb
+    result = sim_test('foundation_kiva_customblocks.rb')
   end
+
+  # TODO : To be added once the next official release
+  # including this object is out : 2.9.0
+  # def test_foundation_kiva_customblocks_osm
+  #   result = sim_test('foundation_kiva_customblocks.osm')
+  # end
 
   def test_fuelcell_osm
     result = sim_test('fuelcell.osm')
