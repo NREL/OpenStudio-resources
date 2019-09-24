@@ -43,6 +43,11 @@ vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlow.new(model)
 
 zones.each do |z|
   vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model)
+  # Also test the supplemental heat capability that was added in 2.9.0
+  supHC = OpenStudio::Model::CoilHeatingElectric.new(model)
+  vrf_terminal.setSupplementalHeatingCoil(supHC)
+  vrf_terminal.autosizeMaximumSupplyAirTemperaturefromSupplementalHeater()
+  vrf_terminal.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21.0)
   vrf_terminal.addToThermalZone(z)
   vrf.addTerminal(vrf_terminal)
 end
