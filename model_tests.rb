@@ -1898,11 +1898,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('zone_hvac_equipment_list.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object's latest changes is out : 2.9.0
-  #def test_zone_hvac_equipment_list_osm
-  #  result = sim_test('zone_hvac_equipment_list.osm')
-  #end
+  def test_zone_hvac_equipment_list_osm
+    result = sim_test('zone_hvac_equipment_list.osm')
+  end
 
   def test_zone_mixing_osm
     result = sim_test('zone_mixing.osm')
