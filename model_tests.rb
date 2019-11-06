@@ -1736,6 +1736,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('surface_properties.rb')
   end
 
+  def test_tablemultivariablelookup_rb
+    result = sim_test('tablemultivariablelookup.rb')
+  end
+
+  def test_tablemultivariablelookup_osm
+    result = sim_test('tablemultivariablelookup.osm')
+  end
+
   def test_thermal_storage_rb
     result = sim_test('thermal_storage.rb')
   end
