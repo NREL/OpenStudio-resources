@@ -1388,11 +1388,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('foundation_kiva_customblocks.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 2.9.0
-  # def test_foundation_kiva_customblocks_osm
-  #   result = sim_test('foundation_kiva_customblocks.osm')
-  # end
+  def test_foundation_kiva_customblocks_osm
+    result = sim_test('foundation_kiva_customblocks.osm')
+  end
 
   def test_fuelcell_osm
     result = sim_test('fuelcell.osm')
@@ -1410,11 +1408,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('generator_microturbine.osm')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 2.9.0
-  # def test_coil_waterheating_desuperheater_osm
-  #   result = sim_test('coil_waterheating_desuperheater.osm')
-  # end
+  def test_coil_waterheating_desuperheater_osm
+    result = sim_test('coil_waterheating_desuperheater.osm')
+  end
 
   def test_coil_waterheating_desuperheater_rb
     result = sim_test('coil_waterheating_desuperheater.rb')
@@ -1560,11 +1556,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('performanceprecisiontradeoffs.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object's latest changes is out : 2.9.0
-  # def test_performanceprecisiontradeoffs_osm
-  #   result = sim_test('performanceprecisiontradeoffs.osm')
-  # end
+  def test_performanceprecisiontradeoffs_osm
+    result = sim_test('performanceprecisiontradeoffs.osm')
+  end
 
   def test_photovoltaics_rb
     result = sim_test('photovoltaics.rb')
@@ -1698,19 +1692,17 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('schedule_fixed_interval.rb')
   end
 
-  # TODO: Add once 2.9.0 is out
-  #def test_schedule_fixed_interval_osm
-    #result = sim_test('schedule_fixed_interval.osm')
-  #end
+  def test_schedule_fixed_interval_osm
+    result = sim_test('schedule_fixed_interval.osm')
+  end
 
   def test_schedule_fixed_interval_schedulefile_rb
     result = sim_test('schedule_fixed_interval_schedulefile.rb')
   end
 
-  # TODO: Add once 2.9.0 is out
-  #def test_schedule_fixed_interval_schedulefile_osm
-    #result = sim_test('schedule_fixed_interval_schedulefile.osm')
-  #end
+  def test_schedule_fixed_interval_schedulefile_osm
+    result = sim_test('schedule_fixed_interval_schedulefile.osm')
+  end
 
   def test_setpoint_managers_rb
     result = sim_test('setpoint_managers.rb')
@@ -1804,10 +1796,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('unitary_vav_bypass_plenum.rb')
   end
 
-  # TODO: add once 2.9.0 is out
-  # def test_unitary_vav_bypass_plenum_osm
-  #   result = sim_test('unitary_vav_bypass_plenum.osm')
-  # end
+  def test_unitary_vav_bypass_plenum_osm
+    result = sim_test('unitary_vav_bypass_plenum.osm')
+  end
 
   def test_unitary_systems_airloop_and_zonehvac_rb
     result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
@@ -1910,11 +1901,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('zone_hvac_equipment_list.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object's latest changes is out : 2.9.0
-  #def test_zone_hvac_equipment_list_osm
-  #  result = sim_test('zone_hvac_equipment_list.osm')
-  #end
+  def test_zone_hvac_equipment_list_osm
+    result = sim_test('zone_hvac_equipment_list.osm')
+  end
 
   def test_zone_mixing_osm
     result = sim_test('zone_mixing.osm')
@@ -1928,11 +1917,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('zone_property_user_view_factors_by_surface_name.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object's latest changes is out : 2.9.0
-  #def test_zone_property_user_view_factors_by_surface_name_osm
-  #  result = sim_test('zone_property_user_view_factors_by_surface_name.osm')
-  #end
+  def test_zone_property_user_view_factors_by_surface_name_osm
+    result = sim_test('zone_property_user_view_factors_by_surface_name.osm')
+  end
 
   def test_afn_single_zone_nv_rb
     result = sim_test('afn_single_zone_nv.rb')
