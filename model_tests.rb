@@ -1909,11 +1909,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('zone_property_user_view_factors_by_surface_name.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object's latest changes is out : 2.9.0
-  #def test_zone_property_user_view_factors_by_surface_name_osm
-  #  result = sim_test('zone_property_user_view_factors_by_surface_name.osm')
-  #end
+  def test_zone_property_user_view_factors_by_surface_name_osm
+    result = sim_test('zone_property_user_view_factors_by_surface_name.osm')
+  end
 
   def test_afn_single_zone_nv_rb
     result = sim_test('afn_single_zone_nv.rb')
