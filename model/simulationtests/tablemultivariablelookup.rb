@@ -54,12 +54,11 @@ p_chw = ch.plantLoop.get
 # CoilCoolingFourPipeBeam
 capModFuncOfWaterFlow = OpenStudio::Model::TableMultiVariableLookup.new(m, 1)
 capModFuncOfWaterFlow.setName("CapModFuncOfWaterFlow")
+
 capModFuncOfWaterFlow.setCurveType("Quadratic")
 capModFuncOfWaterFlow.setInterpolationMethod("EvaluateCurveToLimits")
 capModFuncOfWaterFlow.setMinimumValueofX1(0)
 capModFuncOfWaterFlow.setMaximumValueofX1(1.33)
-capModFuncOfWaterFlow.setMinimumTableOutput(0.0)
-capModFuncOfWaterFlow.setMaximumTableOutput(1.04)
 capModFuncOfWaterFlow.setInputUnitTypeforX1("Dimensionless")
 capModFuncOfWaterFlow.setOutputUnitType("Dimensionless")
 
@@ -68,14 +67,20 @@ capModFuncOfWaterFlow.setOutputUnitType("Dimensionless")
 norm_ref = 2.4
 capModFuncOfWaterFlow.setNormalizationReference(norm_ref)
 
-capModFuncOfWaterFlow.addPoint(0.0, 0.0*norm_ref)
-capModFuncOfWaterFlow.addPoint(0.05, 0.001*norm_ref)
-capModFuncOfWaterFlow.addPoint(0.33333, 0.71*norm_ref)
-capModFuncOfWaterFlow.addPoint(0.5, 0.85*norm_ref)
-capModFuncOfWaterFlow.addPoint(0.666667, 0.92*norm_ref)
-capModFuncOfWaterFlow.addPoint(0.833333, 0.97*norm_ref)
-capModFuncOfWaterFlow.addPoint(1.0, 1.0*norm_ref) # <= RATING POINT
-capModFuncOfWaterFlow.addPoint(1.333333, 1.04*norm_ref)
+# Quoting I/O ref for 9.1:
+# > Both the output values and minimum/maximum curve limits
+# > are normalized as applicable.
+capModFuncOfWaterFlow.setMinimumTableOutput(0.0 * norm_ref)
+capModFuncOfWaterFlow.setMaximumTableOutput(1.04 * norm_ref)
+
+capModFuncOfWaterFlow.addPoint(0.0, 0.0 * norm_ref)
+capModFuncOfWaterFlow.addPoint(0.05, 0.001 * norm_ref)
+capModFuncOfWaterFlow.addPoint(0.33333, 0.71 * norm_ref)
+capModFuncOfWaterFlow.addPoint(0.5, 0.85 * norm_ref)
+capModFuncOfWaterFlow.addPoint(0.666667, 0.92 * norm_ref)
+capModFuncOfWaterFlow.addPoint(0.833333, 0.97 * norm_ref)
+capModFuncOfWaterFlow.addPoint(1.0, 1.0 * norm_ref) # <= RATING POINT
+capModFuncOfWaterFlow.addPoint(1.333333, 1.04 * norm_ref)
 
 
 # Replace all terminals with ATUFourPipeBeams
