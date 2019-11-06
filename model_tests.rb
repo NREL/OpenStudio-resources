@@ -1556,11 +1556,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('performanceprecisiontradeoffs.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object's latest changes is out : 2.9.0
-  # def test_performanceprecisiontradeoffs_osm
-  #   result = sim_test('performanceprecisiontradeoffs.osm')
-  # end
+  def test_performanceprecisiontradeoffs_osm
+    result = sim_test('performanceprecisiontradeoffs.osm')
+  end
 
   def test_photovoltaics_rb
     result = sim_test('photovoltaics.rb')
