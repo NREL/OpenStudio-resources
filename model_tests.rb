@@ -1788,10 +1788,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('unitary_vav_bypass_plenum.rb')
   end
 
-  # TODO: add once 2.9.0 is out
-  # def test_unitary_vav_bypass_plenum_osm
-  #   result = sim_test('unitary_vav_bypass_plenum.osm')
-  # end
+  def test_unitary_vav_bypass_plenum_osm
+    result = sim_test('unitary_vav_bypass_plenum.osm')
+  end
 
   def test_unitary_systems_airloop_and_zonehvac_rb
     result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
