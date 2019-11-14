@@ -1720,6 +1720,26 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('solar_collector_flat_plate_water.osm')
   end
 
+  def test_solar_collector_flat_plate_photovoltaicthermal_rb
+    result = sim_test('solar_collector_flat_plate_photovoltaicthermal.rb')
+  end
+
+  # TODO: at 2.9.0 since it will always fail before that
+  # (though this object has been added circa 1.8.4)
+  #def test_solar_collector_flat_plate_photovoltaicthermal_osm
+  #  result = sim_test('solar_collector_flat_plate_photovoltaicthermal.osm')
+  #end
+
+  def test_solar_collector_integralcollectorstorage_rb
+    result = sim_test('solar_collector_integralcollectorstorage.rb')
+  end
+
+  # TODO: at 2.9.0 since it will always fail before that
+  # (though this object has been added circa 1.8.4)
+  #def test_solar_collector_integralcollectorstorage_osm
+  #  result = sim_test('solar_collector_integralcollectorstorage.osm')
+  #end
+
   def test_space_load_instances_rb
     result = sim_test('space_load_instances.rb')
   end

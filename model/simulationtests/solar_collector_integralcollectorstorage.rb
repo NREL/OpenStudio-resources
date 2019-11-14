@@ -168,24 +168,37 @@ group.setZOrigin(8)
 shade = OpenStudio::Model::ShadingSurface.new(vertices, model)
 shade.setShadingSurfaceGroup(group)
 
-collector = OpenStudio::Model::SolarCollectorFlatPlateWater.new(model)
+collector = OpenStudio::Model::SolarCollectorIntegralCollectorStorage.new(model)
 storage_water_loop.addSupplyBranchForComponent(collector)
 collector.setSurface(shade)
+
+collector.setMaximumFlowRate(0.001)
+# Note: there is no setter for bottomSurfaceBoundaryConditionsType
+# (nor Boundary Condition Model)
 
 # Modify the Performance object
 # (Here I hardset them exactly like the constructor does)
 perf = collector.solarCollectorPerformance
-perf.setName("Solar Collector Performance FlatPlate")
-perf.setGrossArea(2.9646)
-perf.setTestFluid("Water") # Only accepted answer
-perf.setTestFlowRate(3.88e-05)
-perf.setTestCorrelationType("Inlet") # ["Inlet", "Average", "Outlet"]
-perf.setCoefficient1ofEfficiencyEquation(0.691)
-perf.setCoefficient2ofEfficiencyEquation(-0.00193)
-# This one is optional
-# perf.setCoefficient3ofEfficiencyEquation()
-perf.setCoefficient2ofIncidentAngleModifier(-0.1939)
-perf.setCoefficient3ofIncidentAngleModifier(-0.0055)
+perf.setName("Solar Collector Performance Integral Collector Storage")
+# Non idd defaults
+perf.setGrossArea(shade.grossArea)
+perf.setCollectorWaterVolume(0.1862) # same as ctor (from HP_wICSSolarCollector.idf)
+# IDD defaults
+perf.setICSCollectorType("RectangularTank")
+perf.setBottomHeatLossConductance(0.4)
+perf.setSideHeatLossConductance(0.6)
+perf.setAspectRatio(0.8)
+perf.setCollectorSideHeight(0.2)
+perf.setThermalMassOfAbsorberPlate(0.0)
+perf.setNumberOfCovers(2)
+perf.setCoverSpacing(0.05)
+perf.setRefractiveIndexOfOuterCover(1.526)
+perf.setExtinctionCoefficientTimesThicknessOfOuterCover(0.045)
+perf.setRefractiveIndexOfInnerCover(1.37)
+perf.setExtinctionCoefficientTimesThicknessOfTheInnerCover(0.008)
+perf.setEmissivityOfInnerCover(0.88)
+perf.setAbsorptanceOfAbsorberPlate(0.96)
+perf.setEmissivityOfAbsorberPlate(0.3)
 
 add_out_vars = false
 if add_out_vars
@@ -211,3 +224,4 @@ tempering_valve.setPumpOutletNode(swh_pump.outletModelObject.get.to_Node.get)
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "in.osm"})
+
