@@ -168,24 +168,33 @@ group.setZOrigin(8)
 shade = OpenStudio::Model::ShadingSurface.new(vertices, model)
 shade.setShadingSurfaceGroup(group)
 
-collector = OpenStudio::Model::SolarCollectorFlatPlateWater.new(model)
+collector = OpenStudio::Model::SolarCollectorFlatPlatePhotovoltaicThermal.new(model)
 storage_water_loop.addSupplyBranchForComponent(collector)
 collector.setSurface(shade)
+
+# We need a PV object as well, and and ELCD, and an inverted
+# create the panel
+panel = OpenStudio::Model::GeneratorPhotovoltaic::simple(model)
+panel.setSurface(shade)
+# create the inverter
+inverter = OpenStudio::Model::ElectricLoadCenterInverterSimple.new(model)
+# create the distribution system
+elcd = OpenStudio::Model::ElectricLoadCenterDistribution.new(model)
+elcd.addGenerator(panel)
+elcd.setInverter(inverter)
+
+# Assign the PV Generator to the collector
+collector.setGeneratorPhotovoltaic(panel)
+
+collector.autosizeDesignFlowRate()
 
 # Modify the Performance object
 # (Here I hardset them exactly like the constructor does)
 perf = collector.solarCollectorPerformance
-perf.setName("Solar Collector Performance FlatPlate")
-perf.setGrossArea(2.9646)
-perf.setTestFluid("Water") # Only accepted answer
-perf.setTestFlowRate(3.88e-05)
-perf.setTestCorrelationType("Inlet") # ["Inlet", "Average", "Outlet"]
-perf.setCoefficient1ofEfficiencyEquation(0.691)
-perf.setCoefficient2ofEfficiencyEquation(-0.00193)
-# This one is optional
-# perf.setCoefficient3ofEfficiencyEquation()
-perf.setCoefficient2ofIncidentAngleModifier(-0.1939)
-perf.setCoefficient3ofIncidentAngleModifier(-0.0055)
+perf.setName("Solar Collector Performance Photovoltaic Thermal Simple")
+perf.setFractionOfSurfaceAreaWithActiveThermalCollector(1.0)
+perf.setThermalConversionEfficiency(0.3)
+perf.setFrontSurfaceEmittance(0.84)
 
 add_out_vars = false
 if add_out_vars
