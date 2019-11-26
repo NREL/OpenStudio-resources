@@ -333,12 +333,20 @@ class ModelTests < Minitest::Test
     result = sim_test('fluid_coolers.osm')
   end
 
+  def test_foundation_kiva_rb
+    result = sim_test('foundation_kiva.rb')
+  end
+
   def test_foundation_kiva_osm
     result = sim_test('foundation_kiva.osm')
   end
 
-  def test_foundation_kiva_rb
-    result = sim_test('foundation_kiva.rb')
+  def test_foundation_kiva_customblocks_rb
+    result = sim_test('foundation_kiva_customblocks.rb')
+  end
+
+  def test_foundation_kiva_customblocks_osm
+    result = sim_test('foundation_kiva_customblocks.osm')
   end
 
   def test_fuelcell_osm
@@ -355,6 +363,14 @@ class ModelTests < Minitest::Test
 
   def test_generator_microturbine_osm
     result = sim_test('generator_microturbine.osm')
+  end
+
+  def test_coil_waterheating_desuperheater_osm
+    result = sim_test('coil_waterheating_desuperheater.osm')
+  end
+
+  def test_coil_waterheating_desuperheater_rb
+    result = sim_test('coil_waterheating_desuperheater.rb')
   end
 
   def test_headered_pumps_osm
@@ -493,6 +509,14 @@ class ModelTests < Minitest::Test
     result = sim_test('multiple_loops_w_plenums.osm')
   end
 
+  def test_performanceprecisiontradeoffs_rb
+    result = sim_test('performanceprecisiontradeoffs.rb')
+  end
+
+  def test_performanceprecisiontradeoffs_osm
+    result = sim_test('performanceprecisiontradeoffs.osm')
+  end
+
   def test_photovoltaics_rb
     result = sim_test('photovoltaics.rb')
   end
@@ -621,6 +645,22 @@ class ModelTests < Minitest::Test
     result = sim_test('schedule_file.osm')
   end
 
+  def test_schedule_fixed_interval_rb
+    result = sim_test('schedule_fixed_interval.rb')
+  end
+
+  def test_schedule_fixed_interval_osm
+    result = sim_test('schedule_fixed_interval.osm')
+  end
+
+  def test_schedule_fixed_interval_schedulefile_rb
+    result = sim_test('schedule_fixed_interval_schedulefile.rb')
+  end
+
+  def test_schedule_fixed_interval_schedulefile_osm
+    result = sim_test('schedule_fixed_interval_schedulefile.osm')
+  end
+
   def test_setpoint_managers_rb
     result = sim_test('setpoint_managers.rb')
   end
@@ -637,6 +677,26 @@ class ModelTests < Minitest::Test
     result = sim_test('solar_collector_flat_plate_water.osm')
   end
 
+  def test_solar_collector_flat_plate_photovoltaicthermal_rb
+    result = sim_test('solar_collector_flat_plate_photovoltaicthermal.rb')
+  end
+
+  # Will fail up to 2.9.0 included due to missing reference in
+  # ProposedEnergy+.idd (though this object has been added circa 1.8.4)
+  def test_solar_collector_flat_plate_photovoltaicthermal_osm
+    result = sim_test('solar_collector_flat_plate_photovoltaicthermal.osm')
+  end
+
+  def test_solar_collector_integralcollectorstorage_rb
+    result = sim_test('solar_collector_integralcollectorstorage.rb')
+  end
+
+  # Will fail up to 2.9.0 included due to missing reference in
+  # ProposedEnergy+.idd (though this object has been added circa 1.8.4)
+  def test_solar_collector_integralcollectorstorage_osm
+    result = sim_test('solar_collector_integralcollectorstorage.osm')
+  end
+
   def test_space_load_instances_rb
     result = sim_test('space_load_instances.rb')
   end
@@ -651,6 +711,14 @@ class ModelTests < Minitest::Test
 
   def test_surface_properties_rb
     result = sim_test('surface_properties.rb')
+  end
+
+  def test_tablemultivariablelookup_rb
+    result = sim_test('tablemultivariablelookup.rb')
+  end
+
+  def test_tablemultivariablelookup_osm
+    result = sim_test('tablemultivariablelookup.osm')
   end
 
   def test_thermal_storage_rb
@@ -701,6 +769,14 @@ class ModelTests < Minitest::Test
     result = sim_test('unitary_vav_bypass.osm')
   end
 
+  def test_unitary_vav_bypass_plenum_rb
+    result = sim_test('unitary_vav_bypass_plenum.rb')
+  end
+
+  def test_unitary_vav_bypass_plenum_osm
+    result = sim_test('unitary_vav_bypass_plenum.osm')
+  end
+
   def test_unitary_systems_airloop_and_zonehvac_rb
     result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
   end
@@ -731,6 +807,15 @@ class ModelTests < Minitest::Test
 
   def test_vrf_rb
     result = sim_test('vrf.rb')
+  end
+
+  # TODO: Add this once next official version is out (Post 2.8.1)
+  # def test_vrf_watercooled_osm
+  #   result = sim_test('vrf_watercooled.osm')
+  # end
+
+  def test_vrf_watercooled_rb
+    result = sim_test('vrf_watercooled.rb')
   end
 
   def test_water_economizer_osm
@@ -789,12 +874,28 @@ class ModelTests < Minitest::Test
     result = sim_test('zone_hvac2.osm')
   end
 
+  def test_zone_hvac_equipment_list_rb
+    result = sim_test('zone_hvac_equipment_list.rb')
+  end
+
+  def test_zone_hvac_equipment_list_osm
+    result = sim_test('zone_hvac_equipment_list.osm')
+  end
+
   def test_zone_mixing_osm
     result = sim_test('zone_mixing.osm')
   end
 
   def test_zone_mixing_rb
     result = sim_test('zone_mixing.rb')
+  end
+
+  def test_zone_property_user_view_factors_by_surface_name_rb
+    result = sim_test('zone_property_user_view_factors_by_surface_name.rb')
+  end
+
+  def test_zone_property_user_view_factors_by_surface_name_osm
+    result = sim_test('zone_property_user_view_factors_by_surface_name.osm')
   end
 
   def test_afn_single_zone_nv_rb
