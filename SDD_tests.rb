@@ -282,6 +282,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('coilsystem_waterhx.osm')
   end
 
+  def test_FT_coil_waterheating_desuperheater
+    sdd_ft_test('coil_waterheating_desuperheater.osm')
+  end
+
   def test_FT_cooling_coils
     sdd_ft_test('cooling_coils.osm')
   end
@@ -352,6 +356,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_foundation_kiva
     sdd_ft_test('foundation_kiva.osm')
+  end
+
+  def test_FT_foundation_kiva_customblocks
+    sdd_ft_test('foundation_kiva_customblocks.osm')
   end
 
   def test_FT_fuelcell
@@ -434,6 +442,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('multiple_loops_w_plenums.osm')
   end
 
+  def test_FT_performanceprecisiontradeoffs
+    sdd_ft_test('performanceprecisiontradeoffs.osm')
+  end
+
   def test_FT_photovoltaics
     sdd_ft_test('photovoltaics.osm')
   end
@@ -486,6 +498,14 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('schedule_file.osm')
   end
 
+  def test_FT_schedule_fixed_interval
+    sdd_ft_test('schedule_fixed_interval.osm')
+  end
+
+  def test_FT_schedule_fixed_interval_schedulefile
+    sdd_ft_test('schedule_fixed_interval_schedulefile.osm')
+  end
+
   def test_FT_schedule_ruleset_2012_LeapYear
     sdd_ft_test('schedule_ruleset_2012_LeapYear.osm')
   end
@@ -506,8 +526,16 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('setpoint_managers.osm')
   end
 
+  def test_FT_solar_collector_flat_plate_photovoltaicthermal
+    sdd_ft_test('solar_collector_flat_plate_photovoltaicthermal.osm')
+  end
+
   def test_FT_solar_collector_flat_plate_water
     sdd_ft_test('solar_collector_flat_plate_water.osm')
+  end
+
+  def test_FT_solar_collector_integralcollectorstorage
+    sdd_ft_test('solar_collector_integralcollectorstorage.osm')
   end
 
   def test_FT_space_load_instances
@@ -516,6 +544,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_surface_properties
     sdd_ft_test('surface_properties.osm')
+  end
+
+  def test_FT_tablemultivariablelookup
+    sdd_ft_test('tablemultivariablelookup.osm')
   end
 
   def test_FT_thermal_storage
@@ -544,6 +576,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_unitary_vav_bypass
     sdd_ft_test('unitary_vav_bypass.osm')
+  end
+
+  def test_FT_unitary_vav_bypass_plenum
+    sdd_ft_test('unitary_vav_bypass_plenum.osm')
   end
 
   def test_FT_utility_bill01
@@ -586,8 +622,16 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('zone_hvac2.osm')
   end
 
+  def test_FT_zone_hvac_equipment_list
+    sdd_ft_test('zone_hvac_equipment_list.osm')
+  end
+
   def test_FT_zone_mixing
     sdd_ft_test('zone_mixing.osm')
+  end
+
+  def test_FT_zone_property_user_view_factors_by_surface_name
+    sdd_ft_test('zone_property_user_view_factors_by_surface_name.osm')
   end
 
 end
