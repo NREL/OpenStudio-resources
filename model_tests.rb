@@ -375,9 +375,11 @@ def sim_test(filename, options = {})
           skip "Matching OSM Model version is newer than the SDK version used (#{model_version} versus #{$SdkVersion})"
         end
       else
-        # If there isn't a matching, we warn, but we'll still run it
-        # It might make sense if you have just added it recently
-        warn "There is no matching OSM test for #{filename}"
+        if !options[:nowarnmatchingosm]
+          # If there isn't a matching, we warn, but we'll still run it
+          # It might make sense if you have just added it recently
+          warn "There is no matching OSM test for #{filename}"
+          end
       end
     end
 
@@ -391,8 +393,6 @@ def sim_test(filename, options = {})
       # puts "moving #{out_osm} to #{in_osm}"
       FileUtils.mv(out_osm, in_osm)
     end
-
-    FileUtils.cp($OswFile, osw)
 
   elsif (ext == '.osw')
 
@@ -493,6 +493,9 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
   $OPENSTUDIO_LOG.setLogLevel(OpenStudio::Debug)
 
   # Run the workflow
+  # Switch this to to false if you're just modifying the code below
+  # (= the checks) after a successful first run as you don't have to wait
+  # for the simulation itself to rerun
   run_sim = true
   if run_sim
     FileUtils.rm_rf(dir) if File.exists?(dir)
@@ -522,10 +525,6 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     run_command(command, dir, 3600)
   end
 
-  # DLM: this line fails on a clean repo if run_sim is false, why would you want run_sim to be false?
-  # JM: because this is useful if you're just modifying the code below
-  # (= the checks) after a successful first run as you don't have to wait
-  # minutes for the simulation itself to rerun
   # fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
 
   result_osw = postprocess_out_osw_and_copy(filename)
@@ -868,6 +867,205 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
 
 end
 
+
+def sql_test(options = {})
+
+  # Get name of calling method and remove the 'test_' portion
+  filename = caller[0][/`.*'/][1..-2].gsub('test_', '')
+
+  # We start by outputing a simple "Fail" into the output file
+  # If everything passes, and we hit no assert, then we overwrite with
+  # "Success"
+  test_result_file = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.sqltest")
+
+  File.write(test_result_file, "Fail", mode: 'w')
+
+  # Create a model
+  m = OpenStudio::Model::Model.new
+  # Add one output variable from EPW
+  out_var = OpenStudio::Model::OutputVariable.new("Site Outdoor Air Drybulb Temperature", m)
+  out_var.setReportingFrequency("Daily")
+
+  yd = m.getYearDescription
+  r = m.getRunPeriod
+
+  # Deal with input
+  if (options[:start] && !options[:end]) || (!options[:start] && options[:end])
+    fail "If you specify start date, you must specify end date and vice versa"
+  end
+  if options[:start]
+    # Ruby dates
+    dr_start = Date.iso8601(options[:start])
+    dr_end = Date.iso8601(options[:end])
+    start_day = dr_start.day
+    start_month = dr_start.month
+    start_year = dr_start.year
+    end_day = dr_end.day
+    end_month = dr_end.month
+    end_year = dr_end.year
+
+    # Day/Month goes into Runperiod
+    r.setBeginDayOfMonth(start_day)
+    r.setBeginMonth(start_month)
+    r.setEndDayOfMonth(end_day)
+    r.setEndMonth(end_month)
+
+    # Year goes into YearDescription
+    yd.setCalendarYear(start_year)
+  else
+    # Defaults to full year, with assumed base year (2009)
+    start_year = yd.assumedYear
+    end_year = start_year
+
+    start_day = r.getBeginDayOfMonth
+    start_month = r.getBeginMonth
+    end_day = r.getEndDayOfMonth
+    end_month = r.getEndMonth
+
+    # Double check that we have the right defaults
+    assert_equal(1, start_day)
+    assert_equal(1, start_month)
+    assert_equal(31, end_day)
+    assert_equal(12, end_month)
+    assert_equal(2009, start_year)
+
+  end
+
+  # OpenStudio dates
+  d_start = OpenStudio::Date.new(OpenStudio::MonthOfYear.new(start_month),
+                                 start_day, start_year)
+  d_end = OpenStudio::Date.new(OpenStudio::MonthOfYear.new(end_month),
+                               end_day, end_year)
+
+
+
+  dir = File.join($TestDir, filename)
+  osw = File.join(dir, 'in.osw')
+  out_osw = File.join(dir, 'out.osw')
+  in_osm = File.join(dir, 'in.osm')
+  sql_path = File.join(dir, 'run', 'eplusout.sql')
+
+  # Run the workflow
+  # Switch this to to false if you're just modifying the code below
+  # (= the checks) after a successful first run as you don't have to wait
+  # for the simulation itself to rerun
+  run_sim = true
+  if run_sim
+    FileUtils.rm_rf(dir) if File.exists?(dir)
+    FileUtils.mkdir_p(dir)
+    # FileUtils.cp($OswFile, osw)
+
+    # Note: If you give E+ a weather file that doesn't have a leap day
+    # It won't give you an output that has a leap day...
+    # And it doesn't appear to let you know about it either
+    if options[:isLeapYear]
+      weather_file = "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_LeapYear.epw"
+    else
+      # If we have a start date, assume an AMY
+      if [:start]
+        weather_file = "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_NonLeapYear.epw"
+      else
+        # Otherwise a TMY
+        weather_file = "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"
+      end
+    end
+
+
+    osw_content = {
+      "weather_file": "../../weatherdata/#{weather_file}",
+      "seed_file": "in.osm",
+      # "steps": [],
+    }
+
+    File.write(osw, JSON.pretty_generate(osw_content))
+
+
+    # Save to above model into dir
+    m.save(in_osm, true)
+
+    # Run it
+    command = "\"#{$OpenstudioCli}\" run -w \"#{osw}\""
+    #command = "\"#{$OpenstudioCli}\" run --debug -w \"#{osw}\""
+
+    run_command(command, dir, 3600)
+  end
+
+  # Typically we do this:
+  # result_osw = postprocess_out_osw_and_copy(filename)
+  # Here we actually don't care about the OSW at all,
+  # just want to make sure that E+ completed successfully
+  # (though I don't see a reason it wouldn't)
+  fail "Cannot find file #{out_osw}" if !File.exists?(out_osw)
+
+  result_osw = nil
+  File.open(out_osw, 'r') do |f|
+    result_osw = JSON::parse(f.read, :symbolize_names=>true)
+  end
+
+  assert_equal("Success", result_osw[:completed_status])
+
+  # Load the model
+  versionTranslator = OpenStudio::OSVersion::VersionTranslator.new
+
+  model = versionTranslator.loadModel(in_osm)
+  if model.empty?
+    assert(model.is_initialized, "Could not load the resulting model, #{in_osm}")
+  end
+  model = model.get
+
+  # Load and attach the sql file to the model
+  sql_path = OpenStudio::Path.new(sql_path)
+  if OpenStudio.exists(sql_path)
+    sql = OpenStudio::SqlFile.new(sql_path)
+    # Check to make sure the sql file is readable,
+    # which won't be true if EnergyPlus crashed during simulation.
+    unless sql.connectionOpen
+      OpenStudio.logFree(OpenStudio::Error, 'openstudio.model.Model', "The run failed, cannot create model.  Look at the eplusout.err file in #{File.dirname(sql_path.to_s)} to see the cause.")
+      return false
+    end
+    # Attach the sql file from the run to the model
+    model.setSqlFile(sql)
+  else
+    OpenStudio.logFree(OpenStudio::Error, 'openstudio.model.Model', "Results for the run couldn't be found here: #{sql_path}.")
+    return false
+  end
+
+  # Assert that the sizing run succeeded
+  assert_equal("Success", result_osw[:completed_status])
+
+  # Now do actual stuff!
+
+  # Get the daily series
+  ts = sql.timeSeries(sql.availableEnvPeriods[0], "Daily", "Site Outdoor Air Drybulb Temperature", "Environment")
+  assert(ts.is_initialized, "Timeseries isn't initialized")
+  ts = ts.get
+
+
+  # End date minus start date, + 1 because we count the start AND the end day
+  n_days = (d_end - d_start).totalDays + 1
+  assert_equal(n_days, ts.values.size, "Bad number of days!")
+
+  # E+ reports with an end convention, meaning that for a daily timeseries
+  # each entry is labeled as the next day
+  # eg: if you start on 2009-01-01, eplus reports as 2009-01-02 00:00
+  sql_start_dt = ts.firstReportDateTime
+  sql_end_dt = ts.dateTimes[-1]
+
+  # Easy check first, check that the year was correctly sent to E+
+  assert_equal(start_year, sql_start_dt.date.year, "Start year doesn't match")
+
+  # Remove 1 day so we can compare with the above
+  sql_start_date = (sql_start_dt - OpenStudio::Time.new(1)).date
+  sql_end_date = (sql_end_dt - OpenStudio::Time.new(1)).date
+
+  assert_equal(d_start, sql_start_date, "Start date doesn't match")
+  assert_equal(d_end, sql_end_date, "End date doesn't match")
+
+  # If we got here, then all good
+  File.write(test_result_file, "Success", mode: 'w')
+
+end
+
 # the tests
 class ModelTests < MiniTest::Unit::TestCase
   parallelize_me!
@@ -880,6 +1078,14 @@ class ModelTests < MiniTest::Unit::TestCase
 
   def test_absorption_chillers_osm
     result = sim_test('absorption_chillers.osm')
+  end
+
+  def test_adiabatic_construction_set_rb
+    result = sim_test('adiabatic_construction_set.rb')
+  end
+
+  def test_adiabatic_construction_set_osm
+    result = sim_test('adiabatic_construction_set.osm')
   end
 
   def test_airterminal_cooledbeam_osm
@@ -1030,6 +1236,22 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('centralheatpumpsystem.rb')
   end
 
+  def test_coilsystem_waterhx_rb
+    result = sim_test('coilsystem_waterhx.rb')
+  end
+
+  def test_coilsystem_waterhx_osm
+    result = sim_test('coilsystem_waterhx.osm')
+  end
+
+  def test_coilsystem_dxhx_rb
+    result = sim_test('coilsystem_dxhx.rb')
+  end
+
+  def test_coilsystem_dxhx_osm
+    result = sim_test('coilsystem_dxhx.osm')
+  end
+
   def test_coolingtowers_osm
     result = sim_test('coolingtowers.osm')
   end
@@ -1106,11 +1328,9 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('electric_equipment_ITE.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 2.7.2
-  # def test_electric_equipment_ITE_osm
-  #   result = sim_test('electric_equipment_ITE.osm')
-  # end
+  def test_electric_equipment_ITE_osm
+    result = sim_test('electric_equipment_ITE.osm')
+  end
 
   def test_ems_osm
     result = sim_test('ems.osm')
@@ -1164,12 +1384,20 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('fluid_coolers.osm')
   end
 
+  def test_foundation_kiva_rb
+    result = sim_test('foundation_kiva.rb')
+  end
+
   def test_foundation_kiva_osm
     result = sim_test('foundation_kiva.osm')
   end
 
-  def test_foundation_kiva_rb
-    result = sim_test('foundation_kiva.rb')
+  def test_foundation_kiva_customblocks_rb
+    result = sim_test('foundation_kiva_customblocks.rb')
+  end
+
+  def test_foundation_kiva_customblocks_osm
+    result = sim_test('foundation_kiva_customblocks.osm')
   end
 
   def test_fuelcell_osm
@@ -1186,6 +1414,14 @@ class ModelTests < MiniTest::Unit::TestCase
 
   def test_generator_microturbine_osm
     result = sim_test('generator_microturbine.osm')
+  end
+
+  def test_coil_waterheating_desuperheater_osm
+    result = sim_test('coil_waterheating_desuperheater.osm')
+  end
+
+  def test_coil_waterheating_desuperheater_rb
+    result = sim_test('coil_waterheating_desuperheater.rb')
   end
 
   def test_headered_pumps_osm
@@ -1324,6 +1560,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('multiple_loops_w_plenums.osm')
   end
 
+  def test_performanceprecisiontradeoffs_rb
+    result = sim_test('performanceprecisiontradeoffs.rb')
+  end
+
+  def test_performanceprecisiontradeoffs_osm
+    result = sim_test('performanceprecisiontradeoffs.osm')
+  end
+
   def test_photovoltaics_rb
     result = sim_test('photovoltaics.rb')
   end
@@ -1452,6 +1696,22 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('schedule_file.osm')
   end
 
+  def test_schedule_fixed_interval_rb
+    result = sim_test('schedule_fixed_interval.rb')
+  end
+
+  def test_schedule_fixed_interval_osm
+    result = sim_test('schedule_fixed_interval.osm')
+  end
+
+  def test_schedule_fixed_interval_schedulefile_rb
+    result = sim_test('schedule_fixed_interval_schedulefile.rb')
+  end
+
+  def test_schedule_fixed_interval_schedulefile_osm
+    result = sim_test('schedule_fixed_interval_schedulefile.osm')
+  end
+
   def test_setpoint_managers_rb
     result = sim_test('setpoint_managers.rb')
   end
@@ -1468,6 +1728,26 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('solar_collector_flat_plate_water.osm')
   end
 
+  def test_solar_collector_flat_plate_photovoltaicthermal_rb
+    result = sim_test('solar_collector_flat_plate_photovoltaicthermal.rb')
+  end
+
+  # Will fail up to 2.9.0 included due to missing reference in
+  # ProposedEnergy+.idd (though this object has been added circa 1.8.4)
+  def test_solar_collector_flat_plate_photovoltaicthermal_osm
+    result = sim_test('solar_collector_flat_plate_photovoltaicthermal.osm')
+  end
+
+  def test_solar_collector_integralcollectorstorage_rb
+    result = sim_test('solar_collector_integralcollectorstorage.rb')
+  end
+
+  # Will fail up to 2.9.0 included due to missing reference in
+  # ProposedEnergy+.idd (though this object has been added circa 1.8.4)
+  def test_solar_collector_integralcollectorstorage_osm
+    result = sim_test('solar_collector_integralcollectorstorage.osm')
+  end
+
   def test_space_load_instances_rb
     result = sim_test('space_load_instances.rb')
   end
@@ -1482,6 +1762,14 @@ class ModelTests < MiniTest::Unit::TestCase
 
   def test_surface_properties_rb
     result = sim_test('surface_properties.rb')
+  end
+
+  def test_tablemultivariablelookup_rb
+    result = sim_test('tablemultivariablelookup.rb')
+  end
+
+  def test_tablemultivariablelookup_osm
+    result = sim_test('tablemultivariablelookup.osm')
   end
 
   def test_thermal_storage_rb
@@ -1532,6 +1820,14 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('unitary_vav_bypass.osm')
   end
 
+  def test_unitary_vav_bypass_plenum_rb
+    result = sim_test('unitary_vav_bypass_plenum.rb')
+  end
+
+  def test_unitary_vav_bypass_plenum_osm
+    result = sim_test('unitary_vav_bypass_plenum.osm')
+  end
+
   def test_unitary_systems_airloop_and_zonehvac_rb
     result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
   end
@@ -1562,6 +1858,15 @@ class ModelTests < MiniTest::Unit::TestCase
 
   def test_vrf_rb
     result = sim_test('vrf.rb')
+  end
+
+  # TODO: Add this once next official version is out (Post 2.8.1)
+  # def test_vrf_watercooled_osm
+  #   result = sim_test('vrf_watercooled.osm')
+  # end
+
+  def test_vrf_watercooled_rb
+    result = sim_test('vrf_watercooled.rb')
   end
 
   def test_water_economizer_osm
@@ -1620,12 +1925,28 @@ class ModelTests < MiniTest::Unit::TestCase
     result = sim_test('zone_hvac2.osm')
   end
 
+  def test_zone_hvac_equipment_list_rb
+    result = sim_test('zone_hvac_equipment_list.rb')
+  end
+
+  def test_zone_hvac_equipment_list_osm
+    result = sim_test('zone_hvac_equipment_list.osm')
+  end
+
   def test_zone_mixing_osm
     result = sim_test('zone_mixing.osm')
   end
 
   def test_zone_mixing_rb
     result = sim_test('zone_mixing.rb')
+  end
+
+  def test_zone_property_user_view_factors_by_surface_name_rb
+    result = sim_test('zone_property_user_view_factors_by_surface_name.rb')
+  end
+
+  def test_zone_property_user_view_factors_by_surface_name_osm
+    result = sim_test('zone_property_user_view_factors_by_surface_name.osm')
   end
 
   def test_afn_single_zone_nv_rb
@@ -1679,7 +2000,7 @@ class ModelTests < MiniTest::Unit::TestCase
   end
 
   def test_model_articulation1_bundle_no_git_osw
-    gemfile_dir = bundle_install('bundle_no_git', false)
+    gemfile_dir = bundle_install('bundle_no_git', true)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
     extra_options = {:outdir => 'model_articulation1_bundle_no_git.osw',
@@ -1710,7 +2031,7 @@ class ModelTests < MiniTest::Unit::TestCase
   end
 
   def test_model_articulation1_bundle_git_osw
-    gemfile_dir = bundle_install('bundle_git', false)
+    gemfile_dir = bundle_install('bundle_git', true)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
     extra_options = {:outdir => 'model_articulation1_bundle_git.osw',
@@ -1736,8 +2057,8 @@ class ModelTests < MiniTest::Unit::TestCase
     #puts "standards = #{standards}"
     #puts "workflow = #{workflow}"
 
-    #assert(/0.2.2/.match(standards))
-    #assert(/1.3.2/.match(workflow))
+    assert(/0.2.6/.match(standards))
+    assert(/1.3.2/.match(workflow))
   end
 
   # intersection tests
@@ -1793,5 +2114,99 @@ class ModelTests < MiniTest::Unit::TestCase
 
   # TODO: model/refbuildingtests/CreateRefBldgModel.rb is unused
   # Either implement as a test, or delete
+
+end
+
+# the tests
+class SqlTests < MiniTest::Unit::TestCase
+  parallelize_me!
+
+  def test_sql_default_fullyear
+    # Full year, calendar year not specified
+    options = {
+      :start => nil,
+      :end => nil,
+      :isLeapYear => false,
+      :type => 'Full',
+    }
+    result = sql_test(options)
+  end
+
+  def test_sql_specific_fullyear_nonleap
+    # Full year, calendar year hard assigned to a non-leap year
+    options = {
+      :start => '2013-01-01',
+      :end => '2013-12-31',
+      :isLeapYear => false,
+      :type => 'Full',
+    }
+    result = sql_test(options)
+  end
+
+  def test_sql_specific_fullyear_leap
+    # Full year, calendar year hard assigned to a leap year
+    options = {
+      :start => '2012-01-01',
+      :end => '2012-12-31',
+      :isLeapYear => true,
+      :type => 'Full',
+    }
+    result = sql_test(options)
+  end
+
+  def test_sql_partial_leap_mid
+    # Partial with leap day in middle
+    options = {
+      :start => '2012-02-10',
+      :end => '2012-03-10',
+      :isLeapYear => true,
+      :type => 'Partial',
+    }
+    result = sql_test(options)
+  end
+
+  def test_sql_partial_leap_end
+    # Partial with leap day at end
+    options = {
+      :start => '2012-02-01',
+      :end => '2012-02-29',
+      :isLeapYear => true,
+      :type => 'Partial',
+    }
+    result = sql_test(options)
+  end
+
+  def test_sql_partial_leap_start
+    # Partial with leap day at start
+    options = {
+      :start => '2012-02-29',
+      :end => '2012-03-10',
+      :isLeapYear => true,
+      :type => 'Partial',
+    }
+    result = sql_test(options)
+  end
+
+  def test_sql_wrap_nonleap
+    # Wrap-around with no leap days
+    options = {
+      :start => '2013-02-10',
+      :end => '2014-02-09',
+      :isLeapYear => false,
+      :type => 'Wrap-around',
+    }
+    result = sql_test(options)
+  end
+
+  def test_sql_wrap_leap
+    # Wrap-around with leap day
+    options = {
+      :start => '2012-02-10',
+      :end => '2013-02-09',
+      :isLeapYear => true,
+      :type => 'Wrap-around',
+    }
+    result = sql_test(options)
+  end
 
 end
