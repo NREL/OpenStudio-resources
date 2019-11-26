@@ -3,7 +3,6 @@ require 'openstudio' unless defined?(OpenStudio)
 # The config and helpers are inside this file
 require_relative 'test_helpers.rb'
 
-
 # TODO: Include the other ones?
 # require_relative 'highlevel_tests.rb'
 # Ensure high level tests pass before continuing
@@ -975,7 +974,7 @@ class ModelTests < Minitest::Test
     #puts "standards = #{standards}"
     #puts "workflow = #{workflow}"
 
-    assert(/0.2.6/.match(standards))
+    assert(/0.2.7/.match(standards))
     assert(/1.3.2/.match(workflow))
   end
 
@@ -1006,7 +1005,7 @@ class ModelTests < Minitest::Test
     #puts "standards = #{standards}"
     #puts "workflow = #{workflow}"
 
-    assert(/0.2.6/.match(standards))
+    assert(/0.2.7/.match(standards))
     assert(/1.3.2/.match(workflow))
   end
 

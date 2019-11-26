@@ -83,6 +83,8 @@ PRETTY_NAMES = {'cooling': 'Cooling',
 # Avoid having a prompt for new version
 OS_EPLUS_DICT = {'2.4.4': '8.9.0'}
 
+# From https://semver.org/
+SEMVER_REGEX = re.compile(r'^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$')
 
 def isnotebook():
     """
@@ -385,7 +387,7 @@ def find_info_osws(compat_matrix=None, test_dir=None, testtype='model'):
 
     # With this pattern, we exclude the custom-tagged out.osw files
     filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw|xml)_'
-                   r'(?P<version>\d+\.\d+\.\d+)_out\.{}'.format(ext))
+                   r'(?P<version>\d+\.\d+\.\d+.*?)_out\.{}'.format(ext))
 
     df_files = pd.DataFrame(files, columns=['path'])
 
@@ -518,12 +520,11 @@ def find_info_osws_with_tags(compat_matrix=None,
 
     if tags_only:
         filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw|xml)_'
-                       r'(?P<version>\d+\.\d+\.\d+)_out'
+                       r'(?P<version>\d+\.\d+\.\d+.*?)_out'
                        r'_(?P<Tag>.*?)\.{}'.format(ext))
     else:
-
         filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw|xml)_'
-                       r'(?P<version>\d+\.\d+\.\d+)_out'
+                       r'(?P<version>\d+\.\d+\.\d+.*?)_out'
                        r'_?(?P<Tag>.*?)?\.{}'.format(ext))
 
     if not files:
@@ -1257,7 +1258,8 @@ def delete_custom_tagged_osws(contains=None, regex_pattern=None):
 
 def test_os_cli(os_cli=None):
     """
-    Make sure the CLI is configured properly, and return the version if worked
+    Make sure the CLI is configured properly, and return a version information
+    dictionary if worked
     False otherwise.
     """
     # Check correct CLI
@@ -1284,7 +1286,12 @@ def test_os_cli(os_cli=None):
         os_long_version = lines[0].rstrip().decode()
         # os_short_version = ".".join(os_long_version.split('.')[:-1])
         print("Selected OS_CLI has version '{}'".format(os_long_version))
-        return os_long_version
+        m = SEMVER_REGEX.match(os_long_version)
+        if m:
+            return m.groupdict()
+        else:
+            print("Couldn't parse the os_long_version, returning as is")
+            return os_long_version
     except:
         print("Problem with the CLI, make sure it is configured properly")
         print("Command that was run to test it:\n{}".format(c_args))

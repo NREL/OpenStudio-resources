@@ -558,7 +558,6 @@ def sim_test(filename, options = {})
                    File.join(base_dir, new_filename))
       filename = new_filename
       # puts "Filename is now #{filename}"
-
     end
 
     # Copy the generic OSW needed for sim
@@ -580,8 +579,6 @@ def sim_test(filename, options = {})
 
     # Copy OSM to testruns dir
     FileUtils.cp(ori_file_path, in_osm)
-
-
 
     # Specific case for schedule_file_osm
     if (filename == 'schedule_file.osm')
