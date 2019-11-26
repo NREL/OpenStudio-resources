@@ -1599,11 +1599,14 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
         totally_failing_tests = set(all_tests) - set(df_files.index.tolist())
         if totally_failing_tests:
             print("The following tests may have failed in all "
-                  "openstudio versions")
+                  "openstudio versions. Exclude them.")
             print(totally_failing_tests)
 
     success = success_sheet(df_files)
     caption = 'Test Success - All found'
+
+    # Filter all NA rows
+    success = success.loc[success.any(axis=1)]
 
     if not entire_table:
         ruby_or_osm_fail = (success.groupby(level='Test')['n_fail+missing']
