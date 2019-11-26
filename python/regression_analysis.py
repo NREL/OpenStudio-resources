@@ -320,7 +320,7 @@ def parse_model_tests_rb():
                     pass
                 else:
                     print("Expected result = xxxx on line {}, got: "
-                          "{}".format(i+1), lines[i+1])
+                          "{}".format(i+1, lines[i+1]))
     return tests
 
 
