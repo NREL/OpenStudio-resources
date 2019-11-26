@@ -140,7 +140,7 @@ ensure
 end
 
 # run a command in directory dir, throws exception on timeout or exit status != 0, always returns to initial directory
-def run_command(command, dir, timeout)  
+def run_command(command, dir, timeout)
   begin
     pwd = Dir.pwd
     Dir.chdir(dir)
@@ -156,7 +156,7 @@ def run_command(command, dir, timeout)
           end
           until e.eof? do
             out += e.readpartial(100)
-          end        
+          end
         end
 
         result = w.value.exitstatus
@@ -169,7 +169,7 @@ def run_command(command, dir, timeout)
         # Process.kill does not work on Windows
         #https://blog.simplificator.com/2016/01/18/how-to-kill-processes-on-windows-using-ruby/
         if Gem.win_platform?
-          system("taskkill /f /pid #{w.pid}") 
+          system("taskkill /f /pid #{w.pid}")
         else
           Process.kill("KILL", w.pid)
         end
@@ -2057,7 +2057,7 @@ class ModelTests < MiniTest::Unit::TestCase
     #puts "standards = #{standards}"
     #puts "workflow = #{workflow}"
 
-    assert(/0.2.6/.match(standards))
+    assert(/0.2.7/.match(standards))
     assert(/1.3.2/.match(workflow))
   end
 
