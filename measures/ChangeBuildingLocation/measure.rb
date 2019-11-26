@@ -152,7 +152,15 @@ class ChangeBuildingLocation < OpenStudio::Measure::ModelMeasure
     weather_file.setLongitude(epw_file.lon)
     weather_file.setTimeZone(epw_file.gmt)
     weather_file.setElevation(epw_file.elevation)
+
+    # try without the file:/// protocol
     weather_file.setString(10, epw_file.filename)
+    runner.registerWarning("weather_file.path is #{weather_file.path.get}.")
+
+    if weather_file.path.empty? || !File.exist?(weather_file.path.get.to_s)
+      # include the file:/// protocol
+      weather_file.setString(10, "file:///#{epw_file.filename}")
+    end
 
     weather_name = "#{epw_file.city}_#{epw_file.state}_#{epw_file.country}"
     weather_lat = epw_file.lat
