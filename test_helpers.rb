@@ -509,6 +509,13 @@ def sim_test(filename, options = {})
   dir = File.join($TestDir, filename)
   if options[:outdir]
     dir = File.join($TestDir, options[:outdir])
+    # For model_articulation1_bundle* we pass filename =
+    # model_articulation1.osw yet we need the cp_out_osw to match
+    # Cp to the OutOSW directory
+    cp_out_osw = File.join($OutOSWDir, "#{options[:outdir]}_#{$SdkVersion}_out#{$Custom_tag}.osw")
+  else
+    # Cp to the OutOSW directory
+    cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.osw")
   end
   if options[:base_dir]
     base_dir = options[:base_dir]
@@ -522,8 +529,6 @@ def sim_test(filename, options = {})
   in_osw = File.join(dir, 'in.osw')
   out_osw = File.join(dir, 'out.osw')
   in_osm = File.join(dir, 'in.osm')
-  # Cp to the OutOSW directory
-  cp_out_osw = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.osw")
 
   # If $DoNotReRunIfSuccess is true, we check if the out_osw already exists
   # and whether it was successful already
@@ -626,7 +631,7 @@ def sim_test(filename, options = {})
     model.save(in_osm, true)
 
     # Copy the specific osw
-    FileUtils.cp(File.join(base_dir,filename), in_osw)
+    FileUtils.cp(File.join(base_dir, filename), in_osw)
 
   end
 
