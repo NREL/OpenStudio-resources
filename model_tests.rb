@@ -889,6 +889,16 @@ class ModelTests < Minitest::Test
     result = sim_test('zone_mixing.rb')
   end
 
+  def test_zoneventilation_windandstackopenarea_rb
+    result = sim_test('zoneventilation_windandstackopenarea.rb')
+  end
+
+  # TODO : To be added once the next official release
+  # including this object is out: 3.0.0 (https://github.com/NREL/OpenStudio/pull/3788)
+  #def test_zoneventilation_windandstackopenarea_osm
+  #  result = sim_test('zoneventilation_windandstackopenarea.osm')
+  #end
+
   def test_zone_property_user_view_factors_by_surface_name_rb
     result = sim_test('zone_property_user_view_factors_by_surface_name.rb')
   end
