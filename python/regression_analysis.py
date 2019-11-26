@@ -18,11 +18,13 @@ import platform
 import json
 import re
 import subprocess
+import warnings
 import glob as gb
 
 import tqdm
 import shlex
 import requests
+from xmldiff import main, formatting
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -223,9 +225,10 @@ def parse_compatibility_matrix(force_latest=False):
     return compat_matrix
 
 
-def find_osm_test_versions():
+def find_osm_test_versions(base_dir='model/simulationtests/'):
     """
-    Globs the model/simulationtests/*.osm and parse the Version String
+    Globs the model/simulationtests/*.osm (or base_dir/*.osm)
+    and parse the Version String
     Constructs a dataframe
 
     Args:
@@ -242,7 +245,7 @@ def find_osm_test_versions():
     v_regex = re.compile(r'\s+(\d+\.\d+\.\d+);\s+!-? Version Identifier')
 
     model_version_lists = []
-    osms = gb.glob(os.path.join(ROOT_DIR, 'model/simulationtests/*.osm'))
+    osms = gb.glob(os.path.join(ROOT_DIR, base_dir, '*.osm'))
     for osm in osms:
         found = False
         test = os.path.splitext(os.path.split(osm)[1])[0]
@@ -317,11 +320,11 @@ def parse_model_tests_rb():
                     pass
                 else:
                     print("Expected result = xxxx on line {}, got: "
-                          "{}".format(i+1), lines[i+1])
+                          "{}".format(i+1, lines[i+1]))
     return tests
 
 
-def find_info_osws(compat_matrix=None, test_dir=None):
+def find_info_osws(compat_matrix=None, test_dir=None, testtype='model'):
     """
     Looks for files in the test/ folder, and parses version and type (rb, osm)
     Constructs a dataframe that has E+/OS versions in column (by looking E+
@@ -330,11 +333,16 @@ def find_info_osws(compat_matrix=None, test_dir=None):
     IMPORTANT: this WILL NOT parse the custom-tagged out.osws
     (see `find_info_osws_with_tags`)
 
+    Note: despite its name, it can also parse XMLs (and not OSWs)
+    from SddForwardTranslatorTests by passing testtype='sddft'
+
     Args:
     ------
     * compat_matrix (pd.DataFrame or None)
         if None, calls parse_compatibility_matrix. Otherwise you can supply it
     * test_dir (str path or None): if None uses the global TEST_DIR constant
+    * testtype (str): either 'model' (default) or 'sddft' or 'sddrt'
+
     Returns:
     ---------
     * df_files (pd.DataFrame): A multi indexed dataframe in rows and columns
@@ -347,18 +355,42 @@ def find_info_osws(compat_matrix=None, test_dir=None):
 
     """
 
+    valid_testtypes = ['model', 'sddft', 'sddrt']
+    if testtype not in valid_testtypes:
+        warnings.warn("Unknown 'testtype', defaulting to 'model'. "
+                      "Valid values are {}".format(valid_testtypes),
+                      UserWarning)
+        testtype = 'model'
+
     if test_dir is None:
         test_dir = TEST_DIR
 
     if compat_matrix is None:
         compat_matrix = parse_compatibility_matrix()
 
-    files = gb.glob(os.path.join(test_dir, '*out.osw'))
+    if testtype == 'sddft':
+        ext = 'xml'
+        # This excludes the custom tagged files
+        files = gb.glob(os.path.join(test_dir, '*out.xml'))
+
+    else:
+        files = gb.glob(os.path.join(test_dir, '*out.osw'))
+        ext = 'osw'
+        re_xml = re.compile(r'xml_\d+\.\d+\.\d+_out+')
+        if testtype == 'sddrt':
+            # Only keep XML
+            files = [f for f in files if re_xml.search(f)]
+
+        else:
+            # Exclude xml (SDDReverseTranslator) tests
+            files = [f for f in files if not re_xml.search(f)]
+
+    # With this pattern, we exclude the custom-tagged out.osw files
+    filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw|xml)_'
+                   r'(?P<version>\d+\.\d+\.\d+.*?)_out\.{}'.format(ext))
 
     df_files = pd.DataFrame(files, columns=['path'])
-    # With this pattern, we exclude the custom-tagged out.osw files
-    filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw)_'
-                   r'(?P<version>\d+\.\d+\.\d+.*?)_out\.osw')
+
     version = (df_files['path'].apply(lambda p: os.path.relpath(p, test_dir))
                                .str.extract(pat=filepattern, expand=True))
     df_files = pd.concat([df_files,
@@ -415,7 +447,8 @@ def find_info_osws(compat_matrix=None, test_dir=None):
 
 def find_info_osws_with_tags(compat_matrix=None,
                              test_dir=None,
-                             tags_only=True):
+                             tags_only=True,
+                             testtype='model'):
     """
     Looks for files in the test/ folder, and parses version
     and type (rb, osm, or osw)
@@ -436,6 +469,8 @@ def find_info_osws_with_tags(compat_matrix=None,
     * tags_only (bool): if True, only greps custom tagged files, if False will
         grep tagged and regular files
 
+    * testtype (str): either 'model' (default) or 'sddft' or 'sddrt'
+
     Returns:
     ---------
     * df_files (pd.DataFrame): A multi indexed dataframe in rows and columns
@@ -448,22 +483,52 @@ def find_info_osws_with_tags(compat_matrix=None,
 
     """
 
+    valid_testtypes = ['model', 'sddft', 'sddrt']
+    if testtype not in valid_testtypes:
+        warnings.warn("Unknown 'testtype', defaulting to 'model'. "
+                      "Valid values are {}".format(valid_testtypes),
+                      UserWarning)
+        testtype = 'model'
+
     if test_dir is None:
         test_dir = TEST_DIR
 
     if compat_matrix is None:
         compat_matrix = parse_compatibility_matrix()
 
-    if tags_only:
-        files = gb.glob(os.path.join(test_dir, '*out_*.osw'))
-
-        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw)_'
-                       r'(?P<version>\d+\.\d+\.\d+.*?)_out_(?P<Tag>.*?)\.osw')
+    if testtype == 'sddft':
+        ext = 'xml'
+        if tags_only:
+            files = gb.glob(os.path.join(test_dir, '*out_*.xml'))
+        else:
+            files = gb.glob(os.path.join(test_dir, '*out*.xml'))
     else:
-        files = gb.glob(os.path.join(test_dir, '*out*.osw'))
+        if tags_only:
+            files = gb.glob(os.path.join(test_dir, '*out_*.osw'))
+        else:
+            files = gb.glob(os.path.join(test_dir, '*out*.osw'))
 
-        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw)_'
-                       r'(?P<version>\d+\.\d+\.\d+.*?)_out_?(?P<Tag>.*?)?\.osw')
+        ext = 'osw'
+        re_xml = re.compile(r'xml_\d+\.\d+\.\d+_out+')
+        if testtype == 'sddrt':
+            # Only keep XML
+            files = [f for f in files if re_xml.search(f)]
+
+        else:
+            # Exclude xml (SDDReverseTranslator) tests
+            files = [f for f in files if not re_xml.search(f)]
+
+    if tags_only:
+        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw|xml)_'
+                       r'(?P<version>\d+\.\d+\.\d+.*?)_out'
+                       r'_(?P<Tag>.*?)\.{}'.format(ext))
+    else:
+        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw|xml)_'
+                       r'(?P<version>\d+\.\d+\.\d+.*?)_out'
+                       r'_?(?P<Tag>.*?)?\.{}'.format(ext))
+
+    if not files:
+        raise RuntimeError("Couldn't find any files matching the pattern")
 
     df_files = pd.DataFrame(files, columns=['path'])
 
@@ -1369,7 +1434,7 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
         # If something went wrong (very likely in the first run of the loop),
         # we raise and don't try further runs (they'll fail too)
         if returncode != 0:
-            print("\n/!\ Something went wrong, process returned a "
+            print(r"\n/!\ Something went wrong, process returned a "
                   "returncode of {}".format(returncode))
             print("Command: {}".format(c_args))
             print("Custom ENV variables: "
@@ -1380,6 +1445,131 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
 
     return True
 
+
+###############################################################################
+#                             S D D    T E S T S                              #
+###############################################################################
+
+def success_sheet_sddft(df_files):
+    success = df_files.applymap(lambda x: 'Fail' if pd.isnull(x)
+                                else 'Success')
+    success['n_fail'] = (success == 'Fail').sum(axis=1)
+    success['n_passed'] = (success == 'Success').sum(axis=1)
+    return success
+
+
+def diff_xmls(start_file, end_file):
+    """
+    Diffs two xml files, removing known changes for select version
+
+    Args:
+    -----
+    * start_file (str): path to old XML
+    * end_file (str): path to new XML
+
+    Returns:
+    --------
+    * diff (list): list of changed, or None if no changes
+
+    Needs:
+    ------
+    from xmldiff import main, formatting
+
+    """
+    fmt = formatting.DiffFormatter()
+
+    # This python module seems to have problems sometimes...
+    try:
+        diff = main.diff_files(start_file,
+                               end_file,
+                               formatter=fmt)
+    except:
+        warnings.warn("Diff failed for start_file={}, "
+                      "end_file={}".format(start_file, end_file),
+                      UserWarning)
+        return
+
+    known_changes = []
+    m = re.search(r'(?P<version>\d+\.\d+\.\d+)_out', end_file)
+    if m:
+        # Add known changes here.
+        end_version = m.groupdict()['version']
+        if end_version == '2.7.2':
+            # Between 2.7.1 and 2.7.2, a few things changed
+            known_changes = [
+                # CoilHtg used to incorrectly map as CoilClg
+                re.compile(r'\[rename, \/.*CoilClg\[\d+\], CoilHtg]'),
+
+                # BldgAz goes from "0" to "-0"
+                re.compile(r'\[update, \/.*BldgAz\[\d+\]\/text\(\)\[\d+\],'
+                           r' "0"]'),
+            ]
+
+    diff = diff.splitlines()
+    diff = [line for line in diff if not any(regex.match(line)
+                                             for regex in known_changes)]
+    if diff:
+        return diff
+
+
+def diff_all_xmls(df_files):
+    """
+    Computes all XMLs changed from one version to the next
+    by calling `diff_xmls` for each test
+
+    Args:
+    -----
+    * df_files (pd.DataFrame): a DataFrame that has
+
+    """
+    df_diff = pd.DataFrame(index=df_files.index, columns=df_files.columns)
+    for i, (index, row) in enumerate(df_files.iterrows()):
+        if index == ('scheduled_infiltration', 'osm'):
+            # This one's weird, it thinks the coordinates of the points moved
+            # when in reality they didn't at all
+            warnings.warn("Skipping scheduled_infiltration.osm as it produces "
+                          "weird diffs that aren't true", UserWarning)
+            continue
+        for j, (colindex, end_file) in enumerate(row.iteritems()):
+            if j == 0:
+                continue
+            start_file = df_files.iloc[i, j-1]
+            df_diff.iloc[i, j] = diff_xmls(start_file, end_file)
+    df_diff.dropna(axis=0, how='all', inplace=True)
+    return df_diff
+
+
+###############################################################################
+#                                S T Y L I N G                                #
+###############################################################################
+
+
+def background_colors(val):
+    fmt = ''
+    s = 'background-color: {}'
+    if val == 'Fail':
+        fmt = s.format('#F4C7C3')
+    elif val == 'N/A':
+        fmt = s.format('#EDEDED') + "; color: #ADADAD;"
+    elif val == '':
+        fmt = s.format('#f2e2c1')
+    return fmt
+
+
+def hover(hover_color="#ffff99"):
+    return dict(selector="tr:hover",
+                props=[("background-color", "%s" % hover_color)])
+
+
+def getStyles():
+    styles = [
+        hover(),
+        dict(selector="tr:nth-child(2n+1)", props=[('background', '#f5f5f5')]),
+        dict(selector="td", props=[("text-align", "center")]),
+        dict(selector="caption", props=[("caption-side", "bottom"),
+                                        ("color", "grey")])
+    ]
+    return styles
 
 ###############################################################################
 #             C O M M A N D    L I N E    F U N C T I O N S
@@ -1398,28 +1588,7 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
     else:
         df_files = find_info_osws()
 
-    def background_colors(val):
-        fmt = ''
-        s = 'background-color: {}'
-        if val == 'Fail':
-            fmt = s.format('#F4C7C3')
-        elif val == 'N/A':
-            fmt = s.format('#EDEDED') + "; color: #ADADAD;"
-        elif val == '':
-            fmt = s.format('#f2e2c1')
-        return fmt
-
-    def hover(hover_color="#ffff99"):
-        return dict(selector="tr:hover",
-                    props=[("background-color", "%s" % hover_color)])
-
-    styles = [
-        hover(),
-        dict(selector="tr:nth-child(2n+1)", props=[('background', '#f5f5f5')]),
-        dict(selector="td", props=[("text-align", "center")]),
-        dict(selector="caption", props=[("caption-side", "bottom"),
-                                        ("color", "grey")])
-    ]
+    styles = getStyles()
 
     # This shows all tests that are implemented but where we don't even have
     # a single out.osw in any OpenStudio that exists,
@@ -1430,11 +1599,14 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
         totally_failing_tests = set(all_tests) - set(df_files.index.tolist())
         if totally_failing_tests:
             print("The following tests may have failed in all "
-                  "openstudio versions")
+                  "openstudio versions. Exclude them.")
             print(totally_failing_tests)
 
     success = success_sheet(df_files)
     caption = 'Test Success - All found'
+
+    # Filter all NA rows
+    success = success.loc[success.any(axis=1)]
 
     if not entire_table:
         ruby_or_osm_fail = (success.groupby(level='Test')['n_fail+missing']

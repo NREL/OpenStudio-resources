@@ -1,91 +1,13 @@
 require 'openstudio' unless defined?(OpenStudio)
 
-require 'json'
-require 'fileutils'
-require 'minitest/autorun'
+# The config and helpers are inside this file
+require_relative 'test_helpers.rb'
 
-begin
-  require "minitest/reporters"
-  require "minitest/reporters/default_reporter"
-  reporter = Minitest::Reporters::DefaultReporter.new
-  reporter.start # had to call start manually otherwise was failing when trying to report elapsed time when run in CLI
-  Minitest::Reporters.use! reporter
-rescue LoadError
-  puts "Minitest Reporters not installed"
-end
-
-# TODO: a lot of that is a duplicate code. Once SDD PR is merged in, it won't
-# be a problem anymore and we can delete all of this, but I'd rather have a
-# separate test file right from the start
-# cf https://github.com/NREL/OpenStudio-resources/pull/66
-$Platform = "Unknown"
-
-begin
-  require 'os'
-
-  if OS.mac?
-    $Platform = "Darwin"
-  elsif OS.linux?
-    $Platform = "Linux"
-  elsif OS.windows?
-    $Platform = "Windows"
-  else
-    puts "Unknown Plaftorm?!"
-  end
-rescue Exception
-  require 'rbconfig'
-
-  host_os = RbConfig::CONFIG['host_os']
-  case host_os
-  when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
-    $Platform = "Windows"
-  when /darwin|mac os/
-    $Platform = "Darwin"
-  when /linux|solaris|bsd/
-    $Platform = "Linux"
-  else
-    puts "Unknown Plaftorm?! #{host_os.inspect}"
-  end
-end
-
-
-$RootDir = File.absolute_path(File.dirname(__FILE__))
-$TestDir = File.join($RootDir, 'testruns')
-$SdkVersion = OpenStudio.openStudioVersion
-$SdkLongVersion = OpenStudio::openStudioLongVersion
-$Build_Sha = $SdkLongVersion.split('.')[-1]
-
-
-puts "Running for OpenStudio #{$SdkLongVersion}"
-
-# Where to cp the out.osw for regression
-# Depends on whether you are in a docker env or not
-proc_file = '/proc/1/cgroup'
-is_docker = File.file?(proc_file) && (File.readlines(proc_file).grep(/docker/).size > 0)
-if is_docker
-  # Mounted directory is at /root/test
-  $OutOSWDir = File.join(ENV['HOME'], 'test')
-else
-  # Directly in here
-  $OutOSWDir = File.join($RootDir, 'test')
-end
-
-# Variables to store the environment variables
-$Custom_tag=''
-if !ENV["CUSTOMTAG"].nil?
-  $Custom_tag = ENV['CUSTOMTAG']
-  # Debug
-  # puts "Setting custom tag to #{$Custom_tag}"
-end
-
-if not $Custom_tag.empty?
-  if $Custom_tag.downcase == 'sha'
-    $Custom_tag = $Build_Sha
-  end
-  $Custom_tag = "_#{$Custom_tag}"
-  puts "Custom tag will be appended, files will be named like 'testname_#{$SdkVersion}_#{$Platform}_out#{$Custom_tag}.osw'\n"
-end
-
+# Name the resulting file for a given test
+# Get caller (name of test), remove the "test_" portion, then append some stuff
+# like version, platform, and custom tag.
+#
+# @Return [String]: Full path to the resulting file
 def name_result()
   test_name = caller[0][/`.*'/][1..-2].gsub('test_', '')
   file_name = "#{test_name}_#{$SdkVersion}_#{$Platform}_out#{$Custom_tag}.status"
@@ -106,6 +28,7 @@ class UtilitiesTest < MiniTest::Unit::TestCase
 
   # simulation tests
 
+  # A pure UTF-8 test
   def test_path_special_chars_str
 
     test_result_file = name_result
@@ -143,6 +66,7 @@ class UtilitiesTest < MiniTest::Unit::TestCase
 
   end
 
+  # Rely on Dir.pwd which would have external encoding
   def test_path_special_chars_pwd
 
     original_dir = Dir.pwd
@@ -159,6 +83,8 @@ class UtilitiesTest < MiniTest::Unit::TestCase
     FileUtils.mkdir_p(dir_str)
     assert File.exists?(dir_str), "dir_str doesn't exists... '#{dir_str}'"
 
+    # Dir.pwd would return UTF-8 on Linux, and something else on Windows
+    # like Windows-1252
     Dir.chdir(dir_str)
     dir_str = Dir.pwd
     result_h['Dir.pwd_Encoding'] = dir_str.encoding
