@@ -11,11 +11,17 @@ require 'etc'
 
 require 'minitest/autorun'
 begin
-  require "minitest/reporters"
-  require "minitest/reporters/default_reporter"
+  require 'minitest/reporters'
+  require 'minitest/reporters/default_reporter'
+  require 'minitest/reporters/junit_reporter'
   reporter = Minitest::Reporters::DefaultReporter.new
   reporter.start # had to call start manually otherwise was failing when trying to report elapsed time when run in CLI
-  Minitest::Reporters.use! reporter
+
+  reports_dir = "test_reports"
+  empty_reports_dir = false
+  junit_reporter = Minitest::Reporters::JUnitReporter.new(reports_dir, empty_reports_dir)
+  junit_reporter.start
+  Minitest::Reporters.use! [reporter, junit_reporter]
 rescue LoadError
   puts "Minitest Reporters not installed"
 end
