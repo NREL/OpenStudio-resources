@@ -82,9 +82,10 @@ $EuiPctThreshold = 0.5
 
 # Where to cp the out.osw for regression
 # Depends on whether you are in a docker env or not
+# (except if Jenkins, in which case treat as normal)
 proc_file = '/proc/1/cgroup'
 is_docker = File.file?(proc_file) && (File.readlines(proc_file).grep(/docker/).size > 0)
-if is_docker
+if is_docker && ENV['JENKINS_URL'].nil?
   # Mounted directory is at /root/test
   $OutOSWDir = File.join(ENV['HOME'], 'test')
 else
