@@ -55,6 +55,11 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.join(this_dir, '..')))
 # Folder in which the out.osw are stored
 TEST_DIR = os.path.join(ROOT_DIR, 'test')
 
+# Reports dir (for heatmap png and test status HTML)
+REPORTS_DIR = os.path.join(ROOT_DIR, 'test_reports')
+if not os.path.exists(REPORTS_DIR):
+    os.makedirs(REPORTS_DIR)
+
 # Google Spreadsheet URL
 SHEET_URL = ('https://docs.google.com/spreadsheets/d/1gL8KSwRPtMPYj-'
              'QrTwlCwHJvNRP7llQyEinfM1-1Usg/edit?usp=sharing')
@@ -1207,8 +1212,10 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     if savefig:
         if figname is None:
             figname = 'site_kbtu_pct_change.png'
-        plt.savefig(figname, dpi=150, bbox_inches='tight')
-        print("Saved to {}".format(os.path.abspath(figname)))
+
+        fig_path = os.path.join(REPORTS_DIR, figname)
+        plt.savefig(fig_path, dpi=150, bbox_inches='tight')
+        print("Saved to {}".format(os.path.abspath(fig_path)))
         if save_indiv_figs_for_ax:
             for i, ax in enumerate(axes):
                 # Save just the portion _inside_ the second axis's boundaries
@@ -1218,7 +1225,9 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
                 # extent = (ax.get_tightbbox(fig.canvas.renderer)
                 #             .transformed(fig.dpi_scale_trans.inverted()))
                 fname, fext = os.path.splitext(figname)
-                fig.savefig('{}_ax{}.png'.format(fname, i), dpi=150,
+                fig_path = os.path.join(REPORTS_DIR,
+                                        '{}_ax{}.png'.format(fname, i))
+                fig.savefig(fig_path, dpi=150,
                             bbox_inches=extent.expanded(1.3, 1.15))
 
     if show_plot:
@@ -1634,11 +1643,11 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
                    .set_table_styles(styles)
                    .set_caption(caption)).render()
 
-    filepath = 'Regression_Test_Status.html'
+    filepath = os.path.join(REPORTS_DIR, 'Regression_Test_Status.html')
     with open(filepath, 'w') as f:
         f.write(html)
 
-    print("HTML file saved in {}".format(os.path.join(os.getcwd(), filepath)))
+    print("HTML file saved in {}".format(filepath))
     if sys.platform.startswith('darwin'):
         subprocess.call(('open', filepath))
     elif os.name == 'nt':
@@ -1676,7 +1685,7 @@ def cli_heatmap(tagged=False, all_osws=False,
         figname = 'site_kbtu_pct_change.png'
 
     if os._exists(figname):
-        os.remvove(figname)
+        os.remove(figname)
 
     s = heatmap_sitekbtu_pct_change(site_kbtu=site_kbtu,
                                     row_threshold=row_threshold,
