@@ -319,6 +319,9 @@ def parse_model_tests_rb():
                 if 'intersect_test' in lines[i+1]:
                     # Expected behavior
                     pass
+                elif 'bundle_install' in lines[i+1]:
+                    # Expected behavior
+                    pass
                 else:
                     print("Expected result = xxxx on line {}, got: "
                           "{}".format(i+1, lines[i+1]))
