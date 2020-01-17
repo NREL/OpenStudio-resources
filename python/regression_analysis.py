@@ -164,17 +164,18 @@ def get_all_openstudio_docker_versions(latest=None):
 
     i = 1
     status_code = 200
-    base_url = 'https://registry.hub.docker.com/v2/'
-    page_url = 'repositories/nrel/openstudio/tags?page={i}'
+    url = ('https://registry.hub.docker.com/v2/'
+           'repositories/nrel/openstudio/tags?page=1')
 
     all_tags = []
-    while status_code == 200:
-        response = requests.get(os.path.join(base_url,
-                                             page_url.format(i=i)))
+    while (status_code == 200) and (url is not None):
+        response = requests.get(url)
         status_code = response.status_code
         i += 1
         if status_code == 200:
             data = json.loads(response.text)
+            # Get next page
+            url = data['next']
             all_tags += [x["name"] for x in data["results"]]
 
     if latest is None:
@@ -321,6 +322,9 @@ def parse_model_tests_rb():
                 # m2.groups()[1])] = (m.groups()[0], m.groups()[1])
             else:
                 if 'intersect_test' in lines[i+1]:
+                    # Expected behavior
+                    pass
+                elif 'bundle_install' in lines[i+1]:
                     # Expected behavior
                     pass
                 else:
