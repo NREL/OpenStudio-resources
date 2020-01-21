@@ -20,7 +20,7 @@ model.add_windows({"wwr" => 0.4,
 #add thermostats
 model.add_thermostats({"heating_setpoint" => 24,
                       "cooling_setpoint" => 28})
-                      
+
 # Add a hot water plant to supply the baseboard heaters
 # This could be baked into HVAC templates in the future
 hotWaterPlant = OpenStudio::Model::PlantLoop.new(model)
@@ -48,7 +48,7 @@ pipe2 = OpenStudio::Model::PipeAdiabatic.new(model)
 pipe2.addToNode(hotWaterOutletNode)
 
 ## Make a hot Water temperature schedule
-  
+
 osTime = OpenStudio::Time.new(0,24,0,0)
 
 hotWaterTempSchedule = OpenStudio::Model::ScheduleRuleset.new(model)
@@ -102,7 +102,7 @@ pipe2 = OpenStudio::Model::PipeAdiabatic.new(model)
 pipe2.addToNode(condenserWaterOutletNode)
 
 ## Make a condenser Water temperature schedule
-  
+
 osTime = OpenStudio::Time.new(0,24,0,0)
 
 condenserWaterTempSchedule = OpenStudio::Model::ScheduleRuleset.new(model)
@@ -125,7 +125,7 @@ condenserWaterTempSchedule.defaultDaySchedule().setName("Condenser Water Tempera
 condenserWaterTempSchedule.defaultDaySchedule().addValue(osTime,24)
 
 condenserWaterSPM = OpenStudio::Model::SetpointManagerScheduled.new(model,condenserWaterTempSchedule)
-condenserWaterSPM.addToNode(condenserWaterOutletNode)      
+condenserWaterSPM.addToNode(condenserWaterOutletNode)
 
 #chilled Water Temp Schedule
 #Schedule Ruleset
@@ -140,7 +140,7 @@ chilled_water_temp_sch.winterDesignDaySchedule().addValue(osTime,6.7)
 chilled_water_temp_schSummer = OpenStudio::Model::ScheduleDay.new(model)
 chilled_water_temp_sch.setSummerDesignDaySchedule(chilled_water_temp_schSummer)
 chilled_water_temp_sch.summerDesignDaySchedule().setName("Chilled_Water_Temperature_Summer_Design_Day")
-chilled_water_temp_sch.summerDesignDaySchedule().addValue(osTime,6.7)  
+chilled_water_temp_sch.summerDesignDaySchedule().addValue(osTime,6.7)
 #All other days
 chilled_water_temp_sch.defaultDaySchedule().setName("Chilled_Water_Temperature_Default")
 chilled_water_temp_sch.defaultDaySchedule().addValue(osTime,6.7)
@@ -174,11 +174,11 @@ chilledWaterPlant.addSupplyBranchForComponent(chilledWaterDemandBypass)
 model.set_constructions()
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  
+model.set_space_type()
 
 #add design days to the model (Chicago)
 model.add_design_days()
-                     
+
 #assign thermal zones to variables
 story_1_core_thermal_zone = model.getThermalZoneByName("Story 1 Core Thermal Zone").get
 story_1_north_thermal_zone = model.getThermalZoneByName("Story 1 North Perimeter Thermal Zone").get
@@ -194,7 +194,7 @@ story_3_core_thermal_zone = model.getThermalZoneByName("Story 3 Core Thermal Zon
 story_3_north_thermal_zone = model.getThermalZoneByName("Story 3 North Perimeter Thermal Zone").get
 story_3_south_thermal_zone = model.getThermalZoneByName("Story 3 South Perimeter Thermal Zone").get
 story_3_east_thermal_zone = model.getThermalZoneByName("Story 3 East Perimeter Thermal Zone").get
-story_3_west_thermal_zone = model.getThermalZoneByName("Story 3 West Perimeter Thermal Zone").get                      
+story_3_west_thermal_zone = model.getThermalZoneByName("Story 3 West Perimeter Thermal Zone").get
 
 # Add ZoneHVACBaseboardRadiantConvectiveWater
 zoneHVACBaseboardRadiantConvectiveWater = OpenStudio::Model::ZoneHVACBaseboardRadiantConvectiveWater.new(model)
@@ -254,8 +254,8 @@ story_3_east_thermal_zone.setZoneControlHumidistat(humidistat)
 # Add ZoneHVACDehumidifierDX
 zoneHVACDehumidifierDX = OpenStudio::Model::ZoneHVACDehumidifierDX.new(model)
 zoneHVACDehumidifierDX.addToThermalZone(story_1_west_thermal_zone)
-        
-#add water to air heat pump with variable speed coils to next available zone        
+
+#add water to air heat pump with variable speed coils to next available zone
 supplyFan = OpenStudio::Model::FanOnOff.new(model)
 
 wahpDXHC = OpenStudio::Model::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit.new(model)
@@ -266,7 +266,7 @@ wahpDXCC = OpenStudio::Model::CoilCoolingWaterToAirHeatPumpVariableSpeedEquation
 speedData = OpenStudio::Model::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.new(model)
 wahpDXCC.addSpeed(speedData)
 
-supplementalHC = OpenStudio::Model::CoilHeatingElectric.new(model)  
+supplementalHC = OpenStudio::Model::CoilHeatingElectric.new(model)
 wtahp = OpenStudio::Model::ZoneHVACWaterToAirHeatPump.new(model,model.alwaysOnDiscreteSchedule(),supplyFan,wahpDXHC,wahpDXCC,supplementalHC)
 wtahp.addToThermalZone(story_1_west_thermal_zone);
 
