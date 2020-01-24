@@ -146,24 +146,13 @@ regularAirLoopHVAC.supplyFan.get.remove
 fan.addToNode(regularAirLoopHVAC.supplyOutletNode)
 
 
-# TODO: a bunch of objects should accept FanSystemModel but they don't
-# cf https://github.com/NREL/EnergyPlus/issues/7697
-
-# ZoneHVAC:WaterToAirHeatPump: not working since E+ idd
-# Field Supply Air Fan Object Type does have Fan:SystemModel as key
-# but Field 'Supply Air Fan Name' only references 'FansOnOff' which Fan:SystemModel isn't part of
-is_working_ZoneHVACWaterToAirHeatPump = false
-
 # AirLoopHVACUnitaryHeatPumpAirToAir
-# TODO: Currently not working due to E+ IDD AND OS IDD: so it'll throw right
-# now
+# TODO: Currently not supported in E+
 is_working_AirLoopHVACUnitaryHeatPumpAirToAir = false
 
 # Unitary: MultiSpeed
-# TODO: Currently not working due to E+ IDD (Model will work fine, but after FT
-# it will not run)
+# TODO: Currently not supported in E+
 is_working_AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed = false
-
 
 # AirLoopHVACUnitaryHeatPumpAirToAir
 if is_working_AirLoopHVACUnitaryHeatPumpAirToAir
@@ -233,10 +222,35 @@ unitary_systemAirLoopHVAC.setName("AirLoopHVACUnitarySystem AirLoopHVAC")
 unitary_system.addToNode(unitary_systemAirLoopHVAC.supplyOutletNode)
 
 
+hpwh_pumped = OpenStudio::Model::WaterHeaterHeatPump.new(model)
+hpwh_pumped_fan = OpenStudio::Model::FanSystemModel.new(model)
+hpwh_pumped.setFan(hpwh_pumped_fan)
+heating_loop.addSupplyBranchForComponent(hpwh_pumped.tank)
+
+hpwh_wrapped = OpenStudio::Model::WaterHeaterHeatPumpWrappedCondenser.new(model)
+hpwh_wrapped_fan = OpenStudio::Model::FanSystemModel.new(model)
+hpwh_wrapped.setFan(hpwh_wrapped_fan)
+heating_loop.addSupplyBranchForComponent(hpwh_wrapped.tank)
 
 zones.each_with_index do |z, i|
-  # ZoneHVACFourPipeFanCoil
+
+  # ZoneHVACEnergyRecoveryVentilator
   if i == 0
+
+    supplyFan = OpenStudio::Model::FanSystemModel.new(model)
+    exhaustFan = OpenStudio::Model::FanSystemModel.new(model)
+
+    heatExchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(model)
+    heatExchanger.setSupplyAirOutletTemperatureControl(false)
+
+    zoneHVACEnergyRecoveryVentilator = OpenStudio::Model::ZoneHVACEnergyRecoveryVentilator.new(model, heatExchanger, supplyFan, exhaustFan)
+    zoneHVACEnergyRecoveryVentilatorController = OpenStudio::Model::ZoneHVACEnergyRecoveryVentilatorController.new(model)
+    zoneHVACEnergyRecoveryVentilator.setController(zoneHVACEnergyRecoveryVentilatorController)
+    zoneHVACEnergyRecoveryVentilatorController.setHighHumidityControlFlag( true )
+    zoneHVACEnergyRecoveryVentilator.addToThermalZone(z)
+
+  # ZoneHVACFourPipeFanCoil
+  elsif i == 1
     fan = OpenStudio::Model::FanSystemModel.new(model)
 
     # ** Severe  ** GetFanCoilUnits: ZoneHVAC:FourPipeFanCoil: ZONE HVAC FOUR PIPE FAN COIL 1
@@ -255,19 +269,41 @@ zones.each_with_index do |z, i|
     four_pipe_fan_coil.addToThermalZone(z)
     heating_loop.addDemandBranchForComponent(heating_coil)
     cooling_loop.addDemandBranchForComponent(cooling_coil)
-  # ZoneHVACWaterToAirHeatPump
-  elsif i == 1 && is_working_ZoneHVACWaterToAirHeatPump
+
+  # ZoneHVACPackagedTerminalAirConditioner
+  elsif i == 2
+    thermal_zone_vector = OpenStudio::Model::ThermalZoneVector.new()
+    thermal_zone_vector << z
+    OpenStudio::Model::addSystemType1(model, thermal_zone_vector)
     fan = OpenStudio::Model::FanSystemModel.new(model)
-    heating_coil = OpenStudio::Model::CoilHeatingWaterToAirHeatPumpEquationFit.new(model)
-    cooling_coil = OpenStudio::Model::CoilCoolingWaterToAirHeatPumpEquationFit.new(model)
-    supp_heating_coil = OpenStudio::Model::CoilHeatingElectric.new(model)
-    water_to_air_heat_pump = OpenStudio::Model::ZoneHVACWaterToAirHeatPump.new(model, alwaysOn, fan, heating_coil, cooling_coil, supp_heating_coil)
-    water_to_air_heat_pump.addToThermalZone(z)
-    heating_loop.addDemandBranchForComponent(heating_coil)
-    cooling_loop.addDemandBranchForComponent(cooling_coil)
+    ptacs = model.getZoneHVACPackagedTerminalAirConditioners
+    fan_cv = ptacs[0].supplyAirFan
+    ptacs[0].setSupplyAirFan(fan)
+    fan_cv.remove
+
+  # ZoneHVACPackagedTerminalHeatPump
+  elsif i == 3
+    thermal_zone_vector = OpenStudio::Model::ThermalZoneVector.new()
+    thermal_zone_vector << z
+    OpenStudio::Model::addSystemType2(model, thermal_zone_vector)
+    fan = OpenStudio::Model::FanSystemModel.new(model)
+    pthps = model.getZoneHVACPackagedTerminalHeatPumps
+    fan_cv = pthps[0].supplyAirFan
+    pthps[0].setSupplyAirFan(fan)
+    fan_cv.remove
+
+  # ZoneHVAC:TerminalUnit:VariableRefrigerantFlow
+  elsif i == 4
+    fan = OpenStudio::Model::FanSystemModel.new(model)
+    cc = OpenStudio::Model::CoilCoolingDXVariableRefrigerantFlow.new(model)
+    hc = OpenStudio::Model::CoilHeatingDXVariableRefrigerantFlow.new(model)
+    vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlow.new(model)
+    vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model, cc, hc, fan)
+    vrf.addTerminal(vrf_terminal)
+    vrf_terminal.addToThermalZone(z)
 
   # ZoneHVACUnitHeater
-  elsif i == 2
+  elsif i == 5
 
     fan = OpenStudio::Model::FanSystemModel.new(model)
     heating_coil = OpenStudio::Model::CoilHeatingElectric.new(model)
@@ -277,7 +313,7 @@ zones.each_with_index do |z, i|
     unit_heater.addToThermalZone(z)
 
   # ZoneHVACUnitVentilator
-  elsif i == 3
+  elsif i == 6
 
     fan = OpenStudio::Model::FanSystemModel.new(model)
 
@@ -289,51 +325,19 @@ zones.each_with_index do |z, i|
     zoneHVACUnitVentilator.setCoolingCoil(cooling_coil)
     zoneHVACUnitVentilator.addToThermalZone(z)
 
-  # ZoneHVACEnergyRecoveryVentilator
-  elsif i == 4
-
-    supplyFan = OpenStudio::Model::FanSystemModel.new(model)
-    exhaustFan = OpenStudio::Model::FanSystemModel.new(model)
-
-    heatExchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(model)
-    heatExchanger.setSupplyAirOutletTemperatureControl(false)
-
-    zoneHVACEnergyRecoveryVentilator = OpenStudio::Model::ZoneHVACEnergyRecoveryVentilator.new(model, heatExchanger, supplyFan, exhaustFan)
-    zoneHVACEnergyRecoveryVentilatorController = OpenStudio::Model::ZoneHVACEnergyRecoveryVentilatorController.new(model)
-    zoneHVACEnergyRecoveryVentilator.setController(zoneHVACEnergyRecoveryVentilatorController)
-    zoneHVACEnergyRecoveryVentilatorController.setHighHumidityControlFlag( true )
-    zoneHVACEnergyRecoveryVentilator.addToThermalZone(z)
-
-  # ZoneHVAC:TerminalUnit:VariableRefrigerantFlow
-  elsif i == 5
-    fan = OpenStudio::Model::FanSystemModel.new(model)
-    cc = CoilCoolingDXVariableRefrigerantFlow.new(model)
-    hc = CoilHeatingDXVariableRefrigerantFlow.new(model)
-    vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlow.new(model)
-    vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model, cc, hc, fan)
-    vrf.addTerminal(vrf_terminal)
-    vrf_terminal.addToThermalZone(z)
-
-  elsif i == 6
-    # ZoneHVACPackagedTerminalAirConditioner
-    thermal_zone_vector = OpenStudio::Model::ThermalZoneVector.new()
-    thermal_zone_vector << z
-    hvac = OpenStudio::Model::addSystemType1(model, thermal_zone_vector)
-    fan = OpenStudio::Model::FanSystemModel.new(model)
-    ptacs = model.getZoneHVACPackagedTerminalAirConditioners
-    fan_cv = ptacs[0].supplyAirFan
-    ptacs[0].setSupplyAirFan(fan)
-    fan_cv.remove
+  # ZoneHVACWaterToAirHeatPump
   elsif i == 7
-    # ZoneHVACPackagedTerminalHeatPump
-    thermal_zone_vector = OpenStudio::Model::ThermalZoneVector.new()
-    thermal_zone_vector << z
-    hvac = OpenStudio::Model::addSystemType2(model, thermal_zone_vector)
     fan = OpenStudio::Model::FanSystemModel.new(model)
-    pthps = model.getZoneHVACPackagedTerminalHeatPumps
-    fan_cv = pthps[0].supplyAirFan
-    pthps[0].setSupplyAirFan(fan)
-    fan_cv.remove
+    heating_coil = OpenStudio::Model::CoilHeatingWaterToAirHeatPumpEquationFit.new(model)
+    cooling_coil = OpenStudio::Model::CoilCoolingWaterToAirHeatPumpEquationFit.new(model)
+    supp_heating_coil = OpenStudio::Model::CoilHeatingElectric.new(model)
+    water_to_air_heat_pump = OpenStudio::Model::ZoneHVACWaterToAirHeatPump.new(model, alwaysOn, fan, heating_coil, cooling_coil, supp_heating_coil)
+    water_to_air_heat_pump.addToThermalZone(z)
+    heating_loop.addDemandBranchForComponent(heating_coil)
+    cooling_loop.addDemandBranchForComponent(cooling_coil)
+
+
+  # AirTerminalSingleDuctSeriesPIUReheat
   elsif i == 8
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
@@ -343,33 +347,20 @@ zones.each_with_index do |z, i|
     new_terminal = OpenStudio::Model::AirTerminalSingleDuctSeriesPIUReheat.new(model, piu_fan, piu_supp_hc)
 
     air_loop.addBranchForZone(z, new_terminal.to_StraightComponent)
+
+  # AirTerminalSingleDuctParallelPIUReheat
   elsif i == 9
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
 
     piu_fan = OpenStudio::Model::FanSystemModel.new(model)
     piu_supp_hc = OpenStudio::Model::CoilHeatingElectric.new(m)
-    new_terminal = OpenStudio::Model::AirTerminalSingleDuctParallelPIUReheat.new(model, piu_fan, piu_supp_hc)
+    new_terminal = OpenStudio::Model::AirTerminalSingleDuctParallelPIUReheat.new(model, alwaysOn, piu_fan, piu_supp_hc)
 
     air_loop.addBranchForZone(z, new_terminal.to_StraightComponent)
 
-  elsif i == 10 && is_working_AirLoopHVACUnitaryHeatPumpAirToAir
-    air_loop = z.airLoopHVAC.get
-    air_loop.removeBranchForZone(z)
-
-    new_terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, alwaysOn)
-
-    unitary_air_to_airAirLoopHVAC.addBranchForZone(z, new_terminal.to_StraightComponent)
-    unitary_air_to_air.setControllingZone(z)
-  elsif i == 11 && is_working_AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
-    air_loop = z.airLoopHVAC.get
-    air_loop.removeBranchForZone(z)
-
-    new_terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, alwaysOn)
-
-    unitary_hp_airtoair_multispeedAirLoopHVAC.addBranchForZone(z, new_terminal.to_StraightComponent)
-    unitary_multispeed.setControllingZoneorThermostatLocation(z)
-  elsif i == 12
+  # AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
+  elsif i == 10
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
 
@@ -377,16 +368,42 @@ zones.each_with_index do |z, i|
 
     unitary_vav_changeoverAirLoopHVAC.addBranchForZone(z, new_terminal.to_StraightComponent)
     unitary_vav_changeover.setControllingZoneorThermostatLocation(z)
-  elsif i == 13
+
+  # AirLoopHVACUnitarySystem
+  elsif i == 11
 
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
 
     new_terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, alwaysOn)
 
-    unitary_vav_changeoverAirLoopHVAC.addBranchForZone(z, new_terminal.to_StraightComponent)
+    unitary_systemAirLoopHVAC.addBranchForZone(z, new_terminal.to_StraightComponent)
     unitary_system.setControllingZoneorThermostatLocation(z)
 
+  # WaterHeaterHeatPump (PumpedCondenser)
+  elsif i == 12
+    hpwh_pumped.addToThermalZone(z)
+
+  # WaterHeaterHeatPumpWrappedCondenser
+  elsif i == 13
+    hpwh_wrapped.addToThermalZone(z)
+
+  elsif i == 14 && is_working_AirLoopHVACUnitaryHeatPumpAirToAir
+    air_loop = z.airLoopHVAC.get
+    air_loop.removeBranchForZone(z)
+
+    new_terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, alwaysOn)
+
+    unitary_air_to_airAirLoopHVAC.addBranchForZone(z, new_terminal.to_StraightComponent)
+    unitary_air_to_air.setControllingZone(z)
+  elsif i == 15 && is_working_AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
+    air_loop = z.airLoopHVAC.get
+    air_loop.removeBranchForZone(z)
+
+    new_terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, alwaysOn)
+
+    unitary_hp_airtoair_multispeedAirLoopHVAC.addBranchForZone(z, new_terminal.to_StraightComponent)
+    unitary_multispeed.setControllingZoneorThermostatLocation(z)
   end
 end
 
