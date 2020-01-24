@@ -23,7 +23,18 @@ end
 # Backward compat
 Minitest::Test = MiniTest::Unit::TestCase unless defined?(Minitest::Test)
 
+$SdkLongVersion = OpenStudio::openStudioLongVersion
+# TODO: once "Versioning" PR is merged
+#$Build_Sha = OpenStudio::openStudioVersionBuildSHA
+#$SdkPrerelease = OpenStudio::openStudioVersionPrerelease
 
+# I actually want them named like '3.0.0-rc1_out' (including the prerelease)
+$SdkVersion = OpenStudio::openStudioLongVersion.split('+')[0]
+#$SdkVersion = OpenStudio::openStudioVersion
+#if !$SdkPrerelease.empty?
+  #$SdkVersion << "-#{$SdkPrerelease}"
+#end
+$Build_Sha = $SdkLongVersion.split('+')[-1]
 
 # Environment variables
 if ENV['N'].nil?
@@ -40,9 +51,36 @@ $Save_idf=false
 $DoNotReRunIfSuccess=false
 
 if ENV['DONOTRERUNIFSUCCESS'].to_s.downcase == "true"
+  puts "DONOTRERUNIFSUCCESS: Tests that already passed in this version (#{$SdkVersion}) will NOT be rerun"
   $DoNotReRunIfSuccess=true
 end
 
+# Force bundle_install gems, should be On, unless you're doing it on purpose
+$ForceBundleInstall=true
+if ENV['DONOTFORCEBUNDLEINSTALL'].to_s.downcase == "true"
+  puts "DONOTFORCEBUNDLEINSTALL: Will not force bundle_install"
+  $ForceBundleInstall=false
+end
+
+if !ENV["CUSTOMTAG"].nil?
+  $Custom_tag = ENV['CUSTOMTAG']
+  # Debug
+  # puts "Setting custom tag to #{$Custom_tag}"
+end
+
+if not $Custom_tag.empty?
+  if $Custom_tag.downcase == 'sha'
+    $Custom_tag = $Build_Sha
+  end
+  $Custom_tag = "_#{$Custom_tag}"
+  puts "CUSTOMTAG: Custom tag will be appended, files will be named like 'testname_#{$SdkVersion}_out#{$Custom_tag}.osw'\n"
+end
+
+# If an ENV variable was given with a value of "True" (case insensitive)
+if ENV["SAVE_IDF"].to_s.downcase == "true"
+  $Save_idf=true
+  puts "SAVE_IDF: Will save the IDF files in the test/ directory"
+end
 
 # config stuff
 $OpenstudioCli = OpenStudio::getOpenStudioCLI
@@ -65,9 +103,6 @@ if File.exists?($TestDirSddRT)
   FileUtils.mkdir_p($TestDirSddRT)
 end
 
-$SdkVersion = OpenStudio.openStudioVersion
-$SdkLongVersion = OpenStudio::openStudioLongVersion
-$Build_Sha = $SdkLongVersion.split('.')[-1]
 
 puts "Running for OpenStudio #{$SdkLongVersion}"
 
@@ -103,26 +138,6 @@ end
 
 # Output the SDDFT'ed XMLs in the same folder as model/rb out.OSW
 $TestDirSddFT = $OutOSWDir
-
-if !ENV["CUSTOMTAG"].nil?
-  $Custom_tag = ENV['CUSTOMTAG']
-  # Debug
-  # puts "Setting custom tag to #{$Custom_tag}"
-end
-
-if not $Custom_tag.empty?
-  if $Custom_tag.downcase == 'sha'
-    $Custom_tag = $Build_Sha
-  end
-  $Custom_tag = "_#{$Custom_tag}"
-  puts "Custom tag will be appended, files will be named like 'testname_#{$SdkVersion}_out#{$Custom_tag}.osw'\n"
-end
-
-# If an ENV variable was given with a value of "True" (case insensitive)
-if ENV["SAVE_IDF"].to_s.downcase == "true"
-  $Save_idf=true
-  puts "Will save the IDF files in the test/ directory"
-end
 
 $:.unshift($ModelDir)
 ENV['RUBYLIB'] = $ModelDir
@@ -1100,7 +1115,7 @@ def sql_test(options = {})
   # We start by outputing a simple "Fail" into the output file
   # If everything passes, and we hit no assert, then we overwrite with
   # "Success"
-  test_result_file = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.sqltest")
+  test_result_file = File.join($OutOSWDir, "#{filename}.sql_#{$SdkVersion}_out#{$Custom_tag}.sqltest")
 
   File.write(test_result_file, "Fail", mode: 'w')
 

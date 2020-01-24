@@ -345,7 +345,8 @@ def find_info_osws(compat_matrix=None, test_dir=None, testtype='model'):
     * compat_matrix (pd.DataFrame or None)
         if None, calls parse_compatibility_matrix. Otherwise you can supply it
     * test_dir (str path or None): if None uses the global TEST_DIR constant
-    * testtype (str): either 'model' (default) or 'sddft' or 'sddrt'
+    * testtype (str): Defaults to 'model'. Must be in the list
+                  `['model', 'sddft', 'sddrt', 'sql', 'utilities']`
 
     Returns:
     ---------
@@ -359,7 +360,7 @@ def find_info_osws(compat_matrix=None, test_dir=None, testtype='model'):
 
     """
 
-    valid_testtypes = ['model', 'sddft', 'sddrt']
+    valid_testtypes = ['model', 'sddft', 'sddrt', 'sql', 'utilities']
     if testtype not in valid_testtypes:
         warnings.warn("Unknown 'testtype', defaulting to 'model'. "
                       "Valid values are {}".format(valid_testtypes),
@@ -376,6 +377,12 @@ def find_info_osws(compat_matrix=None, test_dir=None, testtype='model'):
         ext = 'xml'
         # This excludes the custom tagged files
         files = gb.glob(os.path.join(test_dir, '*out.xml'))
+    elif testtype == 'sql':
+        ext = 'sqltest'
+        files = gb.glob(os.path.join(test_dir, '*out.sqltest'))
+    elif testtype == 'utilities':
+        ext = 'status'
+        files = gb.glob(os.path.join(test_dir, '*out.status'))
 
     else:
         files = gb.glob(os.path.join(test_dir, '*out.osw'))
@@ -390,8 +397,14 @@ def find_info_osws(compat_matrix=None, test_dir=None, testtype='model'):
             files = [f for f in files if not re_xml.search(f)]
 
     # With this pattern, we exclude the custom-tagged out.osw files
-    filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw|xml)_'
+    filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw|xml|sql)_'
                    r'(?P<version>\d+\.\d+\.\d+.*?)_out\.{}'.format(ext))
+
+    index = ['Test', 'Type', 'version']
+    if testtype == 'utilities':
+        filepattern = (r'(?P<Test>.*?)_(?P<version>\d+\.\d+\.\d+.*?)_'
+                       r'(?P<Platform>.*?)_out.status')
+        index = ['Test', 'Platform', 'version']
 
     df_files = pd.DataFrame(files, columns=['path'])
 
@@ -400,8 +413,7 @@ def find_info_osws(compat_matrix=None, test_dir=None, testtype='model'):
     df_files = pd.concat([df_files,
                           version],
                          axis=1)
-    df_files = (df_files.set_index(['Test', 'Type',
-                                    'version'])['path'].unstack(['version'])
+    df_files = (df_files.set_index(index)['path'].unstack(['version'])
                         .sort_index(axis=1))
 
     version_dict = compat_matrix.set_index('OpenStudio')['E+'].to_dict()
@@ -846,6 +858,89 @@ def success_sheet(df_files, model_test_cases=None, add_missing=True):
 
     return success
 
+
+def success_sheet_utilities(df_files):
+    """
+    High-level method to construct a dataframe of Success for utilities tests
+
+    Args:
+    -----
+    * df_files (pd.DataFrame): from `find_info_osws()`
+    """
+    def parse_status_success(out_status_path):
+        if out_status_path is None:
+            return ''
+        data = load_osw(out_status_path)
+        if data is None:
+            return ''
+        return data['Status']
+
+    success = df_files.applymap(parse_status_success)
+
+    # Create n_fail and order by that
+    n_fail = (success == 'Fail').sum(axis=1)
+    success['n_fail'] = n_fail
+
+    # Order by n_fail, then by n_fail+missing
+    order_n_fail = (success.groupby(level='Test').sum()
+                           .sort_values(by='n_fail',
+                                        ascending=False))
+
+    success = success.reindex(index=order_n_fail.index, level=0)
+    return success
+
+
+def encoding_sheet_utilities(df_files):
+    """
+    High-level method to construct a dataframe of encoding for the
+    'path_special_chars_pwd' test case
+
+    Args:
+    -----
+    * df_files (pd.DataFrame): from `find_info_osws()`
+    """
+    def parse_status_encoding(out_status_path):
+        if out_status_path is None:
+            return ''
+        data = load_osw(out_status_path)
+        if data is None:
+            return ''
+        if 'Dir.pwd_Encoding' not in data:
+            print("Error: {}, {}".format(out_status_path, data))
+            return None
+        return data['Dir.pwd_Encoding']
+
+    return (df_files.loc['path_special_chars_pwd']
+                    .applymap(parse_status_encoding))
+
+def success_sheet_sql(df_files):
+    """
+    High-level method to construct a dataframe of Success for sql tests
+
+    Args:
+    -----
+    * df_files (pd.DataFrame): from `find_info_osws()`
+    """
+    def parse_sql_success(out_sql_path):
+        if out_sql_path is None:
+            return ''
+        with open(out_sql_path, 'r') as f:
+            status = f.read().strip()
+        return status
+
+    success = df_files.applymap(parse_sql_success)
+
+    # Create n_fail and order by that
+    n_fail = (success == 'Fail').sum(axis=1)
+    success['n_fail'] = n_fail
+
+    # Order by n_fail, then by n_fail+missing
+    order_n_fail = (success.groupby(level='Test').sum()
+                           .sort_values(by='n_fail',
+                                        ascending=False))
+
+    success = success.reindex(index=order_n_fail.index, level=0)
+    return success
 
 def test_implemented_sheet(df_files, success=None, model_test_cases=None,
                            only_for_mising_osm=False):

@@ -818,7 +818,7 @@ class ModelTests < Minitest::Test
     result = sim_test('vrf.rb')
   end
 
-  # TODO: Add this once next official version is out (Post 2.8.1)
+  # TODO: Add this once next official version is out (3.0.0, need #3687)
   # def test_vrf_watercooled_osm
   #   result = sim_test('vrf_watercooled.osm')
   # end
