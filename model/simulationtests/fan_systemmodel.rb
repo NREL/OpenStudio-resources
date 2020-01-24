@@ -224,12 +224,16 @@ unitary_system.addToNode(unitary_systemAirLoopHVAC.supplyOutletNode)
 
 hpwh_pumped = OpenStudio::Model::WaterHeaterHeatPump.new(model)
 hpwh_pumped_fan = OpenStudio::Model::FanSystemModel.new(model)
+old_hpwh_pumped_fan = hpwh_pumped.fan
 hpwh_pumped.setFan(hpwh_pumped_fan)
+old_hpwh_pumped_fan.remove
 heating_loop.addSupplyBranchForComponent(hpwh_pumped.tank)
 
 hpwh_wrapped = OpenStudio::Model::WaterHeaterHeatPumpWrappedCondenser.new(model)
 hpwh_wrapped_fan = OpenStudio::Model::FanSystemModel.new(model)
+old_hpwh_wrapped_fan = hpwh_wrapped.fan
 hpwh_wrapped.setFan(hpwh_wrapped_fan)
+old_hpwh_wrapped_fan.remove
 heating_loop.addSupplyBranchForComponent(hpwh_wrapped.tank)
 
 zones.each_with_index do |z, i|
@@ -304,19 +308,14 @@ zones.each_with_index do |z, i|
 
   # ZoneHVACUnitHeater
   elsif i == 5
-
     fan = OpenStudio::Model::FanSystemModel.new(model)
     heating_coil = OpenStudio::Model::CoilHeatingElectric.new(model)
     unit_heater = OpenStudio::Model::ZoneHVACUnitHeater.new(model, alwaysOn, fan, heating_coil)
-
-    unit_heater = OpenStudio::Model::ZoneHVACWaterToAirHeatPump.new(model, alwaysOn, fan, heating_coil, cooling_coil, supp_heating_coil)
     unit_heater.addToThermalZone(z)
 
   # ZoneHVACUnitVentilator
   elsif i == 6
-
     fan = OpenStudio::Model::FanSystemModel.new(model)
-
     zoneHVACUnitVentilator = OpenStudio::Model::ZoneHVACUnitVentilator.new(model, fan)
     heating_coil = OpenStudio::Model::CoilHeatingElectric.new(model)
     cooling_coil = OpenStudio::Model::CoilCoolingWater.new(model)
@@ -343,7 +342,7 @@ zones.each_with_index do |z, i|
     air_loop.removeBranchForZone(z)
 
     piu_fan = OpenStudio::Model::FanSystemModel.new(model)
-    piu_supp_hc = OpenStudio::Model::CoilHeatingElectric.new(m)
+    piu_supp_hc = OpenStudio::Model::CoilHeatingElectric.new(model)
     new_terminal = OpenStudio::Model::AirTerminalSingleDuctSeriesPIUReheat.new(model, piu_fan, piu_supp_hc)
 
     air_loop.addBranchForZone(z, new_terminal.to_StraightComponent)
@@ -354,7 +353,7 @@ zones.each_with_index do |z, i|
     air_loop.removeBranchForZone(z)
 
     piu_fan = OpenStudio::Model::FanSystemModel.new(model)
-    piu_supp_hc = OpenStudio::Model::CoilHeatingElectric.new(m)
+    piu_supp_hc = OpenStudio::Model::CoilHeatingElectric.new(model)
     new_terminal = OpenStudio::Model::AirTerminalSingleDuctParallelPIUReheat.new(model, alwaysOn, piu_fan, piu_supp_hc)
 
     air_loop.addBranchForZone(z, new_terminal.to_StraightComponent)
@@ -367,7 +366,7 @@ zones.each_with_index do |z, i|
     new_terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, alwaysOn)
 
     unitary_vav_changeoverAirLoopHVAC.addBranchForZone(z, new_terminal.to_StraightComponent)
-    unitary_vav_changeover.setControllingZoneorThermostatLocation(z)
+    # Doesn't exist: unitary_vav_changeover.setControllingZoneorThermostatLocation(z)
 
   # AirLoopHVACUnitarySystem
   elsif i == 11
