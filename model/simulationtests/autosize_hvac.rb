@@ -496,7 +496,7 @@ unitary_loop.addBranchForZone(zones[30], term)
 # UnitarySystem with variable speed cooling coil
 unitary_loop = OpenStudio::Model::AirLoopHVAC.new(model)
 unitary_loop.setName('UnitarySystem Var Spd Clg Loop')
-fan = OpenStudio::Model::FanVariableVolume.new(model, s1)
+fan = OpenStudio::Model::FanSystemModel.new(model)
 htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model, s1)
 htg_coil.setName("#{air_loop.name} Electric Htg Coil")
 sup_htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model, s1)
