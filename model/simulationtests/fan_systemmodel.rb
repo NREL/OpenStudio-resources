@@ -222,19 +222,21 @@ unitary_systemAirLoopHVAC.setName("AirLoopHVACUnitarySystem AirLoopHVAC")
 unitary_system.addToNode(unitary_systemAirLoopHVAC.supplyOutletNode)
 
 
+dhw_loop = OpenStudio::Model::addSHWLoop(model).to_PlantLoop.get
+
 hpwh_pumped = OpenStudio::Model::WaterHeaterHeatPump.new(model)
 hpwh_pumped_fan = OpenStudio::Model::FanSystemModel.new(model)
 old_hpwh_pumped_fan = hpwh_pumped.fan
 hpwh_pumped.setFan(hpwh_pumped_fan)
 old_hpwh_pumped_fan.remove
-heating_loop.addSupplyBranchForComponent(hpwh_pumped.tank)
+dhw_loop.addSupplyBranchForComponent(hpwh_pumped.tank)
 
 hpwh_wrapped = OpenStudio::Model::WaterHeaterHeatPumpWrappedCondenser.new(model)
 hpwh_wrapped_fan = OpenStudio::Model::FanSystemModel.new(model)
 old_hpwh_wrapped_fan = hpwh_wrapped.fan
 hpwh_wrapped.setFan(hpwh_wrapped_fan)
 old_hpwh_wrapped_fan.remove
-heating_loop.addSupplyBranchForComponent(hpwh_wrapped.tank)
+dhw_loop.addSupplyBranchForComponent(hpwh_wrapped.tank)
 
 zones.each_with_index do |z, i|
 
@@ -250,7 +252,7 @@ zones.each_with_index do |z, i|
     zoneHVACEnergyRecoveryVentilator = OpenStudio::Model::ZoneHVACEnergyRecoveryVentilator.new(model, heatExchanger, supplyFan, exhaustFan)
     zoneHVACEnergyRecoveryVentilatorController = OpenStudio::Model::ZoneHVACEnergyRecoveryVentilatorController.new(model)
     zoneHVACEnergyRecoveryVentilator.setController(zoneHVACEnergyRecoveryVentilatorController)
-    zoneHVACEnergyRecoveryVentilatorController.setHighHumidityControlFlag( true )
+    zoneHVACEnergyRecoveryVentilatorController.setHighHumidityControlFlag(false)
     zoneHVACEnergyRecoveryVentilator.addToThermalZone(z)
 
   # ZoneHVACFourPipeFanCoil
