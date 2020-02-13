@@ -468,6 +468,9 @@ unitary.setCoolingCoil(clg_coil)
 unitary.setHeatingCoil(htg_coil)
 unitary.addToNode(unitary_loop.supplyOutletNode)
 unitary.setControllingZoneorThermostatLocation(zones[27])
+# Necessary for autosizedDOASDXCoolingCoilLeavingMinimumAirTemperature
+unitary.setControlType("SingleZoneVAV")
+unitary.autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature()
 term = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, s1)
 unitary_loop.addBranchForZone(zones[27], term)
 
