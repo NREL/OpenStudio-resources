@@ -325,7 +325,7 @@ class ModelTests < Minitest::Test
   end
 
   # TODO : To be added once the next official release
-  # including this object is out: 3.0.0 (https://github.com/NREL/OpenStudio/pull/3788)
+  # including this object is out: 3.0.0 (https://github.com/NREL/OpenStudio/pull/3864)
   #def test_fan_systemmodel_osm
   #  result = sim_test('fan_systemmodel.osm')
   #end

@@ -231,12 +231,19 @@ hpwh_pumped.setFan(hpwh_pumped_fan)
 old_hpwh_pumped_fan.remove
 dhw_loop.addSupplyBranchForComponent(hpwh_pumped.tank)
 
-hpwh_wrapped = OpenStudio::Model::WaterHeaterHeatPumpWrappedCondenser.new(model)
-hpwh_wrapped_fan = OpenStudio::Model::FanSystemModel.new(model)
-old_hpwh_wrapped_fan = hpwh_wrapped.fan
-hpwh_wrapped.setFan(hpwh_wrapped_fan)
-old_hpwh_wrapped_fan.remove
-dhw_loop.addSupplyBranchForComponent(hpwh_wrapped.tank)
+# TODO: ENABLE AFTER NEW E+ RELEASE (9.2.0+)
+# Having both a HPWH:Pumped and a HPWH:Wrapped makes E+ crash
+# Fixed by https://github.com/NREL/EnergyPlus/pull/7717 but not in any E+
+# release yet
+is_working_WaterThermalTanks = false
+if is_working_WaterThermalTanks
+  hpwh_wrapped = OpenStudio::Model::WaterHeaterHeatPumpWrappedCondenser.new(model)
+  hpwh_wrapped_fan = OpenStudio::Model::FanSystemModel.new(model)
+  old_hpwh_wrapped_fan = hpwh_wrapped.fan
+  hpwh_wrapped.setFan(hpwh_wrapped_fan)
+  old_hpwh_wrapped_fan.remove
+  dhw_loop.addSupplyBranchForComponent(hpwh_wrapped.tank)
+end
 
 zones.each_with_index do |z, i|
 
@@ -386,8 +393,8 @@ zones.each_with_index do |z, i|
     hpwh_pumped.addToThermalZone(z)
 
   # WaterHeaterHeatPumpWrappedCondenser
-  elsif i == 13
-    hpwh_wrapped.addToThermalZone(z)
+  elsif i == 13 && is_working_WaterThermalTanks
+      hpwh_wrapped.addToThermalZone(z)
 
   elsif i == 14 && is_working_AirLoopHVACUnitaryHeatPumpAirToAir
     air_loop = z.airLoopHVAC.get
