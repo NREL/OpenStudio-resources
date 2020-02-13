@@ -601,6 +601,10 @@ zones.each_with_index do |zn, zone_index|
   when 7
     vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlow.new(model)
     term = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model)
+    # Add a supplemental heating coil since
+    # 'Maximum Supply Air Temperature from Supplemental Heater' can be autosized
+    suppl_hc = OpenStudio::Model::CoilHeatingElectric.new(model)
+    term.setSupplementalHeatingCoil(suppl_hc)
     term.addToThermalZone(zn)
     vrf.addTerminal(term)
   when 8
