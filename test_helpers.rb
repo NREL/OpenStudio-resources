@@ -850,6 +850,9 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     'OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow' => 'OS:Coil:Cooling:LowTempRadiant:VarFlow',
     'OS:Coil:Heating:LowTemperatureRadiant:VariableFlow' => 'OS:Coil:Heating:LowTempRadiant:VarFlow',
     'OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow' => 'OS:ZoneHVAC:LowTempRadiant:VarFlow',
+    'OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow' => 'OS:ZoneHVAC:LowTempRadiant:ConstFlow',
+    'OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow' => 'OS:Coil:Cooling:LowTempRadiant:ConstFlow',
+    'OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow' => 'OS:Coil:Heating:LowTempRadiant:ConstFlow'
   }
 
   # List of objects and fields where the autosized output does
