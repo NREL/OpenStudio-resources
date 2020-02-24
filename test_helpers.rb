@@ -1121,7 +1121,13 @@ def sql_test(options = {})
 
   # Create a model
   m = OpenStudio::Model::Model.new
-  # Add one output variable from EPW
+  # Add three output variables from EPW
+  out_var = OpenStudio::Model::OutputVariable.new("Site Outdoor Air Drybulb Temperature", m)
+  out_var.setReportingFrequency("RunPeriod")
+
+  out_var = OpenStudio::Model::OutputVariable.new("Site Outdoor Air Drybulb Temperature", m)
+  out_var.setReportingFrequency("Annual")
+  
   out_var = OpenStudio::Model::OutputVariable.new("Site Outdoor Air Drybulb Temperature", m)
   out_var.setReportingFrequency("Daily")
 
@@ -1274,11 +1280,43 @@ def sql_test(options = {})
 
   # Now do actual stuff!
 
+  # Get the run period series
+  ts = sql.timeSeries(sql.availableEnvPeriods[0], "RunPeriod", "Site Outdoor Air Drybulb Temperature", "Environment")
+  assert(ts.is_initialized, "Timeseries isn't initialized")
+  run_periods = ts.get
+  puts run_periods.values
+  puts run_periods.dateTimes
+  
+  # Get the annual series
+  ts = sql.timeSeries(sql.availableEnvPeriods[0], "Annual", "Site Outdoor Air Drybulb Temperature", "Environment")
+
+  # Check run period and annual series
+  assert_equal(run_periods.dateTimes.length, 1)
+  assert_equal(run_periods.values.length, 1)
+  if options[:type] == 'Full'
+    assert(ts.is_initialized, "Timeseries isn't initialized")
+    annuals = ts.get
+    assert_equal(annuals.dateTimes.length, 1)
+    assert_equal(annuals.values.length, 1)
+    assert_equal(run_periods.dateTimes[0], annuals.dateTimes[0])
+    assert_equal(run_periods.values[0], annuals.values[0])
+    assert(annuals.values[0] == run_periods.values[0])
+  elsif options[:type] == 'Partial'
+    assert(!ts.is_initialized, "Timeseries is initialized")
+  elsif options[:type] == 'Wrap-around'
+    assert(ts.is_initialized, "Timeseries isn't initialized")
+    annuals = ts.get
+    assert_equal(run_periods.dateTimes.length, 1)
+    assert_equal(run_periods.values.length, 1)
+    assert_equal(annuals.dateTimes.length, 1)
+    assert_equal(annuals.values.length, 1)
+    assert(annuals.values[0] != run_periods.values[0])
+  end
+
   # Get the daily series
   ts = sql.timeSeries(sql.availableEnvPeriods[0], "Daily", "Site Outdoor Air Drybulb Temperature", "Environment")
   assert(ts.is_initialized, "Timeseries isn't initialized")
   ts = ts.get
-
 
   # End date minus start date, + 1 because we count the start AND the end day
   n_days = (d_end - d_start).totalDays + 1
