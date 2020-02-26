@@ -53,6 +53,7 @@ condenser_loop.addDemandBranchForComponent(chiller_abs_indirect)
 # and this is a node on the **demand** side of a **different** loop than the
 # condenser loop, this will call `chiller_abs_indirect.addToTertiaryNode`
 heating_loop.addDemandBranchForComponent(chiller_abs_indirect)
+chiller_abs_indirect.setCondenserInletTemperatureLowerLimit(0.01)
 
 # ChillerAbsorption: on the DEMAND side of a Tertiary Loop (HW/Steam)
 chiller_absorption = OpenStudio::Model::ChillerAbsorption.new(model)
