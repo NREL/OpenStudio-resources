@@ -44,29 +44,31 @@ condenser_loop.setName("CndW Loop")
 heating_loop.setName("HW Loop")
 cooling_loop.setName("ChW Loop")
 
-# ChillerAbsorptionIndirect
+# ChillerAbsorptionIndirect: on the DEMAND side of a Tertiary Loop (HW/Steam)
 chiller_abs_indirect = OpenStudio::Model::ChillerAbsorptionIndirect.new(model)
 chiller_abs_indirect.setName("Chiller AbsInd")
 cooling_loop.addSupplyBranchForComponent(chiller_abs_indirect)
 condenser_loop.addDemandBranchForComponent(chiller_abs_indirect)
-# Since the Primary loop is already connected (ChW loop) and this is a node on
-# on the supply side of a **different** loop than the primary loop, this will
-# call chiller_abs_indirect.addToTertiaryNode
-heating_loop.addSupplyBranchForComponent(chiller_abs_indirect)
+# Since the secondary loop is already connected (condenser loop)
+# and this is a node on the **demand** side of a **different** loop than the
+# condenser loop, this will call `chiller_abs_indirect.addToTertiaryNode`
+heating_loop.addDemandBranchForComponent(chiller_abs_indirect)
 
-# ChillerElectricEIR: Sys 07 so already water-cooled
-chiller_eir = chillers.first
-chiller_eir.setName("Chiller EIR")
-heating_loop.addSupplyBranchForComponent(chiller_eir)
-
-
-# ChillerAbsorption
+# ChillerAbsorption: on the DEMAND side of a Tertiary Loop (HW/Steam)
 chiller_absorption = OpenStudio::Model::ChillerAbsorption.new(model)
 chiller_absorption.setName("Chiller Abs")
 cooling_loop.addSupplyBranchForComponent(chiller_absorption)
 condenser_loop.addDemandBranchForComponent(chiller_absorption)
 # Connect Generator Inlet/Outlet Nodes
-heating_loop.addSupplyBranchForComponent(chiller_absorption)
+heating_loop.addDemandBranchForComponent(chiller_absorption)
+
+
+# ChillerElectricEIR: on the DEMAND side of a Tertiary Loop (Heat Recovery)
+# Makes sense: the HR isn't "active" is responding to HR load
+# Sys 07 so already water-cooled
+chiller_eir = chillers.first
+chiller_eir.setName("Chiller EIR")
+heating_loop.addDemandBranchForComponent(chiller_eir)
 
 model.rename_loop_nodes()
 model.renames_air_nodes()
