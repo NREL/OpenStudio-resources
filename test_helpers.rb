@@ -47,7 +47,21 @@ end
 # Environment variables
 if ENV['N'].nil?
   # Number of parallel runs caps to nproc - 1
-  ENV['N'] = [1, Etc.nprocessors - 1].max.to_s
+  # For 2.0.4 (at least), ruby on the docker is 2.0.0,
+  # and Etc doesn't have nprocessors
+  nproc = nil
+  begin
+    nproc = Etc.nprocessors
+  rescue
+    begin
+      nproc = `nproc`
+      nproc = nproc.to_i
+    rescue
+      # Just fall back to whatever
+      nproc = 16
+    end
+  end
+  ENV['N'] = [1, nproc - 1].max.to_s
 end
 
 # Variables to store the environment variables
@@ -1225,9 +1239,9 @@ def sql_test(options = {})
 
 
     osw_content = {
-      "weather_file": "../../weatherdata/#{weather_file}",
-      "seed_file": "in.osm",
-      # "steps": [],
+      "weather_file" => "../../weatherdata/#{weather_file}",
+      "seed_file" => "in.osm",
+      # "steps" => [],
     }
 
     File.write(osw, JSON.pretty_generate(osw_content))

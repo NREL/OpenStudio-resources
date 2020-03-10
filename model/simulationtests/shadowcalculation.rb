@@ -40,7 +40,10 @@ zones.each{|z| z.setUseIdealAirLoads(true)}
 sc = m.getShadowCalculation
 
 if Gem::Version.new(OpenStudio::openStudioVersion) < Gem::Version.new("3.0.0")
-  sc.setCalculationMethod("AverageOverDaysInFrequency")
+  # This one was added only in 2.9.0
+  if Gem::Version.new(OpenStudio::openStudioVersion) >= Gem::Version.new("2.9.0")
+    sc.setCalculationMethod("AverageOverDaysInFrequency")
+  end
   sc.setCalculationFrequency(20)
 else
   sc.setShadingCalculationUpdateFrequencyMethod("Periodic")
