@@ -1044,4 +1044,168 @@ class BaselineModel < OpenStudio::Model::Model
     return water_heater
   end
 
+  # NOTE: a very rough way
+  def rename_loop_nodes()
+
+    self.getPlantLoops.each do |p|
+      prefix = p.name.to_s
+
+      p.supplyComponents.reverse.each do |c|
+        next if c.to_Node.is_initialized
+
+        if c.to_ConnectorMixer.is_initialized
+          c.setName("#{prefix} Supply ConnectorMixer")
+        elsif c.to_ConnectorSplitter.is_initialized
+          c.setName("#{prefix} Supply ConnectorSplitter")
+        else
+
+          obj_type = c.iddObjectType.valueName
+          obj_type_name = obj_type.gsub('OS_','').gsub('_','')
+
+          if c.to_PumpVariableSpeed.is_initialized
+            c.setName("#{prefix} VSD Pump")
+          elsif c.to_PumpConstantSpeed.is_initialized
+            c.setName("#{prefix} CstSpeed Pump")
+          elsif c.to_HeaderedPumpsVariableSpeed.is_initialized
+            c.setName("#{prefix} Headered VSD Pump")
+          elsif c.to_HeaderedPumpsConstantSpeed.is_initialized
+            c.setName("#{prefix} Headered CstSpeed Pump")
+          end
+
+
+          method_name = "to_#{obj_type_name}"
+          next if !c.respond_to?(method_name)
+          actual_thing = c.method(method_name).call
+          next if actual_thing.empty?
+          actual_thing = actual_thing.get
+          if actual_thing.respond_to?("inletModelObject") && actual_thing.inletModelObject.is_initialized
+            inlet_mo = actual_thing.inletModelObject.get
+            inlet_mo.setName("#{prefix} Supply Side #{actual_thing.name.to_s} Inlet Node")
+          end
+          if actual_thing.respond_to?("outletModelObject") && actual_thing.outletModelObject.is_initialized
+            outlet_mo = actual_thing.outletModelObject.get
+            outlet_mo.setName("#{prefix} Supply Side #{actual_thing.name.to_s} Outlet Node")
+          end
+
+          # WaterToWaterComponent
+          # Yep, that part is gross, but I don't care
+          if actual_thing.respond_to?("supplyInletModelObject") && actual_thing.supplyInletModelObject.is_initialized
+            inlet_node = actual_thing.supplyInletModelObject.get.to_Node.get
+            if inlet_node.plantLoop.is_initialized && (inlet_node.plantLoop.get == p)
+              inlet_node.setName("#{prefix} Supply Side #{actual_thing.name.to_s} Inlet Node")
+            end
+          end
+          if actual_thing.respond_to?("supplyOutletModelObject") && actual_thing.supplyOutletModelObject.is_initialized
+            outlet_node = actual_thing.supplyOutletModelObject.get.to_Node.get
+            if outlet_node.plantLoop.is_initialized && (outlet_node.plantLoop.get == p)
+              outlet_node.setName("#{prefix} Supply Side #{actual_thing.name.to_s} Outlet Node")
+            end
+          end
+
+          if actual_thing.respond_to?("tertiaryInletModelObject") && actual_thing.tertiaryInletModelObject.is_initialized
+            inlet_node = actual_thing.tertiaryInletModelObject.get.to_Node.get
+            if inlet_node.plantLoop.is_initialized && (inlet_node.plantLoop.get == p)
+              inlet_node.setName("#{prefix} Tertiary Side #{actual_thing.name.to_s} Inlet Node")
+            end
+          end
+          if actual_thing.respond_to?("tertiaryOutletModelObject") && actual_thing.tertiaryOutletModelObject.is_initialized
+            outlet_node = actual_thing.tertiaryOutletModelObject.get.to_Node.get
+            if outlet_node.plantLoop.is_initialized && (outlet_node.plantLoop.get == p)
+              outlet_node.setName("#{prefix} Tertiary Side #{actual_thing.name.to_s} Outlet Node")
+            end
+          end
+
+        end
+      end
+
+      p.demandComponents.reverse.each do |c|
+        next if c.to_Node.is_initialized
+
+        if c.to_ConnectorMixer.is_initialized
+          c.setName("#{prefix} Demand ConnectorMixer")
+        elsif c.to_ConnectorSplitter.is_initialized
+          c.setName("#{prefix} Demand ConnectorSplitter")
+        else
+          obj_type = c.iddObjectType.valueName
+          obj_type_name = obj_type.gsub('OS_','').gsub('_','')
+          method_name = "to_#{obj_type_name}"
+          next if !c.respond_to?(method_name)
+          actual_thing = c.method(method_name).call
+          next if actual_thing.empty?
+          actual_thing = actual_thing.get
+          if actual_thing.respond_to?("inletModelObject") && actual_thing.inletModelObject.is_initialized
+            inlet_mo = actual_thing.inletModelObject.get
+            inlet_mo.setName("#{prefix} Demand Side #{actual_thing.name.to_s} Inlet Node")
+          end
+          if actual_thing.respond_to?("outletModelObject") && actual_thing.outletModelObject.is_initialized
+            outlet_mo = actual_thing.outletModelObject.get
+            outlet_mo.setName("#{prefix} Demand Side #{actual_thing.name.to_s} Outlet Node")
+          end
+
+          # WaterToAirComponent
+          if actual_thing.respond_to?("waterInletModelObject") && actual_thing.waterInletModelObject.is_initialized
+            inlet_mo = actual_thing.waterInletModelObject.get
+            inlet_mo.setName("#{prefix} Demand Side #{actual_thing.name.to_s} Inlet Node")
+          end
+          if actual_thing.respond_to?("waterOutletModelObject") && actual_thing.waterOutletModelObject.is_initialized
+            outlet_mo = actual_thing.waterOutletModelObject.get
+            outlet_mo.setName("#{prefix} Demand Side #{actual_thing.name.to_s} Outlet Node")
+          end
+
+          if actual_thing.respond_to?("demandInletModelObject") && actual_thing.demandInletModelObject.is_initialized
+            inlet_node = actual_thing.demandInletModelObject.get.to_Node.get
+            if inlet_node.plantLoop.is_initialized && (inlet_node.plantLoop.get == p)
+              inlet_node.setName("#{prefix} Demand Side #{actual_thing.name.to_s} Inlet Node")
+            end
+          end
+          if actual_thing.respond_to?("demandOutletModelObject") && actual_thing.demandOutletModelObject.is_initialized
+            outlet_node = actual_thing.demandOutletModelObject.get.to_Node.get
+            if outlet_node.plantLoop.is_initialized && (outlet_node.plantLoop.get == p)
+              outlet_node.setName("#{prefix} Demand Side #{actual_thing.name.to_s} Outlet Node")
+            end
+          end
+
+        end
+      end
+
+
+      node = p.supplyInletNode
+      new_name = 'Supply Inlet Node'
+      new_name = "#{prefix} #{new_name}"
+      node.setName(new_name)
+
+      node = p.supplyOutletNode
+      new_name = 'Supply Outlet Node'
+      new_name = "#{prefix} #{new_name}"
+      node.setName(new_name)
+
+      # Demand Side
+      node = p.demandInletNode
+      new_name = 'Demand Inlet Node'
+      new_name = "#{prefix} #{new_name}"
+      node.setName(new_name)
+
+      node = p.demandOutletNode
+      new_name = 'Demand Outlet Node'
+      new_name = "#{prefix} #{new_name}"
+      node.setName(new_name)
+      end
+  end
+
+  # NOTE: Not in the least complete, but I don't need it right now
+  def renames_air_nodes()
+    # Rename some nodes and such, for ease of debugging
+    self.getAirLoopHVACs.each do |a|
+      a.supplyInletNode.setName("#{a.name.to_s} Supply Inlet Node")
+      a.supplyOutletNode.setName("#{a.name.to_s} Supply Outlet Node")
+      a.mixedAirNode.get.setName("#{a.name.to_s} Mixed Air Node")
+
+      # Rename Zone Air Nodes
+      self.getThermalZones.each {|z| z.zoneAirNode.setName("#{z.name.to_s} Zone Air Node")}
+
+      # Rename thermostats
+      self.getThermostatSetpointDualSetpoints.each {|t| t.setName("#{t.thermalZone.get.name.to_s} ThermostatSetpointDualSetpoint") }
+    end
+  end
+
 end
