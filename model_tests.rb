@@ -672,13 +672,9 @@ class ModelTests < Minitest::Test
     result = sim_test('shadowcalculation.rb')
   end
 
-  # TODO: add OSM test from 2.9.1
-  # This was added a long time ago, but the 'Calculation Method' (now called
-  # 'Shading Calculation Update Frequency Method' was added in v2.9.0, and
-  # since it's closed to 2.9.0, might as well just do 2.9.1)
-  # def test_shadowcalculation_osm
-  #   result = sim_test('shadowcalculation.osm')
-  # end
+  def test_shadowcalculation_osm
+    result = sim_test('shadowcalculation.osm')
+  end
 
   def test_solar_collector_flat_plate_water_rb
     result = sim_test('solar_collector_flat_plate_water.rb')
