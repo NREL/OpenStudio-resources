@@ -23,18 +23,26 @@ end
 # Backward compat
 Minitest::Test = MiniTest::Unit::TestCase unless defined?(Minitest::Test)
 
-$SdkLongVersion = OpenStudio::openStudioLongVersion
-# TODO: once "Versioning" PR is merged
-#$Build_Sha = OpenStudio::openStudioVersionBuildSHA
-#$SdkPrerelease = OpenStudio::openStudioVersionPrerelease
+$SdkVersion = OpenStudio::openStudioVersion
 
-# I actually want them named like '3.0.0-rc1_out' (including the prerelease)
-$SdkVersion = OpenStudio::openStudioLongVersion.split('+')[0]
-#$SdkVersion = OpenStudio::openStudioVersion
-#if !$SdkPrerelease.empty?
-  #$SdkVersion << "-#{$SdkPrerelease}"
-#end
-$Build_Sha = $SdkLongVersion.split('+')[-1]
+if Gem::Version.new($SdkVersion) < Gem::Version.new("3.0.0")
+  # There was no prelease tags or anything like that
+  # LongVersion was in format "2.9.1.3472e8b799"
+  $SdkLongVersion = OpenStudio::openStudioLongVersion
+  $Build_Sha = $SdkLongVersion.split('.')[-1]
+else
+  # This uses SemVer 2.0 and has new methods for easy access to the components
+  # Format is like "3.0.0-beta+6648e88805" (with a prerelease tag)
+  # or "3.0.0+6648e88805"
+  $SdkLongVersion = OpenStudio::openStudioLongVersion
+  $Build_Sha = OpenStudio::openStudioVersionBuildSHA
+  $SdkPrerelease = OpenStudio::openStudioVersionPrerelease
+
+  # I actually want them named like '3.0.0-rc1_out' (including the prerelease)
+  if !$SdkPrerelease.empty?
+    $SdkVersion << "-#{$SdkPrerelease}"
+  end
+end
 
 # Environment variables
 if ENV['N'].nil?
@@ -1127,7 +1135,7 @@ def sql_test(options = {})
 
   out_var = OpenStudio::Model::OutputVariable.new("Site Outdoor Air Drybulb Temperature", m)
   out_var.setReportingFrequency("Annual")
-  
+
   out_var = OpenStudio::Model::OutputVariable.new("Site Outdoor Air Drybulb Temperature", m)
   out_var.setReportingFrequency("Daily")
 
@@ -1286,7 +1294,7 @@ def sql_test(options = {})
   run_periods = ts.get
   puts run_periods.values
   puts run_periods.dateTimes
-  
+
   # Get the annual series
   ts = sql.timeSeries(sql.availableEnvPeriods[0], "Annual", "Site Outdoor Air Drybulb Temperature", "Environment")
 
