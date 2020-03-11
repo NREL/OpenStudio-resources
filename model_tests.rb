@@ -700,10 +700,9 @@ class ModelTests < Minitest::Test
     result = sim_test('sizing_zone_dszad.rb')
   end
 
-  # TODO:
-  #def test_sizing_zone_dszad_osm
-  #  result = sim_test('sizing_zone_dszad.osm')
-  #end
+  def test_sizing_zone_dszad_osm
+    result = sim_test('sizing_zone_dszad.osm')
+  end
 
   def test_solar_collector_flat_plate_water_rb
     result = sim_test('solar_collector_flat_plate_water.rb')
