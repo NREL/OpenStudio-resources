@@ -688,6 +688,14 @@ class ModelTests < Minitest::Test
     result = sim_test('setpoint_managers.osm')
   end
 
+  def test_shadowcalculation_rb
+    result = sim_test('shadowcalculation.rb')
+  end
+
+  def test_shadowcalculation_osm
+    result = sim_test('shadowcalculation.osm')
+  end
+
   def test_solar_collector_flat_plate_water_rb
     result = sim_test('solar_collector_flat_plate_water.rb')
   end

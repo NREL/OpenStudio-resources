@@ -107,7 +107,11 @@ spaces.each_with_index do |space, i|
     other_eq.setSchedule(model.alwaysOnDiscreteSchedule)
     other_eq.setMultiplier(1.0)
     other_eq.setEndUseSubcategory("Propane stuff")
-    other_eq.setFuelType("PropaneGas")
+    if Gem::Version.new(OpenStudio::openStudioVersion) < Gem::Version.new("3.0.0")
+      other_eq.setFuelType("PropaneGas")
+    else
+      other_eq.setFuelType("Propane")
+    end
 
     other_eq.setSpace(space)
     other_eq.setName("#{space.name.to_s} Other Equipment")
