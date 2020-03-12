@@ -67,8 +67,36 @@ def new_evap_cooling_coil_dx_twospeed(model)
 end
 ### High level constructs
 
-### Chilled water loop for thermal storage ###
+### Declare loops
 storage_loop = OpenStudio::Model::PlantLoop.new(model)
+hw_loop = OpenStudio::Model::PlantLoop.new(model)
+cw_loop = OpenStudio::Model::PlantLoop.new(model)
+chw_loop = OpenStudio::Model::PlantLoop.new(model)
+swh_loop = model.add_swh_loop("Mixed")
+
+
+###  water loop for Heat recovery ###
+# Water use connection
+swh_connection = OpenStudio::Model::WaterUseConnections.new(model)
+# Water fixture definition
+water_fixture_def = OpenStudio::Model::WaterUseEquipmentDefinition.new(model)
+rated_flow_rate_gal_per_min = 50
+rated_flow_rate_m3_per_s = OpenStudio.convert(rated_flow_rate_gal_per_min,'gal/min','m^3/s').get
+water_fixture_def.setPeakFlowRate(rated_flow_rate_m3_per_s)
+water_fixture_def.setName("Service Water Use Def #{rated_flow_rate_gal_per_min.round(2)}gal/min")
+# Target mixed water temperature
+mixed_water_temp_f = 110
+mixed_water_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model, OpenStudio.convert(mixed_water_temp_f,'F','C').get)
+water_fixture_def.setTargetTemperatureSchedule(mixed_water_temp_sch)
+# Water use equipment
+water_fixture = OpenStudio::Model::WaterUseEquipment.new(water_fixture_def)
+water_fixture.setName("Service Water Use #{rated_flow_rate_gal_per_min.round(2)}gal/min")
+swh_connection.addWaterUseEquipment(water_fixture)
+# Connect the water use connection to the SWH loop
+swh_loop.addDemandBranchForComponent(swh_connection)
+
+
+### Chilled water loop for thermal storage ###
 storage_loop.setName('Storage Chilled Water Loop')
 storage_loop.setMaximumLoopTemperature(98)
 storage_loop.setMinimumLoopTemperature(1)
@@ -99,7 +127,6 @@ pri_chw_pump.addToNode(storage_loop.supplyInletNode)
 storage_loop.addSupplyBranchForComponent(OpenStudio::Model::DistrictCooling.new(model))
 
 ### Condenser water loop ###
-cw_loop = OpenStudio::Model::PlantLoop.new(model)
 cw_loop.setName('Condenser Water Loop')
 cw_loop.setMaximumLoopTemperature(80)
 cw_loop.setMinimumLoopTemperature(5)
@@ -187,7 +214,6 @@ fluid_clr.resetLowFanSpeedUfactorTimesAreaValue
 cw_loop.addSupplyBranchForComponent(fluid_clr)
 
 ### Chilled water loop ###
-chw_loop = OpenStudio::Model::PlantLoop.new(model)
 chw_loop.setName('Chilled Water Loop')
 chw_loop.setMaximumLoopTemperature(98)
 chw_loop.setMinimumLoopTemperature(1)
@@ -235,12 +261,16 @@ chw_loop.setCommonPipeSimulation('CommonPipe')
 chiller = OpenStudio::Model::ChillerElectricEIR.new(model)
 chw_loop.addSupplyBranchForComponent(chiller)
 cw_loop.addDemandBranchForComponent(chiller)
+swh_loop.addDemandBranchForComponent(chiller) # Heat Recovery
 chiller = OpenStudio::Model::ChillerAbsorptionIndirect.new(model)
 chw_loop.addSupplyBranchForComponent(chiller)
 cw_loop.addDemandBranchForComponent(chiller)
+swh_loop.addDemandBranchForComponent(chiller) # Heat Recovery
 chiller = OpenStudio::Model::ChillerAbsorption.new(model)
 chw_loop.addSupplyBranchForComponent(chiller)
 cw_loop.addDemandBranchForComponent(chiller)
+swh_loop.addDemandBranchForComponent(chiller) # Heat Recovery
+
 chw_loop.addSupplyBranchForComponent(OpenStudio::Model::DistrictCooling.new(model))
 wwhp = OpenStudio::Model::HeatPumpWaterToWaterEquationFitCooling.new(model)
 chw_loop.addSupplyBranchForComponent(wwhp)
@@ -253,7 +283,6 @@ storage_loop.addDemandBranchForComponent(chw_storage)
 # chw_loop.addSupplyBranchForComponent(OpenStudio::Model::ChillerHeaterPerformanceElectricEIR.new(model))
 
 ### Hot water loop ###
-hw_loop = OpenStudio::Model::PlantLoop.new(model)
 hw_loop.setName('Hot Water Loop')
 hw_loop.setMinimumLoopTemperature(10)
 hw_temp_f = 140
