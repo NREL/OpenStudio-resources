@@ -528,6 +528,16 @@ class ModelTests < Minitest::Test
     result = sim_test('multiple_loops_w_plenums.osm')
   end
 
+  def test_output_objects_rb
+    result = sim_test('output_objects.rb')
+  end
+
+  # TODO : To be added once the next official release
+  # including this object is out : 3.0.0
+  # def test_output_objects_osm
+  #   result = sim_test('output_objects.osm')
+  # end
+
   def test_performanceprecisiontradeoffs_rb
     result = sim_test('performanceprecisiontradeoffs.rb')
   end
