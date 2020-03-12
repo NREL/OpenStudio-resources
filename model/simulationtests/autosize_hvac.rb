@@ -568,6 +568,17 @@ humidifier.addToNode(unitary_loop.supplyOutletNode)
 spm = OpenStudio::Model::SetpointManagerSingleZoneHumidityMinimum.new(model)
 spm.addToNode(unitary_loop.supplyOutletNode)
 
+# Create an  internal source construction for the radiant systems
+int_src_const = OpenStudio::Model::ConstructionWithInternalSource.new(model)
+int_src_const.setSourcePresentAfterLayerNumber(3)
+int_src_const.setTemperatureCalculationRequestedAfterLayerNumber(3)
+layers = []
+layers << concrete_sand_gravel = OpenStudio::Model::StandardOpaqueMaterial.new(model,"MediumRough",0.1014984,1.729577,2242.585, 836.8)
+layers << rigid_insulation_2inch = OpenStudio::Model::StandardOpaqueMaterial.new(model,"Rough",0.05,0.02,56.06,1210)
+layers << gyp1 = OpenStudio::Model::StandardOpaqueMaterial.new(model,"MediumRough",0.0127,0.7845,1842.1221,988)
+layers << gyp2 = OpenStudio::Model::StandardOpaqueMaterial.new(model,"MediumRough",0.01905,0.7845,1842.1221,988)
+layers << finished_floor = OpenStudio::Model::StandardOpaqueMaterial.new(model,"Smooth",0.0016,0.17,1922.21,1250)
+int_src_const.setLayers(layers)
 
 ### Zone HVAC and Terminals ###
 # Add one of every single kind of Zone HVAC equipment supported by OS
@@ -650,18 +661,6 @@ zones.each_with_index do |zn, zone_index|
     hw_loop.addDemandBranchForComponent(htg_coil)
     OpenStudio::Model::ZoneHVACBaseboardConvectiveWater.new(model, s1, htg_coil).addToThermalZone(zn)
   when 14
-    # Create an  internal source construction for the radiant system
-    int_src_const = OpenStudio::Model::ConstructionWithInternalSource.new(model)
-    int_src_const.setSourcePresentAfterLayerNumber(3)
-    int_src_const.setTemperatureCalculationRequestedAfterLayerNumber(3)
-    layers = []
-    layers << concrete_sand_gravel = OpenStudio::Model::StandardOpaqueMaterial.new(model,"MediumRough",0.1014984,1.729577,2242.585, 836.8)
-    layers << rigid_insulation_2inch = OpenStudio::Model::StandardOpaqueMaterial.new(model,"Rough",0.05,0.02,56.06,1210)
-    layers << gyp1 = OpenStudio::Model::StandardOpaqueMaterial.new(model,"MediumRough",0.0127,0.7845,1842.1221,988)
-    layers << gyp2 = OpenStudio::Model::StandardOpaqueMaterial.new(model,"MediumRough",0.01905,0.7845,1842.1221,988)
-    layers << finished_floor = OpenStudio::Model::StandardOpaqueMaterial.new(model,"Smooth",0.0016,0.17,1922.21,1250)
-    int_src_const.setLayers(layers)
-
     # Make all floors in the spaces in this zone use the internal source construction
     zn.spaces.each do |space|
       space.surfaces.each do |s|
@@ -675,18 +674,6 @@ zones.each_with_index do |zn, zone_index|
     low_temp_rad.setRadiantSurfaceType("Floors")
     low_temp_rad.addToThermalZone(zn)
   when 15
-    # Create an  internal source construction for the radiant system
-    int_src_const = OpenStudio::Model::ConstructionWithInternalSource.new(model)
-    int_src_const.setSourcePresentAfterLayerNumber(3)
-    int_src_const.setTemperatureCalculationRequestedAfterLayerNumber(3)
-    layers = []
-    layers << concrete_sand_gravel = OpenStudio::Model::StandardOpaqueMaterial.new(model,"MediumRough",0.1014984,1.729577,2242.585, 836.8)
-    layers << rigid_insulation_2inch = OpenStudio::Model::StandardOpaqueMaterial.new(model,"Rough",0.05,0.02,56.06,1210)
-    layers << gyp1 = OpenStudio::Model::StandardOpaqueMaterial.new(model,"MediumRough",0.0127,0.7845,1842.1221,988)
-    layers << gyp2 = OpenStudio::Model::StandardOpaqueMaterial.new(model,"MediumRough",0.01905,0.7845,1842.1221,988)
-    layers << finished_floor = OpenStudio::Model::StandardOpaqueMaterial.new(model,"Smooth",0.0016,0.17,1922.21,1250)
-    int_src_const.setLayers(layers)
-
     # Make all floors in the spaces in this zone use the internal source construction
     zn.spaces.each do |space|
       space.surfaces.each do |s|
@@ -705,20 +692,6 @@ zones.each_with_index do |zn, zone_index|
     low_temp_rad = OpenStudio::Model::ZoneHVACLowTempRadiantVarFlow.new(model, s1, htg_coil, clg_coil)
     low_temp_rad.setRadiantSurfaceType("Floors")
     low_temp_rad.addToThermalZone(zn)
-
-
-
-    # heat_coil = OpenStudio::Model::CoilHeatingLowTempRadiantVarFlow.new(model,heatingControlTemperatureSched)
-    # cool_coil = OpenStudio::Model::CoilCoolingLowTempRadiantVarFlow.new(model,coolingControlTemperatureSched)
-
-    # lowtempradiant = OpenStudio::Model::ZoneHVACLowTempRadiantVarFlow.new(model,model.alwaysOnDiscreteSchedule,heat_coil,cool_coil)
-    # lowtempradiant.setRadiantSurfaceType("Floors")
-    # lowtempradiant.setHydronicTubingInsideDiameter(0.154)
-    # lowtempradiant.setTemperatureControlType("MeanRadiantTemperature")
-
-    # hotWaterPlant.addDemandBranchForComponent(heat_coil)
-    # chilledWaterPlant.addDemandBranchForComponent(cool_coil)
-
 
   when 16
     # hp_wh.addToThermalZone(zn)
@@ -794,6 +767,39 @@ zones.each_with_index do |zn, zone_index|
 
     term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeFourPipeBeam.new(model, clg_coil, htg_coil)
     air_loop.addBranchForZone(zn, term)
+
+  when 37
+    # Make all floors in the spaces in this zone use the internal source construction
+    zn.spaces.each do |space|
+      space.surfaces.each do |s|
+        s.setConstruction(int_src_const) if s.surfaceType == "Floor"
+      end
+    end
+
+    coolingHighWaterTempSched = OpenStudio::Model::ScheduleConstant.new(model)
+    coolingLowWaterTempSched = OpenStudio::Model::ScheduleConstant.new(model)
+    coolingHighControlTempSched = OpenStudio::Model::ScheduleConstant.new(model)
+    coolingLowControlTempSched = OpenStudio::Model::ScheduleConstant.new(model)
+    heatingHighWaterTempSched = OpenStudio::Model::ScheduleConstant.new(model)
+    heatingLowWaterTempSched = OpenStudio::Model::ScheduleConstant.new(model)
+    heatingHighControlTempSched = OpenStudio::Model::ScheduleConstant.new(model)
+    heatingLowControlTempSched = OpenStudio::Model::ScheduleConstant.new(model)
+
+    coolingHighWaterTempSched.setValue(15.0)
+    coolingLowWaterTempSched.setValue(10.0)
+    coolingHighControlTempSched.setValue(26.0)
+    coolingLowControlTempSched.setValue(22.0)
+    heatingHighWaterTempSched.setValue(50.0)
+    heatingLowWaterTempSched.setValue(30.0)
+    heatingHighControlTempSched.setValue(21.0)
+    heatingLowControlTempSched.setValue(15.0)
+
+    testCC = OpenStudio::Model::CoilCoolingLowTempRadiantConstFlow.new(model,coolingHighWaterTempSched,coolingLowWaterTempSched,coolingHighControlTempSched,coolingLowControlTempSched)
+    testHC = OpenStudio::Model::CoilHeatingLowTempRadiantConstFlow.new(model,heatingHighWaterTempSched,heatingLowWaterTempSched,heatingHighControlTempSched,heatingLowControlTempSched)
+
+    low_temp_cst_rad = OpenStudio::Model::ZoneHVACLowTempRadiantConstFlow.new(model, s1, testHC, testCC)
+    low_temp_cst_rad.setRadiantSurfaceType("Floors")
+    low_temp_cst_rad.addToThermalZone(zn)
 
   when 26, 27, 28, 29, 30, 31, 32, 33
     # Previously used for the unitary systems, dehum, etc
