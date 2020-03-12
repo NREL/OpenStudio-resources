@@ -859,6 +859,13 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
   # not exist in the E+ output, even under a different name.
   # These are things the E+ team should fix.
   missing_getters = {
+
+    'OS:AirLoopHVAC:UnitarySystem' => [
+      # TODO: this one exists, but E+ crashes if you autosize. Revert once
+      # 9.3.0 official is out
+      'autosizedDOASDXCoolingCoilLeavingMinimumAirTemperature'
+    ],
+
     'OS:Coil:Heating:Water:Baseboard:Radiant' => [
       'autosizedHeatingDesignCapacity'
     ],

@@ -499,7 +499,11 @@ unitary.addToNode(unitary_loop.supplyOutletNode)
 unitary.setControllingZoneorThermostatLocation(zones[27])
 # Necessary for autosizedDOASDXCoolingCoilLeavingMinimumAirTemperature
 unitary.setControlType("SingleZoneVAV")
-unitary.autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature()
+# TODO: Temp pending https://github.com/NREL/EnergyPlus/pull/7823 which isn't
+# in v9.3.0-IOFreeze but should be in 9.3.0 official
+unitary.setDOASDXCoolingCoilLeavingMinimumAirTemperature(2)
+# unitary.autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature()
+
 term = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, s1)
 unitary_loop.addBranchForZone(zones[27], term)
 
