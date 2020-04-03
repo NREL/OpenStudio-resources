@@ -1147,6 +1147,8 @@ end
 #       }
 def sql_test(options = {})
 
+  require 'date'
+
   # Get name of calling method and remove the 'test_' portion
   filename = caller[0][/`.*'/][1..-2].gsub('test_', '')
 
