@@ -986,10 +986,6 @@ class ModelTests < Minitest::Test
     result = sim_test('pvwatts.osm')
   end
 
-  def test_unitary_systems_airloop_and_zonehvac_rb
-    result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
-  end
-
   def test_epw_design_conditions_rb
     result = sim_test('epw_design_conditions.rb')
   end
