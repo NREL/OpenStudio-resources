@@ -274,6 +274,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('centralheatpumpsystem.osm')
   end
 
+  def test_FT_chillers_tertiary
+    sdd_ft_test('chillers_tertiary.osm')
+  end
+
   def test_FT_coilsystem_dxhx
     sdd_ft_test('coilsystem_dxhx.osm')
   end
@@ -348,6 +352,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_fan_on_off
     sdd_ft_test('fan_on_off.osm')
+  end
+
+  def test_FT_fan_systemmodel
+    sdd_ft_test('fan_systemmodel.osm')
   end
 
   def test_FT_fluid_coolers
@@ -446,6 +454,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('performanceprecisiontradeoffs.osm')
   end
 
+  def test_FT_output_objects
+    sdd_ft_test('output_objects.osm')
+  end
+
   def test_FT_photovoltaics
     sdd_ft_test('photovoltaics.osm')
   end
@@ -526,6 +538,14 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('setpoint_managers.osm')
   end
 
+  def test_FT_shadowcalculation
+    sdd_ft_test('shadowcalculation.osm')
+  end
+
+  def test_FT_sizing_zone_dszad
+    sdd_ft_test('sizing_zone_dszad.osm')
+  end
+
   def test_FT_solar_collector_flat_plate_photovoltaicthermal
     sdd_ft_test('solar_collector_flat_plate_photovoltaicthermal.osm')
   end
@@ -594,6 +614,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('vrf.osm')
   end
 
+  def test_FT_vrf_watercooled
+    sdd_ft_test('vrf_watercooled.osm')
+  end
+
   def test_FT_water_economizer
     sdd_ft_test('water_economizer.osm')
   end
@@ -632,6 +656,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_zone_property_user_view_factors_by_surface_name
     sdd_ft_test('zone_property_user_view_factors_by_surface_name.osm')
+  end
+
+  def test_FT_zoneventilation_windandstackopenarea
+    sdd_ft_test('zoneventilation_windandstackopenarea.osm')
   end
 
 end

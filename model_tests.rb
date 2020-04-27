@@ -188,11 +188,9 @@ class ModelTests < Minitest::Test
     result = sim_test('chillers_tertiary.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 3.0.0
-  # def test_chillers_tertiary_osm
-  #   result = sim_test('chillers_tertiary.osm')
-  # end
+  def test_chillers_tertiary_osm
+    result = sim_test('chillers_tertiary.osm')
+  end
 
   def test_coilsystem_waterhx_rb
     result = sim_test('coilsystem_waterhx.rb')
@@ -334,12 +332,10 @@ class ModelTests < Minitest::Test
     result = sim_test('fan_on_off.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out: 3.0.0 (https://github.com/NREL/OpenStudio/pull/3864)
-  #def test_fan_systemmodel_osm
-  #  result = sim_test('fan_systemmodel.osm')
-  #end
-  #
+  def test_fan_systemmodel_osm
+    result = sim_test('fan_systemmodel.osm')
+  end
+
   def test_fan_systemmodel_rb
     result = sim_test('fan_systemmodel.rb')
   end
@@ -532,11 +528,9 @@ class ModelTests < Minitest::Test
     result = sim_test('output_objects.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 3.0.0
-  # def test_output_objects_osm
-  #   result = sim_test('output_objects.osm')
-  # end
+  def test_output_objects_osm
+    result = sim_test('output_objects.osm')
+  end
 
   def test_performanceprecisiontradeoffs_rb
     result = sim_test('performanceprecisiontradeoffs.rb')
@@ -854,10 +848,9 @@ class ModelTests < Minitest::Test
     result = sim_test('vrf.rb')
   end
 
-  # TODO: Add this once next official version is out (3.0.0, need #3687)
-  # def test_vrf_watercooled_osm
-  #   result = sim_test('vrf_watercooled.osm')
-  # end
+  def test_vrf_watercooled_osm
+    result = sim_test('vrf_watercooled.osm')
+  end
 
   def test_vrf_watercooled_rb
     result = sim_test('vrf_watercooled.rb')
@@ -939,11 +932,9 @@ class ModelTests < Minitest::Test
     result = sim_test('zoneventilation_windandstackopenarea.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out: 3.0.0 (https://github.com/NREL/OpenStudio/pull/3788)
-  #def test_zoneventilation_windandstackopenarea_osm
-  #  result = sim_test('zoneventilation_windandstackopenarea.osm')
-  #end
+  def test_zoneventilation_windandstackopenarea_osm
+    result = sim_test('zoneventilation_windandstackopenarea.osm')
+  end
 
   def test_zone_property_user_view_factors_by_surface_name_rb
     result = sim_test('zone_property_user_view_factors_by_surface_name.rb')

@@ -311,6 +311,12 @@ zones.each_with_index do |z, i|
     cc = OpenStudio::Model::CoilCoolingDXVariableRefrigerantFlow.new(model)
     hc = OpenStudio::Model::CoilHeatingDXVariableRefrigerantFlow.new(model)
     vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlow.new(model)
+    # E+ now throws when the CoolingEIRLowPLR has a curve minimum value of x which
+    # is higher than the Minimum Heat Pump Part-Load Ratio.
+    # The curve has a min of 0.5 here, so set the MinimumHeatPumpPartLoadRatio to
+    # the same value
+    vrf.setMinimumHeatPumpPartLoadRatio(0.5)
+
     vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model, cc, hc, fan)
     vrf.addTerminal(vrf_terminal)
     vrf_terminal.addToThermalZone(z)
