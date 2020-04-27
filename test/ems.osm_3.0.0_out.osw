@@ -1,0 +1,57 @@
+{
+  "completed_status": "Fail",
+  "current_step": 0,
+  "eplusout_err": [
+    "Program Version,EnergyPlus, Version 9.3.0-baff08990c, ",
+    "   ************* Beginning Zone Sizing Calculations",
+    "   ** Warning ** Site:GroundTemperature:BuildingSurface: Some values fall outside the range of 15-25C.",
+    "   **   ~~~   ** These values may be inappropriate.  Please consult the Input Output Reference for more details.",
+    "   ** Warning ** Weather file location will be used rather than entered (IDF) Location object.",
+    "   **   ~~~   ** ..Location object=BALTIMORE BLT WASHNGTN INTL",
+    "   **   ~~~   ** ..Weather File Location=Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300",
+    "   **   ~~~   ** ..due to location differences, Latitude difference=[2.81] degrees, Longitude difference=[11.24] degrees.",
+    "   **   ~~~   ** ..Time Zone difference=[1.0] hour(s), Elevation difference=[346.67] percent, [156.00] meters.",
+    "   ** Warning ** SetUpDesignDay: Entered DesignDay Barometric Pressure=83011 differs by more than 10% from Standard Barometric Pressure=98934.",
+    "   **   ~~~   ** ...occurs in DesignDay=DENVER INTL AP ANN CLG 1% CONDNS DB=>MWB, Standard Pressure (based on elevation) will be used.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"SUPPLYFANOPERATION 1\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"SUPPLYFANOPERATION\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** SetUpDesignDay: Entered DesignDay Barometric Pressure=83011 differs by more than 10% from Standard Barometric Pressure=98934.",
+    "   **   ~~~   ** ...occurs in DesignDay=DENVER INTL AP ANN CLG 1% CONDNS WB=>MDB, Standard Pressure (based on elevation) will be used.",
+    "   ** Warning ** SetUpDesignDay: Entered DesignDay Barometric Pressure=83011 differs by more than 10% from Standard Barometric Pressure=98934.",
+    "   **   ~~~   ** ...occurs in DesignDay=DENVER INTL AP ANN HTG 99% CONDNS DB, Standard Pressure (based on elevation) will be used.",
+    "   ** Warning ** GetVRFInput: AirConditioner:VariableRefrigerantFlow=\"LIVING ZONE MULTI SPLIT HEAT PUMP\", invalid",
+    "   **   ~~~   ** ...Cooling Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve Name = COOL-EIR-FPLR10 has out of range value.",
+    "   **   ~~~   ** ...Curve minimum value of X = 0.407 must be <= Minimum Heat Pump Part-Load Ratio = 0.333.",
+    "   ** Warning ** GetVRFInput: AirConditioner:VariableRefrigerantFlow=\"LIVING ZONE|UNIT 2 MULTI SPLIT HEAT PUMP\", invalid",
+    "   **   ~~~   ** ...Cooling Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve Name = COOL-EIR-FPLR10 has out of range value.",
+    "   **   ~~~   ** ...Curve minimum value of X = 0.407 must be <= Minimum Heat Pump Part-Load Ratio = 0.333.",
+    "   **  Fatal  ** GetVRFInput: Errors found in getting AirConditioner:VariableRefrigerantFlow system input. Preceding condition(s) causes termination.",
+    "   ...Summary of Errors that led to program termination:",
+    "   ..... Reference severe error count=0",
+    "   ..... Last severe error=",
+    "   ************* Warning:  Node connection errors not checked - most system input has not been read (see previous warning).",
+    "   ************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages.",
+    "   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 11 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Terminated--Fatal Error Detected. 11 Warning; 0 Severe Errors; "
+  ],
+  "file_paths": [
+    "/home/julien/Software/Others/OpenStudio-resources/testruns/ems.osm/generated_files",
+    "./files",
+    "./weather",
+    "../../files",
+    "../../weather",
+    "./"
+  ],
+  "seed_file": "in.osm",
+  "steps": [
+    {
+      "arguments": {
+      },
+      "measure_dir_name": "openstudio_results"
+    }
+  ],
+  "weather_file": "../../weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"
+}
