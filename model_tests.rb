@@ -188,11 +188,9 @@ class ModelTests < Minitest::Test
     result = sim_test('chillers_tertiary.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 3.0.0
-  # def test_chillers_tertiary_osm
-  #   result = sim_test('chillers_tertiary.osm')
-  # end
+  def test_chillers_tertiary_osm
+    result = sim_test('chillers_tertiary.osm')
+  end
 
   def test_coilsystem_waterhx_rb
     result = sim_test('coilsystem_waterhx.rb')
