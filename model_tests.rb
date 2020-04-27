@@ -332,12 +332,10 @@ class ModelTests < Minitest::Test
     result = sim_test('fan_on_off.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out: 3.0.0 (https://github.com/NREL/OpenStudio/pull/3864)
-  #def test_fan_systemmodel_osm
-  #  result = sim_test('fan_systemmodel.osm')
-  #end
-  #
+  def test_fan_systemmodel_osm
+    result = sim_test('fan_systemmodel.osm')
+  end
+
   def test_fan_systemmodel_rb
     result = sim_test('fan_systemmodel.rb')
   end
