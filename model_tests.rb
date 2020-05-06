@@ -744,6 +744,14 @@ class ModelTests < Minitest::Test
     result = sim_test('space_load_instances.osm')
   end
 
+  def test_surface_control_rb
+    result = sim_test('surface_control.rb')
+  end
+
+  def test_surface_control_osm
+    # TODO
+  end
+
   def test_surface_properties_osm
     result = sim_test('surface_properties.osm')
   end
