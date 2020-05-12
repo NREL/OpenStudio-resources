@@ -51,12 +51,11 @@ night_schedule.addValue(OpenStudio::Time.new(0,8,0,0),1.0)
 night_schedule.addValue(OpenStudio::Time.new(0,21,0,0),0.0)
 night_schedule.addValue(OpenStudio::Time.new(0,24,0,0),1.0)
 
-
+# To ensure repeatability, we sort the surfaces by their name,
+# and we keep only outside walls
+surfaces = model.getSurfaces.select{|s| s.outsideBoundaryCondition == "Outdoors" && s.surfaceType == "Wall"}.sort_by{|s| s.name.to_s}
 # set surface control movable insulation
-model.getSurfaces.each do |surface|
-  next if surface.surfaceType != "Wall"
-  next if surface.outsideBoundaryCondition != "Outdoors"
-
+surfaces.each do |surface|
   movableInsulation = OpenStudio::Model::SurfaceControlMovableInsulation.new(surface, material)
   movableInsulation.setInsulationType("Inside")
   movableInsulation.setSchedule(scheduleRuleset)
