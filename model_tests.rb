@@ -184,6 +184,14 @@ class ModelTests < Minitest::Test
     result = sim_test('centralheatpumpsystem.rb')
   end
 
+  def test_chillers_tertiary_rb
+    result = sim_test('chillers_tertiary.rb')
+  end
+
+  def test_chillers_tertiary_osm
+    result = sim_test('chillers_tertiary.osm')
+  end
+
   def test_coilsystem_waterhx_rb
     result = sim_test('coilsystem_waterhx.rb')
   end
@@ -322,6 +330,14 @@ class ModelTests < Minitest::Test
 
   def test_fan_on_off_rb
     result = sim_test('fan_on_off.rb')
+  end
+
+  def test_fan_systemmodel_osm
+    result = sim_test('fan_systemmodel.osm')
+  end
+
+  def test_fan_systemmodel_rb
+    result = sim_test('fan_systemmodel.rb')
   end
 
   def test_fluid_coolers_rb
@@ -508,6 +524,14 @@ class ModelTests < Minitest::Test
     result = sim_test('multiple_loops_w_plenums.osm')
   end
 
+  def test_output_objects_rb
+    result = sim_test('output_objects.rb')
+  end
+
+  def test_output_objects_osm
+    result = sim_test('output_objects.osm')
+  end
+
   def test_performanceprecisiontradeoffs_rb
     result = sim_test('performanceprecisiontradeoffs.rb')
   end
@@ -668,6 +692,22 @@ class ModelTests < Minitest::Test
     result = sim_test('setpoint_managers.osm')
   end
 
+  def test_shadowcalculation_rb
+    result = sim_test('shadowcalculation.rb')
+  end
+
+  def test_shadowcalculation_osm
+    result = sim_test('shadowcalculation.osm')
+  end
+
+  def test_sizing_zone_dszad_rb
+    result = sim_test('sizing_zone_dszad.rb')
+  end
+
+  def test_sizing_zone_dszad_osm
+    result = sim_test('sizing_zone_dszad.osm')
+  end
+
   def test_solar_collector_flat_plate_water_rb
     result = sim_test('solar_collector_flat_plate_water.rb')
   end
@@ -808,10 +848,9 @@ class ModelTests < Minitest::Test
     result = sim_test('vrf.rb')
   end
 
-  # TODO: Add this once next official version is out (Post 2.8.1)
-  # def test_vrf_watercooled_osm
-  #   result = sim_test('vrf_watercooled.osm')
-  # end
+  def test_vrf_watercooled_osm
+    result = sim_test('vrf_watercooled.osm')
+  end
 
   def test_vrf_watercooled_rb
     result = sim_test('vrf_watercooled.rb')
@@ -893,11 +932,9 @@ class ModelTests < Minitest::Test
     result = sim_test('zoneventilation_windandstackopenarea.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out: 3.0.0 (https://github.com/NREL/OpenStudio/pull/3788)
-  #def test_zoneventilation_windandstackopenarea_osm
-  #  result = sim_test('zoneventilation_windandstackopenarea.osm')
-  #end
+  def test_zoneventilation_windandstackopenarea_osm
+    result = sim_test('zoneventilation_windandstackopenarea.osm')
+  end
 
   def test_zone_property_user_view_factors_by_surface_name_rb
     result = sim_test('zone_property_user_view_factors_by_surface_name.rb')
@@ -938,10 +975,6 @@ class ModelTests < Minitest::Test
 
   def test_pvwatts_osm
     result = sim_test('pvwatts.osm')
-  end
-
-  def test_unitary_systems_airloop_and_zonehvac_rb
-    result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
   end
 
   def test_epw_design_conditions_rb

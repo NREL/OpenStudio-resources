@@ -41,9 +41,22 @@ zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 # This watercooled VRF example has +50% site EUI compared to vrf.rb example
 vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlow.new(model)
 
+# E+ now throws when the CoolingEIRLowPLR has a curve minimum value of x which
+# is higher than the Minimum Heat Pump Part-Load Ratio.
+# The curve has a min of 0.5 here, so set the MinimumHeatPumpPartLoadRatio to
+# the same value
+vrf.setMinimumHeatPumpPartLoadRatio(0.5)
+
+# Has to be DryBulbTemperature or you get a severe as WetBulbTemperature isn't
+# supported for water-cooled VRFs
+vrf.setHeatingPerformanceCurveOutdoorTemperatureType("DryBulbTemperature")
+
+# Weirdly named, but that's the max inlet water temperature in heating mode
+vrf.setMaximumOutdoorTemperatureinHeatingMode(60)
+
 zones.each do |z|
   vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model)
-  # Also test the supplemental heat capability that was added in 2.9.0
+  # Also test the supplemental heat capability that was added in 3.0.0 (#3687)
   supHC = OpenStudio::Model::CoilHeatingElectric.new(model)
   vrf_terminal.setSupplementalHeatingCoil(supHC)
   vrf_terminal.autosizeMaximumSupplyAirTemperaturefromSupplementalHeater()
