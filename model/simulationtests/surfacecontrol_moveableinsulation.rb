@@ -43,8 +43,14 @@ material.setConductivity(1.3114056)
 material.setDensity(2242.8)
 material.setSpecificHeat(837.4)
 
-schedule = OpenStudio::Model::ScheduleConstant.new(model)
-schedule.setValue(0.5)
+# Set a fractional continuous schedule, here we'll say the insulation is
+# completely in place during the night (21 to 8), off during the day
+scheduleRuleset = OpenStudio::Model::ScheduleRuleset.new(model)
+night_schedule = scheduleRuleset.defaultDaySchedule();
+night_schedule.addValue(OpenStudio::Time.new(0,8,0,0),1.0)
+night_schedule.addValue(OpenStudio::Time.new(0,21,0,0),0.0)
+night_schedule.addValue(OpenStudio::Time.new(0,24,0,0),1.0)
+
 
 # set surface control movable insulation
 model.getSurfaces.each do |surface|
@@ -53,7 +59,7 @@ model.getSurfaces.each do |surface|
 
   movableInsulation = OpenStudio::Model::SurfaceControlMovableInsulation.new(surface, material)
   movableInsulation.setInsulationType("Inside")
-  movableInsulation.setSchedule(schedule)
+  movableInsulation.setSchedule(scheduleRuleset)
 end
 
 #save the OpenStudio model (.osm)
