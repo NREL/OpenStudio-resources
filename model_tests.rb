@@ -744,6 +744,16 @@ class ModelTests < Minitest::Test
     result = sim_test('space_load_instances.osm')
   end
 
+  def test_surfacecontrol_moveableinsulation_rb
+    result = sim_test('surfacecontrol_moveableinsulation.rb')
+  end
+
+  # TODO : To be added once the next official release
+  # including this object is out : 3.0.1?
+  # def test_surfacecontrol_moveableinsulation_osm
+  #   result = sim_test('surfacecontrol_moveableinsulation.osm')
+  # end
+
   def test_surface_properties_osm
     result = sim_test('surface_properties.osm')
   end
