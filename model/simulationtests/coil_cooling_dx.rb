@@ -2,52 +2,65 @@
 require 'openstudio'
 require 'lib/baseline_model'
 
-model = BaselineModel.new
+m = BaselineModel.new
 
-#make a 1 story, 100m X 50m, 1 zone core/perimeter building
-model.add_geometry({"length" => 100,
+#make a 2 story, 100m X 50m, 10 zone core/perimeter building
+m.add_geometry({"length" => 100,
                 "width" => 50,
-                "num_floors" => 1,
+                "num_floors" => 2,
                 "floor_to_floor_height" => 4,
                 "plenum_height" => 1,
-                "perimeter_zone_depth" => 0})
+                "perimeter_zone_depth" => 3})
 
 #add windows at a 40% window-to-wall ratio
-model.add_windows({"wwr" => 0.4,
+m.add_windows({"wwr" => 0.4,
                "offset" => 1,
                "application_type" => "Above Floor"})
 
 #add thermostats
-model.add_thermostats({"heating_setpoint" => 24,
+m.add_thermostats({"heating_setpoint" => 24,
                    "cooling_setpoint" => 28})
 
 #assign constructions from a local library to the walls/windows/etc. in the model
-model.set_constructions()
+m.set_constructions()
 
 #set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()
+m.set_space_type()
 
 #add design days to the model (Chicago)
-model.add_design_days()
+m.add_design_days()
+
+#add ASHRAE System type 07, VAV w/ Reheat
+m.add_hvac({"ashrae_sys_num" => '07'})
 
 # In order to produce more consistent results between different runs,
-# we sort the zones by names (only one here anyways...)
-zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+# we sort the zones by names
+zones = m.getThermalZones.sort_by{|z| z.name.to_s}
 
-# Use Ideal Air Loads
-zones.each{|z| z.setUseIdealAirLoads(true)}
+# CoilCoolingDXCurveFitSpeed
+curve_fit_speed_1 = OpenStudio::Model::CoilCoolingDXCurveFitSpeed.new(m)
 
-curve_fit_speed_1 = OpenStudio::Model::CoilCoolingDXCurveFitSpeed.new(model)
-curve_fit_speed_2 = OpenStudio::Model::CoilCoolingDXCurveFitSpeed.new(model)
-
-curve_fit_operating_mode = OpenStudio::Model::CoilCoolingDXCurveFitOperatingMode.new(model)
+# CoilCoolingDXCurveFitOperatingMode
+curve_fit_operating_mode = OpenStudio::Model::CoilCoolingDXCurveFitOperatingMode.new(m)
 curve_fit_operating_mode.addSpeed(curve_fit_speed_1)
-curve_fit_operating_mode.addSpeed(curve_fit_speed_2)
 
-curve_fit_performance = OpenStudio::Model::CoilCoolingDXCurveFitPerformance.new(model, curve_fit_operating_mode)
+# CoilCoolingDXCurveFitPerformance
+curve_fit_performance = OpenStudio::Model::CoilCoolingDXCurveFitPerformance.new(m, curve_fit_operating_mode)
 
-dx = OpenStudio::Model::CoilCoolingDX.new(model, curve_fit_performance)
+# CoilCoolingDX
+coil = OpenStudio::Model::CoilCoolingDX.new(m, curve_fit_performance)
+
+# AirLoopHVACUnitarySystem
+air_loop_unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(m)
+
+# AirLoopHVAC
+air_loop = OpenStudio::Model::AirLoopHVAC.new(m)
+air_supply_inlet_node = air_loop.supplyInletNode
+
+air_loop_unitary.addToNode(air_supply_inlet_node)
+air_loop_unitary.setCoolingCoil(coil)
+air_loop_unitary.setControllingZoneorThermostatLocation(zones[0])
 
 #save the OpenStudio model (.osm)
-model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
-                           "osm_name" => "in.osm"})
+m.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
+                       "osm_name" => "in.osm"})
