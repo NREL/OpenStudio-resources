@@ -68,9 +68,9 @@ constant_biquadratic = curve_biquadratic(m, 1, 0, 0, 0, 0, 0, -100, 100, -100, 1
 
 # CoilCoolingDXCurveFitSpeed
 speed_1 = OpenStudio::Model::CoilCoolingDXCurveFitSpeed.new(m)
-speed_1.setGrossTotalCoolingCapacityFraction(4015.05615933448 / 4015.05615933448)
-speed_1.setEvaporatorAirFlowRateFraction(0.241052070735995 / 0.241052070735995)
-# speed_1.setCondenserAirFlowRateFraction()
+# speed_1.setGrossTotalCoolingCapacityFraction(4015.05615933448 / 4015.05615933448)
+# speed_1.setEvaporatorAirFlowRateFraction(0.241052070735995 / 0.241052070735995)
+# speed_1.setCondenserAirFlowRateFraction(0.241052070735995 / 0.241052070735995)
 speed_1.setGrossSensibleHeatRatio(0.842150793933333)
 speed_1.setGrossCoolingCOP(5.48021287249984)
 
@@ -88,9 +88,9 @@ speed_1.setPartLoadFractionCorrelationCurve(cool_plf_fplr)
 speed_1.setWasteHeatModifierFunctionofTemperatureCurve(constant_biquadratic)
 
 speed_2 = OpenStudio::Model::CoilCoolingDXCurveFitSpeed.new(m)
-speed_2.setGrossTotalCoolingCapacityFraction(7137.87761659463 / 4015.05615933448)
-speed_2.setEvaporatorAirFlowRateFraction(0.397026940035757 / 0.241052070735995)
-# speed_2.setCondenserAirFlowRateFraction()
+# speed_2.setGrossTotalCoolingCapacityFraction(7137.87761659463 / 4015.05615933448)
+# speed_2.setEvaporatorAirFlowRateFraction(0.397026940035757 / 0.241052070735995)
+# speed_2.setCondenserAirFlowRateFraction(0.397026940035757 / 0.241052070735995)
 speed_2.setGrossSensibleHeatRatio(0.80758872085)
 speed_2.setGrossCoolingCOP(5.1989191865934)
 
@@ -108,9 +108,9 @@ speed_2.setPartLoadFractionCorrelationCurve(cool_plf_fplr)
 speed_2.setWasteHeatModifierFunctionofTemperatureCurve(constant_biquadratic)
 
 speed_3 = OpenStudio::Model::CoilCoolingDXCurveFitSpeed.new(m)
-speed_3.setGrossTotalCoolingCapacityFraction(11152.9337759291 / 4015.05615933448)
-speed_3.setEvaporatorAirFlowRateFraction(0.472651119090187 / 0.241052070735995)
-# speed_3.setCondenserAirFlowRateFraction()
+# speed_3.setGrossTotalCoolingCapacityFraction(11152.9337759291 / 4015.05615933448)
+# speed_3.setEvaporatorAirFlowRateFraction(0.472651119090187 / 0.241052070735995)
+# speed_3.setCondenserAirFlowRateFraction(0.472651119090187 / 0.241052070735995)
 speed_3.setGrossSensibleHeatRatio(0.7039025016)
 speed_3.setGrossCoolingCOP(4.64414572911775)
 
@@ -128,9 +128,9 @@ speed_3.setPartLoadFractionCorrelationCurve(cool_plf_fplr)
 speed_3.setWasteHeatModifierFunctionofTemperatureCurve(constant_biquadratic)
 
 speed_4 = OpenStudio::Model::CoilCoolingDXCurveFitSpeed.new(m)
-speed_4.setGrossTotalCoolingCapacityFraction(12937.4031800778 / 4015.05615933448)
-speed_4.setEvaporatorAirFlowRateFraction(0.562454831717322 / 0.241052070735995)
-# speed_4.setCondenserAirFlowRateFraction()
+# speed_4.setGrossTotalCoolingCapacityFraction(12937.4031800778 / 4015.05615933448)
+# speed_4.setEvaporatorAirFlowRateFraction(0.562454831717322 / 0.241052070735995)
+# speed_4.setCondenserAirFlowRateFraction(0.562454831717322 / 0.241052070735995)
 speed_4.setGrossSensibleHeatRatio(0.712483430089655)
 speed_4.setGrossCoolingCOP(4.0695894950265)
 
@@ -149,9 +149,9 @@ speed_4.setWasteHeatModifierFunctionofTemperatureCurve(constant_biquadratic)
 
 # CoilCoolingDXCurveFitOperatingMode
 operating_mode = OpenStudio::Model::CoilCoolingDXCurveFitOperatingMode.new(m)
-operating_mode.setRatedGrossTotalCoolingCapacity(4015.05615933448)
-operating_mode.setRatedEvaporatorAirFlowRate(0.241052070735995)
-# operating_mode.setRatedCondenserAirFlowRate()
+# operating_mode.setRatedGrossTotalCoolingCapacity(4015.05615933448)
+# operating_mode.setRatedEvaporatorAirFlowRate(0.241052070735995)
+# operating_mode.setRatedCondenserAirFlowRate(0.241052070735995)
 operating_mode.setMaximumCyclingRate(3)
 operating_mode.setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(1.5)
 operating_mode.setLatentCapacityTimeConstant(45)
@@ -184,15 +184,26 @@ air_loop_unitary.setSupplyAirFlowRateDuringHeatingOperation(0.0)
 air_loop_unitary.setSupplyFan(fan)
 air_loop_unitary.setFanPlacement("BlowThrough")
 air_loop_unitary.setSupplyAirFanOperatingModeSchedule(m.alwaysOffDiscreteSchedule)
+air_loop_unitary.setSupplyAirFlowRateMethodDuringCoolingOperation("SupplyAirFlowRate")
+# air_loop_unitary.setSupplyAirFlowRateDuringCoolingOperation(0.746842648594057)
+air_loop_unitary.setSupplyAirFlowRateMethodDuringHeatingOperation("SupplyAirFlowRate")
 air_loop_unitary.setMaximumSupplyAirTemperature(48.888889)
 air_loop_unitary.setSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(0)
-air_loop_unitary.setControllingZoneorThermostatLocation(zones[0])
 
 # AirLoopHVAC
 air_loop = OpenStudio::Model::AirLoopHVAC.new(m)
+# air_loop.setDesignSupplyAirFlowRate(0.888742751826928)
 air_supply_inlet_node = air_loop.supplyInletNode
 air_loop_unitary.addToNode(air_supply_inlet_node)
-air_loop.multiAddBranchForZone(zones[0])
+
+# SimulationControl
+# m.getSimulationControl.setDoZoneSizingCalculation(true)
+
+# Zones
+zones.each do |zone|
+  air_loop_unitary.setControllingZoneorThermostatLocation(zone)
+  air_loop.multiAddBranchForZone(zone)
+end
 
 #save the OpenStudio model (.osm)
 m.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
