@@ -30,9 +30,6 @@ m.set_space_type()
 #add design days to the model (Chicago)
 m.add_design_days()
 
-#add ASHRAE System type 07, VAV w/ Reheat
-# m.add_hvac({"ashrae_sys_num" => '07'})
-
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
 zones = m.getThermalZones.sort_by{|z| z.name.to_s}
