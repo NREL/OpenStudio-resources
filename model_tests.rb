@@ -176,6 +176,16 @@ class ModelTests < Minitest::Test
     result = sim_test('baseline_sys10.rb')
   end
 
+  def test_coil_cooling_dx_rb
+    result = sim_test('coil_cooling_dx.rb')
+  end
+
+  # TODO : To be added once the next official release
+  # including this object is out : 3.0.1?
+  # def test_coil_cooling_dx_osm
+  #   result = sim_test('coil_cooling_dx.osm')
+  # end
+
   def test_centralheatpumpsystem_osm
     result = sim_test('centralheatpumpsystem.osm')
   end
