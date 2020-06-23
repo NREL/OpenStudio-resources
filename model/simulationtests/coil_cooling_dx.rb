@@ -4,13 +4,13 @@ require 'lib/baseline_model'
 
 m = BaselineModel.new
 
-#make a 2 story, 100m X 50m, 10 zone core/perimeter building
+#make a 1 story, 100m X 50m, 1 zone building
 m.add_geometry({"length" => 100,
                 "width" => 50,
                 "num_floors" => 1,
                 "floor_to_floor_height" => 4,
-                "plenum_height" => 1,
-                "perimeter_zone_depth" => 3})
+                "plenum_height" => 0,
+                "perimeter_zone_depth" => 0})
 
 #add windows at a 40% window-to-wall ratio
 m.add_windows({"wwr" => 0.4,
@@ -18,8 +18,8 @@ m.add_windows({"wwr" => 0.4,
                "application_type" => "Above Floor"})
 
 #add thermostats
-m.add_thermostats({"heating_setpoint" => 24,
-                   "cooling_setpoint" => 28})
+m.add_thermostats({"heating_setpoint" => 19,
+                   "cooling_setpoint" => 26})
 
 #assign constructions from a local library to the walls/windows/etc. in the model
 m.set_constructions()
@@ -29,10 +29,6 @@ m.set_space_type()
 
 #add design days to the model (Chicago)
 m.add_design_days()
-
-# In order to produce more consistent results between different runs,
-# we sort the zones by names
-zones = m.getThermalZones.sort_by{|z| z.name.to_s}
 
 def curve_biquadratic(model, c_1constant, c_2x, c_3xPOW2, c_4y, c_5yPOW2, c_6xTIMESY, minx, maxx, miny, maxy)
   curve = OpenStudio::Model::CurveBiquadratic.new(model)
@@ -158,7 +154,7 @@ performance = OpenStudio::Model::CoilCoolingDXCurveFitPerformance.new(m, operati
 coil = OpenStudio::Model::CoilCoolingDX.new(m, performance)
 
 # FanOnOff
-fan = OpenStudio::Model::FanOnOff.new(m, m.alwaysOnDiscreteSchedule)
+fan = OpenStudio::Model::FanOnOff.new(m)
 fan.setFanEfficiency(0.75)
 fan.setPressureRise(476.748000740096)
 fan.setMotorEfficiency(1.0)
@@ -182,14 +178,16 @@ air_loop = OpenStudio::Model::AirLoopHVAC.new(m)
 air_supply_inlet_node = air_loop.supplyInletNode
 air_loop_unitary.addToNode(air_supply_inlet_node)
 
-# AirTerminalSingleDuctUncontrolled
-diffuser = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(m, m.alwaysOnDiscreteSchedule)
-
-# Zone
-zone = zones[0]
-air_loop_unitary.setControllingZoneorThermostatLocation(zone)
-air_loop.multiAddBranchForZone(zone, diffuser)
-air_loop.multiAddBranchForZone(zone)
+# Add to zone
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+# (There's only one here, but just in case this would be copy pasted somewhere
+# else...)
+zones = m.getThermalZones.sort_by{|z| z.name.to_s}
+z = zones[0]
+atu = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(m, m.alwaysOnDiscreteSchedule)
+air_loop_unitary.setControllingZoneorThermostatLocation(z)
+air_loop.addBranchForZone(z, atu)
 
 #save the OpenStudio model (.osm)
 m.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
