@@ -772,6 +772,16 @@ class ModelTests < Minitest::Test
     result = sim_test('surface_properties.rb')
   end
 
+  def test_swimmingpool_indoor_rb
+    result = sim_test('swimmingpool_indoor.rb')
+  end
+
+  # TODO : To be added once the next official release
+  # including this object is out : 3.0.2?
+  # def test_swimmingpool_indoor_osm
+  #   result = sim_test('swimmingpool_indoor.osm')
+  # end
+
   def test_tablemultivariablelookup_rb
     result = sim_test('tablemultivariablelookup.rb')
   end
