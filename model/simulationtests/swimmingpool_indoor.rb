@@ -116,6 +116,50 @@ swimmingPoolIndoor.setPeopleHeatGainSchedule(poolOccHeatGainSched)
 # Connect the pool to the heating loop
 heating_loop.addDemandBranchForComponent(swimmingPoolIndoor)
 
+
+###
+
+# add output reports
+add_out_vars = true
+if add_out_vars
+
+  freq = 'Detailed'
+
+  # Outputs implemented in the class
+  swimmingPoolIndoor.outputVariableNames.each do |varname|
+    outvar = OpenStudio::Model::OutputVariable.new(varname, model)
+    outvar.setReportingFrequency(freq)
+  end
+
+  vars = ['Indoor Pool Makeup Water Rate',
+   'Indoor Pool Makeup Water Volume',
+   'Indoor Pool Makeup Water Temperature',
+   'Indoor Pool Water Temperature',
+   'Indoor Pool Inlet Water Temperature',
+   'Indoor Pool Inlet Water Mass Flow Rate',
+   'Indoor Pool Miscellaneous Equipment Power',
+   'Indoor Pool Miscellaneous Equipment Energy',
+   'Indoor Pool Heating Rate',
+   'Indoor Pool Heating Energy',
+   'Indoor Pool Radiant to Convection by Cover',
+   'Indoor Pool People Heat Gain',
+   'Indoor Pool Current Activity Factor',
+   'Indoor Pool Current Cover Factor',
+   'Indoor Pool Evaporative Heat Loss Rate',
+   'Indoor Pool Evaporative Heat Loss Energy',
+   'Indoor Pool Saturation Pressure at Pool Temperature',
+   'Indoor Pool Partial Pressure of Water Vapor in Air',
+   'Indoor Pool Current Cover Evaporation Factor',
+   'Indoor Pool Current Cover Convective Factor',
+   'Indoor Pool Current Cover SW Radiation Factor',
+   'Indoor Pool Current Cover LW Radiation Factor']
+
+  vars.each do |varname|
+    outvar = OpenStudio::Model::OutputVariable.new(varname, model)
+    outvar.setReportingFrequency(freq)
+  end
+end
+
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "out.osm"})
