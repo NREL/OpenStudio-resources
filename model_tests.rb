@@ -181,7 +181,7 @@ class ModelTests < Minitest::Test
   end
 
   # TODO : To be added once the next official release
-  # including this object is out : 3.0.1?
+  # including this object is out : 3.1.0
   # def test_coil_cooling_dx_osm
   #   result = sim_test('coil_cooling_dx.osm')
   # end
@@ -758,11 +758,9 @@ class ModelTests < Minitest::Test
     result = sim_test('surfacecontrol_moveableinsulation.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 3.0.1?
-  # def test_surfacecontrol_moveableinsulation_osm
-  #   result = sim_test('surfacecontrol_moveableinsulation.osm')
-  # end
+  def test_surfacecontrol_moveableinsulation_osm
+    result = sim_test('surfacecontrol_moveableinsulation.osm')
+  end
 
   def test_surface_properties_osm
     result = sim_test('surface_properties.osm')
@@ -777,7 +775,7 @@ class ModelTests < Minitest::Test
   end
 
   # TODO : To be added once the next official release
-  # including this object is out : 3.0.2?
+  # including this object is out : 3.1.0
   # def test_swimmingpool_indoor_osm
   #   result = sim_test('swimmingpool_indoor.osm')
   # end
