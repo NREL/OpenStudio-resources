@@ -203,7 +203,7 @@ def parse_compatibility_matrix(force_latest=False):
     """
 
     compat_matrix_url = ('https://github.com/NREL/OpenStudio/wiki/'
-                         'OpenStudio-Version-Compatibility-Matrix')
+                         'OpenStudio-SDK-Version-Compatibility-Matrix')
     compat_matrix = pd.read_html(compat_matrix_url, index_col=0)[0]
     compat_matrix.index = [x.replace('v', '').replace('*', '')
                            for x in compat_matrix.index]
