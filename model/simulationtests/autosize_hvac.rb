@@ -65,6 +65,33 @@ def new_evap_cooling_coil_dx_twospeed(model)
   clg_coil.setRatedLowSpeedSensibleHeatRatio(OpenStudio::OptionalDouble.new)
   return clg_coil
 end
+
+def curve_biquadratic(model, c_1constant, c_2x, c_3xPOW2, c_4y, c_5yPOW2, c_6xTIMESY, minx, maxx, miny, maxy)
+  curve = OpenStudio::Model::CurveBiquadratic.new(model)
+  curve.setCoefficient1Constant(c_1constant)
+  curve.setCoefficient2x(c_2x)
+  curve.setCoefficient3xPOW2(c_3xPOW2)
+  curve.setCoefficient4y(c_4y)
+  curve.setCoefficient5yPOW2(c_5yPOW2)
+  curve.setCoefficient6xTIMESY(c_6xTIMESY)
+  curve.setMinimumValueofx(minx)
+  curve.setMaximumValueofx(maxx)
+  curve.setMinimumValueofy(miny)
+  curve.setMaximumValueofy(maxy)
+  return curve
+end
+
+def curve_quadratic(model, c_1constant, c_2x, c_3xPOW2, minx, maxx, miny, maxy)
+  curve = OpenStudio::Model::CurveQuadratic.new(model)
+  curve.setCoefficient1Constant(c_1constant)
+  curve.setCoefficient2x(c_2x)
+  curve.setCoefficient3xPOW2(c_3xPOW2)
+  curve.setMinimumValueofx(minx)
+  curve.setMaximumValueofx(maxx)
+  curve.setMinimumCurveOutput(miny)
+  curve.setMaximumCurveOutput(maxy)
+  return curve
+end
 ### High level constructs
 
 ### Declare loops
@@ -444,7 +471,7 @@ unitary.setNumberofSpeedsforHeating(4)
 unitary.setNumberofSpeedsforCooling(4)
 unitary.addToNode(unitary_loop.supplyOutletNode)
 unitary.setControllingZoneorThermostatLocation(zones[26])
-term = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, s1)
+term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 unitary_loop.addBranchForZone(zones[26], term)
 
 # UnitaryHeatCoolVAVChangeoverBypass
@@ -474,7 +501,7 @@ sup_htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model, s1)
 unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAir.new(model, s1, fan, htg_coil, clg_coil, sup_htg_coil)
 unitary.addToNode(unitary_loop.supplyOutletNode)
 unitary.setControllingZone(zones[31])
-term = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, s1)
+term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 unitary_loop.addBranchForZone(zones[31], term)
 
 # UnitarySystem with variable speed heat pumps
@@ -501,7 +528,7 @@ unitary.setControllingZoneorThermostatLocation(zones[27])
 unitary.setControlType("SingleZoneVAV")
 unitary.autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature()
 
-term = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, s1)
+term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 unitary_loop.addBranchForZone(zones[27], term)
 
 # UnitarySystem with multi stage gas coils
@@ -527,7 +554,7 @@ unitary.setControllingZoneorThermostatLocation(zones[30])
 unitary.setControlType("SingleZoneVAV")
 unitary.autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature()
 
-term = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, s1)
+term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 unitary_loop.addBranchForZone(zones[30], term)
 
 # UnitarySystem with variable speed cooling coil
@@ -561,7 +588,7 @@ unitary.setControllingZoneorThermostatLocation(zones[32])
 unitary.setControlType("SingleZoneVAV")
 unitary.autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature()
 
-term = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, s1)
+term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 unitary_loop.addBranchForZone(zones[32], term)
 
 # UnitarySystem with two stage DX with humidity control
@@ -592,7 +619,7 @@ unitary.setCoolingCoil(clg_coil)
 unitary.setHeatingCoil(htg_coil)
 unitary.addToNode(unitary_loop.supplyInletNode)
 unitary.setControllingZoneorThermostatLocation(zones[33])
-term = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, s1)
+term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 unitary_loop.addBranchForZone(zones[33], term)
 
 dehumidify_sch = OpenStudio::Model::ScheduleConstant.new(model)
@@ -616,6 +643,58 @@ layers << gyp1 = OpenStudio::Model::StandardOpaqueMaterial.new(model,"MediumRoug
 layers << gyp2 = OpenStudio::Model::StandardOpaqueMaterial.new(model,"MediumRough",0.01905,0.7845,1842.1221,988)
 layers << finished_floor = OpenStudio::Model::StandardOpaqueMaterial.new(model,"Smooth",0.0016,0.17,1922.21,1250)
 int_src_const.setLayers(layers)
+
+# UnitarySystem with CoilCoolingDX
+unitary_loop = OpenStudio::Model::AirLoopHVAC.new(model)
+unitary_loop.setName('UnitarySystem CoilCoolingDX Loop')
+fan = OpenStudio::Model::FanVariableVolume.new(model, s1)
+
+speed_1 = OpenStudio::Model::CoilCoolingDXCurveFitSpeed.new(model)
+speed_1.setGrossTotalCoolingCapacityFraction(4015.05615933448 / 4015.05615933448)
+speed_1.setGrossSensibleHeatRatio(0.842150793933333)
+speed_1.setGrossCoolingCOP(5.48021287249984)
+
+constant_biquadratic = curve_biquadratic(model, 1, 0, 0, 0, 0, 0, -100, 100, -100, 100)
+cool_cap_ft = curve_biquadratic(model, 1.790226088881, -0.0772146982404, 0.00299548780452, 0.0026270330994, -6.81238188e-005, -0.00062105857056, 13.88, 23.88, 18.33, 51.66)
+cool_cap_fff = curve_quadratic(model, 1, 0, 0, 0, 2, 0, 2)
+cool_eir_ft = curve_biquadratic(model, -0.1450569952, 0.062239559472, -0.00190953288, -0.012608055432, 0.0010591834752, -0.0003311985672, 13.88, 23.88, 18.33, 51.66)
+cool_eir_fff = curve_quadratic(model, 1, 0, 0, 0, 2, 0, 2)
+cool_plf_fplr = curve_quadratic(model, 0.75, 0.25, 0, 0, 1, 0.7, 1)
+
+speed_1.setTotalCoolingCapacityModifierFunctionofTemperatureCurve(cool_cap_ft)
+speed_1.setTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve(cool_cap_fff)
+speed_1.setEnergyInputRatioModifierFunctionofTemperatureCurve(cool_eir_ft)
+speed_1.setEnergyInputRatioModifierFunctionofAirFlowFractionCurve(cool_eir_fff)
+speed_1.setPartLoadFractionCorrelationCurve(cool_plf_fplr)
+speed_1.setWasteHeatModifierFunctionofTemperatureCurve(constant_biquadratic)
+
+operating_mode = OpenStudio::Model::CoilCoolingDXCurveFitOperatingMode.new(model)
+operating_mode.addSpeed(speed_1)
+# Nominal Evaporative Condenser Pump Power is not autosized - because it is
+# unused - if it's AirCooled (default); so set it to evap cooled
+operating_mode.setCondenserType("EvaporativelyCooled")
+operating_mode.autosizeRatedGrossTotalCoolingCapacity()
+operating_mode.autosizeRatedEvaporatorAirFlowRate()
+operating_mode.autosizeRatedCondenserAirFlowRate()
+operating_mode.autosizeNominalEvaporativeCondenserPumpPower()
+
+performance = OpenStudio::Model::CoilCoolingDXCurveFitPerformance.new(model, operating_mode)
+clg_coil = OpenStudio::Model::CoilCoolingDX.new(model, performance)
+
+htg_coil = OpenStudio::Model::CoilHeatingDXSingleSpeed.new(model)
+
+unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
+unitary_loop.setName('UnitarySystem CoilCoolingDX')
+unitary.setFanPlacement("BlowThrough")
+unitary.setSupplyAirFanOperatingModeSchedule(s1)
+unitary.setSupplyFan(fan)
+unitary.setCoolingCoil(clg_coil)
+unitary.setHeatingCoil(htg_coil)
+unitary.addToNode(unitary_loop.supplyInletNode)
+unitary.setControllingZoneorThermostatLocation(zones[38])
+term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
+unitary_loop.addBranchForZone(zones[38], term)
+
 
 ### Zone HVAC and Terminals ###
 # Add one of every single kind of Zone HVAC equipment supported by OS
@@ -769,7 +848,7 @@ zones.each_with_index do |zn, zone_index|
     term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeCooledBeam.new(model, s1, clg_coil)
     air_loop.addBranchForZone(zn, term)
   when 22
-    term = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, s1)
+    term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
     air_loop.addBranchForZone(zn, term)
 
     # Make this zone sizing account for DOAS
@@ -844,7 +923,7 @@ zones.each_with_index do |zn, zone_index|
     low_temp_cst_rad.setRadiantSurfaceType("Floors")
     low_temp_cst_rad.addToThermalZone(zn)
 
-  when 26, 27, 28, 29, 30, 31, 32, 33
+  when 26, 27, 28, 29, 30, 31, 32, 33, 38
     # Previously used for the unitary systems, dehum, etc
   else
     puts "Nothing added to #{zn.name}, index #{zone_index}"
