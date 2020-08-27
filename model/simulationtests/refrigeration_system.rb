@@ -67,6 +67,9 @@ model.add_design_days()
 # we sort the zones by names
 zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 
+boilers = model.getBoilerHotWaters.sort_by{|c| c.name.to_s}
+heating_loop = boilers.first.plantLoop.get
+
 i = 0
 therm_zone = nil
 ref_sys1 = nil
@@ -160,6 +163,7 @@ zones.each do |z|
     water_tank = OpenStudio::Model::WaterHeaterMixed.new(model)
     water_tank.setAmbientTemperatureIndicator("ThermalZone")
     water_tank.setAmbientTemperatureThermalZone(z)
+    heating_loop.addSupplyBranchForComponent(water_tank)
     #Schedule Ruleset
     setpointTemperatureSchedule = OpenStudio::Model::ScheduleRuleset.new(model)
     setpointTemperatureSchedule.setName("Setpoint Temperature Schedule")
