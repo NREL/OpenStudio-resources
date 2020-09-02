@@ -534,6 +534,14 @@ class ModelTests < Minitest::Test
     result = sim_test('multiple_loops_w_plenums.osm')
   end
 
+  def test_outputcontrol_files_rb
+    result = sim_test('outputcontrol_files.rb')
+  end
+
+  # def test_outputcontrol_files_osm
+    # result = sim_test('outputcontrol_files.osm')
+  # end
+
   def test_output_objects_rb
     result = sim_test('output_objects.rb')
   end

@@ -98,16 +98,6 @@ output_table.addSummaryReports(["OutdoorAirSummary", "ObjectCountSummary"])
 # output_table.getSummaryReport(1).get == "AdaptiveComfortSummary"
 # output_table.summaryReportIndex("AdaptiveComfortSummary").get == 1
 
-###############################################################################
-#                            OUTPUTCONTROL:FILES                             #
-###############################################################################
-
-outputcontrol_files = model.getOutputControlFiles
-outputcontrol_files.setOutputCSV(true)
-outputcontrol_files.setOutputTabular(false)
-outputcontrol_files.setOutputJSON(false)
-outputcontrol_files.setOutputDBG(false)
-
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
                            "osm_name" => "out.osm"})
