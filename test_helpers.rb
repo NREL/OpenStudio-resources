@@ -565,6 +565,12 @@ def sim_test(filename, options = {})
     base_dir = $ModelDir
   end
 
+  if !options[:compare_eui].nil?
+    compare_eui = options[:compare_eui]
+  else
+    compare_eui = true
+  end
+
   # puts "Running sim_test(#{filename})"
 
   in_osw = File.join(dir, 'in.osw')
@@ -699,7 +705,7 @@ def sim_test(filename, options = {})
   run_command(command, dir, 3600)
 
   # Post-process the out_osw
-  result_osw = postprocess_out_osw_and_copy(out_osw, cp_out_osw, true)
+  result_osw = postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui)
 
   # return result_osw for further checks
   return result_osw
