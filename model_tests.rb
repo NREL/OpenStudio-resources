@@ -543,11 +543,16 @@ class ModelTests < Minitest::Test
     assert(File.exists?(run_dir))
 
     assert(File.exists?(File.join(run_dir, 'eplusout.csv')))
+    assert(File.exists?(File.join(run_dir, 'eplusmtr.csv')))
     assert(File.exists?(File.join(run_dir, 'eplusout.mtr')))
+    assert(File.exists?(File.join(run_dir, 'eplusout.err')))
+    assert(File.exists?(File.join(run_dir, 'eplusout.audit')))
 
+    assert(!File.exist?(File.join(run_dir, 'eplusout.end')))
     assert(!File.exist?(File.join(run_dir, 'eplusout.bnd')))
     assert(!File.exist?(File.join(run_dir, 'eplusout.dbg')))
-
+    assert(!File.exist?(File.join(run_dir, 'eplusout.eio')))
+    assert(!File.exist?(File.join(run_dir, 'eplusout.eso')))
   end
 
   # def test_outputcontrol_files_osm
