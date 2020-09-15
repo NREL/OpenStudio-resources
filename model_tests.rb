@@ -702,6 +702,14 @@ class ModelTests < Minitest::Test
     result = sim_test('setpoint_managers.osm')
   end
 
+  def test_shadingcontrol_rb
+    result = sim_test('shadingcontrol.rb')
+  end
+
+  # def test_shadingcontrol_osm
+    # result = sim_test('shadingcontrol.osm')
+  # end
+
   def test_shadowcalculation_rb
     result = sim_test('shadowcalculation.rb')
   end
