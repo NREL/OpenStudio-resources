@@ -6,6 +6,7 @@ on:
       os_installer_link:
         description: 'The Link where to download the LINUX OpenStudio SDK Installer (.DEB)'
         required: true
+        default: 'https://openstudio-ci-builds.s3.amazonaws.com/develop/OpenStudio-3.1.0-alpha%2B7e9cd9eaf5-Linux.deb'
       branch_name:
         description: 'The branch name to use and where to commit the test results. If ommited, it will default to the installer SHA'
         required: false
@@ -57,7 +58,8 @@ jobs:
     - name: Run model_tests.rb
       shell: bash
       run: |
-        CUSTOMTAG=SHA openstudio model_tests.rb
+        echo "nproc=$(nproc)"
+        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb -n /baseline_sys01/
 
     #- name: Analyze results
       #shell: bash
