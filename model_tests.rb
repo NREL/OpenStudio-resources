@@ -535,7 +535,24 @@ class ModelTests < Minitest::Test
   end
 
   def test_outputcontrol_files_rb
-    result = sim_test('outputcontrol_files.rb')
+    extra_options = {:compare_eui => false}
+    result = sim_test('outputcontrol_files.rb', extra_options)
+
+    # We enabled only CSV and MTR, so check that
+    run_dir = File.join($TestDir, 'outputcontrol_files.rb', 'run')
+    assert(File.exists?(run_dir))
+
+    assert(File.exists?(File.join(run_dir, 'eplusout.csv')))
+    assert(File.exists?(File.join(run_dir, 'eplusmtr.csv')))
+    assert(File.exists?(File.join(run_dir, 'eplusout.mtr')))
+    assert(File.exists?(File.join(run_dir, 'eplusout.err')))
+    assert(File.exists?(File.join(run_dir, 'eplusout.audit')))
+
+    assert(!File.exist?(File.join(run_dir, 'eplusout.end')))
+    assert(!File.exist?(File.join(run_dir, 'eplusout.bnd')))
+    assert(!File.exist?(File.join(run_dir, 'eplusout.dbg')))
+    assert(!File.exist?(File.join(run_dir, 'eplusout.eio')))
+    assert(!File.exist?(File.join(run_dir, 'eplusout.eso')))
   end
 
   # def test_outputcontrol_files_osm
