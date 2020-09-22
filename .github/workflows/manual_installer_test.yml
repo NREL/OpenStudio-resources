@@ -49,10 +49,10 @@ jobs:
       run: |
         pip install requests matplotlib numpy pandas seaborn jupyter lxml beautifulsoup4 df2gspread docopt tqdm xmldiff
 
-    - name: Run highlevel_tests.rb
-      shell: bash
-      run: |
-        CUSTOMTAG=SHA openstudio highlevel_tests.rb
+    #- name: Run highlevel_tests.rb
+      #shell: bash
+      #run: |
+        #CUSTOMTAG=SHA openstudio highlevel_tests.rb
 
     - name: Run model_tests.rb
       shell: bash
