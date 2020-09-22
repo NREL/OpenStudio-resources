@@ -70,4 +70,5 @@ jobs:
       shell: bash
       run: |
         git add -f test/*
+        git commit "Add results from workflow_dispatch testing with ${{ github.event.inputs.os_installer_link }}"
         git push -u origin $branch_name
