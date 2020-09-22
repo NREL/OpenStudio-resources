@@ -1,10 +1,3 @@
-# This test aims to test the new **Unique** ModelObjects related to Output
-# added in 3.0.0:
-# * OutputDiagnostics,
-# * OutputDebuggingData,
-# * OutputJSON, and
-# * OutputTableSummaryReports
-
 require 'openstudio'
 require 'lib/baseline_model'
 
