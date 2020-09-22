@@ -1,0 +1,71 @@
+name: Test OS SDK Installer
+
+on:
+  workflow_dispatch:
+    inputs:
+      os_installer_link:
+        description: 'The Link where to download the LINUX OpenStudio SDK Installer (.DEB)'
+        required: true
+      branch_name:
+        description: 'The branch name to use and where to commit the test results. If ommited, it will default to the installer SHA'
+        required: false
+
+jobs:
+  release_installers:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.8.x'
+
+    - name: Download and install OS SDK installer
+      shell: bash
+      run: |
+        set -x
+        echo "Installer link: ${{ github.event.inputs.os_installer_link }}"
+        echo "Branch Name: ${{ github.event.inputs.branch_name }}"
+        sudo apt update
+        wget '${{ github.event.inputs.os_installer_link }}'
+        sudo apt install -y ./OpenStudio*.deb
+        openstudio openstudio_version
+
+    - name: Checkout the branch
+      shell: bash
+      run: |
+        branch_name="${{ github.event.inputs.branch_name }}"
+
+        if [ -z "$branch_name" ]; then
+          branch_name=$(openstudio -e "puts OpenStudio::openStudioVersionBuildSHA")
+        fi;
+
+        echo "::set-env name=branch_name::$branch_name"
+
+        git checkout -b $branch_name || git checkout $branch_name
+
+    - name: Setup python deps
+      shell: bash
+      run: |
+        pip install requests matplotlib numpy pandas seaborn jupyter lxml beautifulsoup4 df2gspread docopt tqdm xmldiff
+
+    - name: Run highlevel_tests.rb
+      shell: bash
+      run: |
+        CUSTOMTAG=SHA openstudio highlevel_tests.rb
+
+    - name: Run model_tests.rb
+      shell: bash
+      run: |
+        CUSTOMTAG=SHA openstudio model_tests.rb
+
+    #- name: Analyze results
+      #shell: bash
+      #run: |
+        #process_results.py test-status --all
+
+    - name: Commit results
+      shell: bash
+      run: |
+        git add -f test/*
+        git push -u origin $branch_name
