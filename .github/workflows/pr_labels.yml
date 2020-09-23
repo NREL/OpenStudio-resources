@@ -8,9 +8,6 @@ jobs:
   check_pr_labels:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
       - name: Verify PR Labels
         shell: python
         run: |
@@ -22,5 +19,5 @@ jobs:
           if not any([x in expected_min_labels for x in labels]):
               raise ValueError("Expected minimum one label in {}".format(expected_min_labels))
           if 'NewTest' in labels:
-              if not any([x in ['PendingOSM', 'AddedOSM'] for x in labels]):
-                raise ValueError("When using 'NewTest', you need to add either 'PendingOSM' or 'AddedOSM' as well")
+              if sum([x in ['PendingOSM', 'AddedOSM'] for x in labels]) != 1:
+                  raise ValueError("When using 'NewTest', you need to add exactly one of 'PendingOSM' or 'AddedOSM' as well")
