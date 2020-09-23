@@ -9,19 +9,31 @@ require 'open3'
 
 require 'etc'
 
-require 'minitest/autorun'
-begin
-  require "minitest/reporters"
-  require "minitest/reporters/default_reporter"
-  reporter = Minitest::Reporters::DefaultReporter.new
-  reporter.start # had to call start manually otherwise was failing when trying to report elapsed time when run in CLI
-  Minitest::Reporters.use! reporter
-rescue LoadError
-  puts "Minitest Reporters not installed"
+# ENV['N'] has to be before require 'minitest/autorun' as it will read it
+# Nowadays MT_CPU should be preferred instead of N, but old minitest versions
+# (like 5.4.3 bundled with OpenStudio 2.9.1)
+# do not read it, so we pass both...
+# Environment variables
+if ENV['N'].nil?
+  # Number of parallel runs caps to nproc - 1
+  # For 2.0.4 (at least), ruby on the docker is 2.0.0,
+  # and Etc doesn't have nprocessors
+  nproc = nil
+  begin
+    nproc = Etc.nprocessors
+  rescue
+    begin
+      nproc = `nproc`
+      nproc = nproc.to_i
+    rescue
+      # Just fall back to whatever
+      nproc = 16
+    end
+  end
+  ENV['N'] = [1, nproc - 1].max.to_s
+  puts "Setting ENV['N'] = #{ENV['N']}"
 end
-
-# Backward compat
-Minitest::Test = MiniTest::Unit::TestCase unless defined?(Minitest::Test)
+ENV['MT_CPU'] = ENV['N']
 
 $SdkVersion = OpenStudio::openStudioVersion
 
@@ -42,27 +54,26 @@ else
   if !$SdkPrerelease.empty?
     $SdkVersion << "-#{$SdkPrerelease}"
   end
+
+  # Avoid the minitest message
+  # "DEPRECATED: use MT_CPU instead of N for parallel test runs"
+  ENV['N'] = nil
+
 end
 
-# Environment variables
-if ENV['N'].nil?
-  # Number of parallel runs caps to nproc - 1
-  # For 2.0.4 (at least), ruby on the docker is 2.0.0,
-  # and Etc doesn't have nprocessors
-  nproc = nil
-  begin
-    nproc = Etc.nprocessors
-  rescue
-    begin
-      nproc = `nproc`
-      nproc = nproc.to_i
-    rescue
-      # Just fall back to whatever
-      nproc = 16
-    end
-  end
-  ENV['N'] = [1, nproc - 1].max.to_s
+require 'minitest/autorun'
+begin
+  require "minitest/reporters"
+  require "minitest/reporters/default_reporter"
+  reporter = Minitest::Reporters::DefaultReporter.new
+  reporter.start # had to call start manually otherwise was failing when trying to report elapsed time when run in CLI
+  Minitest::Reporters.use! reporter
+rescue LoadError
+  puts "Minitest Reporters not installed"
 end
+
+# Backward compat
+Minitest::Test = MiniTest::Unit::TestCase unless defined?(Minitest::Test)
 
 # Variables to store the environment variables
 $Custom_tag=''
@@ -517,14 +528,6 @@ def postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui=true)
       f.write(JSON.pretty_generate(result_osw))
     end
 
-    if $Save_idf
-      in_idf = File.join(dir, 'run/in.idf')
-      if File.exist?(in_idf)
-        cp_in_idf = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.idf")
-        FileUtils.cp(in_idf, cp_in_idf)
-      end
-    end
-
   end
 
   # standard checks
@@ -703,6 +706,14 @@ def sim_test(filename, options = {})
   # puts command
 
   run_command(command, dir, 3600)
+
+  if $Save_idf
+    in_idf = File.join(File.dirname(out_osw), 'run/in.idf')
+    if File.exist?(in_idf)
+      cp_in_idf = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.idf")
+      FileUtils.cp(in_idf, cp_in_idf)
+    end
+  end
 
   # Post-process the out_osw
   result_osw = postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui)
