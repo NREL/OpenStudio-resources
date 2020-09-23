@@ -54,7 +54,7 @@ jobs:
         set -x
         echo "Installer link: $INSTALLER_LINK"
         sudo apt update
-        wget '$INSTALLER_LINK'
+        wget $INSTALLER_LINK
         sudo apt install -y ./OpenStudio*.deb
         openstudio openstudio_version
 
