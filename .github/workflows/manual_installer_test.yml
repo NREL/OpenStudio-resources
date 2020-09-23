@@ -59,7 +59,7 @@ jobs:
       shell: bash
       run: |
         echo "nproc=$(nproc)"
-        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
+        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb -e /utility_bill02/
 
     #- name: Analyze results
       #shell: bash
