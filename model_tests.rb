@@ -180,8 +180,7 @@ class ModelTests < Minitest::Test
     result = sim_test('coil_cooling_dx.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 3.1.0
+  # TODO: To be added in the next official release after: 3.0.1
   # def test_coil_cooling_dx_osm
   #   result = sim_test('coil_cooling_dx.osm')
   # end
@@ -774,8 +773,7 @@ class ModelTests < Minitest::Test
     result = sim_test('swimmingpool_indoor.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 3.1.0
+  # TODO: To be added in the next official release after: 3.0.1
   # def test_swimmingpool_indoor_osm
   #   result = sim_test('swimmingpool_indoor.osm')
   # end
@@ -979,6 +977,7 @@ class ModelTests < Minitest::Test
   def test_afn_single_zone_nv_osm
     result = sim_test('afn_single_zone_nv.osm')
   end
+
   # TODO: feature is not yet working, uncomment to test it out
   # def test_afn_single_zone_ac_rb
   #   result = sim_test('afn_single_zone_ac.rb')

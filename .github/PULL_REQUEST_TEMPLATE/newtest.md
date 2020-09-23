@@ -44,8 +44,7 @@ The following has been checked to ensure compliance with the guidelines:
               result = sim_test('airterminal_cooledbeam.rb')
             end
 
-            # TODO : To be added once the next official release
-            # including this object is out : 2.5.0
+            # TODO: To be added in the next official release after: 2.5.0
             # def test_airterminal_fourpipebeam_osm
             #   result = sim_test('airterminal_fourpipebeam.osm')
             # end
