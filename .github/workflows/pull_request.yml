@@ -17,7 +17,7 @@ jobs:
     - name: Setup python deps
       shell: bash
       run: |
-        pip install requests matplotlib numpy pandas seaborn jupyter lxml beautifulsoup4 df2gspread docopt tqdm xmldiff
+        pip install requests matplotlib numpy pandas seaborn lxml beautifulsoup4 df2gspread docopt tqdm xmldiff
 
     - name: Locate installer link
       shell: python
@@ -70,8 +70,8 @@ jobs:
         import re
 
         cmd = 'git diff origin/${{ github.base_ref }} origin/${{ github.head_ref }} --name-only -- model/'
-        result = subprocess.check_call(shlex.split(cmd), stdout=subprocess.PIPE)
-        touched_files = result.stdout.decode('utf-8').splitlines()
+        result = subprocess.check_output(shlex.split(cmd))
+        touched_files = result.decode('utf-8').splitlines()
         if len(touched_files) == 0:
             print("No touched files in model/, nothing to do")
             exit(0)
