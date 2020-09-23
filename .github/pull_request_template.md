@@ -1,9 +1,15 @@
 Pull request overview
 ---------------------
 
-**Please change this line to a description of the pull request, with useful supporting information.**
+<!--- **Please change this line to a description of the pull request, with useful supporting information.** -->
+
+<!---  **Note**: You can open a specific PR template directly by appending `?template=xxx` argument with the value `newtest.md`, `testfix.md` or `newtestforexisting.md`. -->
 
 Link to relevant GitHub Issue(s) if appropriate:
+
+Link to the **Linux.deb** installer to use for CI Testing. If not set, it will default to latest official release.
+[OpenStudio Installer]: http://
+
 
 This Pull Request is concerning:
 
@@ -15,7 +21,6 @@ This Pull Request is concerning:
 Depending on your answer, please fill out the required section below, and delete the three others.
 Leave the review checklist in place.
 
-**Note**: You can open a specific PR template directly by appending `?template=xxx` argument with the value `newtest.md`, `testfix.md` or `newtestforexisting.md`.
 
 ----------------------------------------------------------------------------------------------------------
 
@@ -23,7 +28,7 @@ Leave the review checklist in place.
 
 Please include which class(es) you are adding a test to specifically test for.
 Include a link to the OpenStudio Pull Request in which you are adding the new classes, or the class itself if already on develop.
-
+<!---
 > eg:
 >
 > This pull request is in relation with the Pull Request [NREL/OpenStudio#3031](https://github.com/NREL/OpenStudio/pull/3031), and  will specifically test for the following classes:
@@ -31,6 +36,7 @@ Include a link to the OpenStudio Pull Request in which you are adding the new cl
 > * `CoilCoolingFourPipeBeam`
 > * `CoilHeatingFourPipeBeam`
 > * Additionally it explicitly tests for the existing class [TableMultiVariableLookUp](https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/model/TableMultiVariableLookup.hpp)
+-->
 
 #### Work Checklist
 
