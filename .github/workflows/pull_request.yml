@@ -70,6 +70,7 @@ jobs:
         m = re.search(r'\[OpenStudio Installer\].*(https?://.*\.deb)', pr_body, flags=re.I | re.DOTALL)
         if m:
             installer_link = m.groups()[0]
+            print(f"Using specified installer from PR body: {installer_link}")
         else:
             r = requests.get('https://api.github.com/repos/NREL/OpenStudio/releases/latest')
             if not r.ok:
@@ -85,8 +86,8 @@ jobs:
                 print(f"Found more than one potential installer... {matched_installers}. Using the first found")
 
             installer_link = matched_installers[0]
+            print(f"Defaulting installer link to the latest OpenStudio release: {installer_link}")
 
-        print(f"Installer link found: {installer_link}")
         print("::set-env name=INSTALLER_LINK::{}".format(installer_link))
 
     - name: Download and install OS SDK installer
