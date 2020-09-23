@@ -9,6 +9,32 @@ require 'open3'
 
 require 'etc'
 
+# ENV['N'] has to be before require 'minitest/autorun' as it will read it
+# Nowadays MT_CPU should be preferred instead of N, but old minitest versions
+# (like 5.4.3 bundled with OpenStudio 2.9.1)
+# do not read it, so we pass both...
+# Environment variables
+if ENV['N'].nil?
+  # Number of parallel runs caps to nproc - 1
+  # For 2.0.4 (at least), ruby on the docker is 2.0.0,
+  # and Etc doesn't have nprocessors
+  nproc = nil
+  begin
+    nproc = Etc.nprocessors
+  rescue
+    begin
+      nproc = `nproc`
+      nproc = nproc.to_i
+    rescue
+      # Just fall back to whatever
+      nproc = 16
+    end
+  end
+  ENV['N'] = [1, nproc - 1].max.to_s
+  puts "Setting ENV['N'] = #{ENV['N']}"
+end
+ENV['MT_CPU'] = ENV['N']
+
 require 'minitest/autorun'
 begin
   require "minitest/reporters"
@@ -42,26 +68,6 @@ else
   if !$SdkPrerelease.empty?
     $SdkVersion << "-#{$SdkPrerelease}"
   end
-end
-
-# Environment variables
-if ENV['N'].nil?
-  # Number of parallel runs caps to nproc - 1
-  # For 2.0.4 (at least), ruby on the docker is 2.0.0,
-  # and Etc doesn't have nprocessors
-  nproc = nil
-  begin
-    nproc = Etc.nprocessors
-  rescue
-    begin
-      nproc = `nproc`
-      nproc = nproc.to_i
-    rescue
-      # Just fall back to whatever
-      nproc = 16
-    end
-  end
-  ENV['N'] = [1, nproc - 1].max.to_s
 end
 
 # Variables to store the environment variables
