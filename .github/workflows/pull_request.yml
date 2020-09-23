@@ -20,7 +20,7 @@ jobs:
         import re
         import requests
 
-        pr_body = "${{ github.event.pull_request.body }}"
+        pr_body = """${{ github.event.pull_request.body }}"""
         m = re.search(r'\[OpenStudio Installer\].*(https?://.*\.deb)', pr_body, flags=re.I | re.DOTALL)
         if m:
             installer_link = m.groups()[0]
