@@ -542,18 +542,61 @@ class ModelTests < Minitest::Test
     run_dir = File.join($TestDir, 'outputcontrol_files.rb', 'run')
     assert(File.exists?(run_dir))
 
-    assert(File.exist?(File.join(run_dir, 'eplusout.end')))
-    assert(File.exist?(File.join(run_dir, 'eplusout.sql')))
-    assert(File.exist?(File.join(run_dir, 'eplusout.csv')))
-    assert(File.exist?(File.join(run_dir, 'eplusout.err')))
-    assert(File.exist?(File.join(run_dir, 'eplusout.audit')))
+    all_files = [
+      'eplusout.audit',
+      'eplusout.bnd',
+      'eplusout.dbg',
+      'eplusout.dxf',
+      'eplusout.edd',
+      'eplusout.eio',
+      'eplusout.end',
+      'eplusout.epmidf',
+      'eplusout.epmdet',
+      'eplusout.err',
+      'eplusout.eso',
+      'eplusout.mdd',
+      'eplusout.mtd',
+      'eplusout.mtr',
+      'eplusout_perflog.csv',
+      'eplusout.rdd',
+      'eplusout.shd',
+      'eplusout.sln',
+      'eplusout.sql',
+      'eplustbl.htm',
+      'eplusssz.csv',
+      'epluszsz.csv',
+      'eplusout.json',
+      'eplusout.csv',
+      'eplusmtr.csv',
+      'eplustbl.htm',
+      'eplusscreen.csv',
+      'eplusout.svg',
+      'eplusout.sci',
+      'eplusout.wrm',
+      'eplusout.delightin',
+      'eplusout.delightout'
+    ]
 
-    assert(!File.exist?(File.join(run_dir, 'eplusout.json')))
-    assert(!File.exist?(File.join(run_dir, 'eplusout.mtr')))
-    assert(!File.exist?(File.join(run_dir, 'eplusout.bnd')))
-    assert(!File.exist?(File.join(run_dir, 'eplusout.dbg')))
-    assert(!File.exist?(File.join(run_dir, 'eplusout.eio')))
-    assert(!File.exist?(File.join(run_dir, 'eplusout.eso')))
+    expected_files = [
+      'eplusout.end',
+      'eplusout.sql',
+      'eplusout.csv',
+      'eplusmtr.csv',
+      'eplusout.err',
+      'eplusout.audit',
+      'eplustbl.htm',
+    ]
+
+    assert((expected_files - all_files).empty?)
+
+    expected_files.each do |fname|
+      assert(File.exist?(File.join(run_dir, fname)), "Expected #{fname}")
+    end
+
+    (all_files - expected_files).each  do |fname|
+      assert(!File.exist?(File.join(run_dir, fname)), "Did not expect #{fname}")
+    end
+
   end
 
   # def test_outputcontrol_files_osm
