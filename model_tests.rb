@@ -1027,26 +1027,26 @@ class ModelTests < Minitest::Test
     result = sim_test('model_articulation1.osw', extra_options)
 
     # check that we got the right version of standards and workflow
-    standards = nil
+    #standards = nil
     workflow = nil
     result[:steps].each do |step|
       if step[:measure_dir_name] == 'openstudio_results'
         step[:result][:step_values].each do |step_value|
-          if step_value[:name] == 'standards_gem_version'
-            standards = step_value[:value]
-          elsif step_value[:name] == 'workflow_gem_version'
+          #if step_value[:name] == 'standards_gem_version'
+          #  standards = step_value[:value]
+          if step_value[:name] == 'workflow_gem_version'
             workflow = step_value[:value]
           end
         end
       end
     end
-    assert(standards.is_a? String)
+    #assert(standards.is_a? String)
     assert(workflow.is_a? String)
     #puts "standards = #{standards}"
     #puts "workflow = #{workflow}"
 
-    assert(/0.2.7/.match(standards))
-    assert(/1.3.2/.match(workflow))
+    #assert(/0.2.7/.match(standards))
+    assert(/2.0.1/.match(workflow))
   end
 
   def test_model_articulation1_bundle_git_osw
@@ -1058,26 +1058,26 @@ class ModelTests < Minitest::Test
     result = sim_test('model_articulation1.osw', extra_options)
 
     # check that we got the right version of standards and workflow
-    standards = nil
+    #standards = nil
     workflow = nil
     result[:steps].each do |step|
       if step[:measure_dir_name] == 'openstudio_results'
         step[:result][:step_values].each do |step_value|
-          if step_value[:name] == 'standards_gem_version'
-            standards = step_value[:value]
-          elsif step_value[:name] == 'workflow_gem_version'
+          #if step_value[:name] == 'standards_gem_version'
+          #  standards = step_value[:value]
+          if step_value[:name] == 'workflow_gem_version'
             workflow = step_value[:value]
           end
         end
       end
     end
-    assert(standards.is_a? String)
+    #assert(standards.is_a? String)
     assert(workflow.is_a? String)
     #puts "standards = #{standards}"
     #puts "workflow = #{workflow}"
 
-    assert(/0.2.7/.match(standards))
-    assert(/1.3.2/.match(workflow))
+    #assert(/0.2.7/.match(standards))
+    assert(/2.0.1/.match(workflow))
   end
 
   # intersection tests
