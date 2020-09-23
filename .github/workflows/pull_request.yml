@@ -57,6 +57,8 @@ jobs:
         wget $INSTALLER_LINK
         sudo apt install -y ./OpenStudio*.deb
         openstudio openstudio_version
+        git fetch --no-tags --depth=1 origin ${{ github.base_ref }}
+        git fetch --no-tags --depth=1 origin ${{ github.head_ref }}
 
 
     - name: Prepare list of changed tests
@@ -67,8 +69,8 @@ jobs:
         import subprocess
         import re
 
-        cmd = 'git diff HEAD develop --name-only -- model/'
-        result = subprocess.run(shlex.split(cmd), stdout=subprocess.PIPE)
+        cmd = 'git diff origin/${{ github.base_ref }} origin/${{ github.head_ref }} --name-only -- model/'
+        result = subprocess.check_call(shlex.split(cmd), stdout=subprocess.PIPE)
         touched_files = result.stdout.decode('utf-8').splitlines()
         if len(touched_files) == 0:
             print("No touched files in model/, nothing to do")
