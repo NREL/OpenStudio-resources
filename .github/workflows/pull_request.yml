@@ -14,6 +14,11 @@ jobs:
       with:
         python-version: '3.8.x'
 
+    - name: Setup python deps
+      shell: bash
+      run: |
+        pip install requests matplotlib numpy pandas seaborn jupyter lxml beautifulsoup4 df2gspread docopt tqdm xmldiff
+
     - name: Locate installer link
       shell: python
       run: |
