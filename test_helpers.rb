@@ -35,20 +35,6 @@ if ENV['N'].nil?
 end
 ENV['MT_CPU'] = ENV['N']
 
-require 'minitest/autorun'
-begin
-  require "minitest/reporters"
-  require "minitest/reporters/default_reporter"
-  reporter = Minitest::Reporters::DefaultReporter.new
-  reporter.start # had to call start manually otherwise was failing when trying to report elapsed time when run in CLI
-  Minitest::Reporters.use! reporter
-rescue LoadError
-  puts "Minitest Reporters not installed"
-end
-
-# Backward compat
-Minitest::Test = MiniTest::Unit::TestCase unless defined?(Minitest::Test)
-
 $SdkVersion = OpenStudio::openStudioVersion
 
 if Gem::Version.new($SdkVersion) < Gem::Version.new("3.0.0")
@@ -68,7 +54,26 @@ else
   if !$SdkPrerelease.empty?
     $SdkVersion << "-#{$SdkPrerelease}"
   end
+
+  # Avoid the minitest message
+  # "DEPRECATED: use MT_CPU instead of N for parallel test runs"
+  ENV['N'] = nil
+
 end
+
+require 'minitest/autorun'
+begin
+  require "minitest/reporters"
+  require "minitest/reporters/default_reporter"
+  reporter = Minitest::Reporters::DefaultReporter.new
+  reporter.start # had to call start manually otherwise was failing when trying to report elapsed time when run in CLI
+  Minitest::Reporters.use! reporter
+rescue LoadError
+  puts "Minitest Reporters not installed"
+end
+
+# Backward compat
+Minitest::Test = MiniTest::Unit::TestCase unless defined?(Minitest::Test)
 
 # Variables to store the environment variables
 $Custom_tag=''
@@ -523,14 +528,6 @@ def postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui=true)
       f.write(JSON.pretty_generate(result_osw))
     end
 
-    if $Save_idf
-      in_idf = File.join(dir, 'run/in.idf')
-      if File.exist?(in_idf)
-        cp_in_idf = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.idf")
-        FileUtils.cp(in_idf, cp_in_idf)
-      end
-    end
-
   end
 
   # standard checks
@@ -703,6 +700,14 @@ def sim_test(filename, options = {})
   # puts command
 
   run_command(command, dir, 3600)
+
+  if $Save_idf
+    in_idf = File.join(File.dirname(out_osw), 'run/in.idf')
+    if File.exist?(in_idf)
+      cp_in_idf = File.join($OutOSWDir, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.idf")
+      FileUtils.cp(in_idf, cp_in_idf)
+    end
+  end
 
   # Post-process the out_osw
   result_osw = postprocess_out_osw_and_copy(out_osw, cp_out_osw, true)
