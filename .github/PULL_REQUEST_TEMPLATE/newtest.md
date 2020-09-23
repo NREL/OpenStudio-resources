@@ -34,6 +34,7 @@ The following has been checked to ensure compliance with the guidelines:
  - [ ] Tests pass either:
      - [ ] with official OpenStudio release (include version):
          - [ ] A matching OSM test has been added from the successful run of the Ruby one with the official OpenStudio release
+         - [ ] The label `AddedOSM` has been added to this PR
          - [ ] All new `out.osw` have been committed
 
      - [ ] with current develop (incude SHA):
@@ -79,5 +80,4 @@ The following has been checked to ensure compliance with the guidelines:
  - [ ] Test is stable
  - [ ] The appropriate labels have been added to this PR:
    - [ ] One of: `NewTest`, `TestFix`, `NewTestForExisting`, `Other`
-   - [ ] If `NewTest`: add `PendingOSM` if needed
-
+   - [ ] If `NewTest`: add `PendingOSM` or `AddedOSM`
