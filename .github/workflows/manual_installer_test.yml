@@ -12,7 +12,7 @@ on:
         required: false
 
 jobs:
-  release_installers:
+  test_installer:
     runs-on: ubuntu-18.04
 
     steps:
@@ -59,7 +59,7 @@ jobs:
       shell: bash
       run: |
         echo "nproc=$(nproc)"
-        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb -n /baseline_sys01/
+        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
 
     #- name: Analyze results
       #shell: bash
@@ -67,8 +67,12 @@ jobs:
         #process_results.py test-status --all
 
     - name: Commit results
+      if: ${{ always() }}
       shell: bash
       run: |
         git add -f test/*
-        git commit "Add results from workflow_dispatch testing with ${{ github.event.inputs.os_installer_link }}"
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git config --global user.name 'github-actions[bot]'
+
+        git commit -m "Add results from workflow_dispatch testing with ${{ github.event.inputs.os_installer_link }}"
         git push -u origin $branch_name
