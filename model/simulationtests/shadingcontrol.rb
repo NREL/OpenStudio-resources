@@ -4,11 +4,11 @@ require 'lib/baseline_model'
 m = BaselineModel.new
 
 #make a 1 story, 100m X 50m, 1 zone core/perimeter building
-m.add_geometry({"length" => 100,
-                "width" => 50,
-                "num_floors" => 1,
+m.add_geometry({"length" => 150,
+                "width" => 100,
+                "num_floors" => 2,
                 "floor_to_floor_height" => 4,
-                "plenum_height" => 1,
+                "plenum_height" => 0,
                 "perimeter_zone_depth" => 0})
 
 #add windows at a 40% window-to-wall ratio
@@ -32,34 +32,55 @@ m.add_design_days()
 # In order to produce more consistent results between different runs,
 # we sort the zones by names (only one here anyways...)
 zones = m.getThermalZones.sort_by{|z| z.name.to_s}
+zone1 = zones[0]
+zone2 = zones[1]
+
+# spaces
+spaces1 = zone1.spaces.sort_by{|s| s.name.to_s}
+spaces2 = zone2.spaces.sort_by{|s| s.name.to_s}
+
+# surfaces
+sub_surfaces1 = []
+surfaces1 = spaces1[0].surfaces.sort_by{|s| s.name.to_s}
+surfaces1.each do |surface|
+  next if surface.surfaceType != "Wall"
+  sub_surfaces1 += surface.subSurfaces.sort_by{|ss| ss.name.to_s}
+end
+sub_surfaces2 = []
+surfaces2 = spaces2[0].surfaces.sort_by{|s| s.name.to_s}
+surfaces2.each do |surface|
+  next if surface.surfaceType != "Wall"
+  sub_surfaces2 += surface.subSurfaces.sort_by{|ss| ss.name.to_s}
+end
+
+# sub surfaces
+sub_surface1 = sub_surfaces1[0]
+sub_surface2 = sub_surfaces2[0]
+sub_surface3 = sub_surfaces1[1]
+sub_surface4 = sub_surfaces2[1]
+sub_surface5 = sub_surfaces1[2]
+sub_surface6 = sub_surfaces2[2]
 
 # Use Ideal Air Loads
 zones.each{|z| z.setUseIdealAirLoads(true)}
 
-# shading material 1
+# shading materials
 blind1 = OpenStudio::Model::Blind.new(m)
-
-# shading material 2
 blind2 = OpenStudio::Model::Blind.new(m)
 
-# shading control 1
+# construction
+simple_glazing = OpenStudio::Model::SimpleGlazing.new(m)
+construction1 = OpenStudio::Model::Construction.new(m)
+construction1.insertLayer(0, simple_glazing)
+
+# shading controls
 shading_control1 = OpenStudio::Model::ShadingControl.new(blind1)
+shading_control2 = OpenStudio::Model::ShadingControl.new(blind2)
+shading_control3 = OpenStudio::Model::ShadingControl.new(construction1)
+shading_control4 = OpenStudio::Model::ShadingControl.new(blind2)
+shading_control4.setTypeofSlatAngleControlforBlinds("BlockBeamSolar")
 
-# shading control 2
-shading_control2 = OpenStudio::Model::ShadingControl.new(blind1)
-
-# shading control 3
-shading_control3 = OpenStudio::Model::ShadingControl.new(blind2)
-shading_control3.setTypeofSlatAngleControlforBlinds("BlockBeamSolar")
-
-# sub surfaces
-sub_surfaces = m.getSubSurfaces.sort_by{|ss| ss.name.to_s}
-sub_surface1 = sub_surfaces[0]
-sub_surface2 = sub_surfaces[1]
-sub_surface3 = sub_surfaces[2]
-sub_surface4 = sub_surfaces[3]
-
-# add sub surfaces to shading control 1
+# add sub surface to shading control 1
 shading_control1.addSubSurface(sub_surface1)
 
 # bulk add sub surfaces to shading control 2
@@ -79,6 +100,13 @@ shading_controls = OpenStudio::Model::ShadingControlVector.new
   shading_controls << shading_control
 end
 sub_surface4.addShadingControls(shading_controls)
+
+# bulk add sub surfaces to shading control 4
+sub_surfaces = OpenStudio::Model::SubSurfaceVector.new
+[sub_surface5, sub_surface6].each do |sub_surface|
+  sub_surfaces << sub_surface
+end
+shading_control4.addSubSurfaces(sub_surfaces)
 
 #save the OpenStudio model (.osm)
 m.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
