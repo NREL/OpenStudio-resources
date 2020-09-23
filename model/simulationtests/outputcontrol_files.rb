@@ -44,15 +44,23 @@ z.setUseIdealAirLoads(true)
 
 outputcontrol_files = model.getOutputControlFiles
 
-outputcontrol_files.setOutputCSV(true)
-outputcontrol_files.setOutputMTR(true)
+# If you set this to false, OpenStudio-workflow-gem issues a fatal since it is
+# checking the eplusout.end
+outputcontrol_files.setOutputEND(true)
+# If you set this to false, reporting measures will fail, including
+# openstudio_results
+outputcontrol_files.setOutputSQLite(true)
+# openstudio_results needs the tabular output since it queries it:
+# "Can't find any contents in Building Area Table to get tabular units. Measure can't run"
+outputcontrol_files.setOutputTabular(true)
 
+outputcontrol_files.setOutputCSV(true)
+outputcontrol_files.setOutputAUDIT(true)
+
+outputcontrol_files.setOutputJSON(false)
+outputcontrol_files.setOutputMTR(false)
 outputcontrol_files.setOutputESO(false)
 outputcontrol_files.setOutputEIO(false)
-# outputcontrol_files.setOutputTabular(false)
-# outputcontrol_files.setOutputSQLite(false)
-outputcontrol_files.setOutputJSON(false)
-outputcontrol_files.setOutputAUDIT(true)
 outputcontrol_files.setOutputZoneSizing(false)
 outputcontrol_files.setOutputSystemSizing(false)
 outputcontrol_files.setOutputDXF(false)
@@ -60,7 +68,7 @@ outputcontrol_files.setOutputBND(false)
 outputcontrol_files.setOutputRDD(false)
 outputcontrol_files.setOutputMDD(false)
 outputcontrol_files.setOutputMTD(false)
-# outputcontrol_files.setOutputEND(false)
+
 outputcontrol_files.setOutputSHD(false)
 outputcontrol_files.setOutputDFS(false)
 outputcontrol_files.setOutputGLHE(false)
