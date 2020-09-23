@@ -18,44 +18,6 @@ jobs:
       shell: bash
       run: |
         pip install requests matplotlib numpy pandas seaborn lxml beautifulsoup4 df2gspread docopt tqdm xmldiff
-
-    - name: Locate installer link
-      shell: python
-      run: |
-        import re
-        import requests
-
-        pr_body = """${{ github.event.pull_request.body }}"""
-        m = re.search(r'\[OpenStudio Installer\].*(https?://.*\.deb)', pr_body, flags=re.I | re.DOTALL)
-        if m:
-            installer_link = m.groups()[0]
-        else:
-            r = requests.get('https://api.github.com/repos/NREL/OpenStudio/releases/latest')
-            if not r.ok:
-                raise ValueError("Something went wrong when querying {}, status={}".format(url, r.status_code))
-                exit(0)
-            data = r.json()
-            matched_installers = [x['browser_download_url'] for x in data['assets'] if 'Linux.deb' in x['name']]
-
-            if len(matched_installers) == 0:
-                raise ValueError("Cannot locate latest openstudio installer")
-
-            if len(matched_installers) > 1:
-                print(f"Found more than one potential installer... {matched_installers}. Using the first found")
-
-            installer_link = matched_installers[0]
-
-        print(f"Installer link found: {installer_link}")
-        print("::set-env name=INSTALLER_LINK::{}".format(installer_link))
-
-    - name: Download and install OS SDK installer
-      shell: bash
-      run: |
-        set -x
-        echo "Installer link: $INSTALLER_LINK"
-        wget $INSTALLER_LINK
-        sudo apt install -y ./OpenStudio*.deb
-        openstudio openstudio_version
         git fetch --no-tags --depth=1 origin ${{ github.base_ref }}
         git fetch --no-tags --depth=1 origin ${{ github.head_ref }}
 
@@ -98,7 +60,45 @@ jobs:
         test_filter = f"/^({'|'.join(tests)})$/"
         print("::set-env name=TEST_FILTER=::{}".format(test_filter))
 
+    - name: Locate installer link
+      shell: python
+      run: |
+        import re
+        import requests
+
+        pr_body = """${{ github.event.pull_request.body }}"""
+        m = re.search(r'\[OpenStudio Installer\].*(https?://.*\.deb)', pr_body, flags=re.I | re.DOTALL)
+        if m:
+            installer_link = m.groups()[0]
+        else:
+            r = requests.get('https://api.github.com/repos/NREL/OpenStudio/releases/latest')
+            if not r.ok:
+                raise ValueError("Something went wrong when querying {}, status={}".format(url, r.status_code))
+                exit(0)
+            data = r.json()
+            matched_installers = [x['browser_download_url'] for x in data['assets'] if 'Linux.deb' in x['name']]
+
+            if len(matched_installers) == 0:
+                raise ValueError("Cannot locate latest openstudio installer")
+
+            if len(matched_installers) > 1:
+                print(f"Found more than one potential installer... {matched_installers}. Using the first found")
+
+            installer_link = matched_installers[0]
+
+        print(f"Installer link found: {installer_link}")
+        print("::set-env name=INSTALLER_LINK::{}".format(installer_link))
+
+    - name: Download and install OS SDK installer
+      shell: bash
+      run: |
+        set -x
+        echo "Installer link: $INSTALLER_LINK"
+        wget $INSTALLER_LINK
+        sudo apt install -y ./OpenStudio*.deb
+        openstudio openstudio_version
+
     - name: Run changed tests
       shell: bash
       run: |
-        MT_CPU=2 openstudio model_tests.rb -n '$TEST_FILTER'
+        MT_CPU=$(nproc) openstudio model_tests.rb -n "'$TEST_FILTER'"
