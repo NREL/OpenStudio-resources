@@ -67,6 +67,7 @@ jobs:
         #process_results.py test-status --all
 
     - name: Commit results
+      if: ${{ always() }}
       shell: bash
       run: |
         git add -f test/*
