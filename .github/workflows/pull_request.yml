@@ -53,13 +53,11 @@ jobs:
       run: |
         set -x
         echo "Installer link: $INSTALLER_LINK"
-        sudo apt update
         wget $INSTALLER_LINK
         sudo apt install -y ./OpenStudio*.deb
         openstudio openstudio_version
         git fetch --no-tags --depth=1 origin ${{ github.base_ref }}
         git fetch --no-tags --depth=1 origin ${{ github.head_ref }}
-
 
     - name: Prepare list of changed tests
       shell: python
