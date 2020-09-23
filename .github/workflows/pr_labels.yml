@@ -16,6 +16,7 @@ jobs:
         run: |
           import json
           labels = json.loads("""${{ toJson(github.event.pull_request.labels) }}""")
+          labels = [x['name'] for x in labels]
           expected_min_labels = ['NewTest', 'TestFix', 'NewTestForExisting', 'Other']
           if not any([x in expected_min_labels for x in labels]):
               raise ValueError(f"Expected minimum one label in {expected_min_labels}")
