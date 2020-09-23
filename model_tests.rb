@@ -706,6 +706,7 @@ class ModelTests < Minitest::Test
     result = sim_test('shadingcontrol.rb')
   end
 
+  # TODO: To be added in the next official release after: 3.0.1
   # def test_shadingcontrol_osm
     # result = sim_test('shadingcontrol.osm')
   # end
