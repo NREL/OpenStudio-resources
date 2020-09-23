@@ -10,9 +10,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Verify PR label action
-        uses: mheap/github-action-required-labels@v1
-        with:
-          mode: minimum
-          count: 1
-          labels: "NewTest, TestFix, NewTestForExisting, Other"
+
+      - name: Verify PR Labels
+        shell: python
+        run: |
+          import json
+          labels = json.loads("${{ toJson(github.event.pull_request.labels) }}")
+          expected_min_labels = ['NewTest', 'TestFix', 'NewTestForExisting', 'Other']
+          if not any([x in expected_min_labels for x in labels]):
+              raise ValueError(f"Expected minimum one label in {expected_min_labels}")
+          if 'NewTest' in labels:
+              if not any([x in ['PendingOSM', 'AddedOSM'] for x in labels]):
+                  raise ValueError(f"When using 'NewTest', you need to add either 'PendingOSM' or 'AddedOSM' as well")
