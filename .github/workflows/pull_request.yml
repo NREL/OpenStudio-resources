@@ -1,0 +1,99 @@
+name: Test PR Changes
+
+on:
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  test_installer:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.8.x'
+
+    - name: Locate installer link
+      shell: python
+      run: |
+        import re
+        import requests
+
+        pr_body = "${{ github.event.pull_request.body }}"
+        m = re.search(r'\[OpenStudio Installer\].*(https?://.*\.deb)', pr_body, flags=re.I | re.DOTALL)
+        if m:
+            installer_link = m.groups()[0]
+        else:
+            r = requests.get('https://api.github.com/repos/NREL/OpenStudio/releases/latest')
+            if not r.ok:
+                raise ValueError("Something went wrong when querying {}, status={}".format(url, r.status_code))
+                exit(0)
+            data = r.json()
+            matched_installers = [x['browser_download_url'] for x in data['assets'] if 'Linux.deb' in x['name']]
+
+            if len(matched_installers) == 0:
+                raise ValueError("Cannot locate latest openstudio installer")
+
+            if len(matched_installers) > 1:
+            print(f"Found more than one potential installer... {matched_installers}. Using the first found")
+
+            installer_link = matched_installers[0]
+
+        print(f"Installer link found: {installer_link})"
+        print("::set-env name=INSTALLER_LINK::{}".format(installer_link))
+
+    - name: Download and install OS SDK installer
+      shell: bash
+      run: |
+        set -x
+        echo "Installer link: $INSTALLER_LINK"
+        sudo apt update
+        wget '$INSTALLER_LINK'
+        sudo apt install -y ./OpenStudio*.deb
+        openstudio openstudio_version
+
+
+    - name: Prepare list of changed tests
+      shell: python
+      run: |
+        import os
+        import shlex
+        import subprocess
+        import re
+
+        cmd = 'git diff HEAD develop --name-only -- model/'
+        result = subprocess.run(shlex.split(cmd), stdout=subprocess.PIPE)
+        touched_files = result.stdout.decode('utf-8').splitlines()
+        if len(touched_files) == 0:
+            print("No touched files in model/, nothing to do")
+            exit(0)
+
+        print("Touched files:\n* {}".format("\n* ".join(touched_files)))
+
+        with open('model_tests.rb', 'r') as f:
+            content = f.read()
+        lines = content.splitlines()
+        re_test = re.compile(r'^\s+def (test_[^\s]*).*')
+        re_sim_test = re.compile(r"sim_test\('(.*)'")
+        test_name = None
+        fname_to_test = {}
+        for line in lines:
+            if (m := re_test.match(line)):
+                test_name = m.groups()[0]
+            elif (m := re_sim_test.search(line)):
+                fname_to_test[m.groups()[0]] = test_name
+
+        tests = []
+        for touched_file in touched_files:
+            test_filename = os.path.basename(touched_file)
+            if test_filename in fname_to_test:
+                tests.append(fname_to_test[test_filename])
+
+        test_filter = f"/^({'|'.join(tests)})$/"
+        print("::set-env name=TEST_FILTER=::{}".format(test_filter))
+
+    - name: Run changed tests
+      shell: bash
+      run: |
+        MT_CPU=2 openstudio model_tests.rb -n '$TEST_FILTER'
