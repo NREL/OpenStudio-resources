@@ -44,9 +44,6 @@ z.setUseIdealAirLoads(true)
 
 outputcontrol_files = model.getOutputControlFiles
 
-# If you set this to false, OpenStudio-workflow-gem issues a fatal since it is
-# checking the eplusout.end
-outputcontrol_files.setOutputEND(true)
 # If you set this to false, reporting measures will fail, including
 # openstudio_results
 outputcontrol_files.setOutputSQLite(true)
