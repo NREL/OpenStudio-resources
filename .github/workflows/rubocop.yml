@@ -206,8 +206,13 @@ jobs:
 
 
         if __name__ == '__main__':
-            check_id, check_url = create_check_run()
-            print(f"Check run created with id {check_id}: {check_url}")
+            # check_id, check_url = create_check_run()
+            # print(f"Check run created with id {check_id}: {check_url}")
+
+            check_id = "${{ github.run_id }}"
+            check_url = ("https://api.github.com/repos/{}/check-runs/{}".format(OWNER_REPO, check_id))
+
+            print(f"Using existing Check run with id {check_id}: {check_url}")
             output = {}
             try:
                 data = run_rubocop()
