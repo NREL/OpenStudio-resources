@@ -160,21 +160,21 @@ jobs:
             if r.status_code != requests.codes.created:
                 # r.raise_for_status()
                 http_error_msg = ("{} Error: {} for url: "
-                                  "{}.\{}".format(r.status_code, r.reason, r.url, json.dumps(r.json(), indent=4, sort_keys=True)))
+                                  "{}.\n{}".format(r.status_code, r.reason, r.url, json.dumps(r.json(), indent=4, sort_keys=True)))
                 raise requests.exceptions.HTTPError(http_error_msg, response=r)
             data = r.json()
             print(f"create_check_run response: {json.dumps(data, indent=4, sort_keys=True)}")
-            return data['id']
+            return data['id'], data['url']
 
 
-        def update_check_run(check_id, conclusion, output):
+        def update_check_run(check_url, conclusion, output):
             """
-            Update the given check-run (check_id) with the conclusion and annotations
-            and sets its status to 'completed'
+            Update the given check-run (check_url) with the conclusion and annotations
+            and sets its status to 'completed'. Uses a PATCH not a POST
 
             Args:
             ------
-            check_id (int): the id of the check_run, returned from create_check_run
+            check_url (url): the url of the check_run, returned from create_check_run
 
             conclusion (str): one of ['success', 'failure', 'neutral', 'cancelled',
             'skipped', 'timed_out', 'action_required']
@@ -193,25 +193,25 @@ jobs:
                 'output': output
             }
 
-            query_url = (
-                "https://api.github.com/repos/{}/check-runs/{}".format(OWNER_REPO,
-                                                                       check_id))
+            # query_url = (
+            #     "https://api.github.com/repos/{}/check-runs/{}".format(OWNER_REPO,
+            #                                                            check_id))
 
-            r = requests.post(query_url, headers=HEADERS, data=json.dumps(body))
+            r = requests.patch(check_url, data=json.dumps(body), headers=HEADERS)
             if r.status_code != requests.codes.ok:
                 # r.raise_for_status()
                 http_error_msg = ("{} Error: {} for url: "
-                                  "{}.\{}".format(r.status_code, r.reason, r.url, json.dumps(r.json(), indent=4, sort_keys=True)))
+                                  "{}.\n{}".format(r.status_code, r.reason, r.url, json.dumps(r.json(), indent=4, sort_keys=True)))
                 raise requests.exceptions.HTTPError(http_error_msg, response=r)
 
 
         if __name__ == '__main__':
-            check_id = create_check_run()
-            print(f"Check run created with id {check_id}")
+            check_id, check_url = create_check_run()
+            print(f"Check run created with id {check_id}: {check_url}")
             try:
                 data = run_rubocop()
                 conclusion, output = process_rubocop_output(data)
-                update_check_run(check_id, conclusion, output)
+                update_check_run(check_url, conclusion, output)
             except:
-                update_check_run(check_id, "failure", None)
+                update_check_run(check_url, "failure", None)
 
