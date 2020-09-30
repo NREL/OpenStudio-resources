@@ -214,8 +214,9 @@ jobs:
                 print(f"{conclusion=}")
                 print(f"{json.dumps(output, indent=4, sort_keys=True)}")
                 update_check_run(check_url, conclusion, output)
-                if conclusion == "failure":
-                    raise RuntimeError("Rubocop found failures")
             except Exception as e:
                 update_check_run(check_url, "failure", None)
                 raise e
+
+            if conclusion == "failure":
+                raise RuntimeError("Rubocop found failures")
