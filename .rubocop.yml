@@ -12,8 +12,47 @@ AllCops:
     - 'test/**/*'
     - 'update_eplus_compare/**/*'
     - 'weatherdata/**/*'
+    - 'model/refbuildingtests/measures/**/*'
 
 inherit_from:
   - http://s3.amazonaws.com/openstudio-resources/styles/rubocop.yml
 
 # =============== OpenStudio Resources Specific ===========
+
+Layout/TrailingWhitespace:
+  Enabled: true
+
+# Do not enforce snake_case
+Naming/VariableName:
+  Enabled: false
+
+Naming/FileName:
+  Enabled: false
+
+Naming/MethodName:
+  Enabled: false
+
+Naming/MethodParameterName:
+  Enabled: false
+
+# I like to use _var for an Optional thing
+Lint/UnderscorePrefixedVariableName:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Style/HashEachMethods:
+  Enabled: false
+
+Style/HashTransformKeys:
+  Enabled: false
+
+Style/HashTransformValues:
+  Enabled: false
