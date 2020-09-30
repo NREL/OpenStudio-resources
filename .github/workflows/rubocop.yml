@@ -145,7 +145,7 @@ jobs:
               'name': CHECK_NAME,
               'head_sha': GITHUB_SHA,
               'status': 'in_progress',
-              'started_at': datetime.datetime.now().isoformat()
+              'started_at': datetime.datetime.utcnow().isoformat(timespec='seconds')
             }
 
             query_url = "https://api.github.com/repos/{}/check-runs".format(OWNER_REPO)
@@ -182,7 +182,7 @@ jobs:
                 'name': CHECK_NAME,
                 'head_sha': GITHUB_SHA,
                 'status': 'completed',
-                'completed_at': datetime.datetime.now().isoformat(),
+                'completed_at': datetime.datetime.utcnow().isoformat(timespec='seconds'),
                 'conclusion': conclusion,
                 'output': output
             }
