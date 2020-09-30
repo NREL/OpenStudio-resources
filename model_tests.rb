@@ -534,6 +534,76 @@ class ModelTests < Minitest::Test
     result = sim_test('multiple_loops_w_plenums.osm')
   end
 
+  def test_outputcontrol_files_rb
+    extra_options = {:compare_eui => false}
+    result = sim_test('outputcontrol_files.rb', extra_options)
+
+    # We enabled only a few files, so check that
+    run_dir = File.join($TestDir, 'outputcontrol_files.rb', 'run')
+    assert(File.exists?(run_dir))
+
+    all_files = [
+      'eplusout.audit',
+      'eplusout.bnd',
+      'eplusout.dbg',
+      'eplusout.dxf',
+      'eplusout.edd',
+      'eplusout.eio',
+      'eplusout.end',
+      'eplusout.epmidf',
+      'eplusout.epmdet',
+      'eplusout.err',
+      'eplusout.eso',
+      'eplusout.mdd',
+      'eplusout.mtd',
+      'eplusout.mtr',
+      'eplusout_perflog.csv',
+      'eplusout.rdd',
+      'eplusout.shd',
+      'eplusout.sln',
+      'eplusout.sql',
+      'eplustbl.htm',
+      'eplusssz.csv',
+      'epluszsz.csv',
+      'eplusout.json',
+      'eplusout.csv',
+      'eplusmtr.csv',
+      'eplustbl.htm',
+      'eplusscreen.csv',
+      'eplusout.svg',
+      'eplusout.sci',
+      'eplusout.wrm',
+      'eplusout.delightin',
+      'eplusout.delightout'
+    ]
+
+    expected_files = [
+      'eplusout.end',
+      'eplusout.sql',
+      'eplusout.csv',
+      'eplusmtr.csv',
+      'eplusout.err',
+      'eplusout.audit',
+      'eplustbl.htm',
+    ]
+
+    assert((expected_files - all_files).empty?)
+
+    expected_files.each do |fname|
+      assert(File.exist?(File.join(run_dir, fname)), "Expected #{fname}")
+    end
+
+    (all_files - expected_files).each  do |fname|
+      assert(!File.exist?(File.join(run_dir, fname)), "Did not expect #{fname}")
+    end
+
+  end
+
+  # TODO: To be added in the next official release after: 3.0.1
+  # def test_outputcontrol_files_osm
+    # result = sim_test('outputcontrol_files.osm')
+  # end
+
   def test_output_objects_rb
     result = sim_test('output_objects.rb')
   end
