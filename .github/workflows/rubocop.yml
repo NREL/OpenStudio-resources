@@ -45,7 +45,7 @@ jobs:
         import requests
 
         GITHUB_TOKEN = "${{ secrets.GITHUB_TOKEN }}"
-        GITHUB_SHA = "${{ github.sha }}"
+        GITHUB_SHA = "${{ github.head_ref }}"
         OWNER_REPO = "${{ github.repository }}"  # "owner/repo"
 
         ANNOTATIONS_LEVELS = {
@@ -56,7 +56,7 @@ jobs:
           'fatal': 'failure'
         }
 
-        CHECK_NAME = 'Rubocop'
+        CHECK_NAME = 'rubocop'
 
         HEADERS = {
           "Content-Type": 'application/json',
