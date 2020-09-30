@@ -8,7 +8,7 @@
 
 # Note: All of these delta temp schemes compare based on
 # (Node condition - Outdoor condition)
-# Meaning if a range from 0 to 5°C difference, means OA condition is between
+# Meaning if a range from 0 to 5 degC difference, means OA condition is between
 # 0 to 5 LOWER than the node
 # They also all expect a WATER node as the reference temperature node
 # (so you can't pass model.outdoorAirNode for eg)
@@ -90,7 +90,7 @@ plant_op_oa_dew_diff.addLoadRange(0, [])
 chilled_plant.setPrimaryPlantEquipmentOperationScheme(plant_op_oa_dew_diff)
 
 # Test the plant OA Db diff one. If the OA drybulb temperature is greater than
-# 10°C above the supply inlet temperature to the heating plant loop,
+# 10 degC above the supply inlet temperature to the heating plant loop,
 # we turn off the boilers
 # Note: doesn't make a ton of sense from a design standpoint...
 boiler = model.getBoilerHotWaters.first

@@ -383,7 +383,7 @@ if plenum_flag
   # good idea to set new color for cloned construction
 
   # edit roofCeiling construction
-  air_gap_material_exists == false
+  air_gap_material_exists = false
   plenum_roof_layers = plenum_def_int_surf_roof.layers
   plenum_roof_layers_counter = plenum_roof_layers.size
   plenum_roof_layers.reverse_each do |plenum_roof_layer|
@@ -393,7 +393,7 @@ if plenum_flag
       plenum_def_int_surf_roof.eraseLayer(plenum_roof_layers_counter)
     else
       plenum_def_int_surf_roof.eraseLayer(plenum_roof_layers_counter)
-      air_gap_material_exists == true
+      air_gap_material_exists = true
       break
     end
   end

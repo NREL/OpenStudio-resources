@@ -57,12 +57,12 @@ additional_properties = construction.additionalProperties
 additional_properties.setFeature('isNiceConstruction', true)
 
 # update all additional properties objects
-model.getAdditionalPropertiess.each do |additional_properties|
+model.getAdditionalPropertiess.each do |add_props|
   # retrieve an additional properties object and set a new feature
-  additional_properties.setFeature('newFeature', 1)
+  add_props.setFeature('newFeature', 1)
 
   # retrieve the parent object from the additional properties object
-  model_object = additional_properties.modelObject
+  model_object = add_props.modelObject
   if model_object.to_StandardOpaqueMaterial.is_initialized
     material = model_object.to_StandardOpaqueMaterial.get
     material.setThickness(0.3)

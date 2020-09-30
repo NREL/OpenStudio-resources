@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # This test aims to test the new **Unique** ModelObjects related to Output
 # added in 3.0.0:
 # * OutputDiagnostics,
@@ -13,20 +14,20 @@ model = BaselineModel.new
 
 # make a 1 story, 100m X 50m, 1 zone building
 model.add_geometry({ 'length' => 100,
-                    'width' => 50,
-                    'num_floors' => 1,
-                    'floor_to_floor_height' => 4,
-                    'plenum_height' => 0,
-                    'perimeter_zone_depth' => 0 })
+                     'width' => 50,
+                     'num_floors' => 1,
+                     'floor_to_floor_height' => 4,
+                     'plenum_height' => 0,
+                     'perimeter_zone_depth' => 0 })
 
 # add windows at a 40% window-to-wall ratio
 model.add_windows({ 'wwr' => 0.4,
-                   'offset' => 1,
-                   'application_type' => 'Above Floor' })
+                    'offset' => 1,
+                    'application_type' => 'Above Floor' })
 
 # add thermostats
 model.add_thermostats({ 'heating_setpoint' => 19,
-                       'cooling_setpoint' => 26 })
+                        'cooling_setpoint' => 26 })
 
 # assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions
@@ -41,7 +42,7 @@ model.add_design_days
 # we sort the zones by names
 # (There's only one here, but just in case this would be copy pasted somewhere
 # else...)
-zones = model.getThermalZones.sort_by {|z| z.name.to_s }
+zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 z = zones[0]
 z.setUseIdealAirLoads(true)
 
@@ -61,8 +62,8 @@ output_diagnostics.addKey('DisplayAdvancedReportVariables')
 # NOTE: until https://github.com/NREL/EnergyPlus/issues/7742 is addressed
 # You can only add maximum TWO diagnostics
 output_diagnostics.setKeys(['DisplayExtraWarnings',
-                            'ReportDuringWarmup']
-                              #                            "DisplayAdvancedReportVariables")
+                            'ReportDuringWarmup'])
+# 'DisplayAdvancedReportVariables'
 
 ###############################################################################
 #                                 OUTPUT:JSON                                 #
@@ -99,4 +100,4 @@ output_table.addSummaryReports(['OutdoorAirSummary', 'ObjectCountSummary'])
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
-                           'osm_name' => 'out.osm' })
+                            'osm_name' => 'out.osm' })

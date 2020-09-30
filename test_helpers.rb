@@ -180,7 +180,7 @@ ENV['RUBYPATH'] = $ModelDir
 #
 # @param None
 # @return [String] Plaftorm name, one of ['Windows', 'Darwin', 'Linux']
-def get_test_platform
+def check_test_platform
   platform = 'Unknown'
 
   begin
@@ -195,7 +195,7 @@ def get_test_platform
     else
       puts 'Unknown Plaftorm?!'
     end
-  rescue Exception
+  rescue LoadError
     require 'rbconfig'
 
     host_os = RbConfig::CONFIG['host_os']
@@ -213,7 +213,7 @@ def get_test_platform
   return platform
 end
 
-$Platform = get_test_platform
+$Platform = check_test_platform
 
 # Sanitizes a filename replaces any of '-+= ' with '_'
 #
@@ -255,12 +255,10 @@ def find_previous_version
     end
   else
     lastVersion = versions.last
-    if thisVersion > lastVersion
-      return lastVersion
-    else
-      puts "Cannot find a previous version for #{$SdkVersion} as it's older than the oldest known"
-      return nil
-    end
+    return lastVersion if thisVersion > lastVersion
+
+    puts "Cannot find a previous version for #{$SdkVersion} as it's older than the oldest known"
+    return nil
   end
 end
 
@@ -1048,9 +1046,9 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
   ]
 
   # Count the number of autosized fields in the model
-  def autosized_fields(model, obj_types_to_skip, missing_getters)
+  autosized_fields = lambda { |t_model, t_obj_types_to_skip, t_missing_getters|
     # Convert to IDF
-    idf = OpenStudio::EnergyPlus::ForwardTranslator.new.translateModel(model).toIdfFile
+    idf = OpenStudio::EnergyPlus::ForwardTranslator.new.translateModel(t_model).toIdfFile
 
     # Ensure that all fields are set to "Autosize" or "Autocalculate"
     fields_autosized = []
@@ -1059,13 +1057,13 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       os_type = "OS:#{obj.iddObject.type.valueDescription}"
 
       # Skip certain object types entirely
-      methods_to_skip = obj_types_to_skip[os_type]
+      methods_to_skip = t_obj_types_to_skip[os_type]
       next if methods_to_skip == 'all'
 
       methods_to_skip = [] if methods_to_skip.nil?
 
       # Get the list of getters to skip because missing from E+
-      fields_to_skip = missing_getters[os_type]
+      fields_to_skip = t_missing_getters[os_type]
       fields_to_skip = [] if fields_to_skip.nil?
 
       for field_num in 0..obj.numFields
@@ -1088,22 +1086,22 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
 
     # return result_osw for further checks
     return result_osw
-  end
+  }
 
   # Get the autosized fields before hard sizing
-  autosized_fields_before_hard_size = autosized_fields(model, obj_types_to_skip, missing_getters)
+  autosized_fields_before_hard_size = autosized_fields.call(model, obj_types_to_skip, missing_getters)
 
   # Hard-size the entire model
   model.applySizingValues
 
   # Get the autosized fields after hard sizing
-  autosized_fields_after_hard_size = autosized_fields(model, obj_types_to_skip, missing_getters)
+  autosized_fields_after_hard_size = autosized_fields.call(model, obj_types_to_skip, missing_getters)
 
   # Auto-size the entire model
   model.autosize
 
   # Get the autosized fields after hard sizing
-  autosized_fields_after_auto_size = autosized_fields(model, obj_types_to_skip, missing_getters)
+  autosized_fields_after_auto_size = autosized_fields.call(model, obj_types_to_skip, missing_getters)
 
   puts "\n*** Fields that are still autosized after hard sizing (but should not be) ***"
   autosized_fields_after_hard_size.each { |f| puts f }
@@ -1223,7 +1221,7 @@ def sql_test(options = {})
       weather_file = 'USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_LeapYear.epw'
     else
       # If we have a start date, assume an AMY
-      if [:start]
+      if options[:start]
         weather_file = 'USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_NonLeapYear.epw'
       else
         # Otherwise a TMY

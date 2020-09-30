@@ -159,7 +159,8 @@ class BaselineModel < OpenStudio::Model::Model
       # Set vertical story position
       story.setNominalZCoordinate(z)
 
-    end # End of floor loop
+      # End of floor loop
+    end
 
     # Put all of the spaces in the model into a vector
     # We sort the spaces by name, so we add the thermalZones always in the
@@ -224,21 +225,21 @@ class BaselineModel < OpenStudio::Model::Model
       zone.spaces.each do |space|
         space.surfaces.each do |surface|
           if (surface.surfaceType == 'Wall') && (surface.outsideBoundaryCondition == 'Outdoors')
-            surface.subSurfaces.each do |subSurface|
-              if (subSurface.subSurfaceType == 'FixedWindow') || (subSurface.subSurfaceType == 'OperableWindow')
-                if biggestWindow.nil? || (subSurface.netArea > biggestWindow.netArea)
-                  biggestWindow = subSurface
+            surface.subSurfaces.each do |sub_surface|
+              if (sub_surface.subSurfaceType == 'FixedWindow') || (sub_surface.subSurfaceType == 'OperableWindow')
+                if biggestWindow.nil? || (sub_surface.netArea > biggestWindow.netArea)
+                  biggestWindow = sub_surface
                 end
 
                 if shades
-                  construction = subSurface.construction.get
+                  construction = sub_surface.construction.get
                   shading_control = shading_control_hash[construction.handle.to_s]
                   if !shading_control
                     material = OpenStudio::Model::Blind.new(self)
                     shading_control = OpenStudio::Model::ShadingControl.new(material)
                     shading_control_hash[construction.handle.to_s] = shading_control
                   end
-                  subSurface.setShadingControl(shading_control)
+                  sub_surface.setShadingControl(shading_control)
 
                 end
               end
@@ -416,7 +417,7 @@ class BaselineModel < OpenStudio::Model::Model
 
   def set_space_type
     # method for converting from IP to SI if you know the strings of the input and the output
-    def ip_to_si(number, ip_unit_string, si_unit_string)
+    ip_to_si = lambda { |number, ip_unit_string, si_unit_string|
       ip_unit = OpenStudio.createUnit(ip_unit_string, 'IP'.to_UnitSystem).get
       si_unit = OpenStudio.createUnit(si_unit_string, 'SI'.to_UnitSystem).get
       # puts "#{ip_unit} --> #{si_unit}"
@@ -424,7 +425,7 @@ class BaselineModel < OpenStudio::Model::Model
       si_quantity = OpenStudio.convert(ip_quantity, si_unit).get
       # puts "#{ip_quantity} = #{si_quantity}"
       return si_quantity.value
-    end
+    }
 
     # baseline space type taken from 90.1-2004 Large Office, Whole Building on-demand space type generator
     space_type = OpenStudio::Model::SpaceType.new(self)
@@ -522,20 +523,20 @@ class BaselineModel < OpenStudio::Model::Model
     ventilation.setName('Baseline Model OA')
     space_type.setDesignSpecificationOutdoorAir(ventilation)
     ventilation.setOutdoorAirMethod('Sum')
-    ventilation.setOutdoorAirFlowperPerson(ip_to_si(20, 'ft^3/min*person', 'm^3/s*person'))
+    ventilation.setOutdoorAirFlowperPerson(ip_to_si.call(20, 'ft^3/min*person', 'm^3/s*person'))
 
     # infiltration = 0.00030226 m^3/s*m^2 exterior (0.06 cfm/ft^2 exterior)
     make_infiltration = false
     infiltration = OpenStudio::Model::SpaceInfiltrationDesignFlowRate.new(self)
     infiltration.setName('Baseline Model Infiltration')
     infiltration.setSpaceType(space_type)
-    infiltration.setFlowperExteriorSurfaceArea(ip_to_si(0.06, 'ft^3/min*ft^2', 'm^3/s*m^2'))
+    infiltration.setFlowperExteriorSurfaceArea(ip_to_si.call(0.06, 'ft^3/min*ft^2', 'm^3/s*m^2'))
 
     # people = 0.053820 people/m^2 (0.005 people/ft^2)
     # create the people definition
     people_def = OpenStudio::Model::PeopleDefinition.new(self)
     people_def.setName('Baseline Model People Definition')
-    people_def.setPeopleperSpaceFloorArea(ip_to_si(0.005, 'people/ft^2', 'people/m^2'))
+    people_def.setPeopleperSpaceFloorArea(ip_to_si.call(0.005, 'people/ft^2', 'people/m^2'))
     # create the people instance and hook it up to the space type
     people = OpenStudio::Model::People.new(people_def)
     people.setName('Baseline Model People')
@@ -545,7 +546,7 @@ class BaselineModel < OpenStudio::Model::Model
     # create the lighting definition
     lights_def = OpenStudio::Model::LightsDefinition.new(self)
     lights_def.setName('Baseline Model Lights Definition')
-    lights_def.setWattsperSpaceFloorArea(ip_to_si(1, 'W/ft^2', 'W/m^2'))
+    lights_def.setWattsperSpaceFloorArea(ip_to_si.call(1, 'W/ft^2', 'W/m^2'))
     # create the lighting instance and hook it up to the space type
     lights = OpenStudio::Model::Lights.new(lights_def)
     lights.setName('Baseline Model Lights')
@@ -555,7 +556,7 @@ class BaselineModel < OpenStudio::Model::Model
     # create the electric equipment definition
     elec_equip_def = OpenStudio::Model::ElectricEquipmentDefinition.new(self)
     elec_equip_def.setName('Baseline Model Electric Equipment Definition')
-    elec_equip_def.setWattsperSpaceFloorArea(ip_to_si(1, 'W/ft^2', 'W/m^2'))
+    elec_equip_def.setWattsperSpaceFloorArea(ip_to_si.call(1, 'W/ft^2', 'W/m^2'))
     # create the electric equipment instance and hook it up to the space type
     elec_equip = OpenStudio::Model::ElectricEquipment.new(elec_equip_def)
     elec_equip.setName('Baseline Model Electric Equipment')
@@ -685,7 +686,7 @@ class BaselineModel < OpenStudio::Model::Model
       matching_objects = search_criteria_matching_objects
     else
       # Round up if capacity is an integer
-      if capacity = capacity.round
+      if capacity == capacity.round
         capacity += (capacity * 0.01)
       end
       search_criteria_matching_objects.each do |object|
@@ -737,7 +738,7 @@ class BaselineModel < OpenStudio::Model::Model
     end
 
     # Helper method to fill in hourly values
-    def add_vals_to_sch(day_sch, sch_type, values)
+    add_vals_to_sch = lambda { |day_sch, sch_type, values|
       if sch_type == 'Constant'
         day_sch.addValue(OpenStudio::Time.new(0, 24, 0, 0), values[0])
       elsif sch_type == 'Hourly'
@@ -747,7 +748,7 @@ class BaselineModel < OpenStudio::Model::Model
           day_sch.addValue(OpenStudio::Time.new(0, i + 1, 0, 0), values[i])
         end
       end
-    end
+    }
 
     # Make a schedule ruleset
     sch_ruleset = OpenStudio::Model::ScheduleRuleset.new(self)
@@ -767,7 +768,7 @@ class BaselineModel < OpenStudio::Model::Model
       if day_types.include?('Default')
         day_sch = sch_ruleset.defaultDaySchedule
         day_sch.setName("#{schedule_name} Default")
-        add_vals_to_sch(day_sch, sch_type, values)
+        add_vals_to_sch.call(day_sch, sch_type, values)
       end
 
       # Winter Design Day
@@ -776,7 +777,7 @@ class BaselineModel < OpenStudio::Model::Model
         sch_ruleset.setWinterDesignDaySchedule(day_sch)
         day_sch = sch_ruleset.winterDesignDaySchedule
         day_sch.setName("#{schedule_name} Winter Design Day")
-        add_vals_to_sch(day_sch, sch_type, values)
+        add_vals_to_sch.call(day_sch, sch_type, values)
       end
 
       # Summer Design Day
@@ -785,7 +786,7 @@ class BaselineModel < OpenStudio::Model::Model
         sch_ruleset.setSummerDesignDaySchedule(day_sch)
         day_sch = sch_ruleset.summerDesignDaySchedule
         day_sch.setName("#{schedule_name} Summer Design Day")
-        add_vals_to_sch(day_sch, sch_type, values)
+        add_vals_to_sch.call(day_sch, sch_type, values)
       end
 
       # Other days (weekdays, weekends, etc)
@@ -803,7 +804,7 @@ class BaselineModel < OpenStudio::Model::Model
         sch_rule = OpenStudio::Model::ScheduleRule.new(sch_ruleset)
         day_sch = sch_rule.daySchedule
         day_sch.setName("#{schedule_name} Summer Design Day")
-        add_vals_to_sch(day_sch, sch_type, values)
+        add_vals_to_sch.call(day_sch, sch_type, values)
 
         # Set the dates when the rule applies
         sch_rule.setStartDate(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(start_date.month.to_i), start_date.day.to_i))
@@ -833,7 +834,8 @@ class BaselineModel < OpenStudio::Model::Model
         sch_rule.setApplySunday(true) if day_types.include?('Sun')
 
       end
-    end # Next rule
+      # Next rule
+    end
 
     return sch_ruleset
   end

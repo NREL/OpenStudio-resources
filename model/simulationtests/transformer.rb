@@ -59,23 +59,22 @@ schedules = model.getObjectsByName('Transformer Output Electric Energy Schedule'
 name_plate_efficiency = 0.985
 unit_load_at_name_plate_efficiency = 0.35
 
-if name_plate_rating === 0
+if name_plate_rating == 0
   max_energy = 0
 
   if schedules[0].iddObject.type == 'Schedule:Year'.to_IddObjectType
     schedules[0].targets.each do |week_target|
-      if week_target.iddObject.type == 'Schedule:Week:Daily'.to_IddObjectType
-        week_target.targets.each do |day_target|
-          if day_target.iddObject.type == 'Schedule:Day:Interval'.to_IddObjectType
-            day_target.extensibleGroups.each do |eg|
-              value = eg.getDouble(1)
-              if value.is_initialized
-                if value.get > max_energy
-                  max_energy = value.get
-                end
-              end
-            end
-          end
+      next if week_target.iddObject.type != 'Schedule:Week:Daily'.to_IddObjectType
+
+      week_target.targets.each do |day_target|
+        next if day_target.iddObject.type != 'Schedule:Day:Interval'.to_IddObjectType
+
+        day_target.extensibleGroups.each do |eg|
+          value = eg.getDouble(1)
+          next if !value.is_initialized
+          next if value.get <= max_energy
+
+          max_energy = value.get
         end
       end
     end
