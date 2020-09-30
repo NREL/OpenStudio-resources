@@ -208,15 +208,18 @@ jobs:
         if __name__ == '__main__':
             check_id, check_url = create_check_run()
             print(f"Check run created with id {check_id}: {check_url}")
+            output = {}
             try:
                 data = run_rubocop()
                 conclusion, output = process_rubocop_output(data)
                 print(f"{conclusion=}")
                 print(f"{json.dumps(output, indent=4, sort_keys=True)}")
                 update_check_run(check_url, conclusion, output)
+                print("update_check_run done")
             except Exception as e:
                 update_check_run(check_url, "failure", None)
                 raise e
 
+            print("Reached up this point")
             if conclusion == "failure":
-                raise RuntimeError("Rubocop found failures")
+                raise RuntimeError(f"Rubocop found failures:\n{json.dumps(output, indent=4, sort_keys=True)}")
