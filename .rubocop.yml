@@ -4,6 +4,7 @@
 # Where a Cop is not listed, it uses the Rubocop defaults.
 
 AllCops:
+  NewCops: enable
   Exclude:
     - 'doc/**/*'
     - 'gemfiles/**/gems/**/*'
@@ -18,6 +19,12 @@ inherit_from:
   - http://s3.amazonaws.com/openstudio-resources/styles/rubocop.yml
 
 # =============== OpenStudio Resources Specific ===========
+
+# Allow long lines to encourage sufficiently
+# detailed user-facing log messages.
+Layout/LineLength:
+  Max: 1200
+  Severity: warning
 
 Layout/TrailingWhitespace:
   Enabled: true
@@ -46,13 +53,4 @@ Metrics/ClassLength:
   Enabled: false
 
 Metrics/AbcSize:
-  Enabled: false
-
-Style/HashEachMethods:
-  Enabled: false
-
-Style/HashTransformKeys:
-  Enabled: false
-
-Style/HashTransformValues:
   Enabled: false
