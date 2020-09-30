@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'openstudio' unless defined?(OpenStudio)
 
 # The config and helpers are inside this file
@@ -6,13 +8,12 @@ require_relative 'test_helpers.rb'
 # TODO: Include the other ones?
 # require_relative 'highlevel_tests.rb'
 # Ensure high level tests pass before continuing
-#require 'minitest'
-#success = Minitest.run(["-n", "/HighLevelTests/"])
-#success = HighLevelTests::run Minitest::Reporters::DefaultReporter.new
-#if not success
+# require 'minitest'
+# success = Minitest.run(["-n", "/HighLevelTests/"])
+# success = HighLevelTests::run Minitest::Reporters::DefaultReporter.new
+# if not success
 #  raise "High level tests failed"
-#end
-
+# end
 
 # the tests
 class ModelTests < Minitest::Test
@@ -1021,17 +1022,17 @@ class ModelTests < Minitest::Test
     gemfile_dir = bundle_install('bundle_no_git', true)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
-    extra_options = {:outdir => 'model_articulation1_bundle_no_git.osw',
-                     :bundle => gemfile, :bundle_path => bundle_path}
+    extra_options = { outdir: 'model_articulation1_bundle_no_git.osw',
+                      bundle: gemfile, bundle_path: bundle_path }
     result = sim_test('model_articulation1.osw', extra_options)
 
     # check that we got the right version of standards and workflow
-    #standards = nil
+    # standards = nil
     workflow = nil
     result[:steps].each do |step|
       if step[:measure_dir_name] == 'openstudio_results'
         step[:result][:step_values].each do |step_value|
-          #if step_value[:name] == 'standards_gem_version'
+          # if step_value[:name] == 'standards_gem_version'
           #  standards = step_value[:value]
           if step_value[:name] == 'workflow_gem_version'
             workflow = step_value[:value]
@@ -1039,12 +1040,12 @@ class ModelTests < Minitest::Test
         end
       end
     end
-    #assert(standards.is_a? String)
-    assert(workflow.is_a? String)
-    #puts "standards = #{standards}"
-    #puts "workflow = #{workflow}"
+    # assert(standards.is_a? String)
+    assert(workflow.is_a?(String))
+    # puts "standards = #{standards}"
+    # puts "workflow = #{workflow}"
 
-    #assert(/0.2.7/.match(standards))
+    # assert(/0.2.7/.match(standards))
     assert(/2.0.1/.match(workflow))
   end
 
@@ -1052,17 +1053,17 @@ class ModelTests < Minitest::Test
     gemfile_dir = bundle_install('bundle_git', true)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
-    extra_options = {:outdir => 'model_articulation1_bundle_git.osw',
-                     :bundle => gemfile, :bundle_path => bundle_path}
+    extra_options = { outdir: 'model_articulation1_bundle_git.osw',
+                      bundle: gemfile, bundle_path: bundle_path }
     result = sim_test('model_articulation1.osw', extra_options)
 
     # check that we got the right version of standards and workflow
-    #standards = nil
+    # standards = nil
     workflow = nil
     result[:steps].each do |step|
       if step[:measure_dir_name] == 'openstudio_results'
         step[:result][:step_values].each do |step_value|
-          #if step_value[:name] == 'standards_gem_version'
+          # if step_value[:name] == 'standards_gem_version'
           #  standards = step_value[:value]
           if step_value[:name] == 'workflow_gem_version'
             workflow = step_value[:value]
@@ -1070,12 +1071,12 @@ class ModelTests < Minitest::Test
         end
       end
     end
-    #assert(standards.is_a? String)
-    assert(workflow.is_a? String)
-    #puts "standards = #{standards}"
-    #puts "workflow = #{workflow}"
+    # assert(standards.is_a? String)
+    assert(workflow.is_a?(String))
+    # puts "standards = #{standards}"
+    # puts "workflow = #{workflow}"
 
-    #assert(/0.2.7/.match(standards))
+    # assert(/0.2.7/.match(standards))
     assert(/2.0.1/.match(workflow))
   end
 
@@ -1132,5 +1133,4 @@ class ModelTests < Minitest::Test
 
   # TODO: model/refbuildingtests/CreateRefBldgModel.rb is unused
   # Either implement as a test, or delete
-
 end

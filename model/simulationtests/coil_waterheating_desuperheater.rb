@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'openstudio'
 require 'lib/baseline_model'
 
@@ -7,7 +9,6 @@ require 'lib/baseline_model'
 # @param model [BaselineModel] The model in which to create it
 # @return [OpenStudio::Model::PlantLoop] the resulting plantloop
 def create_condenser_loop(model)
-
   # Create a Condenser Loop
   cw_loop = OpenStudio::Model::PlantLoop.new(model)
   cw_loop.setName('Condenser Water Loop')
@@ -50,20 +51,18 @@ end
 # @param zone [OpenStudio::Model::ThermalZone] The control zone
 # @return [OpenStudio::Model::AirLoopHVACUnitarySystem] the unitary
 def create_unitary_on_airloophvac(model, zone)
-
   airloop = zone.airLoopHVAC.get
-  airloop.setName("AirLoopHVAC for #{zone.name.to_s}")
+  airloop.setName("AirLoopHVAC for #{zone.name}")
 
   unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
   unitary.setControllingZoneorThermostatLocation(zone)
 
   # Replace the default Cooling Coil with the Unitary, then remove the default one
-  coil = airloop.supplyComponents(OpenStudio::Model::CoilCoolingDXSingleSpeed::iddObjectType).first.to_CoilCoolingDXSingleSpeed.get
+  coil = airloop.supplyComponents(OpenStudio::Model::CoilCoolingDXSingleSpeed.iddObjectType).first.to_CoilCoolingDXSingleSpeed.get
   unitary.addToNode(coil.outletModelObject.get.to_Node.get)
   coil.remove
 
   return unitary
-
 end
 
 # Tests a desuperheater with:
@@ -77,15 +76,14 @@ end
 # CoilCoolingWaterToAirHeatPumpEquationFit)
 # @return [OpenStudio::Model::CoilWaterHeatingDesuperheater]
 def create_gshp_test(model, zone)
-
   # create desuperheater object
   setpoint_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model, 60)
   coil_water_heating_desuperheater_gshp = OpenStudio::Model::CoilWaterHeatingDesuperheater.new(model, setpoint_temp_sch)
   coil_water_heating_desuperheater_gshp.setRatedHeatReclaimRecoveryEfficiency(0.25)
 
-  #create a SWH Loop with a stratified water heater
-  stratified_swh_loop = model.add_swh_loop("Stratified")
-  water_heater_stratified = stratified_swh_loop.supplyComponents("OS:WaterHeater:Stratified".to_IddObjectType)[0].to_WaterHeaterStratified.get
+  # create a SWH Loop with a stratified water heater
+  stratified_swh_loop = model.add_swh_loop('Stratified')
+  water_heater_stratified = stratified_swh_loop.supplyComponents('OS:WaterHeater:Stratified'.to_IddObjectType)[0].to_WaterHeaterStratified.get
   # Add it as a heat rejection target for the Desuperheater
   coil_water_heating_desuperheater_gshp.addToHeatRejectionTarget(water_heater_stratified)
 
@@ -117,15 +115,14 @@ end
 # CoilCoolingDXMultiSpeed)
 # @return [OpenStudio::Model::CoilWaterHeatingDesuperheater]
 def create_multispeedac_test(model, zone)
-
   # create desuperheater object
   setpoint_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model, 60)
   coil_water_heating_desuperheater_multi = OpenStudio::Model::CoilWaterHeatingDesuperheater.new(model, setpoint_temp_sch)
   coil_water_heating_desuperheater_multi.setRatedHeatReclaimRecoveryEfficiency(0.25)
 
   # Create a SHW Loop with a Mixed Water Heater
-  mixed_swh_loop = model.add_swh_loop("Mixed")
-  water_heater_mixed = mixed_swh_loop.supplyComponents("OS:WaterHeater:Mixed".to_IddObjectType)[0].to_WaterHeaterMixed.get
+  mixed_swh_loop = model.add_swh_loop('Mixed')
+  water_heater_mixed = mixed_swh_loop.supplyComponents('OS:WaterHeater:Mixed'.to_IddObjectType)[0].to_WaterHeaterMixed.get
   # Add it as a heat rejection target
   coil_water_heating_desuperheater_multi.addToHeatRejectionTarget(water_heater_mixed)
 
@@ -148,41 +145,40 @@ def create_multispeedac_test(model, zone)
   return coil_water_heating_desuperheater_multi
 end
 
-
 model = BaselineModel.new
 
-#make a 2 story, 100m X 50m, 2 zone core/perimeter building
-model.add_geometry({"length" => 100,
-                    "width" => 50,
-                    "num_floors" => 2,
-                    "floor_to_floor_height" => 4,
-                    "plenum_height" => 1,
-                    "perimeter_zone_depth" => 0})
+# make a 2 story, 100m X 50m, 2 zone core/perimeter building
+model.add_geometry({ 'length' => 100,
+                     'width' => 50,
+                     'num_floors' => 2,
+                     'floor_to_floor_height' => 4,
+                     'plenum_height' => 1,
+                     'perimeter_zone_depth' => 0 })
 
-#add windows at a 40% window-to-wall ratio
-model.add_windows({"wwr" => 0.4,
-                   "offset" => 1,
-                   "application_type" => "Above Floor"})
+# add windows at a 40% window-to-wall ratio
+model.add_windows({ 'wwr' => 0.4,
+                    'offset' => 1,
+                    'application_type' => 'Above Floor' })
 
-#add thermostats
-model.add_thermostats({"heating_setpoint" => 24,
-                       "cooling_setpoint" => 28})
+# add thermostats
+model.add_thermostats({ 'heating_setpoint' => 24,
+                        'cooling_setpoint' => 28 })
 
-#assign constructions from a local library to the walls/windows/etc. in the model
-model.set_constructions()
+# assign constructions from a local library to the walls/windows/etc. in the model
+model.set_constructions
 
-#set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()
+# set whole building space type; simplified 90.1-2004 Large Office Whole Building
+model.set_space_type
 
-#add design days to the model (Chicago)
-model.add_design_days()
+# add design days to the model (Chicago)
+model.add_design_days
 
-#add ASHRAE System type 03, PSZ-AC
-model.add_hvac({"ashrae_sys_num" => '03'})
+# add ASHRAE System type 03, PSZ-AC
+model.add_hvac({ 'ashrae_sys_num' => '03' })
 
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
-zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 
 ###############################################################################
 #                           (1) T E S T    G S H P                            #
@@ -203,6 +199,5 @@ create_gshp_test(model, zones[0])
 # * Heating source: CoilCoolingDXMultiSpeed.
 create_multispeedac_test(model, zones[1])
 
-
 # save the OpenStudio model (.osm)
-model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})
+model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd, 'osm_name' => 'in.osm' })

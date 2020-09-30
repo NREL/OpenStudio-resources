@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file aims to test the PlantEquipmentOperation based on the difference
 # between outdoor conditions and a reference node:
 # OutdoorDryBulbDifference, OutdoorDewpointDifference and OutdoorWetBulbDifference
@@ -16,28 +18,27 @@ require 'lib/baseline_model'
 
 model = BaselineModel.new
 
-#make a 2 story, 100m X 50m, 10 zone core/perimeter building
-model.add_geometry({"length" => 100,
-              "width" => 50,
-              "num_floors" => 2,
-              "floor_to_floor_height" => 4,
-              "plenum_height" => 1,
-              "perimeter_zone_depth" => 3})
+# make a 2 story, 100m X 50m, 10 zone core/perimeter building
+model.add_geometry({ 'length' => 100,
+                     'width' => 50,
+                     'num_floors' => 2,
+                     'floor_to_floor_height' => 4,
+                     'plenum_height' => 1,
+                     'perimeter_zone_depth' => 3 })
 
-#add windows at a 40% window-to-wall ratio
-model.add_windows({"wwr" => 0.4,
-                  "offset" => 1,
-                  "application_type" => "Above Floor"})
+# add windows at a 40% window-to-wall ratio
+model.add_windows({ 'wwr' => 0.4,
+                    'offset' => 1,
+                    'application_type' => 'Above Floor' })
 
-#add ASHRAE System type 07, VAV w/ Reheat
-model.add_hvac({"ashrae_sys_num" => '07'})
+# add ASHRAE System type 07, VAV w/ Reheat
+model.add_hvac({ 'ashrae_sys_num' => '07' })
 
-#add thermostats
-model.add_thermostats({"heating_setpoint" => 24,
-                      "cooling_setpoint" => 28})
+# add thermostats
+model.add_thermostats({ 'heating_setpoint' => 24,
+                        'cooling_setpoint' => 28 })
 
-#manually add op schemes instead of depending on os defaults
-
+# manually add op schemes instead of depending on os defaults
 
 # Note there are only 3 plant loops (heating/cooling/condenser) so this test is
 # reliable by using model.getCoolingTowerSingleSpeeds.first for eg
@@ -52,7 +53,7 @@ cond = tower.plantLoop.get
 tower2 = OpenStudio::Model::CoolingTowerSingleSpeed.new(model)
 cond.addSupplyBranchForComponent(tower2)
 
-cond_pump = cond.supplyComponents("OS_Pump_VariableSpeed".to_IddObjectType)[0].to_PumpVariableSpeed.get
+cond_pump = cond.supplyComponents('OS_Pump_VariableSpeed'.to_IddObjectType)[0].to_PumpVariableSpeed.get
 cond_pump_outlet_node = cond_pump.outletModelObject.get.to_Node.get
 
 plant_op_oa_wb_diff = OpenStudio::Model::PlantEquipmentOperationOutdoorWetBulbDifference.new(model)
@@ -67,9 +68,6 @@ plant_op_oa_wb_diff.addLoadRange(7, [tower])
 plant_op_oa_wb_diff.addLoadRange(5, [])
 
 cond.setPrimaryPlantEquipmentOperationScheme(plant_op_oa_wb_diff)
-
-
-
 
 # Test the OA Dewpoint diff one, we control it based on the condenser loop pump
 # outlet temperature, and if there is no difference, we don't use the
@@ -91,8 +89,6 @@ plant_op_oa_dew_diff.addEquipment(chiller2)
 plant_op_oa_dew_diff.addLoadRange(0, [])
 chilled_plant.setPrimaryPlantEquipmentOperationScheme(plant_op_oa_dew_diff)
 
-
-
 # Test the plant OA Db diff one. If the OA drybulb temperature is greater than
 # 10°C above the supply inlet temperature to the heating plant loop,
 # we turn off the boilers
@@ -109,17 +105,15 @@ plant_op_oa_db_diff.setReferenceTemperatureNode(heating_plant.supplyInletNode)
 plant_op_oa_db_diff.addLoadRange(-10, [boiler, boiler2])
 heating_plant.setPrimaryPlantEquipmentOperationScheme(plant_op_oa_db_diff)
 
+# assign constructions from a local library to the walls/windows/etc. in the model
+model.set_constructions
 
-#assign constructions from a local library to the walls/windows/etc. in the model
-model.set_constructions()
+# set whole building space type; simplified 90.1-2004 Large Office Whole Building
+model.set_space_type
 
-#set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()
+# add design days to the model (Chicago)
+model.add_design_days
 
-#add design days to the model (Chicago)
-model.add_design_days()
-
-#save the OpenStudio model (.osm)
-model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
-                           "osm_name" => "in.osm"})
-
+# save the OpenStudio model (.osm)
+model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
+                            'osm_name' => 'in.osm' })

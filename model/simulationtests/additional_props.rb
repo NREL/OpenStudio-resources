@@ -1,66 +1,67 @@
+# frozen_string_literal: true
+
 require 'openstudio'
 require 'lib/baseline_model'
 
 model = BaselineModel.new
 
-#make a 2 story, 100m X 50m, 10 zone core/perimeter building
-model.add_geometry({"length" => 100,
-                    "width" => 50,
-                    "num_floors" => 2,
-                    "floor_to_floor_height" => 4,
-                    "plenum_height" => 1,
-                    "perimeter_zone_depth" => 3})
+# make a 2 story, 100m X 50m, 10 zone core/perimeter building
+model.add_geometry({ 'length' => 100,
+                     'width' => 50,
+                     'num_floors' => 2,
+                     'floor_to_floor_height' => 4,
+                     'plenum_height' => 1,
+                     'perimeter_zone_depth' => 3 })
 
-#add windows at a 40% window-to-wall ratio
-model.add_windows({"wwr" => 0.4,
-                   "offset" => 1,
-                   "application_type" => "Above Floor"})
+# add windows at a 40% window-to-wall ratio
+model.add_windows({ 'wwr' => 0.4,
+                    'offset' => 1,
+                    'application_type' => 'Above Floor' })
 
-#add ASHRAE System type 01, PTAC, Residential
-model.add_hvac({"ashrae_sys_num" => '01'})
+# add ASHRAE System type 01, PTAC, Residential
+model.add_hvac({ 'ashrae_sys_num' => '01' })
 
-#add thermostats
-model.add_thermostats({"heating_setpoint" => 24,
-                       "cooling_setpoint" => 28})
+# add thermostats
+model.add_thermostats({ 'heating_setpoint' => 24,
+                        'cooling_setpoint' => 28 })
 
-#assign constructions from a local library to the walls/windows/etc. in the model
-model.set_constructions()
+# assign constructions from a local library to the walls/windows/etc. in the model
+model.set_constructions
 
-#set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()
+# set whole building space type; simplified 90.1-2004 Large Office Whole Building
+model.set_space_type
 
-#add design days to the model (Chicago)
-model.add_design_days()
+# add design days to the model (Chicago)
+model.add_design_days
 
 # Get spaces, ordered by name to ensure consistency
-spaces = model.getSpaces.sort_by{|s| s.name.to_s}
+spaces = model.getSpaces.sort_by { |s| s.name.to_s }
 
-#create 8in concrete material
+# create 8in concrete material
 material = OpenStudio::Model::StandardOpaqueMaterial.new(model)
 material.setThickness(0.2032)
 material.setConductivity(1.3114056)
 material.setDensity(2242.8)
 material.setSpecificHeat(837.4)
 
-#create the additional properties object
+# create the additional properties object
 additional_properties = material.additionalProperties
-additional_properties.setFeature("isNiceMaterial", true)
+additional_properties.setFeature('isNiceMaterial', true)
 
-#create construction with the material
+# create construction with the material
 construction = OpenStudio::Model::Construction.new(model)
 construction.insertLayer(0, material)
 
-#create the additional properties object
+# create the additional properties object
 additional_properties = construction.additionalProperties
-additional_properties.setFeature("isNiceConstruction", true)
+additional_properties.setFeature('isNiceConstruction', true)
 
-#update all additional properties objects
+# update all additional properties objects
 model.getAdditionalPropertiess.each do |additional_properties|
+  # retrieve an additional properties object and set a new feature
+  additional_properties.setFeature('newFeature', 1)
 
-  #retrieve an additional properties object and set a new feature
-  additional_properties.setFeature("newFeature", 1)
-
-  #retrieve the parent object from the additional properties object
+  # retrieve the parent object from the additional properties object
   model_object = additional_properties.modelObject
   if model_object.to_StandardOpaqueMaterial.is_initialized
     material = model_object.to_StandardOpaqueMaterial.get
@@ -75,7 +76,6 @@ model.getAdditionalPropertiess.each do |additional_properties|
     construction = model_object.to_Construction.get
     construction.insertLayer(1, material)
   end
-
 end
 
 unit = OpenStudio::Model::BuildingUnit.new(model)
@@ -84,15 +84,15 @@ spaces.each do |space|
 end
 
 additional_properties = unit.additionalProperties
-additional_properties.setFeature("isNiceUnit", true)
+additional_properties.setFeature('isNiceUnit', true)
 
-if unit.suggestedFeatures.include? "isNiceUnit" # check backwards compatibility
-  unit.setFeature("hasSuggestedFeature1", true)
+if unit.suggestedFeatures.include? 'isNiceUnit' # check backwards compatibility
+  unit.setFeature('hasSuggestedFeature1', true)
 end
 
-if unit.additionalProperties.suggestedFeatureNames.include? "isNiceUnit"
-  additional_properties.setFeature("hasSuggestedFeature2", true)
+if unit.additionalProperties.suggestedFeatureNames.include? 'isNiceUnit'
+  additional_properties.setFeature('hasSuggestedFeature2', true)
 end
 
 # save the OpenStudio model (.osm)
-model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})
+model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd, 'osm_name' => 'in.osm' })

@@ -1,23 +1,20 @@
+# frozen_string_literal: true
 
 require 'openstudio'
 require 'lib/baseline_model'
 require 'json'
 
-
-
 # Open the model class
 class OpenStudio::Model::Model
-
   # Helper function to create a captsone with heat recovery
   # Author: Julien Marrec
   # Will create a Capstone C65 and return the mchp, mchpHR
   def add_generator_mt_capstone65
-
-    #Generator:MicroTurbine,
+    # Generator:MicroTurbine,
     mchp = OpenStudio::Model::GeneratorMicroTurbine.new(self)
 
     #    Capstone C65,            !- Name
-    mchp.setName("Capstone C65")
+    mchp.setName('Capstone C65')
 
     # And it has heat recovery
     mchpHR = OpenStudio::Model::GeneratorMicroTurbineHeatRecovery.new(self, mchp)
@@ -44,12 +41,12 @@ class OpenStudio::Model::Model
     mchp.setReferenceCombustionAirInletHumidityRatio(0.00638)
 
     #    0.0,                     !- Reference Elevation {m}
-    #mchp.setReferenceElevation(0)
+    # mchp.setReferenceElevation(0)
 
     #    Capstone C65 Power_vs_Temp_Elev,  !- Electrical Power Function of Temperature and Elevation Curve Name
     curve = mchp.electricalPowerFunctionofTemperatureandElevationCurve
     curve = curve.to_CurveBiquadratic.get
-    #curve = OpenStudio::Model::CurveBiquadratic.new(self)
+    # curve = OpenStudio::Model::CurveBiquadratic.new(self)
     curve.setName('Capstone C65 Power_vs_Temp_Elev')
     curve.setCoefficient1Constant(1.2027697)
     curve.setCoefficient2x(-0.009671305)
@@ -63,11 +60,10 @@ class OpenStudio::Model::Model
     curve.setMaximumValueofy(3050)
     mchp.setElectricalPowerFunctionofTemperatureandElevationCurve(curve)
 
-
     #    Capstone C65 Efficiency_vs_Temp,  !- Electrical Efficiency Function of Temperature Curve Name
     curve = mchp.electricalEfficiencyFunctionofTemperatureCurve
     curve = curve.to_CurveCubic.get
-    #curve = OpenStudio::Model::CurveCubic.new(self)
+    # curve = OpenStudio::Model::CurveCubic.new(self)
     curve.setName('Capstone C65 Efficiency_vs_Temp')
     curve.setCoefficient1Constant(1.0402217)
     curve.setCoefficient2x(-0.0017314)
@@ -77,11 +73,10 @@ class OpenStudio::Model::Model
     curve.setMaximumValueofx(50)
     mchp.setElectricalEfficiencyFunctionofTemperatureCurve(curve)
 
-
     #    Capstone C65 Efficiency_vs_PLR,  !- Electrical Efficiency Function of Part Load Ratio Curve Name
     curve = mchp.electricalEfficiencyFunctionofPartLoadRatioCurve
     curve = curve.to_CurveCubic.get
-    #curve = OpenStudio::Model::CurveCubic.new(self)
+    # curve = OpenStudio::Model::CurveCubic.new(self)
     curve.setName('Capstone C65 Efficiency_vs_PLR')
     curve.setCoefficient1Constant(0.21529)
     curve.setCoefficient2x(2.561463)
@@ -92,7 +87,7 @@ class OpenStudio::Model::Model
     mchp.setElectricalEfficiencyFunctionofPartLoadRatioCurve(curve)
 
     #    NaturalGas,              !- Fuel Type
-    mchp.setFuelType("NaturalGas")
+    mchp.setFuelType('NaturalGas')
 
     #    50000,                   !- Fuel Higher Heating Value {kJ/kg}
     mchp.setFuelHigherHeatingValue(50000)
@@ -116,14 +111,14 @@ class OpenStudio::Model::Model
     mchpHR.setReferenceInletWaterTemperature(60)
 
     #    PlantControl,            !- Heat Recovery Water Flow Operating Mode
-    mchpHR.setHeatRecoveryWaterFlowOperatingMode("PlantControl")
+    mchpHR.setHeatRecoveryWaterFlowOperatingMode('PlantControl')
 
     #    0.00252362,              !- Reference Heat Recovery Water Flow Rate {m3/s}
     #    = 40 GPM
     mchpHR.setReferenceHeatRecoveryWaterFlowRate(0.00252362)
 
     #    ,                        !- Heat Recovery Water Flow Rate Function of Temperature and Power Curve Name
-    #mchpHR.setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve()
+    # mchpHR.setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve()
 
     #    Capstone C65 ThermalEff_vs_Temp_Elev,  !- Thermal Efficiency Function of Temperature and Elevation Curve Name
     curve = OpenStudio::Model::CurveBicubic.new(self)
@@ -190,10 +185,8 @@ class OpenStudio::Model::Model
     #    Capstone C65 Combustion Air Inlet Node,  !- Combustion Air Inlet Node Name
     #    Capstone C65 Combustion Air Outlet Node,  !- Combustion Air Outlet Node Name
 
-
     #    0.489885,                !- Reference Exhaust Air Mass Flow Rate {kg/s}
     mchp.setReferenceExhaustAirMassFlowRate(0.489885)
-
 
     #    Capstone C65 ExhAirFlowRate_vs_InletTemp,  !- Exhaust Air Flow Rate Function of Temperature Curve Name
     curve = OpenStudio::Model::CurveCubic.new(self)
@@ -248,10 +241,9 @@ class OpenStudio::Model::Model
   end
 end
 
-
 model = BaselineModel.new
 
-	model.add_standards( JSON.parse('{
+model.add_standards(JSON.parse('{
   "schedules": [
     {
         "name": "Medium Office Bldg Swh",
@@ -293,64 +285,61 @@ model = BaselineModel.new
         ]
       }
     ]
-  }') )
+  }'))
 
-#make a 1 story, 100m X 50m, 5 zone core/perimeter building
-model.add_geometry({"length" => 100,
-              "width" => 50,
-              "num_floors" => 1,
-              "floor_to_floor_height" => 4,
-              "plenum_height" => 1,
-              "perimeter_zone_depth" => 3})
+# make a 1 story, 100m X 50m, 5 zone core/perimeter building
+model.add_geometry({ 'length' => 100,
+                     'width' => 50,
+                     'num_floors' => 1,
+                     'floor_to_floor_height' => 4,
+                     'plenum_height' => 1,
+                     'perimeter_zone_depth' => 3 })
 
-#add windows at a 40% window-to-wall ratio
-model.add_windows({"wwr" => 0.4,
-                  "offset" => 1,
-                  "application_type" => "Above Floor"})
+# add windows at a 40% window-to-wall ratio
+model.add_windows({ 'wwr' => 0.4,
+                    'offset' => 1,
+                    'application_type' => 'Above Floor' })
 
-#add ASHRAE System type 01, PTAC, Residential
-model.add_hvac({"ashrae_sys_num" => '01'})
+# add ASHRAE System type 01, PTAC, Residential
+model.add_hvac({ 'ashrae_sys_num' => '01' })
 
-#add thermostats
-model.add_thermostats({"heating_setpoint" => 24,
-                      "cooling_setpoint" => 28})
+# add thermostats
+model.add_thermostats({ 'heating_setpoint' => 24,
+                        'cooling_setpoint' => 28 })
 
-#assign constructions from a local library to the walls/windows/etc. in the model
-model.set_constructions()
+# assign constructions from a local library to the walls/windows/etc. in the model
+model.set_constructions
 
-#set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()
+# set whole building space type; simplified 90.1-2004 Large Office Whole Building
+model.set_space_type
 
-#add design days to the model (Chicago)
-model.add_design_days()
-
+# add design days to the model (Chicago)
+model.add_design_days
 
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
-zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 
 # We are going to artificially put more than enough electrical and service hot
 # water loads (the goal isn't to produce a realistic office building...)
 
 # We transform our building into a 10 story one
-zones.each {|z| z.setMultiplier(10)}
+zones.each { |z| z.setMultiplier(10) }
 
 # Add a shw loop with one water use connections + water use equipment
-mixed_swh_loop = model.add_swh_loop("Mixed")
-model.add_swh_end_uses(mixed_swh_loop, "Medium Office Bldg Swh")
+mixed_swh_loop = model.add_swh_loop('Mixed')
+model.add_swh_end_uses(mixed_swh_loop, 'Medium Office Bldg Swh')
 
 # Modify it to be about 150 GPM
 # with the schedule defined for defaultDay, with a sum of hourly frac = 5.367
 # that's about 48 kGal/day of service water, peaking at 85.5 GPM.
 # The Capstone Reference Heat Recovery Water Flow Rate = 40 GPM
 gpm = 150.0
-water_use_connection = mixed_swh_loop.demandComponents("OS:WaterUse:Connections".to_IddObjectType)[0].to_WaterUseConnections.get
+water_use_connection = mixed_swh_loop.demandComponents('OS:WaterUse:Connections'.to_IddObjectType)[0].to_WaterUseConnections.get
 water_use_equipment = water_use_connection.waterUseEquipment[0]
 water_equip_def = water_use_equipment.waterUseEquipmentDefinition
-water_equip_def.setPeakFlowRate(OpenStudio::convert(gpm, "gal/min", "m^3/s").get)
+water_equip_def.setPeakFlowRate(OpenStudio.convert(gpm, 'gal/min', 'm^3/s').get)
 water_equip_def.setName("Service Water Use Def #{gpm.round(1)} gal/min")
-
-
 
 ###############################################################################
 # If you want to compare it to the base case (without the microturbine)
@@ -371,17 +360,17 @@ if !base_case
   # We will connect the mchpHR on the same branch as the WaterHeater:Mixed right
   # before it.
   generator_operation_scheme_type = 'FollowThermalLimitElectrical'
-  supply_components = mixed_swh_loop.supplyComponents("OS:WaterHeater:Mixed".to_IddObjectType)
+  supply_components = mixed_swh_loop.supplyComponents('OS:WaterHeater:Mixed'.to_IddObjectType)
   waterheater = supply_components.first.to_WaterHeaterMixed.get
 
-   # Get the Use Side (demand) Inlet Node
+  # Get the Use Side (demand) Inlet Node
   inlet_node = waterheater.supplyInletModelObject.get.to_Node.get
   mchpHR.addToNode(inlet_node)
 
   # Create a PlantEquipmentOperationHeatingLoad, and place the cogen first in
   # line, and set the plant loop operation scheme to Sequential so the order
   # is preserved
-  mixed_swh_loop.setLoadDistributionScheme("Sequential")
+  mixed_swh_loop.setLoadDistributionScheme('Sequential')
   # Create a PlantEquipmentOperationHeatingLoad and add the cogen first,
   operation = OpenStudio::Model::PlantEquipmentOperationHeatingLoad.new(model)
   operation.addEquipment(mchpHR)
@@ -390,13 +379,12 @@ if !base_case
   operation.setName("#{mixed_swh_loop.name} PlantEquipmentOperationHeatingLoad")
   mixed_swh_loop.setPlantEquipmentOperationHeatingLoad(operation)
 
-
   # Create an ELCD, and add the cogen on it
   elcd = OpenStudio::Model::ElectricLoadCenterDistribution.new(model)
-  elcd.setName("Capstone C65 ELCD")
+  elcd.setName('Capstone C65 ELCD')
   elcd.setGeneratorOperationSchemeType(generator_operation_scheme_type)
   elcd.addGenerator(mchp)
-  elcd.setElectricalBussType("AlternatingCurrent")
+  elcd.setElectricalBussType('AlternatingCurrent')
 
   # If you want to see all available fields on the ELCD, do the following
   # elcd.resetStorageControlUtilityDemandTargetFractionSchedule
@@ -408,12 +396,11 @@ if !base_case
   # Eg: if I had not set 'AlternatingCurrent' for buss type, the default is
   # 'DirectCurrentWithInverter', elcd.validityCheck would return false and print
   # a message saying the buss type requires and inverter while I didn't set one
-  if not elcd.validityCheck
-    raise "Electric Load Center is not valid"
+  if !elcd.validityCheck
+    raise 'Electric Load Center is not valid'
   end
 
 end
-
 
 ###############################################################################
 
@@ -432,5 +419,5 @@ if add_out_vars
 end
 
 ###############################################################################
-#save the OpenStudio model (.osm)
-model.save_openstudio_osm({"osm_save_directory" => Dir.pwd, "osm_name" => "in.osm"})
+# save the OpenStudio model (.osm)
+model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd, 'osm_name' => 'in.osm' })
