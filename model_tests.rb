@@ -535,12 +535,12 @@ class ModelTests < Minitest::Test
   end
 
   def test_outputcontrol_files_rb
-    extra_options = {:compare_eui => false}
+    extra_options = { compare_eui: false }
     result = sim_test('outputcontrol_files.rb', extra_options)
 
     # We enabled only a few files, so check that
     run_dir = File.join($TestDir, 'outputcontrol_files.rb', 'run')
-    assert(File.exists?(run_dir))
+    assert(File.exist?(run_dir))
 
     all_files = [
       'eplusout.audit',
@@ -584,7 +584,7 @@ class ModelTests < Minitest::Test
       'eplusmtr.csv',
       'eplusout.err',
       'eplusout.audit',
-      'eplustbl.htm',
+      'eplustbl.htm'
     ]
 
     assert((expected_files - all_files).empty?)
@@ -593,15 +593,14 @@ class ModelTests < Minitest::Test
       assert(File.exist?(File.join(run_dir, fname)), "Expected #{fname}")
     end
 
-    (all_files - expected_files).each  do |fname|
+    (all_files - expected_files).each do |fname|
       assert(!File.exist?(File.join(run_dir, fname)), "Did not expect #{fname}")
     end
-
   end
 
   # TODO: To be added in the next official release after: 3.0.1
   # def test_outputcontrol_files_osm
-    # result = sim_test('outputcontrol_files.osm')
+  # result = sim_test('outputcontrol_files.osm')
   # end
 
   def test_output_objects_rb
