@@ -212,6 +212,8 @@ jobs:
                 data = run_rubocop()
                 conclusion, output = process_rubocop_output(data)
                 update_check_run(check_url, conclusion, output)
+                if conclusion == "failure":
+                    raise RuntimeError("Rubocop found failures")
             except:
                 update_check_run(check_url, "failure", None)
 
