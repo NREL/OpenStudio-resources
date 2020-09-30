@@ -212,10 +212,11 @@ jobs:
                 data = run_rubocop()
                 conclusion, output = process_rubocop_output(data)
                 print(f"{conclusion=}")
-                rint(f"{json.dumps(output, indent=4, sort_keys=True)}")
+                print(f"{json.dumps(output, indent=4, sort_keys=True)}")
                 update_check_run(check_url, conclusion, output)
                 if conclusion == "failure":
                     raise RuntimeError("Rubocop found failures")
-            except:
+            except as e:
                 update_check_run(check_url, "failure", None)
+                raise e
 
