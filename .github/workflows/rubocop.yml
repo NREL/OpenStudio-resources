@@ -11,7 +11,197 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Rubocop checks
-      uses: gimenete/rubocop-action@1.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: install rubocop and python requests
+      shell: bash
+      run: |
+          gem install rubocop=0.80.1
+          pip install requests
+
+    - name: Check if rubocop gem is installed
+      shell: bash
+      run: |
+        if [ `gem list -i "^rubocop$"` != "true" ]; then
+          echo "gem rubocop is not installed"
+          exit 1
+        fi
+
+    - name: run rubocop
+      shell: python
+      run: |
+        import json
+        import shlex
+        import subprocess
+        import datetime
+        import requests
+
+        GITHUB_TOKEN = "${{ secrets.GITHUB_TOKEN }}"
+        GITHUB_SHA = "${{ github.sha }}"
+        OWNER_REPO = "${{ github.repository }}"  # "owner/repo"
+
+        ANNOTATIONS_LEVELS = {
+          'refactor': 'failure',
+          'convention': 'failure',
+          'warning': 'warning',
+          'error': 'failure',
+          'fatal': 'failure'
+        }
+
+        CHECK_NAME = 'Rubocop'
+
+        HEADERS = {
+          "Content-Type": 'application/json',
+          "Accept": 'application/vnd.github.antiope-preview+json',
+          "Authorization": "Bearer {}".format(GITHUB_TOKEN),
+          "User-Agent": 'github-actions-rubocop'
+        }
+
+
+        def run_rubocop():
+            """
+            Runs `rubocop --format json` parse json into a python dict
+            Also prints the summary data
+            """
+
+            result = subprocess.run(shlex.split('rubocop --format json'),
+                                    capture_output=True)
+
+            if result.returncode == 0:
+                conclusion = 'success'
+            else:
+                conclusion = 'failure'
+
+            data = json.loads(result.stdout)
+            print("Rubocop exited with {}: {}".format(result.returncode, conclusion))
+            print(json.dumps(data['Summary'], indent=4, sort_keys=True))
+
+            return data
+
+
+        def process_rubocop_output(data):
+            """
+            Processes the output of `rubocop --format json` and create an output object
+            with annotations
+
+            Args:
+            -----
+            data (dict): the parsed output of rubocop json
+
+            Returns:
+            ---------
+            conclusion (str): 'failure' or 'success'
+            output (dict): the output object
+                see https://developer.github.com/v3/checks/runs/#output-object-1
+            """
+            annotations = []
+            for f in data['files']:
+                if not f['offenses']:
+                    continue
+                path = f['path']
+                for offense in f['offenses']:
+                    severity = offense['severity']
+                    correctable = " (Correctable)" if offense['correctable'] else ""
+                    message = "{}: {}{}".format(offense['cop_name'],
+                                                offense['message'],
+                                                correctable)
+                    location = offense['location']
+                    annotation_level = ANNOTATIONS_LEVELS[severity]
+
+                    if annotation_level == 'failure':
+                        conclusion = 'failure'
+
+                    annotations.append({
+                        'path': path,
+                        'start_line': location['start_line'],
+                        'end_line': location['last_line'],
+                        'annotation_level': annotation_level,
+                        'message': message
+                    })
+
+            title = "{} {} (ruby {}p{})".format(CHECK_NAME,
+                                                data['metadata']['rubocop_version'],
+                                                data['metadata']['ruby_version'],
+                                                data['metadata']['ruby_patchlevel'])
+            output = {
+                "title": title,
+                "summary": "{} offense(s) found".format(
+                    data['summary']['offense_count']),
+                'annotations': annotations
+            }
+
+            return conclusion, output
+
+
+        def create_check_run():
+            """
+            Creates the initial check-run with a status of 'in_progress' and returns
+            the id of the check-run that was created. Throws if failed
+            """
+
+            body = {
+              'name': CHECK_NAME,
+              'head_sha': GITHUB_SHA,
+              'status': 'in_progress',
+              'started_at': datetime.datetime.now().isoformat()
+            }
+
+            query_url = "https://api.github.com/repos/{}/check-runs".format(OWNER_REPO)
+
+            r = requests.post(query_url, headers=HEADERS, data=json.dumps(body))
+            if r.status_code != requests.codes.created:
+                r.raise_for_status()
+                http_error_msg = ("{} Error: {} for url: "
+                                  "{}".format(r.status_code, r.reason, r.url))
+                raise requests.exceptions.HTTPError(http_error_msg, response=r)
+            data = r.json()
+
+            return data['id']
+
+
+        def update_check_run(check_id, conclusion, output):
+            """
+            Update the given check-run (check_id) with the conclusion and annotations
+            and sets its status to 'completed'
+
+            Args:
+            ------
+            check_id (int): the id of the check_run, returned from create_check_run
+
+            conclusion (str): one of ['success', 'failure', 'neutral', 'cancelled',
+            'skipped', 'timed_out', 'action_required']
+
+            output (json object):
+                see https://developer.github.com/v3/checks/runs/#output-object-1
+
+            """
+
+            body = {
+                'name': CHECK_NAME,
+                'head_sha': GITHUB_SHA,
+                'status': 'completed',
+                'completed_at': datetime.datetime.now().isoformat(),
+                'conclusion': conclusion,
+                'output': output
+            }
+
+            query_url = (
+                "https://api.github.com/repos/{}/check-runs/{}".format(OWNER_REPO,
+                                                                       check_id))
+
+            r = requests.post(query_url, headers=HEADERS, data=json.dumps(body))
+            if r.status_code != requests.codes.ok:
+                r.raise_for_status()
+                http_error_msg = ("{} Error: {} for url: "
+                                  "{}".format(r.status_code, r.reason, r.url))
+                raise requests.exceptions.HTTPError(http_error_msg, response=r)
+
+
+        if __name__ == '__main__':
+            check_id = create_check_run()
+
+            data = run_rubocop()
+            try:
+                conclusion, output = process_rubocop_output(data)
+                update_check_run(check_id, conclusion, output)
+            except:
+                update_check_run(check_id, "failure", None)
+
