@@ -566,6 +566,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('surface_properties.osm')
   end
 
+  def test_FT_surfacecontrol_moveableinsulation
+    sdd_ft_test('surfacecontrol_moveableinsulation.osm')
+  end
+
   def test_FT_tablemultivariablelookup
     sdd_ft_test('tablemultivariablelookup.osm')
   end
