@@ -163,7 +163,7 @@ jobs:
                                   "{}.\{}".format(r.status_code, r.reason, r.url, json.dumps(r.json(), indent=4, sort_keys=True)))
                 raise requests.exceptions.HTTPError(http_error_msg, response=r)
             data = r.json()
-
+            print(f"create_check_run response: {json.dumps(data, indent=4, sort_keys=True)}")
             return data['id']
 
 
@@ -207,7 +207,7 @@ jobs:
 
         if __name__ == '__main__':
             check_id = create_check_run()
-
+            print(f"Check run created with id {check_id}")
             try:
                 data = run_rubocop()
                 conclusion, output = process_rubocop_output(data)
