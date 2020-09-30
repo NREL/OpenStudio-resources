@@ -82,7 +82,7 @@ jobs:
 
             data = json.loads(result.stdout)
             print("Rubocop exited with {}: {}".format(result.returncode, conclusion))
-            print(json.dumps(data['Summary'], indent=4, sort_keys=True))
+            print(json.dumps(data['summary'], indent=4, sort_keys=True))
 
             return data
 
@@ -208,8 +208,8 @@ jobs:
         if __name__ == '__main__':
             check_id = create_check_run()
 
-            data = run_rubocop()
             try:
+                data = run_rubocop()
                 conclusion, output = process_rubocop_output(data)
                 update_check_run(check_id, conclusion, output)
             except:
