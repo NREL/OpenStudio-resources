@@ -1,0 +1,15 @@
+name: Rubocop
+
+on:
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  rubocop:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Rubocop checks
+      uses: gimenete/rubocop-action@1.0
