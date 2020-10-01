@@ -43,7 +43,10 @@ class HighLevelTests < MiniTest::Test
     # These are the ruby tests we expect NOT to find in a sim_test
     expected_sim_missing = [
       # This is autosizing_test
-      'autosize_hvac.rb'
+      'autosize_hvac.rb',
+      # This one has an unusual structure, and I don't feel like playing with the
+      # regex above any more
+      'outputcontrol_files.rb',
     ]
 
     missing_rbs -= expected_sim_missing
