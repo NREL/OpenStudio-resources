@@ -62,7 +62,7 @@ class HighLevelTests < MiniTest::Test
     # input the ruby file name, eg `xxxx.rb` NOT `test_xxx_rb`
     noMatchingOSMTests = ['ExampleModel.rb',
                           'autosize_hvac.rb',
-                          # Not enabled
+                          # TODO: Not enabled
                           'afn_single_zone_ac.rb']
 
     content = File.read('model_tests.rb')
