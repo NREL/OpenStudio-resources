@@ -1,59 +1,60 @@
+# frozen_string_literal: true
+
 require 'openstudio'
 require 'lib/baseline_model'
 
 model = BaselineModel.new
 
-#make a 2 story, 100m X 50m, 10 zone core/perimeter building
-model.add_geometry({"length" => 100,
-                    "width" => 50,
-                    "num_floors" => 2,
-                    "floor_to_floor_height" => 4,
-                    "plenum_height" => 1,
-                    "perimeter_zone_depth" => 0})
+# make a 2 story, 100m X 50m, 10 zone core/perimeter building
+model.add_geometry({ 'length' => 100,
+                     'width' => 50,
+                     'num_floors' => 2,
+                     'floor_to_floor_height' => 4,
+                     'plenum_height' => 1,
+                     'perimeter_zone_depth' => 0 })
 
-#add windows at a 40% window-to-wall ratio
-model.add_windows({"wwr" => 0.4,
-                   "offset" => 1,
-                   "application_type" => "Above Floor"})
+# add windows at a 40% window-to-wall ratio
+model.add_windows({ 'wwr' => 0.4,
+                    'offset' => 1,
+                    'application_type' => 'Above Floor' })
 
-#add thermostats
-model.add_thermostats({"heating_setpoint" => 15,
-                       "cooling_setpoint" => 28})
+# add thermostats
+model.add_thermostats({ 'heating_setpoint' => 15,
+                        'cooling_setpoint' => 28 })
 
-#assign constructions from a local library to the walls/windows/etc. in the model
-model.set_constructions()
+# assign constructions from a local library to the walls/windows/etc. in the model
+model.set_constructions
 
-#set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()
+# set whole building space type; simplified 90.1-2004 Large Office Whole Building
+model.set_space_type
 
-#add design days to the model (Chicago)
-model.add_design_days()
+# add design days to the model (Chicago)
+model.add_design_days
 
 # set HVAC for the IT equipment zone
-model.add_hvac({"ashrae_sys_num" => '07'})
+model.add_hvac({ 'ashrae_sys_num' => '07' })
 
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
 # zones = model.getThermalZones.sort_by{|z| z.name.to_s}
 
 # Get spaces, ordered by name to ensure consistency
-spaces = model.getSpaces.sort_by{|s| s.name.to_s}
-
+spaces = model.getSpaces.sort_by { |s| s.name.to_s }
 
 spaces.each_with_index do |space, i|
   # IT equipment with default curves
   if i == 0
     it_equipment_def = OpenStudio::Model::ElectricEquipmentITEAirCooledDefinition.new(model)
-    it_equipment_def.setName("IT equipment def 1")
+    it_equipment_def.setName('IT equipment def 1')
     it_equipment_def.setWattsperUnit(50000)
     it_equipment_def.setDesignFanAirFlowRateperPowerInput(0.0001)
-    it_equipment_def.setDesignEnteringAirTemperature(22.5)    # recommended SAT 18-27C, use the middle T as design
+    it_equipment_def.setDesignEnteringAirTemperature(22.5) # recommended SAT 18-27C, use the middle T as design
     it_equipment_def.setDesignFanPowerInputFraction(0.4)
 
     it_equipment = OpenStudio::Model::ElectricEquipmentITEAirCooled.new(it_equipment_def)
     it_equipment.setSpace(space)
-    it_equipment.setName("#{space.name.to_s} IT equipment 1")
-    it_equipment_def.setDesignPowerInputCalculationMethod("Watts/Area", it_equipment.floorArea)
+    it_equipment.setName("#{space.name} IT equipment 1")
+    it_equipment_def.setDesignPowerInputCalculationMethod('Watts/Area', it_equipment.floorArea)
 
     # IT equipment with customized curves
   elsif i == 1
@@ -92,16 +93,16 @@ spaces.each_with_index do |space, i|
                                                                                       cpu_power_curve,
                                                                                       airflow_curve,
                                                                                       fan_power_curve)
-    it_equipment_def.setName("IT equipment def 2")
+    it_equipment_def.setName('IT equipment def 2')
     it_equipment_def.setWattsperUnit(50000)
     it_equipment_def.setDesignFanAirFlowRateperPowerInput(0.0001)
     it_equipment_def.setDesignFanPowerInputFraction(0.4)
-    it_equipment_def.setDesignEnteringAirTemperature(22.5)    # recommended SAT 18-27C, use the middle T as design
-    it_equipment_def.setAirFlowCalculationMethod("FlowControlWithApproachTemperatures")
+    it_equipment_def.setDesignEnteringAirTemperature(22.5) # recommended SAT 18-27C, use the middle T as design
+    it_equipment_def.setAirFlowCalculationMethod('FlowControlWithApproachTemperatures')
 
     it_equipment = OpenStudio::Model::ElectricEquipmentITEAirCooled.new(it_equipment_def)
     it_equipment.setSpace(space)
-    it_equipment.setName("#{space.name.to_s} IT equipment 2")
+    it_equipment.setName("#{space.name} IT equipment 2")
 
     it_equipment.setDesignPowerInputSchedule(model.alwaysOnDiscreteSchedule)
     it_equipment.setMultiplier(2.0)
@@ -109,7 +110,6 @@ spaces.each_with_index do |space, i|
   end
 end
 
-#save the OpenStudio model (.osm)
-model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
-                           "osm_name" => "in.osm"})
-
+# save the OpenStudio model (.osm)
+model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
+                            'osm_name' => 'in.osm' })

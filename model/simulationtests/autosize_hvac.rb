@@ -1,39 +1,39 @@
+# frozen_string_literal: true
 
 require 'openstudio'
 require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 
-#make a 8 story, 100m X 50m, 40 zone core/perimeter building
-model.add_geometry({"length" => 100,
-              "width" => 50,
-              "num_floors" => 8,
-              "floor_to_floor_height" => 4,
-              "plenum_height" => 1,
-              "perimeter_zone_depth" => 3})
+# make a 8 story, 100m X 50m, 40 zone core/perimeter building
+model.add_geometry({ 'length' => 100,
+                     'width' => 50,
+                     'num_floors' => 8,
+                     'floor_to_floor_height' => 4,
+                     'plenum_height' => 1,
+                     'perimeter_zone_depth' => 3 })
 
+# add thermostats
+model.add_thermostats({ 'heating_setpoint' => 24,
+                        'cooling_setpoint' => 28 })
 
-#add thermostats
-model.add_thermostats({"heating_setpoint" => 24,
-                      "cooling_setpoint" => 28})
+# assign constructions from a local library to the walls/windows/etc. in the model
+model.set_constructions
 
-#assign constructions from a local library to the walls/windows/etc. in the model
-model.set_constructions()
+# set whole building space type; simplified 90.1-2004 Large Office Whole Building
+model.set_space_type
 
-#set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()
+# add design days to the model (Chicago)
+model.add_design_days
 
-#add design days to the model (Chicago)
-model.add_design_days()
-
-#add windows at a 40% window-to-wall ratio
+# add windows at a 40% window-to-wall ratio
 # model.add_windows({"wwr" => 0.4,
-                  # "offset" => 1,
-                  # "application_type" => "Above Floor"})
+# "offset" => 1,
+# "application_type" => "Above Floor"})
 
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
-zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 puts "The model has #{zones.size} thermal zones"
 
 # Change the simulation to only run the sizing days
@@ -99,8 +99,7 @@ storage_loop = OpenStudio::Model::PlantLoop.new(model)
 hw_loop = OpenStudio::Model::PlantLoop.new(model)
 cw_loop = OpenStudio::Model::PlantLoop.new(model)
 chw_loop = OpenStudio::Model::PlantLoop.new(model)
-swh_loop = model.add_swh_loop("Mixed")
-
+swh_loop = model.add_swh_loop('Mixed')
 
 ###  water loop for Heat recovery ###
 # Water use connection
@@ -108,12 +107,12 @@ swh_connection = OpenStudio::Model::WaterUseConnections.new(model)
 # Water fixture definition
 water_fixture_def = OpenStudio::Model::WaterUseEquipmentDefinition.new(model)
 rated_flow_rate_gal_per_min = 50
-rated_flow_rate_m3_per_s = OpenStudio.convert(rated_flow_rate_gal_per_min,'gal/min','m^3/s').get
+rated_flow_rate_m3_per_s = OpenStudio.convert(rated_flow_rate_gal_per_min, 'gal/min', 'm^3/s').get
 water_fixture_def.setPeakFlowRate(rated_flow_rate_m3_per_s)
 water_fixture_def.setName("Service Water Use Def #{rated_flow_rate_gal_per_min.round(2)}gal/min")
 # Target mixed water temperature
 mixed_water_temp_f = 110
-mixed_water_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model, OpenStudio.convert(mixed_water_temp_f,'F','C').get)
+mixed_water_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model, OpenStudio.convert(mixed_water_temp_f, 'F', 'C').get)
 water_fixture_def.setTargetTemperatureSchedule(mixed_water_temp_sch)
 # Water use equipment
 water_fixture = OpenStudio::Model::WaterUseEquipment.new(water_fixture_def)
@@ -121,7 +120,6 @@ water_fixture.setName("Service Water Use #{rated_flow_rate_gal_per_min.round(2)}
 swh_connection.addWaterUseEquipment(water_fixture)
 # Connect the water use connection to the SWH loop
 swh_loop.addDemandBranchForComponent(swh_connection)
-
 
 ### Chilled water loop for thermal storage ###
 storage_loop.setName('Storage Chilled Water Loop')
@@ -370,7 +368,7 @@ fan = OpenStudio::Model::FanVariableVolume.new(model)
 fan.addToNode(in_1)
 oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
 oa_controller.autosizeMinimumOutdoorAirFlowRate # OS has a bad default of zero, which disables autosizing
-oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model,oa_controller)
+oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, oa_controller)
 oa_system.addToNode(in_1)
 
 # OA equipment
@@ -398,7 +396,7 @@ clg_coil = new_evap_cooling_coil_dx_singlespeed(model)
 clg_coil.addToNode(out_1)
 clg_coil = new_evap_cooling_coil_dx_twospeed(model)
 clg_coil.addToNode(out_1)
-evap_clr = OpenStudio::Model::EvaporativeCoolerDirectResearchSpecial.new(model,s1)
+evap_clr = OpenStudio::Model::EvaporativeCoolerDirectResearchSpecial.new(model, s1)
 evap_clr.autosizeRecirculatingWaterPumpPowerConsumption
 evap_clr.addToNode(out_1)
 evap_clr = OpenStudio::Model::EvaporativeCoolerIndirectResearchSpecial.new(model)
@@ -418,28 +416,27 @@ htg_coil.addToNode(out_1)
 
 ### Dual Duct Air loop ###
 air_loop_dual_duct = OpenStudio::Model::AirLoopHVAC.new(model)
-air_loop_dual_duct.setName("Dual Duct Air Loop")
+air_loop_dual_duct.setName('Dual Duct Air Loop')
 oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
-oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model,oa_controller)
+oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, oa_controller)
 oa_system.addToNode(air_loop_dual_duct.supplyOutletNode)
 fan = OpenStudio::Model::FanVariableVolume.new(model)
 fan.addToNode(air_loop_dual_duct.supplyOutletNode)
 splitter = OpenStudio::Model::ConnectorSplitter.new(model)
 splitter.addToNode(air_loop_dual_duct.supplyOutletNode)
-supply_outlet_nodes = air_loop_dual_duct.supplyOutletNodes()
+supply_outlet_nodes = air_loop_dual_duct.supplyOutletNodes
 heating_coil = OpenStudio::Model::CoilHeatingGas.new(model)
 heating_coil.addToNode(supply_outlet_nodes[0])
 heating_sch = OpenStudio::Model::ScheduleRuleset.new(model)
-heating_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),45.0)
-heating_spm = OpenStudio::Model::SetpointManagerScheduled.new(model,heating_sch)
+heating_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 45.0)
+heating_spm = OpenStudio::Model::SetpointManagerScheduled.new(model, heating_sch)
 heating_spm.addToNode(supply_outlet_nodes[0])
 cooling_coil = new_evap_cooling_coil_dx_twospeed(model)
 cooling_coil.addToNode(supply_outlet_nodes[1])
 cooling_sch = OpenStudio::Model::ScheduleRuleset.new(model)
-cooling_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),12.8)
-cooling_spm = OpenStudio::Model::SetpointManagerScheduled.new(model,cooling_sch)
+cooling_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 12.8)
+cooling_spm = OpenStudio::Model::SetpointManagerScheduled.new(model, cooling_sch)
 cooling_spm.addToNode(supply_outlet_nodes[1])
-
 
 ### Unitary airloops ###
 
@@ -465,8 +462,8 @@ clg_coil.addStage(clg_stage_1)
 clg_coil.addStage(clg_stage_2)
 clg_coil.addStage(clg_stage_3)
 clg_coil.addStage(clg_stage_4)
-sup_htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model,s1)
-unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.new(model,fan,htg_coil,clg_coil,sup_htg_coil)
+sup_htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model, s1)
+unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.new(model, fan, htg_coil, clg_coil, sup_htg_coil)
 unitary.setNumberofSpeedsforHeating(4)
 unitary.setNumberofSpeedsforCooling(4)
 unitary.addToNode(unitary_loop.supplyOutletNode)
@@ -480,7 +477,7 @@ unitary_loop.setName('UnitaryHeatCoolVAVChangeoverBypass Loop')
 fan = OpenStudio::Model::FanConstantVolume.new(model, s1)
 clg_coil = new_evap_cooling_coil_dx_singlespeed(model)
 htg_coil = OpenStudio::Model::CoilHeatingGas.new(model, s1)
-unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.new(model,fan,clg_coil,htg_coil)
+unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.new(model, fan, clg_coil, htg_coil)
 unitary.addToNode(unitary_loop.supplyOutletNode)
 # Reheat terminal
 reheat_coil = OpenStudio::Model::CoilHeatingWater.new(model)
@@ -517,7 +514,7 @@ cw_loop.addDemandBranchForComponent(htg_coil)
 speed_data = OpenStudio::Model::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.new(model)
 htg_coil.addSpeed(speed_data)
 unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
-unitary.setFanPlacement("BlowThrough")
+unitary.setFanPlacement('BlowThrough')
 unitary.setSupplyAirFanOperatingModeSchedule(s1)
 unitary.setSupplyFan(fan)
 unitary.setCoolingCoil(clg_coil)
@@ -525,8 +522,8 @@ unitary.setHeatingCoil(htg_coil)
 unitary.addToNode(unitary_loop.supplyOutletNode)
 unitary.setControllingZoneorThermostatLocation(zones[27])
 # Necessary for autosizedDOASDXCoolingCoilLeavingMinimumAirTemperature
-unitary.setControlType("SingleZoneVAV")
-unitary.autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature()
+unitary.setControlType('SingleZoneVAV')
+unitary.autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature
 
 term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 unitary_loop.addBranchForZone(zones[27], term)
@@ -543,7 +540,7 @@ heat_stage_2 = OpenStudio::Model::CoilHeatingGasMultiStageStageData.new(model)
 htg_coil.addStage(heat_stage_1)
 htg_coil.addStage(heat_stage_2)
 unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
-unitary.setFanPlacement("BlowThrough")
+unitary.setFanPlacement('BlowThrough')
 unitary.setSupplyAirFanOperatingModeSchedule(s1)
 unitary.setSupplyFan(fan)
 unitary.setCoolingCoil(clg_coil)
@@ -551,8 +548,8 @@ unitary.setHeatingCoil(htg_coil)
 unitary.addToNode(unitary_loop.supplyOutletNode)
 unitary.setControllingZoneorThermostatLocation(zones[30])
 # Necessary for autosizedDOASDXCoolingCoilLeavingMinimumAirTemperature
-unitary.setControlType("SingleZoneVAV")
-unitary.autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature()
+unitary.setControlType('SingleZoneVAV')
+unitary.autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature
 
 term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 unitary_loop.addBranchForZone(zones[30], term)
@@ -585,8 +582,8 @@ unitary.setSupplyAirFanOperatingModeSchedule(s1)
 unitary.addToNode(unitary_loop.supplyInletNode)
 unitary.setControllingZoneorThermostatLocation(zones[32])
 # Necessary for autosizedDOASDXCoolingCoilLeavingMinimumAirTemperature
-unitary.setControlType("SingleZoneVAV")
-unitary.autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature()
+unitary.setControlType('SingleZoneVAV')
+unitary.autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature
 
 term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 unitary_loop.addBranchForZone(zones[32], term)
@@ -612,7 +609,7 @@ heat_stage_2 = OpenStudio::Model::CoilHeatingDXMultiSpeedStageData.new(model)
 htg_coil.addStage(heat_stage_1)
 htg_coil.addStage(heat_stage_2)
 unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
-unitary.setFanPlacement("BlowThrough")
+unitary.setFanPlacement('BlowThrough')
 unitary.setSupplyAirFanOperatingModeSchedule(s1)
 unitary.setSupplyFan(fan)
 unitary.setCoolingCoil(clg_coil)
@@ -637,11 +634,11 @@ int_src_const = OpenStudio::Model::ConstructionWithInternalSource.new(model)
 int_src_const.setSourcePresentAfterLayerNumber(3)
 int_src_const.setTemperatureCalculationRequestedAfterLayerNumber(3)
 layers = []
-layers << concrete_sand_gravel = OpenStudio::Model::StandardOpaqueMaterial.new(model,"MediumRough",0.1014984,1.729577,2242.585, 836.8)
-layers << rigid_insulation_2inch = OpenStudio::Model::StandardOpaqueMaterial.new(model,"Rough",0.05,0.02,56.06,1210)
-layers << gyp1 = OpenStudio::Model::StandardOpaqueMaterial.new(model,"MediumRough",0.0127,0.7845,1842.1221,988)
-layers << gyp2 = OpenStudio::Model::StandardOpaqueMaterial.new(model,"MediumRough",0.01905,0.7845,1842.1221,988)
-layers << finished_floor = OpenStudio::Model::StandardOpaqueMaterial.new(model,"Smooth",0.0016,0.17,1922.21,1250)
+layers << concrete_sand_gravel = OpenStudio::Model::StandardOpaqueMaterial.new(model, 'MediumRough', 0.1014984, 1.729577, 2242.585, 836.8)
+layers << rigid_insulation_2inch = OpenStudio::Model::StandardOpaqueMaterial.new(model, 'Rough', 0.05, 0.02, 56.06, 1210)
+layers << gyp1 = OpenStudio::Model::StandardOpaqueMaterial.new(model, 'MediumRough', 0.0127, 0.7845, 1842.1221, 988)
+layers << gyp2 = OpenStudio::Model::StandardOpaqueMaterial.new(model, 'MediumRough', 0.01905, 0.7845, 1842.1221, 988)
+layers << finished_floor = OpenStudio::Model::StandardOpaqueMaterial.new(model, 'Smooth', 0.0016, 0.17, 1922.21, 1250)
 int_src_const.setLayers(layers)
 
 # UnitarySystem with CoilCoolingDX
@@ -672,11 +669,11 @@ operating_mode = OpenStudio::Model::CoilCoolingDXCurveFitOperatingMode.new(model
 operating_mode.addSpeed(speed_1)
 # Nominal Evaporative Condenser Pump Power is not autosized - because it is
 # unused - if it's AirCooled (default); so set it to evap cooled
-operating_mode.setCondenserType("EvaporativelyCooled")
-operating_mode.autosizeRatedGrossTotalCoolingCapacity()
-operating_mode.autosizeRatedEvaporatorAirFlowRate()
-operating_mode.autosizeRatedCondenserAirFlowRate()
-operating_mode.autosizeNominalEvaporativeCondenserPumpPower()
+operating_mode.setCondenserType('EvaporativelyCooled')
+operating_mode.autosizeRatedGrossTotalCoolingCapacity
+operating_mode.autosizeRatedEvaporatorAirFlowRate
+operating_mode.autosizeRatedCondenserAirFlowRate
+operating_mode.autosizeNominalEvaporativeCondenserPumpPower
 
 performance = OpenStudio::Model::CoilCoolingDXCurveFitPerformance.new(model, operating_mode)
 clg_coil = OpenStudio::Model::CoilCoolingDX.new(model, performance)
@@ -685,7 +682,7 @@ htg_coil = OpenStudio::Model::CoilHeatingDXSingleSpeed.new(model)
 
 unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
 unitary_loop.setName('UnitarySystem CoilCoolingDX')
-unitary.setFanPlacement("BlowThrough")
+unitary.setFanPlacement('BlowThrough')
 unitary.setSupplyAirFanOperatingModeSchedule(s1)
 unitary.setSupplyFan(fan)
 unitary.setCoolingCoil(clg_coil)
@@ -694,7 +691,6 @@ unitary.addToNode(unitary_loop.supplyInletNode)
 unitary.setControllingZoneorThermostatLocation(zones[38])
 term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 unitary_loop.addBranchForZone(zones[38], term)
-
 
 ### Zone HVAC and Terminals ###
 # Add one of every single kind of Zone HVAC equipment supported by OS
@@ -786,20 +782,20 @@ zones.each_with_index do |zn, zone_index|
     # Make all floors in the spaces in this zone use the internal source construction
     zn.spaces.each do |space|
       space.surfaces.each do |s|
-        s.setConstruction(int_src_const) if s.surfaceType == "Floor"
+        s.setConstruction(int_src_const) if s.surfaceType == 'Floor'
       end
     end
 
     zn_temp_sch = OpenStudio::Model::ScheduleConstant.new(model)
     zn_temp_sch.setValue(OpenStudio.convert(65.0, 'F', 'C').get)
     low_temp_rad = OpenStudio::Model::ZoneHVACLowTemperatureRadiantElectric.new(model, s1, zn_temp_sch)
-    low_temp_rad.setRadiantSurfaceType("Floors")
+    low_temp_rad.setRadiantSurfaceType('Floors')
     low_temp_rad.addToThermalZone(zn)
   when 15
     # Make all floors in the spaces in this zone use the internal source construction
     zn.spaces.each do |space|
       space.surfaces.each do |s|
-        s.setConstruction(int_src_const) if s.surfaceType == "Floor"
+        s.setConstruction(int_src_const) if s.surfaceType == 'Floor'
       end
     end
 
@@ -812,7 +808,7 @@ zones.each_with_index do |zn, zone_index|
     clg_coil = OpenStudio::Model::CoilCoolingLowTempRadiantVarFlow.new(model, clg_temp_sch)
     chw_loop.addDemandBranchForComponent(clg_coil)
     low_temp_rad = OpenStudio::Model::ZoneHVACLowTempRadiantVarFlow.new(model, s1, htg_coil, clg_coil)
-    low_temp_rad.setRadiantSurfaceType("Floors")
+    low_temp_rad.setRadiantSurfaceType('Floors')
     low_temp_rad.addToThermalZone(zn)
 
   when 16
@@ -861,7 +857,7 @@ zones.each_with_index do |zn, zone_index|
     chw_loop.addDemandBranchForComponent(clg_coil)
     htg_coil = OpenStudio::Model::CoilHeatingWater.new(model)
     hw_loop.addDemandBranchForComponent(htg_coil)
-    OpenStudio::Model::ZoneHVACFourPipeFanCoil.new(model,s1,fan,clg_coil,htg_coil).addToThermalZone(zn)
+    OpenStudio::Model::ZoneHVACFourPipeFanCoil.new(model, s1, fan, clg_coil, htg_coil).addToThermalZone(zn)
   when 23
     term = OpenStudio::Model::AirTerminalSingleDuctVAVNoReheat.new(model, s1)
     air_loop.addBranchForZone(zn, term)
@@ -894,7 +890,7 @@ zones.each_with_index do |zn, zone_index|
     # Make all floors in the spaces in this zone use the internal source construction
     zn.spaces.each do |space|
       space.surfaces.each do |s|
-        s.setConstruction(int_src_const) if s.surfaceType == "Floor"
+        s.setConstruction(int_src_const) if s.surfaceType == 'Floor'
       end
     end
 
@@ -916,11 +912,11 @@ zones.each_with_index do |zn, zone_index|
     heatingHighControlTempSched.setValue(21.0)
     heatingLowControlTempSched.setValue(15.0)
 
-    testCC = OpenStudio::Model::CoilCoolingLowTempRadiantConstFlow.new(model,coolingHighWaterTempSched,coolingLowWaterTempSched,coolingHighControlTempSched,coolingLowControlTempSched)
-    testHC = OpenStudio::Model::CoilHeatingLowTempRadiantConstFlow.new(model,heatingHighWaterTempSched,heatingLowWaterTempSched,heatingHighControlTempSched,heatingLowControlTempSched)
+    testCC = OpenStudio::Model::CoilCoolingLowTempRadiantConstFlow.new(model, coolingHighWaterTempSched, coolingLowWaterTempSched, coolingHighControlTempSched, coolingLowControlTempSched)
+    testHC = OpenStudio::Model::CoilHeatingLowTempRadiantConstFlow.new(model, heatingHighWaterTempSched, heatingLowWaterTempSched, heatingHighControlTempSched, heatingLowControlTempSched)
 
     low_temp_cst_rad = OpenStudio::Model::ZoneHVACLowTempRadiantConstFlow.new(model, s1, testHC, testCC)
-    low_temp_cst_rad.setRadiantSurfaceType("Floors")
+    low_temp_cst_rad.setRadiantSurfaceType('Floors')
     low_temp_cst_rad.addToThermalZone(zn)
 
   when 26, 27, 28, 29, 30, 31, 32, 33, 38
@@ -931,7 +927,6 @@ zones.each_with_index do |zn, zone_index|
   end
 end
 
-#save the OpenStudio model (.osm)
-model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
-                           "osm_name" => "in.osm"})
-
+# save the OpenStudio model (.osm)
+model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
+                            'osm_name' => 'in.osm' })
