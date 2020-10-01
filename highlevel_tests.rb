@@ -46,7 +46,7 @@ class HighLevelTests < MiniTest::Test
       'autosize_hvac.rb',
       # This one has an unusual structure, and I don't feel like playing with the
       # regex above any more
-      'outputcontrol_files.rb',
+      'outputcontrol_files.rb'
     ]
 
     missing_rbs -= expected_sim_missing
