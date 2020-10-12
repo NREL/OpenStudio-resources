@@ -1,69 +1,71 @@
+# frozen_string_literal: true
+
 require 'openstudio'
 require 'lib/baseline_model'
 
 model = BaselineModel.new
 
-#make a 2 story, 100m X 50m, 15 zone core/perimeter building
-model.add_geometry({"length" => 100,
-                    "width" => 50,
-                    "num_floors" => 3,
-                    "floor_to_floor_height" => 4,
-                    "plenum_height" => 1,
-                    "perimeter_zone_depth" => 3});
+# make a 2 story, 100m X 50m, 15 zone core/perimeter building
+model.add_geometry({ 'length' => 100,
+                     'width' => 50,
+                     'num_floors' => 3,
+                     'floor_to_floor_height' => 4,
+                     'plenum_height' => 1,
+                     'perimeter_zone_depth' => 3 })
 
-#add windows at a 40% window-to-wall ratio
-model.add_windows({"wwr" => 0.4,
-                   "offset" => 1,
-                   "application_type" => "Above Floor"});
+# add windows at a 40% window-to-wall ratio
+model.add_windows({ 'wwr' => 0.4,
+                    'offset' => 1,
+                    'application_type' => 'Above Floor' })
 
-#assign constructions from a local library to the walls/windows/etc. in the model
-model.set_constructions()
+# assign constructions from a local library to the walls/windows/etc. in the model
+model.set_constructions
 
-#set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()
+# set whole building space type; simplified 90.1-2004 Large Office Whole Building
+model.set_space_type
 
-#add design days to the model (Chicago)
-model.add_design_days()
+# add design days to the model (Chicago)
+model.add_design_days
 
-#add thermostats
-model.add_thermostats({"heating_setpoint" => 24,
-                       "cooling_setpoint" => 28})
+# add thermostats
+model.add_thermostats({ 'heating_setpoint' => 24,
+                        'cooling_setpoint' => 28 })
 
-#add ASHRAE System type 07, VAV w/ Reheat
-model.add_hvac({"ashrae_sys_num" => '07'});
+# add ASHRAE System type 07, VAV w/ Reheat
+model.add_hvac({ 'ashrae_sys_num' => '07' })
 
 # In order to produce more consistent results between different runs,
 # We ensure we do get the same object each time
-zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 
-airLoops = model.getAirLoopHVACs.sort_by{|a| a.name.to_s}
+airLoops = model.getAirLoopHVACs.sort_by { |a| a.name.to_s }
 regularAirLoopHVAC = airLoops[0]
 
-chillers = model.getChillerElectricEIRs.sort_by{|c| c.name.to_s}
-boilers = model.getBoilerHotWaters.sort_by{|c| c.name.to_s}
+chillers = model.getChillerElectricEIRs.sort_by { |c| c.name.to_s }
+boilers = model.getBoilerHotWaters.sort_by { |c| c.name.to_s }
 
 cooling_loop = chillers.first.plantLoop.get
 heating_loop = boilers.first.plantLoop.get
 
-alwaysOn = model.alwaysOnDiscreteSchedule()
+alwaysOn = model.alwaysOnDiscreteSchedule
 
 fan = OpenStudio::Model::FanSystemModel.new(model)
 # Demonstrate API
-fan.setName("My FanSystemModel");
+fan.setName('My FanSystemModel')
 
 # Availability Schedule Name: Required Object
-sch = OpenStudio::Model::ScheduleConstant.new(model);
-sch.setName("Fan Avail Schedule");
+sch = OpenStudio::Model::ScheduleConstant.new(model)
+sch.setName('Fan Avail Schedule')
 sch.setValue(1.0)
 fan.setAvailabilitySchedule(sch)
 
 # Design Maximum Air Flow Rate: Required Double, Autosizable
 # fan.setDesignMaximumAirFlowRate(0.1)
-fan.autosizeDesignMaximumAirFlowRate()
+fan.autosizeDesignMaximumAirFlowRate
 
 # Speed Control Method: Required String
 # OpenStudio::Model::FanSystemModel::speedControlMethodValues()
-fan.setSpeedControlMethod("Discrete")
+fan.setSpeedControlMethod('Discrete')
 
 # Electric Power Minimum Flow Rate Fraction: Required Double
 fan.setElectricPowerMinimumFlowRateFraction(0.0)
@@ -79,11 +81,11 @@ fan.setMotorInAirStreamFraction(0.87)
 
 # Design Electric Power Consumption: Required Double, Autosizable
 # fan.setDesignElectricPowerConsumption(3112.8)
-fan.autosizeDesignElectricPowerConsumption()
+fan.autosizeDesignElectricPowerConsumption
 
 # Design Power Sizing Method: Required String (choice)
 # OpenStudio::Model::FanSystemModel::designPowerSizingMethodValues()
-fan.setDesignPowerSizingMethod("TotalEfficiencyAndPressure")
+fan.setDesignPowerSizingMethod('TotalEfficiencyAndPressure')
 
 # These two may not be used depending on the Design Power Sizing Method
 # Electric Power Per Unit Flow Rate: Required Double
@@ -98,7 +100,7 @@ fan.setFanTotalEfficiency(0.59)
 # Electric Power Function of Flow Fraction Curve Name: Optional Object
 # Taken from PackagedTerminalHeatPump.idf
 fanPowerFuncFlowCurve = OpenStudio::Model::CurveCubic.new(model)
-fanPowerFuncFlowCurve.setName("CombinedPowerAndFanEff")
+fanPowerFuncFlowCurve.setName('CombinedPowerAndFanEff')
 fanPowerFuncFlowCurve.setCoefficient1Constant(0.0)
 fanPowerFuncFlowCurve.setCoefficient2x(0.027411)
 fanPowerFuncFlowCurve.setCoefficient3xPOW2(0.008740)
@@ -122,7 +124,7 @@ fan.setMotorLossZone(zones[0])
 fan.setMotorLossRadiativeFraction(0.15)
 
 # End-Use Subcategory: Required String
-fan.setEndUseSubcategory("My Fan")
+fan.setEndUseSubcategory('My Fan')
 
 # Speeds: used when Speed Control Method = Discrete
 # You can add speeds one by one
@@ -145,7 +147,6 @@ fan.setSpeeds(speeds)
 regularAirLoopHVAC.supplyFan.get.remove
 fan.addToNode(regularAirLoopHVAC.supplyOutletNode)
 
-
 # AirLoopHVACUnitaryHeatPumpAirToAir
 # TODO: Currently not supported in E+
 is_working_AirLoopHVACUnitaryHeatPumpAirToAir = false
@@ -161,7 +162,7 @@ if is_working_AirLoopHVACUnitaryHeatPumpAirToAir
   supp_heating_coil = OpenStudio::Model::CoilHeatingElectric.new(model)
   unitary_air_to_air = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAir.new(model, alwaysOn, fan, heating_coil, cooling_coil, supp_heating_coil)
   unitary_air_to_airAirLoopHVAC = OpenStudio::Model::AirLoopHVAC.new(model)
-  unitary_air_to_airAirLoopHVAC.setName("UnitaryHPAirToAir AirLoopHVAC")
+  unitary_air_to_airAirLoopHVAC.setName('UnitaryHPAirToAir AirLoopHVAC')
   unitary_air_to_air.addToNode(unitary_air_to_airAirLoopHVAC.supplyOutletNode)
 end
 
@@ -191,7 +192,7 @@ if is_working_AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
   unitary_multispeed.setNumberofSpeedsforHeating(4)
   unitary_multispeed.setNumberofSpeedsforCooling(4)
   unitary_hp_airtoair_multispeedAirLoopHVAC = OpenStudio::Model::AirLoopHVAC.new(model)
-  unitary_hp_airtoair_multispeedAirLoopHVAC.setName("UnitaryHPAirToAirMultiSpeed AirLoopHVAC")
+  unitary_hp_airtoair_multispeedAirLoopHVAC.setName('UnitaryHPAirToAirMultiSpeed AirLoopHVAC')
   unitary_multispeed.addToNode(unitary_hp_airtoair_multispeedAirLoopHVAC.supplyOutletNode)
 end
 
@@ -201,9 +202,8 @@ unitary_vav_cc = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
 unitary_vav_hc = OpenStudio::Model::CoilHeatingGas.new(model)
 unitary_vav_changeover = OpenStudio::Model::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.new(model, unitary_vav_fan, unitary_vav_cc, unitary_vav_hc)
 unitary_vav_changeoverAirLoopHVAC = OpenStudio::Model::AirLoopHVAC.new(model)
-unitary_vav_changeoverAirLoopHVAC.setName("AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass AirLoopHVAC")
+unitary_vav_changeoverAirLoopHVAC.setName('AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass AirLoopHVAC')
 unitary_vav_changeover.addToNode(unitary_vav_changeoverAirLoopHVAC.supplyOutletNode)
-
 
 # AirLoopHVACUnitarySystem
 unitary_system = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
@@ -218,11 +218,10 @@ unitary_system.setCoolingCoil(unitary_system_cc)
 unitary_system.setHeatingCoil(unitary_system_hc)
 unitary_system.setSupplementalHeatingCoil(supp_unitary_system_hc)
 unitary_systemAirLoopHVAC = OpenStudio::Model::AirLoopHVAC.new(model)
-unitary_systemAirLoopHVAC.setName("AirLoopHVACUnitarySystem AirLoopHVAC")
+unitary_systemAirLoopHVAC.setName('AirLoopHVACUnitarySystem AirLoopHVAC')
 unitary_system.addToNode(unitary_systemAirLoopHVAC.supplyOutletNode)
 
-
-dhw_loop = OpenStudio::Model::addSHWLoop(model).to_PlantLoop.get
+dhw_loop = OpenStudio::Model.addSHWLoop(model).to_PlantLoop.get
 
 hpwh_pumped = OpenStudio::Model::WaterHeaterHeatPump.new(model)
 hpwh_pumped_fan = OpenStudio::Model::FanSystemModel.new(model)
@@ -246,7 +245,6 @@ if is_working_WaterThermalTanks
 end
 
 zones.each_with_index do |z, i|
-
   # ZoneHVACEnergyRecoveryVentilator
   if i == 0
 
@@ -269,7 +267,7 @@ zones.each_with_index do |z, i|
     # ** Severe  ** GetFanCoilUnits: ZoneHVAC:FourPipeFanCoil: ZONE HVAC FOUR PIPE FAN COIL 1
     # **   ~~~   ** ...the fan type of the object : FAN SYSTEM MODEL 1 does not match with the capacity control method selected : VARIABLEFANVARIABLEFLOW please see I/O reference
     # **   ~~~   ** ...for VariableFanVariableFlow or VariableFanConstantFlow a Fan:SystemModel should have Continuous speed control.
-    fan.setSpeedControlMethod("Continuous")
+    fan.setSpeedControlMethod('Continuous')
 
     # ** Warning ** HVACFan constructor Fan:SystemModel="FAN SYSTEM MODEL 1", invalid entry.
     # **   ~~~   ** Continuous speed control requires a fan power curve in Electric Power Function of Flow Fraction Curve Name =
@@ -285,9 +283,9 @@ zones.each_with_index do |z, i|
 
   # ZoneHVACPackagedTerminalAirConditioner
   elsif i == 2
-    thermal_zone_vector = OpenStudio::Model::ThermalZoneVector.new()
+    thermal_zone_vector = OpenStudio::Model::ThermalZoneVector.new
     thermal_zone_vector << z
-    OpenStudio::Model::addSystemType1(model, thermal_zone_vector)
+    OpenStudio::Model.addSystemType1(model, thermal_zone_vector)
     fan = OpenStudio::Model::FanSystemModel.new(model)
     ptacs = model.getZoneHVACPackagedTerminalAirConditioners
     fan_cv = ptacs[0].supplyAirFan
@@ -296,9 +294,9 @@ zones.each_with_index do |z, i|
 
   # ZoneHVACPackagedTerminalHeatPump
   elsif i == 3
-    thermal_zone_vector = OpenStudio::Model::ThermalZoneVector.new()
+    thermal_zone_vector = OpenStudio::Model::ThermalZoneVector.new
     thermal_zone_vector << z
-    OpenStudio::Model::addSystemType2(model, thermal_zone_vector)
+    OpenStudio::Model.addSystemType2(model, thermal_zone_vector)
     fan = OpenStudio::Model::FanSystemModel.new(model)
     pthps = model.getZoneHVACPackagedTerminalHeatPumps
     fan_cv = pthps[0].supplyAirFan
@@ -350,7 +348,6 @@ zones.each_with_index do |z, i|
     heating_loop.addDemandBranchForComponent(heating_coil)
     cooling_loop.addDemandBranchForComponent(cooling_coil)
 
-
   # AirTerminalSingleDuctSeriesPIUReheat
   elsif i == 8
     air_loop = z.airLoopHVAC.get
@@ -381,7 +378,7 @@ zones.each_with_index do |z, i|
     new_terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, alwaysOn)
 
     unitary_vav_changeoverAirLoopHVAC.addBranchForZone(z, new_terminal.to_StraightComponent)
-    # Doesn't exist: unitary_vav_changeover.setControllingZoneorThermostatLocation(z)
+  # Doesn't exist: unitary_vav_changeover.setControllingZoneorThermostatLocation(z)
 
   # AirLoopHVACUnitarySystem
   elsif i == 11
@@ -400,7 +397,7 @@ zones.each_with_index do |z, i|
 
   # WaterHeaterHeatPumpWrappedCondenser
   elsif i == 13 && is_working_WaterThermalTanks
-      hpwh_wrapped.addToThermalZone(z)
+    hpwh_wrapped.addToThermalZone(z)
 
   elsif i == 14 && is_working_AirLoopHVACUnitaryHeatPumpAirToAir
     air_loop = z.airLoopHVAC.get
@@ -421,6 +418,6 @@ zones.each_with_index do |z, i|
   end
 end
 
-#save the OpenStudio model (.osm)
-model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
-                           "osm_name" => "in.osm"})
+# save the OpenStudio model (.osm)
+model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
+                            'osm_name' => 'in.osm' })

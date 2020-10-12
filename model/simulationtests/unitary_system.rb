@@ -1,47 +1,48 @@
+# frozen_string_literal: true
 
 require 'openstudio'
 require 'lib/baseline_model'
 
 model = BaselineModel.new
 
-#make a 2 story, 100m X 50m, 10 zone core/perimeter building
-model.add_geometry({"length" => 100,
-              "width" => 50,
-              "num_floors" => 2,
-              "floor_to_floor_height" => 4,
-              "plenum_height" => 1,
-              "perimeter_zone_depth" => 3})
+# make a 2 story, 100m X 50m, 10 zone core/perimeter building
+model.add_geometry({ 'length' => 100,
+                     'width' => 50,
+                     'num_floors' => 2,
+                     'floor_to_floor_height' => 4,
+                     'plenum_height' => 1,
+                     'perimeter_zone_depth' => 3 })
 
-#add windows at a 40% window-to-wall ratio
-model.add_windows({"wwr" => 0.4,
-                  "offset" => 1,
-                  "application_type" => "Above Floor"})
+# add windows at a 40% window-to-wall ratio
+model.add_windows({ 'wwr' => 0.4,
+                    'offset' => 1,
+                    'application_type' => 'Above Floor' })
 
-schedule = model.alwaysOnDiscreteSchedule()
+schedule = model.alwaysOnDiscreteSchedule
 
 _hotWaterSchedule = OpenStudio::Model::ScheduleRuleset.new(model)
-_hotWaterSchedule.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0), 67)
+_hotWaterSchedule.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 67)
 
 _chilledWaterSchedule = OpenStudio::Model::ScheduleRuleset.new(model)
-_chilledWaterSchedule.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0), 6.7)
+_chilledWaterSchedule.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 6.7)
 
 # Hot Water Plant
 hotWaterPlant = OpenStudio::Model::PlantLoop.new(model)
 sizingPlant = hotWaterPlant.sizingPlant()
-sizingPlant.setLoopType("Heating")
+sizingPlant.setLoopType('Heating')
 sizingPlant.setDesignLoopExitTemperature(82.0)
 sizingPlant.setLoopDesignTemperatureDifference(11.0)
 
-hotWaterOutletNode = hotWaterPlant.supplyOutletNode()
-hotWaterInletNode = hotWaterPlant.supplyInletNode()
-hotWaterDemandOutletNode = hotWaterPlant.demandOutletNode()
-hotWaterDemandInletNode = hotWaterPlant.demandInletNode()
+hotWaterOutletNode = hotWaterPlant.supplyOutletNode
+hotWaterInletNode = hotWaterPlant.supplyInletNode
+hotWaterDemandOutletNode = hotWaterPlant.demandOutletNode
+hotWaterDemandInletNode = hotWaterPlant.demandInletNode
 
 pump = OpenStudio::Model::PumpVariableSpeed.new(model)
 boiler = OpenStudio::Model::BoilerHotWater.new(model)
 
 pump.addToNode(hotWaterInletNode)
-node = hotWaterPlant.supplySplitter().lastOutletModelObject().get.to_Node.get
+node = hotWaterPlant.supplySplitter.lastOutletModelObject.get.to_Node.get
 boiler.addToNode(node)
 
 pipe = OpenStudio::Model::PipeAdiabatic.new(model)
@@ -63,14 +64,14 @@ hotWaterSPM.addToNode(hotWaterOutletNode)
 # Chilled Water Plant
 chilledWaterPlant = OpenStudio::Model::PlantLoop.new(model)
 sizingPlant = chilledWaterPlant.sizingPlant()
-sizingPlant.setLoopType("Cooling")
+sizingPlant.setLoopType('Cooling')
 sizingPlant.setDesignLoopExitTemperature(7.22)
 sizingPlant.setLoopDesignTemperatureDifference(6.67)
 
-chilledWaterOutletNode = chilledWaterPlant.supplyOutletNode()
-chilledWaterInletNode = chilledWaterPlant.supplyInletNode()
-chilledWaterDemandOutletNode = chilledWaterPlant.demandOutletNode()
-chilledWaterDemandInletNode = chilledWaterPlant.demandInletNode()
+chilledWaterOutletNode = chilledWaterPlant.supplyOutletNode
+chilledWaterInletNode = chilledWaterPlant.supplyInletNode
+chilledWaterDemandOutletNode = chilledWaterPlant.demandOutletNode
+chilledWaterDemandInletNode = chilledWaterPlant.demandInletNode
 
 pump2 = OpenStudio::Model::PumpVariableSpeed.new(model)
 pump2.addToNode(chilledWaterInletNode)
@@ -108,7 +109,7 @@ eirToCorfOfPlr.setMaximumValueofx(1.0)
 
 chiller = OpenStudio::Model::ChillerElectricEIR.new(model, ccFofT, eirToCorfOfT, eirToCorfOfPlr)
 
-node = chilledWaterPlant.supplySplitter().lastOutletModelObject().get.to_Node.get
+node = chilledWaterPlant.supplySplitter.lastOutletModelObject.get.to_Node.get
 chiller.addToNode(node)
 
 pipe3 = OpenStudio::Model::PipeAdiabatic.new(model)
@@ -130,12 +131,12 @@ chilledWaterDemandInlet.addToNode(chilledWaterDemandInletNode)
 # Condenser System
 condenserSystem = OpenStudio::Model::PlantLoop.new(model)
 sizingPlant = condenserSystem.sizingPlant()
-sizingPlant.setLoopType("Condenser")
+sizingPlant.setLoopType('Condenser')
 sizingPlant.setDesignLoopExitTemperature(29.4)
 sizingPlant.setLoopDesignTemperatureDifference(5.6)
 
-#tower = OpenStudio::Model::CoolingTowerSingleSpeed.new(model)
-#condenserSystem.addSupplyBranchForComponent(tower)
+# tower = OpenStudio::Model::CoolingTowerSingleSpeed.new(model)
+# condenserSystem.addSupplyBranchForComponent(tower)
 
 distHeating = OpenStudio::Model::DistrictHeating.new(model)
 condenserSystem.addSupplyBranchForComponent(distHeating)
@@ -143,15 +144,15 @@ condenserSystem.addSupplyBranchForComponent(distHeating)
 distCooling = OpenStudio::Model::DistrictCooling.new(model)
 condenserSystem.addSupplyBranchForComponent(distCooling)
 
-condenserSupplyOutletNode = condenserSystem.supplyOutletNode()
-condenserSupplyInletNode = condenserSystem.supplyInletNode()
-condenserDemandOutletNode = condenserSystem.demandOutletNode()
-condenserDemandInletNode = condenserSystem.demandInletNode()
+condenserSupplyOutletNode = condenserSystem.supplyOutletNode
+condenserSupplyInletNode = condenserSystem.supplyInletNode
+condenserDemandOutletNode = condenserSystem.demandOutletNode
+condenserDemandInletNode = condenserSystem.demandInletNode
 
 pump3 = OpenStudio::Model::PumpVariableSpeed.new(model)
 pump3.addToNode(condenserSupplyInletNode)
 
-#condenserSystem.addDemandBranchForComponent(chiller)
+# condenserSystem.addDemandBranchForComponent(chiller)
 
 condenserSupplyBypass = OpenStudio::Model::PipeAdiabatic.new(model)
 condenserSystem.addSupplyBranchForComponent(condenserSupplyBypass)
@@ -171,7 +172,7 @@ spm.addToNode(condenserSupplyOutletNode)
 
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
-zones = model.getThermalZones.sort_by{|z| z.name.to_s}
+zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 
 heating_curve_1 = OpenStudio::Model::CurveCubic.new(model)
 heating_curve_1.setCoefficient1Constant(0.758746)
@@ -222,7 +223,7 @@ cooling_curve_1.setMinimumValueofx(17.0)
 cooling_curve_1.setMaximumValueofx(22.0)
 cooling_curve_1.setMinimumValueofy(13.0)
 cooling_curve_1.setMaximumValueofy(46.0)
-cooling_curve_1_alt = cooling_curve_1.clone().to_CurveBiquadratic.get
+cooling_curve_1_alt = cooling_curve_1.clone.to_CurveBiquadratic.get
 
 cooling_curve_2 = OpenStudio::Model::CurveQuadratic.new(model)
 cooling_curve_2.setCoefficient1Constant(0.8)
@@ -230,7 +231,7 @@ cooling_curve_2.setCoefficient2x(0.2)
 cooling_curve_2.setCoefficient3xPOW2(0.0)
 cooling_curve_2.setMinimumValueofx(0.5)
 cooling_curve_2.setMaximumValueofx(1.5)
-cooling_curve_2_alt = cooling_curve_2.clone().to_CurveQuadratic.get
+cooling_curve_2_alt = cooling_curve_2.clone.to_CurveQuadratic.get
 
 cooling_curve_3 = OpenStudio::Model::CurveBiquadratic.new(model)
 cooling_curve_3.setCoefficient1Constant(0.297145)
@@ -243,7 +244,7 @@ cooling_curve_3.setMinimumValueofx(17.0)
 cooling_curve_3.setMaximumValueofx(22.0)
 cooling_curve_3.setMinimumValueofy(13.0)
 cooling_curve_3.setMaximumValueofy(46.0)
-cooling_curve_3_alt = cooling_curve_3.clone().to_CurveBiquadratic.get
+cooling_curve_3_alt = cooling_curve_3.clone.to_CurveBiquadratic.get
 
 cooling_curve_4 = OpenStudio::Model::CurveQuadratic.new(model)
 cooling_curve_4.setCoefficient1Constant(1.156)
@@ -251,7 +252,7 @@ cooling_curve_4.setCoefficient2x(-0.1816)
 cooling_curve_4.setCoefficient3xPOW2(0.0256)
 cooling_curve_4.setMinimumValueofx(0.5)
 cooling_curve_4.setMaximumValueofx(1.5)
-cooling_curve_4_alt = cooling_curve_4.clone().to_CurveQuadratic.get
+cooling_curve_4_alt = cooling_curve_4.clone.to_CurveQuadratic.get
 
 cooling_curve_5 = OpenStudio::Model::CurveQuadratic.new(model)
 cooling_curve_5.setCoefficient1Constant(0.75)
@@ -259,7 +260,7 @@ cooling_curve_5.setCoefficient2x(0.25)
 cooling_curve_5.setCoefficient3xPOW2(0.0)
 cooling_curve_5.setMinimumValueofx(0.0)
 cooling_curve_5.setMaximumValueofx(1.0)
-cooling_curve_5_alt = cooling_curve_5.clone().to_CurveQuadratic.get
+cooling_curve_5_alt = cooling_curve_5.clone.to_CurveQuadratic.get
 
 cooling_curve_6 = OpenStudio::Model::CurveBiquadratic.new(model)
 cooling_curve_6.setCoefficient1Constant(0.42415)
@@ -287,7 +288,7 @@ cooling_curve_7.setMaximumValueofy(46.0)
 
 # Unitary System test 1
 airLoop_1 = OpenStudio::Model::AirLoopHVAC.new(model)
-airLoop_1_supplyNode = airLoop_1.supplyOutletNode()
+airLoop_1_supplyNode = airLoop_1.supplyOutletNode
 
 unitary_1 = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
 fan_1 = OpenStudio::Model::FanVariableVolume.new(model, schedule)
@@ -295,13 +296,13 @@ cooling_coil_1 = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model, schedule
 heating_coil_1 = OpenStudio::Model::CoilHeatingDXSingleSpeed.new(model, schedule, heating_curve_1, heating_curve_2, heating_curve_3, heating_curve_4, heating_curve_5)
 supp_heating_coil_1 = OpenStudio::Model::CoilHeatingElectric.new(model, schedule)
 unitary_1.setControllingZoneorThermostatLocation(zones[0])
-unitary_1.setFanPlacement("DrawThrough")
+unitary_1.setFanPlacement('DrawThrough')
 dehumidify_sch = OpenStudio::Model::ScheduleConstant.new(model)
 dehumidify_sch.setValue(50)
 humidistat = OpenStudio::Model::ZoneControlHumidistat.new(model)
 humidistat.setHumidifyingRelativeHumiditySetpointSchedule(dehumidify_sch)
 zones[0].setZoneControlHumidistat(humidistat)
-unitary_1.setDehumidificationControlType("CoolReheat")
+unitary_1.setDehumidificationControlType('CoolReheat')
 # unitary_1.setControlType("SetPoint")
 unitary_1.setSupplyAirFanOperatingModeSchedule(schedule)
 unitary_1.setSupplyFan(fan_1)
@@ -310,7 +311,7 @@ unitary_1.setHeatingCoil(heating_coil_1)
 unitary_1.setSupplementalHeatingCoil(supp_heating_coil_1)
 
 unitary_1.addToNode(airLoop_1_supplyNode)
-node_1 = unitary_1.airOutletModelObject().get.to_Node.get
+node_1 = unitary_1.airOutletModelObject.get.to_Node.get
 setpointMMA_1 = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(model)
 setpointMMA_1.addToNode(node_1)
 
@@ -318,32 +319,32 @@ air_terminal_1 = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,
 airLoop_1.addBranchForZone(zones[0], air_terminal_1)
 
 # Unitary System test 2
-#airLoop_2 = OpenStudio::Model::AirLoopHVAC.new(model)
-#airLoop_2_supplyNode = airLoop_2.supplyOutletNode()
+# airLoop_2 = OpenStudio::Model::AirLoopHVAC.new(model)
+# airLoop_2_supplyNode = airLoop_2.supplyOutletNode()
 #
-#unitary_2 = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
-#fan_2 = OpenStudio::Model::FanVariableVolume.new(model, schedule)
-#cooling_coil_2 = OpenStudio::Model::CoilCoolingWater.new(model, schedule)
-#chilledWaterPlant.addDemandBranchForComponent(cooling_coil_2)
-#heating_coil_2 = OpenStudio::Model::CoilHeatingWater.new(model, schedule)
-#hotWaterPlant.addDemandBranchForComponent(heating_coil_2)
-#unitary_2.setControllingZoneorThermostatLocation(zones[4])
-#unitary_2.setFanPlacement("DrawThrough")
-#unitary_2.setSupplyAirFanOperatingModeSchedule(schedule)
-#unitary_2.setSupplyFan(fan_2)
-#unitary_2.setCoolingCoil(cooling_coil_2)
-#unitary_2.setHeatingCoil(heating_coil_2)
+# unitary_2 = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
+# fan_2 = OpenStudio::Model::FanVariableVolume.new(model, schedule)
+# cooling_coil_2 = OpenStudio::Model::CoilCoolingWater.new(model, schedule)
+# chilledWaterPlant.addDemandBranchForComponent(cooling_coil_2)
+# heating_coil_2 = OpenStudio::Model::CoilHeatingWater.new(model, schedule)
+# hotWaterPlant.addDemandBranchForComponent(heating_coil_2)
+# unitary_2.setControllingZoneorThermostatLocation(zones[4])
+# unitary_2.setFanPlacement("DrawThrough")
+# unitary_2.setSupplyAirFanOperatingModeSchedule(schedule)
+# unitary_2.setSupplyFan(fan_2)
+# unitary_2.setCoolingCoil(cooling_coil_2)
+# unitary_2.setHeatingCoil(heating_coil_2)
 #
-#hotWaterPlant.addSupplyBranchForComponent(unitary_2)
+# hotWaterPlant.addSupplyBranchForComponent(unitary_2)
 #
-#unitary_2.addToNode(airLoop_2_supplyNode)
+# unitary_2.addToNode(airLoop_2_supplyNode)
 #
-#air_terminal_2 = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, schedule)
-#airLoop_2.addBranchForZone(zones[4], air_terminal_2)
+# air_terminal_2 = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, schedule)
+# airLoop_2.addBranchForZone(zones[4], air_terminal_2)
 
 # Unitary System test 3
 airLoop_3 = OpenStudio::Model::AirLoopHVAC.new(model)
-airLoop_3_supplyNode = airLoop_3.supplyOutletNode()
+airLoop_3_supplyNode = airLoop_3.supplyOutletNode
 
 unitary_3 = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
 fan_3 = OpenStudio::Model::FanConstantVolume.new(model, schedule)
@@ -351,7 +352,7 @@ cooling_coil_3 = OpenStudio::Model::CoilCoolingWaterToAirHeatPumpEquationFit.new
 chilledWaterPlant.addDemandBranchForComponent(cooling_coil_3)
 heating_coil_3 = OpenStudio::Model::CoilHeatingGas.new(model, schedule)
 unitary_3.setControllingZoneorThermostatLocation(zones[2])
-unitary_3.setFanPlacement("BlowThrough")
+unitary_3.setFanPlacement('BlowThrough')
 unitary_3.setSupplyAirFanOperatingModeSchedule(schedule)
 unitary_3.setSupplyFan(fan_3)
 unitary_3.setCoolingCoil(cooling_coil_3)
@@ -364,7 +365,7 @@ airLoop_3.addBranchForZone(zones[2], air_terminal_3)
 
 # Unitary System test 4
 airLoop_4 = OpenStudio::Model::AirLoopHVAC.new(model)
-airLoop_4_supplyNode = airLoop_4.supplyOutletNode()
+airLoop_4_supplyNode = airLoop_4.supplyOutletNode
 
 unitary_4 = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
 fan_4 = OpenStudio::Model::FanConstantVolume.new(model, schedule)
@@ -375,7 +376,7 @@ heating_coil_4 = OpenStudio::Model::CoilHeatingWaterToAirHeatPumpVariableSpeedEq
 speedData = OpenStudio::Model::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.new(model)
 heating_coil_4.addSpeed(speedData)
 unitary_4.setControllingZoneorThermostatLocation(zones[3])
-unitary_4.setFanPlacement("BlowThrough")
+unitary_4.setFanPlacement('BlowThrough')
 unitary_4.setSupplyAirFanOperatingModeSchedule(schedule)
 unitary_4.setSupplyFan(fan_4)
 unitary_4.setCoolingCoil(cooling_coil_4)
@@ -391,7 +392,7 @@ airLoop_4.addBranchForZone(zones[3], air_terminal_4)
 
 # Unitary System test 5
 airLoop_5 = OpenStudio::Model::AirLoopHVAC.new(model)
-airLoop_5_supplyNode = airLoop_5.supplyOutletNode()
+airLoop_5_supplyNode = airLoop_5.supplyOutletNode
 
 unitary_5 = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
 fan_5 = OpenStudio::Model::FanConstantVolume.new(model, schedule)
@@ -402,7 +403,7 @@ heat_stage_2 = OpenStudio::Model::CoilHeatingDXMultiSpeedStageData.new(model)
 heating_coil_5.addStage(heat_stage_1)
 heating_coil_5.addStage(heat_stage_2)
 unitary_5.setControllingZoneorThermostatLocation(zones[4])
-unitary_5.setFanPlacement("BlowThrough")
+unitary_5.setFanPlacement('BlowThrough')
 unitary_5.setSupplyAirFanOperatingModeSchedule(schedule)
 unitary_5.setSupplyFan(fan_5)
 unitary_5.setCoolingCoil(cooling_coil_5)
@@ -414,7 +415,7 @@ airLoop_5.addBranchForZone(zones[4], air_terminal_5)
 
 # Unitary System test 6
 airLoop_6 = OpenStudio::Model::AirLoopHVAC.new(model)
-airLoop_6_supplyNode = airLoop_6.supplyOutletNode()
+airLoop_6_supplyNode = airLoop_6.supplyOutletNode
 
 unitary_6 = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
 fan_6 = OpenStudio::Model::FanConstantVolume.new(model, schedule)
@@ -426,7 +427,7 @@ heat_stage_2 = OpenStudio::Model::CoilHeatingGasMultiStageStageData.new(model)
 heating_coil_6.addStage(heat_stage_1)
 heating_coil_6.addStage(heat_stage_2)
 unitary_6.setControllingZoneorThermostatLocation(zones[5])
-unitary_6.setFanPlacement("BlowThrough")
+unitary_6.setFanPlacement('BlowThrough')
 unitary_6.setSupplyAirFanOperatingModeSchedule(schedule)
 unitary_6.setSupplyFan(fan_6)
 unitary_6.setCoolingCoil(cooling_coil_6)
@@ -438,7 +439,7 @@ airLoop_6.addBranchForZone(zones[5], air_terminal_6)
 
 # Unitary System test 7
 airLoop_7 = OpenStudio::Model::AirLoopHVAC.new(model)
-airLoop_7_supplyNode = airLoop_7.supplyOutletNode()
+airLoop_7_supplyNode = airLoop_7.supplyOutletNode
 
 unitary_7 = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
 fan_7 = OpenStudio::Model::FanConstantVolume.new(model, schedule)
@@ -453,7 +454,7 @@ heat_speed_2 = OpenStudio::Model::CoilHeatingDXVariableSpeedSpeedData.new(model)
 heating_coil_7.addSpeed(heat_speed_1)
 heating_coil_7.addSpeed(heat_speed_2)
 unitary_7.setControllingZoneorThermostatLocation(zones[6])
-unitary_7.setFanPlacement("BlowThrough")
+unitary_7.setFanPlacement('BlowThrough')
 unitary_7.setSupplyAirFanOperatingModeSchedule(schedule)
 unitary_7.setSupplyFan(fan_7)
 unitary_7.setCoolingCoil(cooling_coil_7)
@@ -512,20 +513,19 @@ airLoop_7.addBranchForZone(zones[6], air_terminal_7)
 # air_terminal_9 = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, schedule)
 # airLoop_9.addBranchForZone(zones[8], air_terminal_9)
 
-#add thermostats
-model.add_thermostats({"heating_setpoint" => 24,
-                      "cooling_setpoint" => 28})
+# add thermostats
+model.add_thermostats({ 'heating_setpoint' => 24,
+                        'cooling_setpoint' => 28 })
 
-#assign constructions from a local library to the walls/windows/etc. in the model
-model.set_constructions()
+# assign constructions from a local library to the walls/windows/etc. in the model
+model.set_constructions
 
-#set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()
+# set whole building space type; simplified 90.1-2004 Large Office Whole Building
+model.set_space_type
 
-#add design days to the model (Chicago)
-model.add_design_days()
+# add design days to the model (Chicago)
+model.add_design_days
 
-#save the OpenStudio model (.osm)
-model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
-                           "osm_name" => "in.osm"})
-
+# save the OpenStudio model (.osm)
+model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
+                            'osm_name' => 'in.osm' })

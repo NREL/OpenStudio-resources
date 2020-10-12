@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'openstudio'
 require 'lib/baseline_model'
 require 'lib/surface_visitor'
@@ -11,10 +13,10 @@ class SurfaceNetworkBuilder < SurfaceVisitor
   end
 
   def interiorFloor(model, surface, adjacentSurface)
-    if !surface.outsideBoundaryCondition().start_with?('Ground') then
-      # Create a surface linkage
-      link = surface.getAirflowNetworkSurface(@interiorCrack)
-    end
+    return if surface.outsideBoundaryCondition.start_with?('Ground')
+
+    # Create a surface linkage
+    link = surface.getAirflowNetworkSurface(@interiorCrack)
   end
 
   def interiorRoofCeiling(model, surface, adjacentSurface)
@@ -29,20 +31,18 @@ class SurfaceNetworkBuilder < SurfaceVisitor
 
   def exteriorSurface(model, surface)
     # Create an external node?
-    if !surface.outsideBoundaryCondition().start_with?('Ground') then
-      # Create a surface linkage
-      link = surface.getAirflowNetworkSurface(@exteriorCrack)
-    end
+    return if surface.outsideBoundaryCondition.start_with?('Ground')
+
+    # Create a surface linkage
+    link = surface.getAirflowNetworkSurface(@exteriorCrack)
   end
 end
 
-
-
 def addSystemType3(model)
-  alwaysOn = model.alwaysOnDiscreteSchedule()
+  alwaysOn = model.alwaysOnDiscreteSchedule
 
   airLoopHVAC = OpenStudio::Model::AirLoopHVAC.new(model)
-  airLoopHVAC.setName("Packaged Rooftop Air Conditioner")
+  airLoopHVAC.setName('Packaged Rooftop Air Conditioner')
   # when an airloophvac is contructed, its constructor automatically creates a sizing:system object
   # the default sizing:system contstructor makes a system:sizing object appropriate for a multizone VAV system
   # this systems is a constant volume system with no VAV terminals, and needs different default settings
@@ -51,8 +51,8 @@ def addSystemType3(model)
   sizingSystem = airLoopHVAC.sizingSystem()
 
   # set the default parameters correctly for a constant volume system with no VAV terminals
-  sizingSystem.setTypeofLoadtoSizeOn("Sensible")
-  sizingSystem.autosizeDesignOutdoorAirFlowRate()
+  sizingSystem.setTypeofLoadtoSizeOn('Sensible')
+  sizingSystem.autosizeDesignOutdoorAirFlowRate
   sizingSystem.setMinimumSystemAirFlowRatio(1.0)
   sizingSystem.setPreheatDesignTemperature(7.0)
   sizingSystem.setPreheatDesignHumidityRatio(0.008)
@@ -60,21 +60,21 @@ def addSystemType3(model)
   sizingSystem.setPrecoolDesignHumidityRatio(0.008)
   sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8)
   sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0)
-  sizingSystem.setSizingOption("NonCoincident")
+  sizingSystem.setSizingOption('NonCoincident')
   sizingSystem.setAllOutdoorAirinCooling(false)
   sizingSystem.setAllOutdoorAirinHeating(false)
   sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085)
   sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080)
-  sizingSystem.setCoolingDesignAirFlowMethod("DesignDay")
+  sizingSystem.setCoolingDesignAirFlowMethod('DesignDay')
   sizingSystem.setCoolingDesignAirFlowRate(0.0)
-  sizingSystem.setHeatingDesignAirFlowMethod("DesignDay")
+  sizingSystem.setHeatingDesignAirFlowMethod('DesignDay')
   sizingSystem.setHeatingDesignAirFlowRate(0.0)
-  sizingSystem.setSystemOutdoorAirMethod("ZoneSum")
+  sizingSystem.setSystemOutdoorAirMethod('ZoneSum')
 
   fan = OpenStudio::Model::FanConstantVolume.new(model)
   fan.setPressureRise(500)
 
-  coilHeatingGas = OpenStudio::Model::CoilHeatingGas.new(model,alwaysOn)
+  coilHeatingGas = OpenStudio::Model::CoilHeatingGas.new(model, alwaysOn)
 
   coilCooling = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
 
@@ -82,7 +82,7 @@ def addSystemType3(model)
 
   controllerOutdoorAir = OpenStudio::Model::ControllerOutdoorAir.new(model)
 
-  outdoorAirSystem = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model,controllerOutdoorAir)
+  outdoorAirSystem = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controllerOutdoorAir)
 
   supplyOutletNode = airLoopHVAC.supplyOutletNode()
 
@@ -91,18 +91,18 @@ def addSystemType3(model)
   coilHeatingGas.addToNode(supplyOutletNode)
   fan.addToNode(supplyOutletNode)
 
-  #Node node1 = fan.outletModelObject()->cast<Node>();
-  #setpointMSZR.addToNode(node1);
+  # Node node1 = fan.outletModelObject()->cast<Node>();
+  # setpointMSZR.addToNode(node1);
 
-  node1 = fan.outletModelObject().get.to_Node.get
+  node1 = fan.outletModelObject.get.to_Node.get
   setpointMSZR.addToNode(node1)
 
   # Starting with E 9.0.0, Uncontrolled is deprecated and replaced with
   # ConstantVolume:NoReheat
-  if Gem::Version.new(OpenStudio::openStudioVersion) >= Gem::Version.new("2.7.0")
-    terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model,alwaysOn)
+  if Gem::Version.new(OpenStudio.openStudioVersion) >= Gem::Version.new('2.7.0')
+    terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, alwaysOn)
   else
-    terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,alwaysOn)
+    terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, alwaysOn)
   end
 
   airLoopHVAC.addBranchForHVACComponent(terminal)
@@ -110,12 +110,11 @@ def addSystemType3(model)
   return airLoopHVAC
 end
 
-
 def addSimpleSystem(model)
-  alwaysOn = model.alwaysOnDiscreteSchedule()
+  alwaysOn = model.alwaysOnDiscreteSchedule
 
   airLoopHVAC = OpenStudio::Model::AirLoopHVAC.new(model)
-  airLoopHVAC.setName("Packaged Rooftop Air Conditioner")
+  airLoopHVAC.setName('Packaged Rooftop Air Conditioner')
   # when an airloophvac is contructed, its constructor automatically creates a sizing:system object
   # the default sizing:system contstructor makes a system:sizing object appropriate for a multizone VAV system
   # this systems is a constant volume system with no VAV terminals, and needs different default settings
@@ -124,8 +123,8 @@ def addSimpleSystem(model)
   sizingSystem = airLoopHVAC.sizingSystem()
 
   # set the default parameters correctly for a constant volume system with no VAV terminals
-  sizingSystem.setTypeofLoadtoSizeOn("Sensible")
-  sizingSystem.autosizeDesignOutdoorAirFlowRate()
+  sizingSystem.setTypeofLoadtoSizeOn('Sensible')
+  sizingSystem.autosizeDesignOutdoorAirFlowRate
   sizingSystem.setMinimumSystemAirFlowRatio(1.0)
   sizingSystem.setPreheatDesignTemperature(7.0)
   sizingSystem.setPreheatDesignHumidityRatio(0.008)
@@ -133,49 +132,48 @@ def addSimpleSystem(model)
   sizingSystem.setPrecoolDesignHumidityRatio(0.008)
   sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8)
   sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0)
-  sizingSystem.setSizingOption("NonCoincident")
+  sizingSystem.setSizingOption('NonCoincident')
   sizingSystem.setAllOutdoorAirinCooling(false)
   sizingSystem.setAllOutdoorAirinHeating(false)
   sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085)
   sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080)
-  sizingSystem.setCoolingDesignAirFlowMethod("DesignDay")
+  sizingSystem.setCoolingDesignAirFlowMethod('DesignDay')
   sizingSystem.setCoolingDesignAirFlowRate(0.0)
-  sizingSystem.setHeatingDesignAirFlowMethod("DesignDay")
+  sizingSystem.setHeatingDesignAirFlowMethod('DesignDay')
   sizingSystem.setHeatingDesignAirFlowRate(0.0)
-  #sizingSystem.setSystemOutdoorAirMethod("ZoneSum")
+  # sizingSystem.setSystemOutdoorAirMethod("ZoneSum")
 
   fan = OpenStudio::Model::FanConstantVolume.new(model)
   fan.setPressureRise(500)
 
-  coilHeatingGas = OpenStudio::Model::CoilHeatingGas.new(model,alwaysOn)
+  coilHeatingGas = OpenStudio::Model::CoilHeatingGas.new(model, alwaysOn)
 
   coilCooling = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
 
   setpointMSZR = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(model)
 
-  #controllerOutdoorAir = OpenStudio::Model::ControllerOutdoorAir.new(model)
+  # controllerOutdoorAir = OpenStudio::Model::ControllerOutdoorAir.new(model)
 
-  #outdoorAirSystem = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model,controllerOutdoorAir)
+  # outdoorAirSystem = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model,controllerOutdoorAir)
 
   supplyOutletNode = airLoopHVAC.supplyOutletNode()
 
-  #outdoorAirSystem.addToNode(supplyOutletNode)
+  # outdoorAirSystem.addToNode(supplyOutletNode)
   fan.addToNode(supplyOutletNode)
   coilCooling.addToNode(supplyOutletNode)
   coilHeatingGas.addToNode(supplyOutletNode)
 
+  # Node node1 = fan.outletModelObject()->cast<Node>();
+  # setpointMSZR.addToNode(node1);
 
-  #Node node1 = fan.outletModelObject()->cast<Node>();
-  #setpointMSZR.addToNode(node1);
-
-  #node1 = fan.outletModelObject().get.to_Node.get
-  node1 = coilHeatingGas.outletModelObject().get.to_Node.get
+  # node1 = fan.outletModelObject().get.to_Node.get
+  node1 = coilHeatingGas.outletModelObject.get.to_Node.get
   setpointMSZR.addToNode(node1)
 
-  if Gem::Version.new(OpenStudio::openStudioVersion) >= Gem::Version.new("2.7.0")
-    terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model,alwaysOn)
+  if Gem::Version.new(OpenStudio.openStudioVersion) >= Gem::Version.new('2.7.0')
+    terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, alwaysOn)
   else
-    terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,alwaysOn)
+    terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, alwaysOn)
   end
 
   airLoopHVAC.addBranchForHVACComponent(terminal)
@@ -184,10 +182,10 @@ def addSimpleSystem(model)
 end
 
 def addSimpleSystemAFN(model)
-  alwaysOn = model.alwaysOnDiscreteSchedule()
+  alwaysOn = model.alwaysOnDiscreteSchedule
 
   airLoopHVAC = OpenStudio::Model::AirLoopHVAC.new(model)
-  airLoopHVAC.setName("Packaged Rooftop Air Conditioner")
+  airLoopHVAC.setName('Packaged Rooftop Air Conditioner')
   # when an airloophvac is contructed, its constructor automatically creates a sizing:system object
   # the default sizing:system contstructor makes a system:sizing object appropriate for a multizone VAV system
   # this systems is a constant volume system with no VAV terminals, and needs different default settings
@@ -196,8 +194,8 @@ def addSimpleSystemAFN(model)
   sizingSystem = airLoopHVAC.sizingSystem()
 
   # set the default parameters correctly for a constant volume system with no VAV terminals
-  sizingSystem.setTypeofLoadtoSizeOn("Sensible")
-  sizingSystem.autosizeDesignOutdoorAirFlowRate()
+  sizingSystem.setTypeofLoadtoSizeOn('Sensible')
+  sizingSystem.autosizeDesignOutdoorAirFlowRate
   sizingSystem.setMinimumSystemAirFlowRatio(1.0)
   sizingSystem.setPreheatDesignTemperature(7.0)
   sizingSystem.setPreheatDesignHumidityRatio(0.008)
@@ -205,48 +203,48 @@ def addSimpleSystemAFN(model)
   sizingSystem.setPrecoolDesignHumidityRatio(0.008)
   sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8)
   sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0)
-  sizingSystem.setSizingOption("NonCoincident")
+  sizingSystem.setSizingOption('NonCoincident')
   sizingSystem.setAllOutdoorAirinCooling(false)
   sizingSystem.setAllOutdoorAirinHeating(false)
   sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085)
   sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080)
-  sizingSystem.setCoolingDesignAirFlowMethod("DesignDay")
+  sizingSystem.setCoolingDesignAirFlowMethod('DesignDay')
   sizingSystem.setCoolingDesignAirFlowRate(0.0)
-  sizingSystem.setHeatingDesignAirFlowMethod("DesignDay")
+  sizingSystem.setHeatingDesignAirFlowMethod('DesignDay')
   sizingSystem.setHeatingDesignAirFlowRate(0.0)
-  #sizingSystem.setSystemOutdoorAirMethod("ZoneSum")
+  # sizingSystem.setSystemOutdoorAirMethod("ZoneSum")
 
   fan = OpenStudio::Model::FanConstantVolume.new(model)
   fan.setPressureRise(500)
 
-  coilHeatingGas = OpenStudio::Model::CoilHeatingGas.new(model,alwaysOn)
+  coilHeatingGas = OpenStudio::Model::CoilHeatingGas.new(model, alwaysOn)
 
   coilCooling = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
 
   setpointMSZR = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(model)
 
-  #controllerOutdoorAir = OpenStudio::Model::ControllerOutdoorAir.new(model)
+  # controllerOutdoorAir = OpenStudio::Model::ControllerOutdoorAir.new(model)
 
-  #outdoorAirSystem = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model,controllerOutdoorAir)
+  # outdoorAirSystem = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model,controllerOutdoorAir)
 
   supplyOutletNode = airLoopHVAC.supplyOutletNode()
 
-  #outdoorAirSystem.addToNode(supplyOutletNode)
+  # outdoorAirSystem.addToNode(supplyOutletNode)
   fan.addToNode(supplyOutletNode)
   coilCooling.addToNode(supplyOutletNode)
   coilHeatingGas.addToNode(supplyOutletNode)
 
-  #Node node1 = fan.outletModelObject()->cast<Node>();
-  #setpointMSZR.addToNode(node1);
+  # Node node1 = fan.outletModelObject()->cast<Node>();
+  # setpointMSZR.addToNode(node1);
 
-  #node1 = fan.outletModelObject().get.to_Node.get
-  node1 = coilHeatingGas.outletModelObject().get.to_Node.get
+  # node1 = fan.outletModelObject().get.to_Node.get
+  node1 = coilHeatingGas.outletModelObject.get.to_Node.get
   setpointMSZR.addToNode(node1)
 
-  if Gem::Version.new(OpenStudio::openStudioVersion) >= Gem::Version.new("2.7.0")
-    terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model,alwaysOn)
+  if Gem::Version.new(OpenStudio.openStudioVersion) >= Gem::Version.new('2.7.0')
+    terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, alwaysOn)
   else
-    terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,alwaysOn)
+    terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, alwaysOn)
   end
 
   airLoopHVAC.addBranchForHVACComponent(terminal)
@@ -302,21 +300,21 @@ def addSimpleSystemAFN(model)
 
   # Build the AFN loop, first get the nodes and components we need
 
-  splitter = airLoopHVAC.zoneSplitter()
-  mixer = airLoopHVAC.zoneMixer()
+  splitter = airLoopHVAC.zoneSplitter
+  mixer = airLoopHVAC.zoneMixer
 
-  equipmentInletNode = splitter.inletModelObject().get.to_Node.get
+  equipmentInletNode = splitter.inletModelObject.get.to_Node.get
 
   zoneSupplyRegisterNode = nil
   zoneOutletNode = mixer.inletModelObject(0).get.to_Node.get
 
-  mainReturnNode = mixer.outletModelObject().get.to_Node.get
+  mainReturnNode = mixer.outletModelObject.get.to_Node.get
 
-  mixerOutletNode = mixer.outletModelObject().get.to_Node.get
-  fanInletNode = fan.inletModelObject().get.to_Node.get
-  fanOutletNode = fan.outletModelObject().get.to_Node.get
-  heatingInletNode = coilHeatingGas.inletModelObject().get.to_Node.get
-  heatingOutletNode = coilHeatingGas.outletModelObject().get.to_Node.get
+  mixerOutletNode = mixer.outletModelObject.get.to_Node.get
+  fanInletNode = fan.inletModelObject.get.to_Node.get
+  fanOutletNode = fan.outletModelObject.get.to_Node.get
+  heatingInletNode = coilHeatingGas.inletModelObject.get.to_Node.get
+  heatingOutletNode = coilHeatingGas.outletModelObject.get.to_Node.get
 
   # Now walk around the loop and make the AFN nodes
   equipmentInletNode_AFN = equipmentInletNode.getAirflowNetworkDistributionNode
@@ -324,7 +322,7 @@ def addSimpleSystemAFN(model)
   zoneSupplyNode_AFN = OpenStudio::Model::AirflowNetworkDistributionNode.new(model)
 
   zoneSupplyRegisterNode_AFN = nil
-  #zoneOutletNode_AFN = zoneOutletNode.getAirflowNetworkDistributionNode
+  # zoneOutletNode_AFN = zoneOutletNode.getAirflowNetworkDistributionNode
 
   zoneReturnNode_AFN = OpenStudio::Model::AirflowNetworkDistributionNode.new(model)
   mixerNode_AFN = mixer.getAirflowNetworkDistributionNode
@@ -350,25 +348,25 @@ end
 
 model = BaselineModel.new
 
-#make a 1 story, 100m X 50m, 1 zone building
-model.add_geometry({"length" => 17.242,
-                    "width" => 10.778,
-                    "num_floors" => 1,
-                    "floor_to_floor_height" => 4,
-                    "plenum_height" => 0,
-                    "perimeter_zone_depth" => 0})
+# make a 1 story, 100m X 50m, 1 zone building
+model.add_geometry({ 'length' => 17.242,
+                     'width' => 10.778,
+                     'num_floors' => 1,
+                     'floor_to_floor_height' => 4,
+                     'plenum_height' => 0,
+                     'perimeter_zone_depth' => 0 })
 
-#add windows at a 40% window-to-wall ratio
-#model.add_windows({"wwr" => 0.4,
+# add windows at a 40% window-to-wall ratio
+# model.add_windows({"wwr" => 0.4,
 #                  "offset" => 1,
 #                  "application_type" => "Above Floor"})
 
-#add ASHRAE System type 03, PSZ-AC
-#model.add_hvac({"ashrae_sys_num" => '03'})
+# add ASHRAE System type 03, PSZ-AC
+# model.add_hvac({"ashrae_sys_num" => '03'})
 
-zone = model.getThermalZones()[0] # There should only be one...
+zone = model.getThermalZones[0] # There should only be one...
 
-#hvac = addSystemType3(model)
+# hvac = addSystemType3(model)
 hvac = addSimpleSystemAFN(model)
 hvac = hvac.to_AirLoopHVAC.get
 hvac.addBranchForZone(zone)
@@ -376,48 +374,48 @@ outlet_node = hvac.supplyOutletNode
 setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get
 setpoint_manager.setControlZone(zone)
 
-#add ASHRAE System type 08, VAV w/ PFP Boxes
-#DLM: this invokes weird mass conservation rules with VAV
-#model.add_hvac({"ashrae_sys_num" => '08'})
+# add ASHRAE System type 08, VAV w/ PFP Boxes
+# DLM: this invokes weird mass conservation rules with VAV
+# model.add_hvac({"ashrae_sys_num" => '08'})
 
-#add thermostats
-model.add_thermostats({"heating_setpoint" => 22, "cooling_setpoint" => 26.6})
+# add thermostats
+model.add_thermostats({ 'heating_setpoint' => 22, 'cooling_setpoint' => 26.6 })
 
-#assign constructions from a local library to the walls/windows/etc. in the model
-model.set_constructions()
+# assign constructions from a local library to the walls/windows/etc. in the model
+model.set_constructions
 
-#set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type()  #OK, yeah, this is wrong
+# set whole building space type; simplified 90.1-2004 Large Office Whole Building
+model.set_space_type # OK, yeah, this is wrong
 
-#remove all infiltration
-#model.getSpaceInfiltrationDesignFlowRates.each do |infil|
+# remove all infiltration
+# model.getSpaceInfiltrationDesignFlowRates.each do |infil|
 #  infil.remove
-#end
+# end
 
-#add design days to the model (Chicago)
-model.add_design_days()
+# add design days to the model (Chicago)
+model.add_design_days
 
-#add simulation control
-afn_control =  model.getAirflowNetworkSimulationControl
-afn_control.setAirflowNetworkControl("MultizoneWithDistribution")
+# add simulation control
+afn_control = model.getAirflowNetworkSimulationControl
+afn_control.setAirflowNetworkControl('MultizoneWithDistribution')
 
-#make an afn zone
+# make an afn zone
 afnzone = zone.getAirflowNetworkZone
 
 # This is kind of lame, regetting stuff we already have above. Need to rethink how this
 # is structured at some point.
-splitter = hvac.zoneSplitter()
-mixer = hvac.zoneMixer()
+splitter = hvac.zoneSplitter
+mixer = hvac.zoneMixer
 splitterNode_AFN = splitter.getAirflowNetworkDistributionNode
 mixerNode_AFN = splitter.getAirflowNetworkDistributionNode
 
 # This is not great either
 zoneOutletNode = mixer.inletModelObject(0).get.to_Node.get
 
-comps = hvac.demandComponents(hvac.demandInletNode(),zone)
+comps = hvac.demandComponents(hvac.demandInletNode, zone)
 zoneInletNode = comps[-2].to_Node.get
 
-#zoneInletNode = zone.airLoopHVACTerminal.get.to_StraightComponent.get.outletModelObject.get.to_Node.get
+# zoneInletNode = zone.airLoopHVACTerminal.get.to_StraightComponent.get.outletModelObject.get.to_Node.get
 
 zoneInletNode_AFN = zoneInletNode.getAirflowNetworkDistributionNode
 zoneOutletNode_AFN = zoneOutletNode.getAirflowNetworkDistributionNode
@@ -462,19 +460,18 @@ zoneSupplyConnectionLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.
 zoneReturnConnectionLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, afnzone, zoneOutletNode_AFN, zoneConnectionDuct)
 zoneSupplyLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, zoneOutletNode_AFN, mixerNode_AFN, zoneReturn)
 
-
 # Connect up envelope
 visitor = SurfaceNetworkBuilder.new(model)
 
 # add output reports
 add_out_vars = false
 if add_out_vars
-  OpenStudio::Model::OutputVariable.new("AFN Node Temperature", model)
-  OpenStudio::Model::OutputVariable.new("AFN Node Wind Pressure", model)
-  OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Mass Flow Rate", model)
-  OpenStudio::Model::OutputVariable.new("AFN Linkage Node 1 to Node 2 Pressure Difference", model)
+  OpenStudio::Model::OutputVariable.new('AFN Node Temperature', model)
+  OpenStudio::Model::OutputVariable.new('AFN Node Wind Pressure', model)
+  OpenStudio::Model::OutputVariable.new('AFN Linkage Node 1 to Node 2 Mass Flow Rate', model)
+  OpenStudio::Model::OutputVariable.new('AFN Linkage Node 1 to Node 2 Pressure Difference', model)
 end
 
-#save the OpenStudio model (.osm)
-model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
-                           "osm_name" => "in.osm"})
+# save the OpenStudio model (.osm)
+model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
+                            'osm_name' => 'in.osm' })

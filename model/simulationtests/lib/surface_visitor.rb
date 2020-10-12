@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 require 'openstudio'
 
@@ -10,26 +11,25 @@ class SurfaceVisitor
     shutdown(model)
   end
 
-  def setup(model)
-  end
+  def setup(model); end
 
   def run(model)
-    allsurfs = model.getSurfaces()
+    allsurfs = model.getSurfaces
     @surfs = []
     for surf in allsurfs do
-      if !@surfs.include?(surf) then
-        other = surf.adjacentSurface()
-        if !other.empty?() then
-          if !@surfs.include?(other.get()) then
+      if !@surfs.include?(surf)
+        other = surf.adjacentSurface
+        if !other.empty?
+          if !@surfs.include?(other.get)
             # This is an interior surface
-            stype = surf.surfaceType()
+            stype = surf.surfaceType
             @surfs << surf
-            if stype == 'Floor' then
-              interiorFloor(model, surf, other.get())
-            elsif stype == 'RoofCeiling' then
-              interiorRoofCeiling(model, surf, other.get())
+            if stype == 'Floor'
+              interiorFloor(model, surf, other.get)
+            elsif stype == 'RoofCeiling'
+              interiorRoofCeiling(model, surf, other.get)
             else # Wall
-              interiorWall(model, surf, other.get())
+              interiorWall(model, surf, other.get)
             end
           end
         else
@@ -41,22 +41,15 @@ class SurfaceVisitor
     end
   end
 
-  def interiorFloor(model, surface, adjacentSurface)
-  end
+  def interiorFloor(model, surface, adjacentSurface); end
 
-  def interiorWall(model, surface, adjacentSurface)
-  end
+  def interiorWall(model, surface, adjacentSurface); end
 
-  def interiorRoofCeiling(model, surface, adjacentSurface)
-  end
+  def interiorRoofCeiling(model, surface, adjacentSurface); end
 
-  def exteriorSurface(model, surface)
-  end
+  def exteriorSurface(model, surface); end
 
   def shutdown(model)
-    @summary = 'Visited ' + @surfs.size().to_s() + ' surfaces'
+    @summary = 'Visited ' + @surfs.size.to_s + ' surfaces'
   end
-
 end
-
-

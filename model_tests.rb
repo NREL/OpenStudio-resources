@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'openstudio' unless defined?(OpenStudio)
 
 # The config and helpers are inside this file
@@ -6,13 +8,12 @@ require_relative 'test_helpers.rb'
 # TODO: Include the other ones?
 # require_relative 'highlevel_tests.rb'
 # Ensure high level tests pass before continuing
-#require 'minitest'
-#success = Minitest.run(["-n", "/HighLevelTests/"])
-#success = HighLevelTests::run Minitest::Reporters::DefaultReporter.new
-#if not success
+# require 'minitest'
+# success = Minitest.run(["-n", "/HighLevelTests/"])
+# success = HighLevelTests::run Minitest::Reporters::DefaultReporter.new
+# if not success
 #  raise "High level tests failed"
-#end
-
+# end
 
 # the tests
 class ModelTests < Minitest::Test
@@ -180,8 +181,7 @@ class ModelTests < Minitest::Test
     result = sim_test('coil_cooling_dx.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 3.1.0
+  # TODO: To be added in the next official release after: 3.0.1
   # def test_coil_cooling_dx_osm
   #   result = sim_test('coil_cooling_dx.osm')
   # end
@@ -534,6 +534,75 @@ class ModelTests < Minitest::Test
     result = sim_test('multiple_loops_w_plenums.osm')
   end
 
+  def test_outputcontrol_files_rb
+    extra_options = { compare_eui: false }
+    result = sim_test('outputcontrol_files.rb', extra_options)
+
+    # We enabled only a few files, so check that
+    run_dir = File.join($TestDir, 'outputcontrol_files.rb', 'run')
+    assert(File.exist?(run_dir))
+
+    all_files = [
+      'eplusout.audit',
+      'eplusout.bnd',
+      'eplusout.dbg',
+      'eplusout.dxf',
+      'eplusout.edd',
+      'eplusout.eio',
+      'eplusout.end',
+      'eplusout.epmidf',
+      'eplusout.epmdet',
+      'eplusout.err',
+      'eplusout.eso',
+      'eplusout.mdd',
+      'eplusout.mtd',
+      'eplusout.mtr',
+      'eplusout_perflog.csv',
+      'eplusout.rdd',
+      'eplusout.shd',
+      'eplusout.sln',
+      'eplusout.sql',
+      'eplustbl.htm',
+      'eplusssz.csv',
+      'epluszsz.csv',
+      'eplusout.json',
+      'eplusout.csv',
+      'eplusmtr.csv',
+      'eplustbl.htm',
+      'eplusscreen.csv',
+      'eplusout.svg',
+      'eplusout.sci',
+      'eplusout.wrm',
+      'eplusout.delightin',
+      'eplusout.delightout'
+    ]
+
+    expected_files = [
+      'eplusout.end',
+      'eplusout.sql',
+      'eplusout.csv',
+      'eplusmtr.csv',
+      'eplusout.err',
+      'eplusout.audit',
+      'eplustbl.htm'
+    ]
+
+    assert((expected_files - all_files).empty?)
+
+    expected_files.each do |fname|
+      assert(File.exist?(File.join(run_dir, fname)), "Expected #{fname}")
+    end
+
+    (all_files - expected_files).each do |fname|
+      assert(!File.exist?(File.join(run_dir, fname)), "Did not expect #{fname}")
+    end
+  end
+
+  # TODO: To be added in the next official release after: 3.0.1
+  # def test_outputcontrol_files_osm
+  # result = sim_test('outputcontrol_files.osm')
+  # end
+
   def test_output_objects_rb
     result = sim_test('output_objects.rb')
   end
@@ -783,8 +852,7 @@ class ModelTests < Minitest::Test
     result = sim_test('swimmingpool_indoor.rb')
   end
 
-  # TODO : To be added once the next official release
-  # including this object is out : 3.1.0
+  # TODO: To be added in the next official release after: 3.0.1
   # def test_swimmingpool_indoor_osm
   #   result = sim_test('swimmingpool_indoor.osm')
   # end
@@ -988,6 +1056,7 @@ class ModelTests < Minitest::Test
   def test_afn_single_zone_nv_osm
     result = sim_test('afn_single_zone_nv.osm')
   end
+
   # TODO: feature is not yet working, uncomment to test it out
   # def test_afn_single_zone_ac_rb
   #   result = sim_test('afn_single_zone_ac.rb')
@@ -1031,17 +1100,17 @@ class ModelTests < Minitest::Test
     gemfile_dir = bundle_install('bundle_no_git', true)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
-    extra_options = {:outdir => 'model_articulation1_bundle_no_git.osw',
-                     :bundle => gemfile, :bundle_path => bundle_path}
+    extra_options = { outdir: 'model_articulation1_bundle_no_git.osw',
+                      bundle: gemfile, bundle_path: bundle_path }
     result = sim_test('model_articulation1.osw', extra_options)
 
     # check that we got the right version of standards and workflow
-    #standards = nil
+    # standards = nil
     workflow = nil
     result[:steps].each do |step|
       if step[:measure_dir_name] == 'openstudio_results'
         step[:result][:step_values].each do |step_value|
-          #if step_value[:name] == 'standards_gem_version'
+          # if step_value[:name] == 'standards_gem_version'
           #  standards = step_value[:value]
           if step_value[:name] == 'workflow_gem_version'
             workflow = step_value[:value]
@@ -1049,12 +1118,12 @@ class ModelTests < Minitest::Test
         end
       end
     end
-    #assert(standards.is_a? String)
-    assert(workflow.is_a? String)
-    #puts "standards = #{standards}"
-    #puts "workflow = #{workflow}"
+    # assert(standards.is_a? String)
+    assert(workflow.is_a?(String))
+    # puts "standards = #{standards}"
+    # puts "workflow = #{workflow}"
 
-    #assert(/0.2.7/.match(standards))
+    # assert(/0.2.7/.match(standards))
     assert(/2.0.1/.match(workflow))
   end
 
@@ -1062,17 +1131,17 @@ class ModelTests < Minitest::Test
     gemfile_dir = bundle_install('bundle_git', true)
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
-    extra_options = {:outdir => 'model_articulation1_bundle_git.osw',
-                     :bundle => gemfile, :bundle_path => bundle_path}
+    extra_options = { outdir: 'model_articulation1_bundle_git.osw',
+                      bundle: gemfile, bundle_path: bundle_path }
     result = sim_test('model_articulation1.osw', extra_options)
 
     # check that we got the right version of standards and workflow
-    #standards = nil
+    # standards = nil
     workflow = nil
     result[:steps].each do |step|
       if step[:measure_dir_name] == 'openstudio_results'
         step[:result][:step_values].each do |step_value|
-          #if step_value[:name] == 'standards_gem_version'
+          # if step_value[:name] == 'standards_gem_version'
           #  standards = step_value[:value]
           if step_value[:name] == 'workflow_gem_version'
             workflow = step_value[:value]
@@ -1080,12 +1149,12 @@ class ModelTests < Minitest::Test
         end
       end
     end
-    #assert(standards.is_a? String)
-    assert(workflow.is_a? String)
-    #puts "standards = #{standards}"
-    #puts "workflow = #{workflow}"
+    # assert(standards.is_a? String)
+    assert(workflow.is_a?(String))
+    # puts "standards = #{standards}"
+    # puts "workflow = #{workflow}"
 
-    #assert(/0.2.7/.match(standards))
+    # assert(/0.2.7/.match(standards))
     assert(/2.0.1/.match(workflow))
   end
 
@@ -1142,5 +1211,4 @@ class ModelTests < Minitest::Test
 
   # TODO: model/refbuildingtests/CreateRefBldgModel.rb is unused
   # Either implement as a test, or delete
-
 end

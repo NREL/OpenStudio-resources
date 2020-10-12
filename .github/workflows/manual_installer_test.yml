@@ -59,12 +59,18 @@ jobs:
       shell: bash
       run: |
         echo "nproc=$(nproc)"
-        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
+        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb -e /utility_bill02/
 
     #- name: Analyze results
       #shell: bash
       #run: |
         #process_results.py test-status --all
+
+    - name: Run highlevel_tests
+      if: ${{ always() }}
+      shell: bash
+      run: |
+        MT_CPU=$(nproc) openstudio highlevel_tests.rb
 
     - name: Commit results
       if: ${{ always() }}

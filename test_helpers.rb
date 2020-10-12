@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'openstudio' unless defined?(OpenStudio)
 
 require 'etc'
@@ -21,11 +23,11 @@ if ENV['N'].nil?
   nproc = nil
   begin
     nproc = Etc.nprocessors
-  rescue
+  rescue StandardError
     begin
       nproc = `nproc`
       nproc = nproc.to_i
-    rescue
+    rescue StandardError
       # Just fall back to whatever
       nproc = 16
     end
@@ -35,20 +37,20 @@ if ENV['N'].nil?
 end
 ENV['MT_CPU'] = ENV['N']
 
-$SdkVersion = OpenStudio::openStudioVersion
+$SdkVersion = OpenStudio.openStudioVersion
 
-if Gem::Version.new($SdkVersion) < Gem::Version.new("3.0.0")
+if Gem::Version.new($SdkVersion) < Gem::Version.new('3.0.0')
   # There was no prelease tags or anything like that
   # LongVersion was in format "2.9.1.3472e8b799"
-  $SdkLongVersion = OpenStudio::openStudioLongVersion
+  $SdkLongVersion = OpenStudio.openStudioLongVersion
   $Build_Sha = $SdkLongVersion.split('.')[-1]
 else
   # This uses SemVer 2.0 and has new methods for easy access to the components
   # Format is like "3.0.0-beta+6648e88805" (with a prerelease tag)
   # or "3.0.0+6648e88805"
-  $SdkLongVersion = OpenStudio::openStudioLongVersion
-  $Build_Sha = OpenStudio::openStudioVersionBuildSHA
-  $SdkPrerelease = OpenStudio::openStudioVersionPrerelease
+  $SdkLongVersion = OpenStudio.openStudioLongVersion
+  $Build_Sha = OpenStudio.openStudioVersionBuildSHA
+  $SdkPrerelease = OpenStudio.openStudioVersionPrerelease
 
   # I actually want them named like '3.0.0-rc1_out' (including the prerelease)
   if !$SdkPrerelease.empty?
@@ -63,45 +65,45 @@ end
 
 require 'minitest/autorun'
 begin
-  require "minitest/reporters"
-  require "minitest/reporters/default_reporter"
+  require 'minitest/reporters'
+  require 'minitest/reporters/default_reporter'
   reporter = Minitest::Reporters::DefaultReporter.new
   reporter.start # had to call start manually otherwise was failing when trying to report elapsed time when run in CLI
   Minitest::Reporters.use! reporter
 rescue LoadError
-  puts "Minitest Reporters not installed"
+  puts 'Minitest Reporters not installed'
 end
 
 # Backward compat
 Minitest::Test = MiniTest::Unit::TestCase unless defined?(Minitest::Test)
 
 # Variables to store the environment variables
-$Custom_tag=''
-$Save_idf=false
+$Custom_tag = ''
+$Save_idf = false
 
 # Don't rerun test if there is already an OSW that shows success if the test/
 # directory
-$DoNotReRunIfSuccess=false
+$DoNotReRunIfSuccess = false
 
-if ENV['DONOTRERUNIFSUCCESS'].to_s.downcase == "true"
+if ENV['DONOTRERUNIFSUCCESS'].to_s.downcase == 'true'
   puts "DONOTRERUNIFSUCCESS: Tests that already passed in this version (#{$SdkVersion}) will NOT be rerun"
-  $DoNotReRunIfSuccess=true
+  $DoNotReRunIfSuccess = true
 end
 
 # Force bundle_install gems, should be On, unless you're doing it on purpose
-$ForceBundleInstall=true
-if ENV['DONOTFORCEBUNDLEINSTALL'].to_s.downcase == "true"
-  puts "DONOTFORCEBUNDLEINSTALL: Will not force bundle_install"
-  $ForceBundleInstall=false
+$ForceBundleInstall = true
+if ENV['DONOTFORCEBUNDLEINSTALL'].to_s.downcase == 'true'
+  puts 'DONOTFORCEBUNDLEINSTALL: Will not force bundle_install'
+  $ForceBundleInstall = false
 end
 
-if !ENV["CUSTOMTAG"].nil?
+if !ENV['CUSTOMTAG'].nil?
   $Custom_tag = ENV['CUSTOMTAG']
   # Debug
   # puts "Setting custom tag to #{$Custom_tag}"
 end
 
-if not $Custom_tag.empty?
+if !$Custom_tag.empty?
   if $Custom_tag.downcase == 'sha'
     $Custom_tag = $Build_Sha
   end
@@ -110,13 +112,13 @@ if not $Custom_tag.empty?
 end
 
 # If an ENV variable was given with a value of "True" (case insensitive)
-if ENV["SAVE_IDF"].to_s.downcase == "true"
-  $Save_idf=true
-  puts "SAVE_IDF: Will save the IDF files in the test/ directory"
+if ENV['SAVE_IDF'].to_s.downcase == 'true'
+  $Save_idf = true
+  puts 'SAVE_IDF: Will save the IDF files in the test/ directory'
 end
 
 # config stuff
-$OpenstudioCli = OpenStudio::getOpenStudioCLI
+$OpenstudioCli = OpenStudio.getOpenStudioCLI
 $RootDir = File.absolute_path(File.dirname(__FILE__))
 $OswFile = File.join($RootDir, 'test.osw')
 $ModelDir = File.join($RootDir, 'model/simulationtests/')
@@ -136,7 +138,6 @@ if File.exist?($TestDirSddRT)
   FileUtils.mkdir_p($TestDirSddRT)
 end
 
-
 puts "Running for OpenStudio #{$SdkLongVersion}"
 
 # Acceptable deviation in EUI = 0.5%
@@ -145,7 +146,7 @@ $EuiPctThreshold = 0.5
 # Where to cp the out.osw for regression
 # Depends on whether you are in a docker env or not
 proc_file = '/proc/1/cgroup'
-is_docker = File.file?(proc_file) && (File.readlines(proc_file).grep(/docker/).size > 0)
+is_docker = File.file?(proc_file) && !File.readlines(proc_file).grep(/docker/).empty?
 if is_docker
   # Mounted directory is at /root/test
   $OutOSWDir = File.join(ENV['HOME'], 'test')
@@ -155,17 +156,15 @@ else
 
   # if the user didn't supply env CUSTOMTAG=whatever,
   # we ask him to optionally supply a tag
-=begin
-     n
-     n  if ENV["CUSTOMTAG"].nil?
-     n    # Ask user if he wants to append a custom tag to the result out.osw
-     n    # We don't do it in docker so it can just run without user input
-     n    prompt = ("If you want to append a custom tag to the result out.osw(s) (eg: 'Windows_run3')\n"\
-     n              "enter it now, or type 'SHA' to append the build sha (#{$Build_Sha}),\n"\
-     n              "or leave empty if not desired\n> ")
-     n    ENV["CUSTOMTAG"] = [(print prompt), STDIN.gets.chomp][1]
-     n  end
-=end
+  #      n
+  #      n  if ENV["CUSTOMTAG"].nil?
+  #      n    # Ask user if he wants to append a custom tag to the result out.osw
+  #      n    # We don't do it in docker so it can just run without user input
+  #      n    prompt = ("If you want to append a custom tag to the result out.osw(s) (eg: 'Windows_run3')\n"\
+  #      n              "enter it now, or type 'SHA' to append the build sha (#{$Build_Sha}),\n"\
+  #      n              "or leave empty if not desired\n> ")
+  #      n    ENV["CUSTOMTAG"] = [(print prompt), STDIN.gets.chomp][1]
+  #      n  end
 
 end
 
@@ -181,52 +180,50 @@ ENV['RUBYPATH'] = $ModelDir
 #
 # @param None
 # @return [String] Plaftorm name, one of ['Windows', 'Darwin', 'Linux']
-def get_test_platform()
-
-  platform = "Unknown"
+def check_test_platform
+  platform = 'Unknown'
 
   begin
     require 'os'
 
     if OS.mac?
-      platform = "Darwin"
+      platform = 'Darwin'
     elsif OS.linux?
-      platform = "Linux"
+      platform = 'Linux'
     elsif OS.windows?
-      platform = "Windows"
+      platform = 'Windows'
     else
-      puts "Unknown Plaftorm?!"
+      puts 'Unknown Plaftorm?!'
     end
-  rescue Exception
+  rescue LoadError
     require 'rbconfig'
 
     host_os = RbConfig::CONFIG['host_os']
     case host_os
     when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
-      platform = "Windows"
+      platform = 'Windows'
     when /darwin|mac os/
-      platform = "Darwin"
+      platform = 'Darwin'
     when /linux|solaris|bsd/
-      platform = "Linux"
+      platform = 'Linux'
     else
       puts "Unknown Plaftorm?! #{host_os.inspect}"
     end
-
   end
   return platform
 end
 
-$Platform = get_test_platform()
+$Platform = check_test_platform
 
 # Sanitizes a filename replaces any of '-+= ' with '_'
 #
 # @param filename [String] The filename to sanitize
 # @return [String] Sanitized filename
 def escapeName(filename)
-  return filename.gsub('-','_')
-                 .gsub('+','_')
-                 .gsub(' ','_')
-                 .gsub("=",'_')
+  return filename.gsub('-', '_')
+                 .gsub('+', '_')
+                 .gsub(' ', '_')
+                 .gsub('=', '_')
 end
 
 # This globs all OSW tests to find all known versions to date
@@ -237,21 +234,20 @@ end
 #
 # @return previousVersion [String] the string of the previous version if found,
 # nil otherwise
-def find_previous_version()
-
+def find_previous_version
   thisVersion = Gem::Version.new($SdkVersion)
 
   # We parse the test/ folder for all osm tests
-  out_files = Dir.glob(File.join($OutOSWDir, "*"));
-  re_version = Regexp.new('.*\.osm_(\d\.\d\.\d)_out\.osw');
-  version_strings = out_files.select{|f| f.match(re_version)}.map{|f| f.scan(re_version).first.last}.uniq;
+  out_files = Dir.glob(File.join($OutOSWDir, '*'))
+  re_version = Regexp.new('.*\.osm_(\d\.\d\.\d)_out\.osw')
+  version_strings = out_files.select { |f| f.match(re_version) }.map { |f| f.scan(re_version).first.last }.uniq
   # We sort them by the actual version
-  versions = version_strings.map{|v| Gem::Version.new(v)}.sort;
+  versions = version_strings.map { |v| Gem::Version.new(v) }.sort
 
   if versions.include?(thisVersion)
     thisIndex = versions.index(thisVersion)
     if thisIndex > 0
-      previousVersion = versions[thisIndex-1]
+      previousVersion = versions[thisIndex - 1]
       return previousVersion
     else
       puts "Cannot find a previous version for #{$SdkVersion} as it's the oldest known"
@@ -259,17 +255,14 @@ def find_previous_version()
     end
   else
     lastVersion = versions.last
-    if thisVersion > lastVersion
-      return lastVersion
-    else
-      puts "Cannot find a previous version for #{$SdkVersion} as it's older than the oldest known"
-      return nil
-    end
+    return lastVersion if thisVersion > lastVersion
+
+    puts "Cannot find a previous version for #{$SdkVersion} as it's older than the oldest known"
+    return nil
   end
 end
 
-
-$SdkPreviousVersion = find_previous_version()
+$SdkPreviousVersion = find_previous_version
 puts "Running for OpenStudio #{$SdkLongVersion} (Previous=#{$SdkPreviousVersion})"
 
 # Add Chicago Design days to an OpenStudio Model
@@ -278,23 +271,21 @@ puts "Running for OpenStudio #{$SdkLongVersion} (Previous=#{$SdkPreviousVersion}
 # @param path [OpenStudio::Model::Model] the model to add the ddy to
 # @return model [OpenStudio::Model::Model].
 def add_design_days(model)
-
   ddy_path = OpenStudio::Path.new(File.join($RootDir, 'weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.ddy'))
 
-  ddy_idf = OpenStudio::IdfFile::load(ddy_path, "EnergyPlus".to_IddFileType).get
+  ddy_idf = OpenStudio::IdfFile.load(ddy_path, 'EnergyPlus'.to_IddFileType).get
   ddy_workspace = OpenStudio::Workspace.new(ddy_idf)
-  reverse_translator = OpenStudio::EnergyPlus::ReverseTranslator.new()
+  reverse_translator = OpenStudio::EnergyPlus::ReverseTranslator.new
   ddy_model = reverse_translator.translateWorkspace(ddy_workspace)
 
   # Try to limit to the two main design days
-  ddy_objects = ddy_model.getDesignDays().select { |d| d.name.get.include?('.4% Condns DB') || d.name.get.include?('99.6% Condns DB') }
+  ddy_objects = ddy_model.getDesignDays.select { |d| d.name.get.include?('.4% Condns DB') || d.name.get.include?('99.6% Condns DB') }
   # Otherwise, get all .4% and 99.6%
   if ddy_objects.size < 2
-    ddy_objects = ddy_model.getDesignDays().select { |d| d.name.get.include?('.4%') || d.name.get.include?('99.6%') }
+    ddy_objects = ddy_model.getDesignDays.select { |d| d.name.get.include?('.4%') || d.name.get.include?('99.6%') }
   end
-  #add the objects in the ddy file to the model
+  # add the objects in the ddy file to the model
   model.addObjects(ddy_objects)
-
 
   # Do a couple more things
   sc = model.getSimulationControl
@@ -305,17 +296,15 @@ def add_design_days(model)
   timestep.setNumberOfTimestepsPerHour(4)
 
   return model
-
 end
 
 # bundle install a gemfile identified by directory name inside of 'gemfiles'
 # returns full directory name gemfile_dir
 # gemfile at gemfile_dir + 'Gemfile', bundle at gemfile_dir + 'gems'
 def bundle_install(gemfile_dirname, force_install)
-
   original_dir = Dir.pwd
   gemfile_dir = File.join($RootDir, 'gemfiles', gemfile_dirname)
-  fail "Gemfile dir '#{gemfile_dir}' does not exist" if !File.exist?(gemfile_dir)
+  raise "Gemfile dir '#{gemfile_dir}' does not exist" if !File.exist?(gemfile_dir)
 
   Dir.chdir(gemfile_dir)
 
@@ -332,52 +321,44 @@ def bundle_install(gemfile_dirname, force_install)
   assert(system('bundle lock --add_platform ruby'))
 
   return gemfile_dir
-
 ensure
   Dir.chdir(original_dir)
 end
 
 # run a command in directory dir, throws exception on timeout or exit status != 0, always returns to initial directory
 def run_command(command, dir, timeout)
-  begin
-    pwd = Dir.pwd
-    Dir.chdir(dir)
+  pwd = Dir.pwd
+  Dir.chdir(dir)
 
-    result = nil
-    Open3.popen3(command) do |i,o,e,w|
-      out = ""
-      begin
-        Timeout.timeout(timeout) do
-          # process output of the process. it will produce EOF when done.
-          until o.eof? do
-            out += o.readpartial(100)
-          end
-          until e.eof? do
-            out += e.readpartial(100)
-          end
-        end
-
-        result = w.value.exitstatus
-        if result != 0
-          Dir.chdir(pwd)
-          fail "Exit code #{result}:\n#{out}"
-        end
-
-      rescue Timeout::Error
-        # Process.kill does not work on Windows
-        #https://blog.simplificator.com/2016/01/18/how-to-kill-processes-on-windows-using-ruby/
-        if Gem.win_platform?
-          system("taskkill /f /pid #{w.pid}")
-        else
-          Process.kill("KILL", w.pid)
-        end
-        Dir.chdir(pwd)
-        fail "Timeout #{timeout}:\n#{out}"
+  result = nil
+  Open3.popen3(command) do |i, o, e, w|
+    out = ''
+    begin
+      Timeout.timeout(timeout) do
+        # process output of the process. it will produce EOF when done.
+        out += o.readpartial(100) until o.eof?
+        out += e.readpartial(100) until e.eof?
       end
+
+      result = w.value.exitstatus
+      if result != 0
+        Dir.chdir(pwd)
+        raise "Exit code #{result}:\n#{out}"
+      end
+    rescue Timeout::Error
+      # Process.kill does not work on Windows
+      # https://blog.simplificator.com/2016/01/18/how-to-kill-processes-on-windows-using-ruby/
+      if Gem.win_platform?
+        system("taskkill /f /pid #{w.pid}")
+      else
+        Process.kill('KILL', w.pid)
+      end
+      Dir.chdir(pwd)
+      raise "Timeout #{timeout}:\n#{out}"
     end
-  ensure
-    Dir.chdir(pwd)
   end
+ensure
+  Dir.chdir(pwd)
 end
 
 # Finds the 'total_site_energy' (kBTU) in an out_osw_path that has the
@@ -394,31 +375,30 @@ def parse_total_site_energy(out_osw_path)
 
   result_osw = nil
   File.open(out_osw_path, 'r') do |f|
-    result_osw = JSON::parse(f.read, :symbolize_names=>true)
+    result_osw = JSON.parse(f.read, symbolize_names: true)
   end
 
   if out_osw_path.include?('2.0.4')
-    os_results = result_osw[:steps].select{|s| s[:measure_dir_name] == 'openstudio_results'}
+    os_results = result_osw[:steps].select { |s| s[:measure_dir_name] == 'openstudio_results' }
   else
     # This works from 2.0.5 onward...
-    os_results = result_osw[:steps].select{|s| s[:result][:measure_name] == 'openstudio_results'}
+    os_results = result_osw[:steps].select { |s| s[:result][:measure_name] == 'openstudio_results' }
   end
 
-  if os_results.size == 0
+  if os_results.empty?
     puts "There are no OpenStudio results for #{out_osw_path}"
     return nil
 
-  elsif  os_results.size != 1
-    puts("Warning: there are more than one openstudio_results measure " +
+  elsif os_results.size != 1
+    puts('Warning: there are more than one openstudio_results measure ' \
          "for #{out_osw_path}")
   end
 
   os_result = os_results[0][:result]
 
-  site_kbtu = os_result[:step_values].select{|s| s[:name] == 'total_site_energy'}[0][:value]
+  site_kbtu = os_result[:step_values].select { |s| s[:name] == 'total_site_energy' }[0][:value]
   return site_kbtu
 end
-
 
 # Checks that % diff of EUI didn't vary too much compared to previous version
 #
@@ -427,7 +407,6 @@ end
 # Will remove custom tags to find previous version, so that it uses the
 # previous **official** run
 def compare_osw_eui_with_previous_version(cp_out_osw)
-
   # We can't just replace the versions, in case there's a custom tag
   # which is almost guaranteed to not exist in the previous version
   # So instead, we try to compare to the last **official** run
@@ -448,13 +427,11 @@ def compare_osw_eui_with_previous_version(cp_out_osw)
     return
   end
 
-  pct_diff = 100*(new_eui - old_eui) / old_eui.to_f
+  pct_diff = 100 * (new_eui - old_eui) / old_eui.to_f
 
-  assert (pct_diff < $EuiPctThreshold), "#{pct_diff.round(3)}% difference in EUI is too large for #{cp_out_osw}" +
+  assert (pct_diff < $EuiPctThreshold), "#{pct_diff.round(3)}% difference in EUI is too large for #{cp_out_osw}" \
                                         " between #{$SdkPreviousVersion} and #{$SdkVersion}"
-
 end
-
 
 # Helper function to post-process the out.osw and save it in test/ with
 # the right naming pattern
@@ -470,13 +447,12 @@ end
 #
 # @return result_osw [Hash]: the sanitized result_osw should you need to do
 # more stuff with it
-def postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui=true)
-
-  fail "Cannot find file #{out_osw}" if !File.exist?(out_osw)
+def postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui = true)
+  raise "Cannot find file #{out_osw}" if !File.exist?(out_osw)
 
   result_osw = nil
   File.open(out_osw, 'r') do |f|
-    result_osw = JSON::parse(f.read, :symbolize_names=>true)
+    result_osw = JSON.parse(f.read, symbolize_names: true)
   end
 
   if !result_osw.nil?
@@ -498,7 +474,7 @@ def postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui=true)
     result_osw.delete(:updated_at)
 
     # Should always be true
-    if (result_osw[:steps].size == 1) && (result_osw[:steps].select{|s| s[:measure_dir_name] == 'openstudio_results'}.size == 1)
+    if (result_osw[:steps].size == 1) && (result_osw[:steps].select { |s| s[:measure_dir_name] == 'openstudio_results' }.size == 1)
       # If something went wrong, there wouldn't be results
       if result_osw[:steps][0].keys.include?(:result)
         result_osw[:steps][0][:result].delete(:completed_at)
@@ -515,7 +491,6 @@ def postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui=true)
       end
     end
 
-
     # The fuel cell tests produce out.osw files that are about 800 MB
     # because E+ throws a warning in the Regula Falsi routine (an E+ bug)
     # which results in about 7.5 Million times the same warning
@@ -524,14 +499,14 @@ def postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui=true)
       result_osw.delete(:eplusout_err)
     end
 
-    File.open(cp_out_osw,"w") do |f|
+    File.open(cp_out_osw, 'w') do |f|
       f.write(JSON.pretty_generate(result_osw))
     end
 
   end
 
   # standard checks
-  assert_equal("Success", result_osw[:completed_status])
+  assert_equal('Success', result_osw[:completed_status])
 
   # Assert that EUI didn't change too much
   if compare_eui
@@ -539,7 +514,6 @@ def postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui=true)
   end
 
   return result_osw
-
 end
 
 # run a simulation test
@@ -549,7 +523,6 @@ end
 #   * :base_dir [String]: where to look for filename to copy it (OSM) or run it
 #   (RB), defaults to $ModelDir
 def sim_test(filename, options = {})
-
   dir = File.join($TestDir, filename)
   if options[:outdir]
     dir = File.join($TestDir, options[:outdir])
@@ -568,6 +541,12 @@ def sim_test(filename, options = {})
     base_dir = $ModelDir
   end
 
+  if !options[:compare_eui].nil?
+    compare_eui = options[:compare_eui]
+  else
+    compare_eui = true
+  end
+
   # puts "Running sim_test(#{filename})"
 
   in_osw = File.join(dir, 'in.osw')
@@ -580,11 +559,11 @@ def sim_test(filename, options = {})
     if File.exist?(cp_out_osw)
       cp_result_osw = nil
       File.open(cp_out_osw, 'r') do |f|
-        cp_result_osw = JSON::parse(f.read, :symbolize_names=>true)
+        cp_result_osw = JSON.parse(f.read, symbolize_names: true)
       end
       if !cp_result_osw.nil?
-        if cp_result_osw[:completed_status] == "Success"
-          skip "Already ran with success"
+        if cp_result_osw[:completed_status] == 'Success'
+          skip 'Already ran with success'
         end
       end
     end
@@ -599,9 +578,9 @@ def sim_test(filename, options = {})
   FileUtils.mkdir_p(dir)
 
   ext = File.extname(filename)
-  if (ext == '.osm') or (ext == '.xml')
+  if (ext == '.osm') || (ext == '.xml')
 
-    if (ext == '.xml')
+    if ext == '.xml'
       new_filename = filename.sub('.xml', '.osm')
       FileUtils.mv(File.join(base_dir, filename),
                    File.join(base_dir, new_filename))
@@ -614,11 +593,12 @@ def sim_test(filename, options = {})
 
     # Check that version of OSM is inferior or equal to the current
     # openstudio sdk used (only for docker...)
-    ori_file_path = File.join(base_dir,filename)
+    ori_file_path = File.join(base_dir, filename)
     v = OpenStudio::IdfFile.loadVersionOnly(ori_file_path)
-    if not v
-      fail "Cannot find versionString in #{filename}"
+    if !v
+      raise "Cannot find versionString in #{filename}"
     end
+
     model_version = v.get.str
 
     if Gem::Version.new(model_version) > Gem::Version.new($SdkVersion)
@@ -630,28 +610,28 @@ def sim_test(filename, options = {})
     FileUtils.cp(ori_file_path, in_osm)
 
     # Specific case for schedule_file_osm
-    if (filename == 'schedule_file.osm')
+    if filename == 'schedule_file.osm'
       # We need to manually copy the supporting schedule into
       # the testruns folder for the simulation to be able to find it
       sch_ori_path = File.join(File.dirname(__FILE__),
                                'model/simulationtests/lib/schedulefile.csv')
       sch_ori_path = File.realpath(sch_ori_path)
 
-      if Gem::Version.new($SdkVersion) == Gem::Version.new("2.7.0")
+      if Gem::Version.new($SdkVersion) == Gem::Version.new('2.7.0')
         # in 2.7.0, it needs to be at the same level as the OSM
-        sch_target_path  = File.join(dir, File.basename(sch_ori_path))
+        sch_target_path = File.join(dir, File.basename(sch_ori_path))
       else
         # Going forward, it's inside the files/ subdirectory
         # Have to make the directory first
         files_dir = File.join(dir, 'files/')
         FileUtils.mkdir_p(files_dir)
-        sch_target_path  = File.join(files_dir, File.basename(sch_ori_path))
+        sch_target_path = File.join(files_dir, File.basename(sch_ori_path))
       end
 
       FileUtils.cp(sch_ori_path, sch_target_path)
     end
 
-  elsif (ext == '.rb')
+  elsif ext == '.rb'
 
     # Copy the generic OSW file, needed to add design days in particular when
     # running the measure to generate the OSM, and then of course for the sim
@@ -668,7 +648,7 @@ def sim_test(filename, options = {})
       FileUtils.mv(out_osm, in_osm)
     end
 
-  elsif (ext == '.osw')
+  elsif ext == '.osw'
 
     # make an empty osm
     model = OpenStudio::Model::Model.new
@@ -679,20 +659,20 @@ def sim_test(filename, options = {})
 
   end
 
-  fail "Cannot find file #{in_osm}" if !File.exist?(in_osm)
-  fail "Cannot find file #{in_osw}" if !File.exist?(in_osw)
+  raise "Cannot find file #{in_osm}" if !File.exist?(in_osm)
+  raise "Cannot find file #{in_osw}" if !File.exist?(in_osw)
 
   # extra options passed to cli
-  extra_options = ""
-  extra_options += "--verbose " if options[:verbose]
+  extra_options = ''
+  extra_options += '--verbose ' if options[:verbose]
   extra_options += "--include #{options[:include]} " if options[:include]
   extra_options += "--gem_path #{options[:gem_path]} " if options[:gem_path]
   extra_options += "--gem_home #{options[:gem_home]} " if options[:gem_home]
   extra_options += "--bundle #{options[:bundle]} " if options[:bundle]
   extra_options += "--bundle_path #{options[:bundle_path]} " if options[:bundle_path]
 
-  extra_run_options = ""
-  extra_run_options += "--debug " if options[:debug]
+  extra_run_options = ''
+  extra_run_options += '--debug ' if options[:debug]
 
   # command to run the in_osw
   command = "\"#{$OpenstudioCli}\" #{extra_options} run #{extra_run_options} -w \"#{in_osw}\""
@@ -710,14 +690,13 @@ def sim_test(filename, options = {})
   end
 
   # Post-process the out_osw
-  result_osw = postprocess_out_osw_and_copy(out_osw, cp_out_osw, true)
+  result_osw = postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui)
 
   # return result_osw for further checks
   return result_osw
 end
 
 def intersect_test(filename)
-
   dir = File.join($TestDir, 'intersections', filename)
   src_osm = File.join($IntersectDir, filename)
   in_osm = File.join(dir, 'in.osm')
@@ -767,10 +746,10 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     FileUtils.cp($OswFile, in_osw)
 
     ext = File.extname(filename)
-    if (ext == '.osm')
-      FileUtils.cp(File.join($ModelDir,filename), in_osm)
-    elsif (ext == '.rb')
-      command = "\"#{$OpenstudioCli}\" \"#{File.join($ModelDir,filename)}\""
+    if ext == '.osm'
+      FileUtils.cp(File.join($ModelDir, filename), in_osm)
+    elsif ext == '.rb'
+      command = "\"#{$OpenstudioCli}\" \"#{File.join($ModelDir, filename)}\""
       run_command(command, dir, 3600)
 
       # tests used to write out.osm
@@ -780,11 +759,11 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
         FileUtils.mv(out_osm, in_osm)
       end
 
-      fail "Cannot find file #{in_osm}" if !File.exist?(in_osm)
+      raise "Cannot find file #{in_osm}" if !File.exist?(in_osm)
     end
 
     command = "\"#{$OpenstudioCli}\" run -w \"#{in_osw}\""
-    #command = "\"#{$OpenstudioCli}\" run --debug -w \"#{in_osw}\""
+    # command = "\"#{$OpenstudioCli}\" run --debug -w \"#{in_osw}\""
 
     run_command(command, dir, 3600)
   end
@@ -825,7 +804,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
   end
 
   # Assert that the sizing run succeeded
-  assert_equal("Success", result_osw[:completed_status])
+  assert_equal('Success', result_osw[:completed_status])
 
   # Skip testing all methods for some objects
   # Skip testing some methods for other objects
@@ -835,8 +814,8 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     'OS:WaterHeater:HeatPump' => 'all', # WH sizing object not wrapped
     'OS:WaterHeater:HeatPump:PumpedCondenser' => 'all', # WH sizing object not wrapped
     'OS:Boiler:Steam' => 'all', # CoilHeatingSteam is not wrapped, cannot use steam boiler in OS
-    'OS:ChillerHeaterPerformance:Electric:EIR' => 'all', # TODO Not in test model (central HP system)
-    'OS:SolarCollector:FlatPlate:PhotovoltaicThermal' => 'all', # TODO Not in test model
+    'OS:ChillerHeaterPerformance:Electric:EIR' => 'all', # TODO: Not in test model (central HP system)
+    'OS:SolarCollector:FlatPlate:PhotovoltaicThermal' => 'all', # TODO: Not in test model
     'OS:Chiller:Absorption' => [
       'autosizedDesignGeneratorFluidFlowRate' # Generator loop not supported by OS
     ],
@@ -917,15 +896,15 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
   getter_aliases = {
     'OS:AirTerminal:SingleDuct:VAV:Reheat' => {
       'autosizedMaximumHotWaterorSteamFlowRate' => 'autosizedMaximumHotWaterOrSteamFlowRate', # Capitalization of 'Or'
-      'autosizedMaximumFlowperZoneFloorAreaDuringReheat' => 'autosizedMaximumFlowPerZoneFloorAreaDuringReheat', # Capitalization of 'Per'
+      'autosizedMaximumFlowperZoneFloorAreaDuringReheat' => 'autosizedMaximumFlowPerZoneFloorAreaDuringReheat' # Capitalization of 'Per'
     },
     'OS:HeatPump:WaterToWater:EquationFit:Heating' => {
       'autosizedReferenceHeatingCapacity' => 'autosizedRatedHeatingCapacity',
-      'autosizedReferenceHeatingPowerConsumption' => 'autosizedRatedHeatingPowerConsumption',
+      'autosizedReferenceHeatingPowerConsumption' => 'autosizedRatedHeatingPowerConsumption'
     },
     'OS:HeatPump:WaterToWater:EquationFit:Cooling' => {
       'autosizedReferenceCoolingCapacity' => 'autosizedRatedCoolingCapacity',
-      'autosizedReferenceCoolingPowerConsumption' => 'autosizedRatedCoolingPowerConsumption',
+      'autosizedReferenceCoolingPowerConsumption' => 'autosizedRatedCoolingPowerConsumption'
     }
   }
 
@@ -952,7 +931,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     os_type = os_type_aliases[os_type] if os_type_aliases[os_type]
 
     # Convert to IDD type
-    type = os_type.gsub('OS:','').gsub(':','')
+    type = os_type.gsub('OS:', '').gsub(':', '')
 
     # Skip objects with no autosizable fields
     next if autosizable_field_names.empty?
@@ -960,6 +939,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     # Skip certain object types entirely
     methods_to_skip = obj_types_to_skip[os_type]
     next if methods_to_skip == 'all'
+
     methods_to_skip = [] if methods_to_skip.nil?
 
     # Convert the type name into a getter for objects from model
@@ -975,10 +955,10 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     # Add the objects to a hash by object type
     objs = model.public_send(method_name)
     obj_counts[type] = objs.size
-    next if objs.size == 0
+    next if objs.empty?
 
     # Get the first instance of this object type in the model
-    obj = objs.sort[0]
+    obj = objs.min
 
     # Special cases
     case type
@@ -993,13 +973,13 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     when 'AirLoopHVACUnitarySystem' # Need to check a unitary where no load flow is autosized
       objs.sort.each do |o|
         obj = o if o.name.get == 'Air Loop HVAC Unitary System 3'
-    end
+      end
     end
 
     # Test all autosizedFoo methods on this instance
     autosizable_field_names.each do |auto_field|
       # Make the getter name from the IDD field
-      getter_name = "autosized#{auto_field.gsub(/\W/,'').strip}"
+      getter_name = "autosized#{auto_field.gsub(/\W/, '').strip}"
 
       # Replace the getter name with known alias, if one exists
       obj_aliases = getter_aliases[os_type]
@@ -1029,9 +1009,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       else
         failed_autosizedFoo << "#{getter_name} failed for #{obj.name} of type #{type}"
       end
-
     end
-
   end
 
   puts "\n*** Autosizable Objects not Wrapped by OpenStudio ***"
@@ -1064,20 +1042,19 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
 
   # Add a few more object types to skip testing for based on test file object inputs
   obj_types_to_skip['OS:EvaporativeFluidCooler:TwoSpeed'] = [
-      'autosizedDesignWaterFlowRate', # Value only present for some fluid cooler sizing input methods in test file
-    ]
+    'autosizedDesignWaterFlowRate' # Value only present for some fluid cooler sizing input methods in test file
+  ]
   obj_types_to_skip['OS:Sizing:System'] = [
-      'autosizedDesignOutdoorAirFlowRate', # Not all AirLoopHVACs in model have OA system, needed for this output to exist
-    ]
+    'autosizedDesignOutdoorAirFlowRate' # Not all AirLoopHVACs in model have OA system, needed for this output to exist
+  ]
   obj_types_to_skip['OS:AirLoopHVAC:UnitarySystem'] = [
-      'autosizedNoLoadSupplyAirFlowRate', # Not all Unitarys in test model have this field autosized
-    ]
+    'autosizedNoLoadSupplyAirFlowRate' # Not all Unitarys in test model have this field autosized
+  ]
 
   # Count the number of autosized fields in the model
-  def autosized_fields(model, obj_types_to_skip, missing_getters)
-
+  autosized_fields = lambda { |t_model, t_obj_types_to_skip, t_missing_getters|
     # Convert to IDF
-    idf = OpenStudio::EnergyPlus::ForwardTranslator.new.translateModel(model).toIdfFile
+    idf = OpenStudio::EnergyPlus::ForwardTranslator.new.translateModel(t_model).toIdfFile
 
     # Ensure that all fields are set to "Autosize" or "Autocalculate"
     fields_autosized = []
@@ -1086,21 +1063,23 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       os_type = "OS:#{obj.iddObject.type.valueDescription}"
 
       # Skip certain object types entirely
-      methods_to_skip = obj_types_to_skip[os_type]
+      methods_to_skip = t_obj_types_to_skip[os_type]
       next if methods_to_skip == 'all'
+
       methods_to_skip = [] if methods_to_skip.nil?
 
       # Get the list of getters to skip because missing from E+
-      fields_to_skip = missing_getters[os_type]
+      fields_to_skip = t_missing_getters[os_type]
       fields_to_skip = [] if fields_to_skip.nil?
 
       for field_num in 0..obj.numFields
-        field_name = obj.fieldComment(field_num, true).to_s.gsub('!-','').gsub(/{.*}/,'').gsub(' ', '').strip
+        field_name = obj.fieldComment(field_num, true).to_s.gsub('!-', '').gsub(/{.*}/, '').gsub(' ', '').strip
         getter_name = "autosized#{field_name}"
         # Don't check fields whose getters aren't being tested
         next if methods_to_skip.include?(getter_name)
         # Don't check fields whose getters aren't working because of E+ defficiencies
         next if fields_to_skip.include?(getter_name)
+
         # Check the value of the field
         val = obj.getString(field_num).to_s
         if autosize_aliases.include?(val)
@@ -1113,22 +1092,22 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
 
     # return result_osw for further checks
     return result_osw
-  end
+  }
 
   # Get the autosized fields before hard sizing
-  autosized_fields_before_hard_size = autosized_fields(model, obj_types_to_skip, missing_getters)
+  autosized_fields_before_hard_size = autosized_fields.call(model, obj_types_to_skip, missing_getters)
 
   # Hard-size the entire model
-  model.applySizingValues()
+  model.applySizingValues
 
   # Get the autosized fields after hard sizing
-  autosized_fields_after_hard_size = autosized_fields(model, obj_types_to_skip, missing_getters)
+  autosized_fields_after_hard_size = autosized_fields.call(model, obj_types_to_skip, missing_getters)
 
   # Auto-size the entire model
-  model.autosize()
+  model.autosize
 
   # Get the autosized fields after hard sizing
-  autosized_fields_after_auto_size = autosized_fields(model, obj_types_to_skip, missing_getters)
+  autosized_fields_after_auto_size = autosized_fields.call(model, obj_types_to_skip, missing_getters)
 
   puts "\n*** Fields that are still autosized after hard sizing (but should not be) ***"
   autosized_fields_after_hard_size.each { |f| puts f }
@@ -1138,9 +1117,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
 
   # Assert that all fields were set back to autosized
   assert_equal(autosized_fields_before_hard_size.size, autosized_fields_after_auto_size.size, "The number of autosized fields before hard sizing and after autosizing don't match.")
-
 end
-
 
 # run a sql test
 # @param options [Hash]: can specify the following values:
@@ -1151,7 +1128,6 @@ end
 #         :type => 'Full',        # or 'Partial'
 #       }
 def sql_test(options = {})
-
   require 'date'
 
   # Get name of calling method and remove the 'test_' portion
@@ -1162,27 +1138,28 @@ def sql_test(options = {})
   # "Success"
   test_result_file = File.join($OutOSWDir, "#{filename}.sql_#{$SdkVersion}_out#{$Custom_tag}.sqltest")
 
-  File.write(test_result_file, "Fail", mode: 'w')
+  File.write(test_result_file, 'Fail', mode: 'w')
 
   # Create a model
   m = OpenStudio::Model::Model.new
   # Add three output variables from EPW
-  out_var = OpenStudio::Model::OutputVariable.new("Site Outdoor Air Drybulb Temperature", m)
-  out_var.setReportingFrequency("RunPeriod")
+  out_var = OpenStudio::Model::OutputVariable.new('Site Outdoor Air Drybulb Temperature', m)
+  out_var.setReportingFrequency('RunPeriod')
 
-  out_var = OpenStudio::Model::OutputVariable.new("Site Outdoor Air Drybulb Temperature", m)
-  out_var.setReportingFrequency("Annual")
+  out_var = OpenStudio::Model::OutputVariable.new('Site Outdoor Air Drybulb Temperature', m)
+  out_var.setReportingFrequency('Annual')
 
-  out_var = OpenStudio::Model::OutputVariable.new("Site Outdoor Air Drybulb Temperature", m)
-  out_var.setReportingFrequency("Daily")
+  out_var = OpenStudio::Model::OutputVariable.new('Site Outdoor Air Drybulb Temperature', m)
+  out_var.setReportingFrequency('Daily')
 
   yd = m.getYearDescription
   r = m.getRunPeriod
 
   # Deal with input
   if (options[:start] && !options[:end]) || (!options[:start] && options[:end])
-    fail "If you specify start date, you must specify end date and vice versa"
+    raise 'If you specify start date, you must specify end date and vice versa'
   end
+
   if options[:start]
     # Ruby dates
     dr_start = Date.iso8601(options[:start])
@@ -1227,8 +1204,6 @@ def sql_test(options = {})
   d_end = OpenStudio::Date.new(OpenStudio::MonthOfYear.new(end_month),
                                end_day, end_year)
 
-
-
   dir = File.join($TestDir, filename)
   osw = File.join(dir, 'in.osw')
   out_osw = File.join(dir, 'out.osw')
@@ -1249,33 +1224,31 @@ def sql_test(options = {})
     # It won't give you an output that has a leap day...
     # And it doesn't appear to let you know about it either
     if options[:isLeapYear]
-      weather_file = "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_LeapYear.epw"
+      weather_file = 'USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_LeapYear.epw'
     else
       # If we have a start date, assume an AMY
-      if [:start]
-        weather_file = "USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_NonLeapYear.epw"
+      if options[:start]
+        weather_file = 'USA_IL_Chicago-OHare.Intl.AP.725300_AMY_2012_NonLeapYear.epw'
       else
         # Otherwise a TMY
-        weather_file = "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"
+        weather_file = 'USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw'
       end
     end
 
-
     osw_content = {
-      "weather_file" => "../../weatherdata/#{weather_file}",
-      "seed_file" => "in.osm",
+      'weather_file' => "../../weatherdata/#{weather_file}",
+      'seed_file' => 'in.osm'
       # "steps" => [],
     }
 
     File.write(osw, JSON.pretty_generate(osw_content))
-
 
     # Save to above model into dir
     m.save(in_osm, true)
 
     # Run it
     command = "\"#{$OpenstudioCli}\" run -w \"#{osw}\""
-    #command = "\"#{$OpenstudioCli}\" run --debug -w \"#{osw}\""
+    # command = "\"#{$OpenstudioCli}\" run --debug -w \"#{osw}\""
 
     run_command(command, dir, 3600)
   end
@@ -1285,14 +1258,14 @@ def sql_test(options = {})
   # Here we actually don't care about the OSW at all,
   # just want to make sure that E+ completed successfully
   # (though I don't see a reason it wouldn't)
-  fail "Cannot find file #{out_osw}" if !File.exist?(out_osw)
+  raise "Cannot find file #{out_osw}" if !File.exist?(out_osw)
 
   result_osw = nil
   File.open(out_osw, 'r') do |f|
-    result_osw = JSON::parse(f.read, :symbolize_names=>true)
+    result_osw = JSON.parse(f.read, symbolize_names: true)
   end
 
-  assert_equal("Success", result_osw[:completed_status])
+  assert_equal('Success', result_osw[:completed_status])
 
   # Load the model
   versionTranslator = OpenStudio::OSVersion::VersionTranslator.new
@@ -1321,19 +1294,19 @@ def sql_test(options = {})
   end
 
   # Assert that the sizing run succeeded
-  assert_equal("Success", result_osw[:completed_status])
+  assert_equal('Success', result_osw[:completed_status])
 
   # Now do actual stuff!
 
   # Get the run period series
-  ts = sql.timeSeries(sql.availableEnvPeriods[0], "RunPeriod", "Site Outdoor Air Drybulb Temperature", "Environment")
+  ts = sql.timeSeries(sql.availableEnvPeriods[0], 'RunPeriod', 'Site Outdoor Air Drybulb Temperature', 'Environment')
   assert(ts.is_initialized, "Timeseries isn't initialized")
   run_periods = ts.get
   puts run_periods.values
   puts run_periods.dateTimes
 
   # Get the annual series
-  ts = sql.timeSeries(sql.availableEnvPeriods[0], "Annual", "Site Outdoor Air Drybulb Temperature", "Environment")
+  ts = sql.timeSeries(sql.availableEnvPeriods[0], 'Annual', 'Site Outdoor Air Drybulb Temperature', 'Environment')
 
   # Check run period and annual series
   assert_equal(run_periods.dateTimes.length, 1)
@@ -1347,7 +1320,7 @@ def sql_test(options = {})
     assert_equal(run_periods.values[0], annuals.values[0])
     assert(annuals.values[0] == run_periods.values[0])
   elsif options[:type] == 'Partial'
-    assert(!ts.is_initialized, "Timeseries is initialized")
+    assert(!ts.is_initialized, 'Timeseries is initialized')
   elsif options[:type] == 'Wrap-around'
     assert(ts.is_initialized, "Timeseries isn't initialized")
     annuals = ts.get
@@ -1359,13 +1332,13 @@ def sql_test(options = {})
   end
 
   # Get the daily series
-  ts = sql.timeSeries(sql.availableEnvPeriods[0], "Daily", "Site Outdoor Air Drybulb Temperature", "Environment")
+  ts = sql.timeSeries(sql.availableEnvPeriods[0], 'Daily', 'Site Outdoor Air Drybulb Temperature', 'Environment')
   assert(ts.is_initialized, "Timeseries isn't initialized")
   ts = ts.get
 
   # End date minus start date, + 1 because we count the start AND the end day
   n_days = (d_end - d_start).totalDays + 1
-  assert_equal(n_days, ts.values.size, "Bad number of days!")
+  assert_equal(n_days, ts.values.size, 'Bad number of days!')
 
   # E+ reports with an end convention, meaning that for a daily timeseries
   # each entry is labeled as the next day
@@ -1384,6 +1357,5 @@ def sql_test(options = {})
   assert_equal(d_end, sql_end_date, "End date doesn't match")
 
   # If we got here, then all good
-  File.write(test_result_file, "Success", mode: 'w')
-
+  File.write(test_result_file, 'Success', mode: 'w')
 end

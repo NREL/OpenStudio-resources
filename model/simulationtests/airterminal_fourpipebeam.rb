@@ -1,40 +1,39 @@
+# frozen_string_literal: true
+
 require 'openstudio'
 require 'lib/baseline_model'
 
 m = BaselineModel.new
 
 # make a 1 story, 100m X 50m, 5 zone core/perimeter building
-m.add_geometry({"length" => 100,
-                "width" => 50,
-                "num_floors" => 1,
-                "floor_to_floor_height" => 3,
-                "plenum_height" => 1,
-                "perimeter_zone_depth" => 3})
+m.add_geometry({ 'length' => 100,
+                 'width' => 50,
+                 'num_floors' => 1,
+                 'floor_to_floor_height' => 3,
+                 'plenum_height' => 1,
+                 'perimeter_zone_depth' => 3 })
 
 # add windows at a 40% window-to-wall ratio
-m.add_windows({"wwr" => 0.4,
-               "offset" => 1,
-               "application_type" => "Above Floor"})
+m.add_windows({ 'wwr' => 0.4,
+                'offset' => 1,
+                'application_type' => 'Above Floor' })
 
 # Add ASHRAE System type 07, VAV w/ Reheat, this creates a ChW, a HW loop and a
 # Condenser Loop
-m.add_hvac({"ashrae_sys_num" => '07'})
-
+m.add_hvac({ 'ashrae_sys_num' => '07' })
 
 # add thermostats
-m.add_thermostats({"heating_setpoint" => 24,
-                   "cooling_setpoint" => 28})
+m.add_thermostats({ 'heating_setpoint' => 24,
+                    'cooling_setpoint' => 28 })
 
 # assign constructions from a local library to the walls/windows/etc. in the model
-m.set_constructions()
+m.set_constructions
 
 # set whole building space type; simplified 90.1-2004 Large Office Whole Building
-m.set_space_type()
+m.set_space_type
 
 # add design days to the model (Chicago)
-m.add_design_days()
-
-
+m.add_design_days
 
 ###############################################################################
 #         R E P L A C E    A T Us    W/    F O U R    P I P E    B E A Ms
@@ -49,19 +48,18 @@ p_hw = b.plantLoop.get
 ch = m.getChillerElectricEIRs.first
 p_chw = ch.plantLoop.get
 
-
 # Recreate the same TableMultiVariableLookup that is created in the Ctor for
 # CoilCoolingFourPipeBeam
 capModFuncOfWaterFlow = OpenStudio::Model::TableMultiVariableLookup.new(m, 1)
-capModFuncOfWaterFlow.setName("CapModFuncOfWaterFlow")
-capModFuncOfWaterFlow.setCurveType("Quadratic")
-capModFuncOfWaterFlow.setInterpolationMethod("EvaluateCurveToLimits")
+capModFuncOfWaterFlow.setName('CapModFuncOfWaterFlow')
+capModFuncOfWaterFlow.setCurveType('Quadratic')
+capModFuncOfWaterFlow.setInterpolationMethod('EvaluateCurveToLimits')
 capModFuncOfWaterFlow.setMinimumValueofX1(0)
 capModFuncOfWaterFlow.setMaximumValueofX1(1.33)
 capModFuncOfWaterFlow.setMinimumTableOutput(0.0)
 capModFuncOfWaterFlow.setMaximumTableOutput(1.04)
-capModFuncOfWaterFlow.setInputUnitTypeforX1("Dimensionless")
-capModFuncOfWaterFlow.setOutputUnitType("Dimensionless")
+capModFuncOfWaterFlow.setInputUnitTypeforX1('Dimensionless')
+capModFuncOfWaterFlow.setOutputUnitType('Dimensionless')
 
 capModFuncOfWaterFlow.addPoint(0.0, 0.0)
 capModFuncOfWaterFlow.addPoint(0.05, 0.001)
@@ -72,16 +70,14 @@ capModFuncOfWaterFlow.addPoint(0.833333, 0.97)
 capModFuncOfWaterFlow.addPoint(1.0, 1.0)
 capModFuncOfWaterFlow.addPoint(1.333333, 1.04)
 
-
 # Replace all terminals with ATUFourPipeBeams
 # There is only one airLoopHVAC, so I get it here
 air_loop = m.getAirLoopHVACs[0]
 
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
-zones = m.getThermalZones.sort_by{|z| z.name.to_s}
+zones = m.getThermalZones.sort_by { |z| z.name.to_s }
 zones.each do |z|
-
   # air_loop = z.airLoopHVAC.get
   air_loop.removeBranchForZone(z)
 
@@ -101,52 +97,51 @@ zones.each do |z|
   atu.setName("#{z.name} ATU FourPipeBeam")
   air_loop.addBranchForZone(z, atu.to_StraightComponent)
 
-  z.zoneAirNode.setName("#{z.name.to_s} Zone Air Node")
+  z.zoneAirNode.setName("#{z.name} Zone Air Node")
 end
 
 # All setters:
 
 # ATU
-#atu.setPrimaryAirAvailabilitySchedule()
-#atu.setCoolingAvailabilitySchedule()
-#atu.setHeatingAvailabilitySchedule()
-#atu.setCoolingCoil()
-#atu.setHeatingCoil()
-#atu.setDesignPrimaryAirVolumeFlowRate()
-#atu.setDesignChilledWaterVolumeFlowRate()
-#atu.setDesignHotWaterVolumeFlowRate()
-#atu.setZoneTotalBeamLength()
-#atu.setRatedPrimaryAirFlowRateperBeamLength()
+# atu.setPrimaryAirAvailabilitySchedule()
+# atu.setCoolingAvailabilitySchedule()
+# atu.setHeatingAvailabilitySchedule()
+# atu.setCoolingCoil()
+# atu.setHeatingCoil()
+# atu.setDesignPrimaryAirVolumeFlowRate()
+# atu.setDesignChilledWaterVolumeFlowRate()
+# atu.setDesignHotWaterVolumeFlowRate()
+# atu.setZoneTotalBeamLength()
+# atu.setRatedPrimaryAirFlowRateperBeamLength()
 
 # CoilCoolingFourPipeBeam
-#cc.setBeamRatedCoolingCapacityperBeamLength()
-#cc.setBeamRatedCoolingRoomAirChilledWaterTemperatureDifference()
-#cc.setBeamRatedChilledWaterVolumeFlowRateperBeamLength()
-#cc.setBeamCoolingCapacityTemperatureDifferenceModificationFactorCurve()
-#cc.setBeamCoolingCapacityAirFlowModificationFactorCurve()
-#cc.setBeamCoolingCapacityChilledWaterFlowModificationFactorCurve()
+# cc.setBeamRatedCoolingCapacityperBeamLength()
+# cc.setBeamRatedCoolingRoomAirChilledWaterTemperatureDifference()
+# cc.setBeamRatedChilledWaterVolumeFlowRateperBeamLength()
+# cc.setBeamCoolingCapacityTemperatureDifferenceModificationFactorCurve()
+# cc.setBeamCoolingCapacityAirFlowModificationFactorCurve()
+# cc.setBeamCoolingCapacityChilledWaterFlowModificationFactorCurve()
 
 # CoilHeatingFourPipeBeam
-
 
 ###############################################################################
 #         R E N A M E    E Q U I P M E N T    A N D    N O D E S
 ###############################################################################
 
 # Remove pipes
-m.getPipeAdiabatics.each {|pipe| pipe.remove}
+m.getPipeAdiabatics.each(&:remove)
 
 # Rename loops
-p_cnd.setName("CndW Loop")
-p_hw.setName("HW Loop")
-p_chw.setName("ChW Loop")
+p_cnd.setName('CndW Loop')
+p_hw.setName('HW Loop')
+p_chw.setName('ChW Loop')
 
-
-m.getCoilCoolingWaters[0].setName("VAV Central ChW Coil")
+m.getCoilCoolingWaters[0].setName('VAV Central ChW Coil')
 
 m.getCoilHeatingWaters.each do |coil|
   next if !coil.airLoopHVAC.is_initialized
-  coil.setName("VAV Central HW Coil")
+
+  coil.setName('VAV Central HW Coil')
 end
 
 # Rename nodes
@@ -163,7 +158,7 @@ m.getPlantLoops.each do |p|
     else
 
       obj_type = c.iddObjectType.valueName
-      obj_type_name = obj_type.gsub('OS_','').gsub('_','')
+      obj_type_name = obj_type.gsub('OS_', '').gsub('_', '')
 
       if c.to_PumpVariableSpeed.is_initialized
         c.setName("#{prefix} VSD Pump")
@@ -177,19 +172,20 @@ m.getPlantLoops.each do |p|
         c.setName("#{prefix} #{obj_type_name}")
       end
 
-
       method_name = "to_#{obj_type_name}"
       next if !c.respond_to?(method_name)
+
       actual_thing = c.method(method_name).call
       next if actual_thing.empty?
+
       actual_thing = actual_thing.get
-      if actual_thing.respond_to?("inletModelObject") && actual_thing.inletModelObject.is_initialized
+      if actual_thing.respond_to?('inletModelObject') && actual_thing.inletModelObject.is_initialized
         inlet_mo = actual_thing.inletModelObject.get
-        inlet_mo.setName("#{prefix} Supply Side #{actual_thing.name.to_s} Inlet Node")
+        inlet_mo.setName("#{prefix} Supply Side #{actual_thing.name} Inlet Node")
       end
-      if actual_thing.respond_to?("outletModelObject") && actual_thing.outletModelObject.is_initialized
+      if actual_thing.respond_to?('outletModelObject') && actual_thing.outletModelObject.is_initialized
         outlet_mo = actual_thing.outletModelObject.get
-        outlet_mo.setName("#{prefix} Supply Side #{actual_thing.name.to_s} Outlet Node")
+        outlet_mo.setName("#{prefix} Supply Side #{actual_thing.name} Outlet Node")
       end
     end
   end
@@ -203,34 +199,35 @@ m.getPlantLoops.each do |p|
       c.setName("#{prefix} Demand ConnectorSplitter")
     else
       obj_type = c.iddObjectType.valueName
-      obj_type_name = obj_type.gsub('OS_','').gsub('_','')
+      obj_type_name = obj_type.gsub('OS_', '').gsub('_', '')
       method_name = "to_#{obj_type_name}"
       next if !c.respond_to?(method_name)
+
       actual_thing = c.method(method_name).call
       next if actual_thing.empty?
+
       actual_thing = actual_thing.get
-      if actual_thing.respond_to?("inletModelObject") && actual_thing.inletModelObject.is_initialized
+      if actual_thing.respond_to?('inletModelObject') && actual_thing.inletModelObject.is_initialized
         inlet_mo = actual_thing.inletModelObject.get
-        inlet_mo.setName("#{prefix} Demand Side #{actual_thing.name.to_s} Inlet Node")
+        inlet_mo.setName("#{prefix} Demand Side #{actual_thing.name} Inlet Node")
       end
-      if actual_thing.respond_to?("outletModelObject") && actual_thing.outletModelObject.is_initialized
+      if actual_thing.respond_to?('outletModelObject') && actual_thing.outletModelObject.is_initialized
         outlet_mo = actual_thing.outletModelObject.get
-        outlet_mo.setName("#{prefix} Demand Side #{actual_thing.name.to_s} Outlet Node")
+        outlet_mo.setName("#{prefix} Demand Side #{actual_thing.name} Outlet Node")
       end
 
       # WaterToAirComponent
-      if actual_thing.respond_to?("waterInletModelObject") && actual_thing.waterInletModelObject.is_initialized
+      if actual_thing.respond_to?('waterInletModelObject') && actual_thing.waterInletModelObject.is_initialized
         inlet_mo = actual_thing.waterInletModelObject.get
-        inlet_mo.setName("#{prefix} Demand Side #{actual_thing.name.to_s} Inlet Node")
+        inlet_mo.setName("#{prefix} Demand Side #{actual_thing.name} Inlet Node")
       end
-      if actual_thing.respond_to?("waterOutletModelObject") && actual_thing.waterOutletModelObject.is_initialized
+      if actual_thing.respond_to?('waterOutletModelObject') && actual_thing.waterOutletModelObject.is_initialized
         outlet_mo = actual_thing.waterOutletModelObject.get
-        outlet_mo.setName("#{prefix} Demand Side #{actual_thing.name.to_s} Outlet Node")
+        outlet_mo.setName("#{prefix} Demand Side #{actual_thing.name} Outlet Node")
       end
 
     end
   end
-
 
   node = p.supplyInletNode
   new_name = 'Supply Inlet Node'
@@ -254,7 +251,6 @@ m.getPlantLoops.each do |p|
   node.setName(new_name)
 end
 
-
 ########################### Request output variables ##########################
 
 add_out_vars = false
@@ -269,9 +265,6 @@ if add_out_vars
   end
 end
 
-
-
 # save the OpenStudio model (.osm)
-m.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
-                       "osm_name" => "in.osm"})
-
+m.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
+                        'osm_name' => 'in.osm' })

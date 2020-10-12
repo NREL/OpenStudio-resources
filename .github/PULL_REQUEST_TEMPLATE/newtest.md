@@ -34,6 +34,7 @@ The following has been checked to ensure compliance with the guidelines:
  - [ ] Tests pass either:
      - [ ] with official OpenStudio release (include version):
          - [ ] A matching OSM test has been added from the successful run of the Ruby one with the official OpenStudio release
+         - [ ] The label `AddedOSM` has been added to this PR
          - [ ] All new `out.osw` have been committed
 
      - [ ] with current develop (incude SHA):
@@ -44,8 +45,7 @@ The following has been checked to ensure compliance with the guidelines:
               result = sim_test('airterminal_cooledbeam.rb')
             end
 
-            # TODO : To be added once the next official release
-            # including this object is out : 2.5.0
+            # TODO: To be added in the next official release after: 2.5.0
             # def test_airterminal_fourpipebeam_osm
             #   result = sim_test('airterminal_fourpipebeam.osm')
             # end
@@ -80,5 +80,4 @@ The following has been checked to ensure compliance with the guidelines:
  - [ ] Test is stable
  - [ ] The appropriate labels have been added to this PR:
    - [ ] One of: `NewTest`, `TestFix`, `NewTestForExisting`, `Other`
-   - [ ] If `NewTest`: add `PendingOSM` if needed
-
+   - [ ] If `NewTest`: add `PendingOSM` or `AddedOSM`

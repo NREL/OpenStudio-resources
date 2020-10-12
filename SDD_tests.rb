@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 require 'openstudio' unless defined?(OpenStudio)
-# TODO not in openstudio gems...
+# TODO: not in openstudio gems...
 # require 'equivalent-xml'
 
 # The config and helpers are inside this file
@@ -21,13 +23,12 @@ else
   $New_Version = ENV['NEW_VERSION']
 end
 
-
-$all_model_paths = Dir.glob(File.join($ModelDir, '*.osm'));
-$all_sddsimxml_paths = Dir.glob(File.join($SddSimDir, '*.xml'));
+$all_model_paths = Dir.glob(File.join($ModelDir, '*.osm'))
+$all_sddsimxml_paths = Dir.glob(File.join($SddSimDir, '*.xml'))
 
 def apply_known_ft_changes(doc_new)
   # Previously, CoilHtg was incorrectly mapped to CoilClg
-  doc_new.xpath("//CoilHtg").each do |node|
+  doc_new.xpath('//CoilHtg').each do |node|
     node.name = 'CoilClg'
   end
 
@@ -42,7 +43,7 @@ OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 # This is the sanitzed filename, with ' - ap.xml'
 $Disabled_RT_Tests = [
   # These make both 2.7.1 and 2.7.2 hard crash
-  #'OffSml_MiniSplit',
+  # 'OffSml_MiniSplit',
 
 ]
 
@@ -67,12 +68,9 @@ def sdd_ft_test(osm_path)
   # We save in the test/ folder like the OSW for sim_tests
   sdd_out = File.join($TestDirSddFT, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.xml")
   ft = OpenStudio::SDD::SddForwardTranslator.new
-  test = ft.modelToSDD(m, sdd_out);
+  test = ft.modelToSDD(m, sdd_out)
   assert test, "Failed SDD FT for #{filename}"
 end
-
-
-
 
 # Runs a single SddReverseTranslator path given the name of a SDD SIM XML file
 # It will raise if the path (or the model) isn't valid
@@ -82,13 +80,12 @@ end
 # @return None. Will assert that the model can be RT'ed, and save it in
 # $TestDirSddRT for comparison
 def sdd_rt_test(sddsimxml_path)
-
   full_path = File.join($SddSimDir, sddsimxml_path)
 
   filename = escapeName(sddsimxml_path.gsub(' - ap.xml', '.xml'))
 
-  #puts "\nRunning for #{filename}"
-  #puts "Loading #{full_path}"
+  # puts "\nRunning for #{filename}"
+  # puts "Loading #{full_path}"
 
   if $Disabled_RT_Tests.include?(filename)
     skip "Test is disabled for #{filename}"
@@ -98,9 +95,8 @@ def sdd_rt_test(sddsimxml_path)
   # Test that RT Worked
   assert _m.is_initialized, "Failed SDD RT for #{filename}"
 
-
   # Need to add the DDY
-  m = add_design_days(_m.get())
+  m = add_design_days(_m.get)
 
   # If so, then save resulting OSM for diffing
   m_out = File.join($TestDirSddRT, filename)
@@ -109,11 +105,9 @@ def sdd_rt_test(sddsimxml_path)
   m.save(m_out, true)
 
   # Now do the sim_test portion!
-  sim_test(filename, {:base_dir => $TestDirSddRT})
+  sim_test(filename, { base_dir: $TestDirSddRT })
   # m_out = File.join($TestDirSddRT, "#{filename}_#{$SdkVersion}_out#{$Custom_tag}.osm")
-
 end
-
 
 class SddForwardTranslatorTests < Minitest::Test
   parallelize_me!
@@ -122,43 +116,40 @@ class SddForwardTranslatorTests < Minitest::Test
   # To be called manually after both the old and new have run
   # TODO: Should also probably make it a method that would be called at the end
   # of each sdd_ft_test (similar to what I've done for sim_tests)
-=begin
-  def test_FT_compare
-
-    if not $IsCompareOK
-      skip "You must pass the environment variables " +
-           "OLD_VERSION & NEW_VERSION in order to run " +
-           "the SddForwardTranslator_compare test.\n" +
-           "eg: `OLD_VERSION=2.7.1 NEW_VERSION=2.7.2 ruby SDD_tests.rb -n /compare/`"
-    end
-
-    puts "Running XML Diffs for #{$Old_Version} > #{$New_Version}"
-
-    all_old_sdds = Dir.glob(File.join($TestDirSddFT, "*#{$Old_Version}_out.xml"))
-    puts "Discovered #{all_old_sdds.size} SDD XMLs to compare"
-    all_old_sdds.each do |sdd_ori|
-      sdd_new = sdd_ori.sub($Old_Version, $New_Version)
-      assert File.exist?(sdd_new)
-      doc_ori = File.open(sdd_ori) {|f| Nokogiri::XML(f) };
-      doc_new = File.open(sdd_new) {|f| Nokogiri::XML(f) };
-
-      # Known-changes to XML structure itself
-      doc_new = apply_known_ft_changes(doc_new)
-
-      # Local only ignores
-      opts = { :element_order => false, :normalize_whitespace => true }
-      if sdd_ori.include?('scheduled_infiltration.osm_2.7.1_out.xml')
-        # BlgAz is "0" in ori, '-0' in new
-        opts[:ignore_content] = ["Proj > Bldg > BldgAz"]
-      end
-
-      # Assert XMLs are the same
-      assert EquivalentXml.equivalent?(doc_ori, doc_new, opts), "Failed: #{sdd_ori}"
-
-    end
-  end
-=end
-
+  #   def test_FT_compare
+  #
+  #     if not $IsCompareOK
+  #       skip "You must pass the environment variables " +
+  #            "OLD_VERSION & NEW_VERSION in order to run " +
+  #            "the SddForwardTranslator_compare test.\n" +
+  #            "eg: `OLD_VERSION=2.7.1 NEW_VERSION=2.7.2 ruby SDD_tests.rb -n /compare/`"
+  #     end
+  #
+  #     puts "Running XML Diffs for #{$Old_Version} > #{$New_Version}"
+  #
+  #     all_old_sdds = Dir.glob(File.join($TestDirSddFT, "*#{$Old_Version}_out.xml"))
+  #     puts "Discovered #{all_old_sdds.size} SDD XMLs to compare"
+  #     all_old_sdds.each do |sdd_ori|
+  #       sdd_new = sdd_ori.sub($Old_Version, $New_Version)
+  #       assert File.exist?(sdd_new)
+  #       doc_ori = File.open(sdd_ori) {|f| Nokogiri::XML(f) };
+  #       doc_new = File.open(sdd_new) {|f| Nokogiri::XML(f) };
+  #
+  #       # Known-changes to XML structure itself
+  #       doc_new = apply_known_ft_changes(doc_new)
+  #
+  #       # Local only ignores
+  #       opts = { :element_order => false, :normalize_whitespace => true }
+  #       if sdd_ori.include?('scheduled_infiltration.osm_2.7.1_out.xml')
+  #         # BlgAz is "0" in ori, '-0' in new
+  #         opts[:ignore_content] = ["Proj > Bldg > BldgAz"]
+  #       end
+  #
+  #       # Assert XMLs are the same
+  #       assert EquivalentXml.equivalent?(doc_ori, doc_new, opts), "Failed: #{sdd_ori}"
+  #
+  #     end
+  #   end
 
   #  Note: JM 2019-01-18
   #  Not used because you can't parallelize this
@@ -166,16 +157,16 @@ class SddForwardTranslatorTests < Minitest::Test
 
   # Dynamically create the SddForwardTranslator tests
   # by discovering all OSMs in model/simulationtests
-  #$all_model_paths.each do |model_path|
+  # $all_model_paths.each do |model_path|
   #  filename = escapeName(File.basename(model_path).gsub('.osm', ''))
   #  define_method("test_FT_#{filename}") do
   #    sdd_ft_test(File.basename(model_path))
   #  end
-  #end
+  # end
 
-###############################################################################
-#                           Hardcoded SDD FT Tests                            #
-###############################################################################
+  ###############################################################################
+  #                           Hardcoded SDD FT Tests                            #
+  ###############################################################################
 
   def test_FT_absorption_chillers
     sdd_ft_test('absorption_chillers.osm')
@@ -566,6 +557,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('surface_properties.osm')
   end
 
+  def test_FT_surfacecontrol_moveableinsulation
+    sdd_ft_test('surfacecontrol_moveableinsulation.osm')
+  end
+
   def test_FT_tablemultivariablelookup
     sdd_ft_test('tablemultivariablelookup.osm')
   end
@@ -661,7 +656,6 @@ class SddForwardTranslatorTests < Minitest::Test
   def test_FT_zoneventilation_windandstackopenarea
     sdd_ft_test('zoneventilation_windandstackopenarea.osm')
   end
-
 end
 
 # the tests
@@ -669,24 +663,21 @@ class SddReverseTranslatorTests < Minitest::Test
   parallelize_me!
   # i_suck_and_my_tests_are_order_dependent! # To debug a crash
 
-
-
-
   #  Note: JM 2019-01-18
   #  Not used because you can't parallelize this
   #
   # Dynamically create the SddReverseTranslator tests
   # by discovering all SDD Sim XMLs in model/sddtests
-  #$all_sddsimxml_paths.each do |sddsimxml_path|
-    #filename = escapeName(File.basename(sddsimxml_path).gsub(' - ap.xml', ''))
-    #define_method("test_RT_auto#{filename}") do
-      #sdd_rt_test(File.basename(sddsimxml_path))
-    #end
-  #end
+  # $all_sddsimxml_paths.each do |sddsimxml_path|
+  # filename = escapeName(File.basename(sddsimxml_path).gsub(' - ap.xml', ''))
+  # define_method("test_RT_auto#{filename}") do
+  # sdd_rt_test(File.basename(sddsimxml_path))
+  # end
+  # end
 
-###############################################################################
-#                             Hardcoded RT tests                              #
-###############################################################################
+  ###############################################################################
+  #                             Hardcoded RT tests                              #
+  ###############################################################################
 
   def test_RT_010012_SchSml_CECStd
     sdd_rt_test('010012-SchSml-CECStd - ap.xml')
@@ -999,5 +990,4 @@ class SddReverseTranslatorTests < Minitest::Test
   def test_RT_RetlSml_DOAS_GravityFurnace_HasNoClg_1
     sdd_rt_test('RetlSml-DOAS+GravityFurnace_HasNoClg=1 - ap.xml')
   end
-
 end
