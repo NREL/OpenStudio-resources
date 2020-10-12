@@ -777,7 +777,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.0.1
   # def test_shadingcontrol_singlezone_osm
-    # result = sim_test('shadingcontrol_singlezone.osm')
+  # result = sim_test('shadingcontrol_singlezone.osm')
   # end
 
   def test_shadowcalculation_rb

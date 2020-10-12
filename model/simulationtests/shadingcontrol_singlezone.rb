@@ -1,64 +1,69 @@
+# frozen_string_literal: true
+
 require 'openstudio'
 require 'lib/baseline_model'
 
 m = BaselineModel.new
 
-#make a 1 story, 100m X 50m, 1 zone core/perimeter building
-m.add_geometry({"length" => 100,
-                "width" => 50,
-                "num_floors" => 3,
-                "floor_to_floor_height" => 4,
-                "plenum_height" => 0,
-                "perimeter_zone_depth" => 0})
+# make a 1 story, 100m X 50m, 1 zone core/perimeter building
+m.add_geometry({ 'length' => 100,
+                 'width' => 50,
+                 'num_floors' => 3,
+                 'floor_to_floor_height' => 4,
+                 'plenum_height' => 0,
+                 'perimeter_zone_depth' => 0 })
 
-#add windows at a 40% window-to-wall ratio
-m.add_windows({"wwr" => 0.4,
-               "offset" => 1,
-               "application_type" => "Above Floor"})
+# add windows at a 40% window-to-wall ratio
+m.add_windows({ 'wwr' => 0.4,
+                'offset' => 1,
+                'application_type' => 'Above Floor' })
 
-#add thermostats
-m.add_thermostats({"heating_setpoint" => 24,
-                   "cooling_setpoint" => 28})
+# add thermostats
+m.add_thermostats({ 'heating_setpoint' => 24,
+                    'cooling_setpoint' => 28 })
 
-#assign constructions from a local library to the walls/windows/etc. in the model
-m.set_constructions()
+# assign constructions from a local library to the walls/windows/etc. in the model
+m.set_constructions
 
-#set whole building space type; simplified 90.1-2004 Large Office Whole Building
-m.set_space_type()
+# set whole building space type; simplified 90.1-2004 Large Office Whole Building
+m.set_space_type
 
-#add design days to the model (Chicago)
-m.add_design_days()
+# add design days to the model (Chicago)
+m.add_design_days
 
 # In order to produce more consistent results between different runs,
 # we sort the zones by names (only one here anyways...)
-zones = m.getThermalZones.sort_by{|z| z.name.to_s}
+zones = m.getThermalZones.sort_by { |z| z.name.to_s }
 zone1 = zones[0]
 zone2 = zones[1]
 zone3 = zones[2]
 
 # spaces
-spaces1 = zone1.spaces.sort_by{|s| s.name.to_s}
-spaces2 = zone2.spaces.sort_by{|s| s.name.to_s}
-spaces3 = zone3.spaces.sort_by{|s| s.name.to_s}
+spaces1 = zone1.spaces.sort_by { |s| s.name.to_s }
+spaces2 = zone2.spaces.sort_by { |s| s.name.to_s }
+spaces3 = zone3.spaces.sort_by { |s| s.name.to_s }
 
 # surfaces
 sub_surfaces1 = []
-surfaces1 = spaces1[0].surfaces.sort_by{|s| s.name.to_s}
+surfaces1 = spaces1[0].surfaces.sort_by { |s| s.name.to_s }
 surfaces1.each do |surface|
-  next if surface.surfaceType != "Wall"
-  sub_surfaces1 += surface.subSurfaces.sort_by{|ss| ss.name.to_s}
+  next if surface.surfaceType != 'Wall'
+
+  sub_surfaces1 += surface.subSurfaces.sort_by { |ss| ss.name.to_s }
 end
 sub_surfaces2 = []
-surfaces2 = spaces2[0].surfaces.sort_by{|s| s.name.to_s}
+surfaces2 = spaces2[0].surfaces.sort_by { |s| s.name.to_s }
 surfaces2.each do |surface|
-  next if surface.surfaceType != "Wall"
-  sub_surfaces2 += surface.subSurfaces.sort_by{|ss| ss.name.to_s}
+  next if surface.surfaceType != 'Wall'
+
+  sub_surfaces2 += surface.subSurfaces.sort_by { |ss| ss.name.to_s }
 end
 sub_surfaces3 = []
-surfaces3 = spaces3[0].surfaces.sort_by{|s| s.name.to_s}
+surfaces3 = spaces3[0].surfaces.sort_by { |s| s.name.to_s }
 surfaces3.each do |surface|
-  next if surface.surfaceType != "Wall"
-  sub_surfaces3 += surface.subSurfaces.sort_by{|ss| ss.name.to_s}
+  next if surface.surfaceType != 'Wall'
+
+  sub_surfaces3 += surface.subSurfaces.sort_by { |ss| ss.name.to_s }
 end
 
 # sub surfaces
@@ -70,20 +75,20 @@ sub_surface5 = sub_surfaces3[0] # zone 3
 sub_surface6 = sub_surfaces3[1] # zone 3
 
 # Use Ideal Air Loads
-zones.each{|z| z.setUseIdealAirLoads(true)}
+zones.each { |z| z.setUseIdealAirLoads(true) }
 
 # SHADING CONTROL 1 (BLIND 1)
-  # SUB SURFACE 1 (ZONE 1)
-  # SUB SURFACE 2 (ZONE 1)
+# SUB SURFACE 1 (ZONE 1)
+# SUB SURFACE 2 (ZONE 1)
 # SHADING CONTROL 2 (BLIND 1)
-  # SUB SURFACE 1 (ZONE 1)
-  # SUB SURFACE 2 (ZONE 1)
+# SUB SURFACE 1 (ZONE 1)
+# SUB SURFACE 2 (ZONE 1)
 # SHADING CONTROL 3 (BLIND 2)
-  # SUB SURFACE 3 (ZONE 2)
-  # SUB SURFACE 4 (ZONE 2)
+# SUB SURFACE 3 (ZONE 2)
+# SUB SURFACE 4 (ZONE 2)
 # SHADING CONTROL 4 (CONSTRUCTION 1)
-  # SUB SURFACE 5 (ZONE 3)
-  # SUB SURFACE 6 (ZONE 3)
+# SUB SURFACE 5 (ZONE 3)
+# SUB SURFACE 6 (ZONE 3)
 
 # shading materials
 blind1 = OpenStudio::Model::Blind.new(m)
@@ -129,6 +134,6 @@ sub_surfaces = OpenStudio::Model::SubSurfaceVector.new
 end
 shading_control4.addSubSurfaces(sub_surfaces)
 
-#save the OpenStudio model (.osm)
-m.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
-                       "osm_name" => "in.osm"})
+# save the OpenStudio model (.osm)
+m.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
+                        'osm_name' => 'in.osm' })
