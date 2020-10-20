@@ -269,6 +269,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('chillers_tertiary.osm')
   end
 
+  def test_FT_coil_cooling_dx
+    sdd_ft_test('coil_cooling_dx.osm')
+  end
+
   def test_FT_coilsystem_dxhx
     sdd_ft_test('coilsystem_dxhx.osm')
   end
