@@ -449,6 +449,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('performanceprecisiontradeoffs.osm')
   end
 
+  def test_FT_outputcontrol_files
+    sdd_ft_test('outputcontrol_files.osm')
+  end
+
   def test_FT_output_objects
     sdd_ft_test('output_objects.osm')
   end
