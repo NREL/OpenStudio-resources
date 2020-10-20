@@ -269,6 +269,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('chillers_tertiary.osm')
   end
 
+  def test_FT_coil_cooling_dx
+    sdd_ft_test('coil_cooling_dx.osm')
+  end
+
   def test_FT_coilsystem_dxhx
     sdd_ft_test('coilsystem_dxhx.osm')
   end
@@ -445,6 +449,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('performanceprecisiontradeoffs.osm')
   end
 
+  def test_FT_outputcontrol_files
+    sdd_ft_test('outputcontrol_files.osm')
+  end
+
   def test_FT_output_objects
     sdd_ft_test('output_objects.osm')
   end
@@ -559,6 +567,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_surfacecontrol_moveableinsulation
     sdd_ft_test('surfacecontrol_moveableinsulation.osm')
+  end
+
+  def test_FT_swimmingpool_indoor
+    sdd_ft_test('swimmingpool_indoor.osm')
   end
 
   def test_FT_tablemultivariablelookup
