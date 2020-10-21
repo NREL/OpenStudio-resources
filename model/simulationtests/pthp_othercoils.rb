@@ -47,7 +47,7 @@ alwaysOn = model.alwaysOnDiscreteSchedule
     htg_coil = OpenStudio::Model::CoilHeatingDXSingleSpeed.new(model)
     clg_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
     supp_htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model, alwaysOn)
-    fan = OpenStudio::Model::FanOnOff.new(model, alwaysOn)    
+    fan = OpenStudio::Model::FanOnOff.new(model, alwaysOn)
     pthp = OpenStudio::Model::ZoneHVACPackagedTerminalHeatPump.new(model, alwaysOn, fan, htg_coil, clg_coil, supp_htg_coil)
     pthp.addToThermalZone(zone)
   elsif i == 1

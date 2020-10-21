@@ -83,7 +83,7 @@ class ModelTests < Minitest::Test
 
   # TODO
   # def test_ptac_othercoils_osm
-    # result = sim_test('ptac_othercoils.osm')
+  # result = sim_test('ptac_othercoils.osm')
   # end
 
   def test_pthp_othercoils_rb
@@ -92,7 +92,7 @@ class ModelTests < Minitest::Test
 
   # TODO
   # def test_pthp_othercoils_osm
-    # result = sim_test('pthp_othercoils.osm')
+  # result = sim_test('pthp_othercoils.osm')
   # end
 
   def test_airloop_avms_rb

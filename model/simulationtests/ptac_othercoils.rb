@@ -45,7 +45,7 @@ alwaysOn = model.alwaysOnDiscreteSchedule
     # CoilCoolingDXSingleSpeed
     htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model, model.alwaysOffDiscreteSchedule)
     clg_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
-    fan = OpenStudio::Model::FanOnOff.new(model, alwaysOn)    
+    fan = OpenStudio::Model::FanOnOff.new(model, alwaysOn)
     ptac = OpenStudio::Model::ZoneHVACPackagedTerminalAirConditioner.new(model, alwaysOn, fan, htg_coil, clg_coil)
     ptac.addToThermalZone(zone)
   elsif i == 1
@@ -54,14 +54,14 @@ alwaysOn = model.alwaysOnDiscreteSchedule
     clg_coil = OpenStudio::Model::CoilCoolingDXVariableSpeed.new(model)
     clg_coil_data = OpenStudio::Model::CoilCoolingDXVariableSpeedSpeedData.new(model)
     clg_coil.addSpeed(clg_coil_data)
-    fan = OpenStudio::Model::FanOnOff.new(model, alwaysOn)    
+    fan = OpenStudio::Model::FanOnOff.new(model, alwaysOn)
     ptac = OpenStudio::Model::ZoneHVACPackagedTerminalAirConditioner.new(model, alwaysOn, fan, htg_coil, clg_coil)
     ptac.addToThermalZone(zone)
   elsif i == 2
     # CoilSystemCoolingDXHeatExchangerAssisted
     htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model, model.alwaysOffDiscreteSchedule)
     clg_coil = OpenStudio::Model::CoilSystemCoolingDXHeatExchangerAssisted.new(model)
-    fan = OpenStudio::Model::FanOnOff.new(model, alwaysOn)    
+    fan = OpenStudio::Model::FanOnOff.new(model, alwaysOn)
     ptac = OpenStudio::Model::ZoneHVACPackagedTerminalAirConditioner.new(model, alwaysOn, fan, htg_coil, clg_coil)
     ptac.addToThermalZone(zone)
   end
