@@ -258,7 +258,7 @@ class ModelTests < Minitest::Test
   end
 
   # def test_doas_osm
-    # result = sim_test('doas.osm')
+  # result = sim_test('doas.osm')
   # end
 
   def test_doas_rb
