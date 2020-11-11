@@ -257,6 +257,14 @@ class ModelTests < Minitest::Test
     result = sim_test('dist_ht_cl.rb')
   end
 
+  # def test_doas_osm
+    # result = sim_test('doas.osm')
+  # end
+
+  def test_doas_rb
+    result = sim_test('doas.rb')
+  end
+
   def test_dsn_oa_w_ideal_loads_osm
     result = sim_test('dsn_oa_w_ideal_loads.osm')
   end
