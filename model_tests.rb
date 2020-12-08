@@ -450,7 +450,7 @@ class ModelTests < Minitest::Test
   end
 
   # def test_humidity_control_2_osm
-    # result = sim_test('humidity_control_2.osm')
+  # result = sim_test('humidity_control_2.osm')
   # end
 
   def test_ideal_plant_rb
