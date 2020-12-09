@@ -1010,7 +1010,7 @@ class ModelTests < Minitest::Test
   end
 
   # def test_zone_hvac_cooling_panel_osm
-    # result = sim_test('zone_hvac_cooling_panel.osm')
+  # result = sim_test('zone_hvac_cooling_panel.osm')
   # end
 
   def test_zone_hvac_equipment_list_rb
