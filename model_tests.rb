@@ -289,6 +289,15 @@ class ModelTests < Minitest::Test
     result = sim_test('ducts_and_pipes.osm')
   end
 
+  def test_elcd_no_generators_rb
+    result = sim_test('elcd_no_generators.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_elcd_no_generators_osm
+  #   result = sim_test('elcd_no_generators.osm')
+  # end
+
   def test_electric_equipment_ITE_rb
     result = sim_test('electric_equipment_ITE.rb')
   end
