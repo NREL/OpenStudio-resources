@@ -48,7 +48,6 @@ elcd = OpenStudio::Model::ElectricLoadCenterDistribution.new(model)
 # an inverter, a storage converter, and a storage object
 elcd.setElectricalBussType('DirectCurrentWithInverterDCStorage')
 
-
 # create the inverter
 inverter = OpenStudio::Model::ElectricLoadCenterInverterLookUpTable.new(model)
 inverter.setName('Default Eplus PV Inverter LookUpTable')
