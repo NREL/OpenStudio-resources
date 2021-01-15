@@ -689,13 +689,21 @@ class ModelTests < Minitest::Test
     result = sim_test('pv_and_storage_demandleveling.osm')
   end
 
+  def test_refrigeration_system_rb
+    result = sim_test('refrigeration_system.rb')
+  end
+
   def test_refrigeration_system_osm
     result = sim_test('refrigeration_system.osm')
   end
 
-  def test_refrigeration_system_rb
-    result = sim_test('refrigeration_system.rb')
+  def test_refrigeration_system_2_rb
+    result = sim_test('refrigeration_system_2.rb')
   end
+
+  # def test_refrigeration_system__2osm
+    # result = sim_test('refrigeration_system_2.osm')
+  # end
 
   def test_roof_vegetation_rb
     result = sim_test('roof_vegetation.rb')
