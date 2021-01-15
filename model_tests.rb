@@ -198,7 +198,7 @@ class ModelTests < Minitest::Test
   end
 
   # def test_chiller_reformulated_osm
-    # result = sim_test('chiller_reformulated.osm')
+  # result = sim_test('chiller_reformulated.osm')
   # end
 
   def test_chillers_tertiary_rb
