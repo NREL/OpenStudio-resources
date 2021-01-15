@@ -193,6 +193,14 @@ class ModelTests < Minitest::Test
     result = sim_test('centralheatpumpsystem.rb')
   end
 
+  def test_chiller_reformulated_rb
+    result = sim_test('chiller_reformulated.rb')
+  end
+
+  # def test_chiller_reformulated_osm
+    # result = sim_test('chiller_reformulated.osm')
+  # end
+
   def test_chillers_tertiary_rb
     result = sim_test('chillers_tertiary.rb')
   end
