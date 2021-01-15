@@ -702,7 +702,7 @@ class ModelTests < Minitest::Test
   end
 
   # def test_refrigeration_system__2osm
-    # result = sim_test('refrigeration_system_2.osm')
+  # result = sim_test('refrigeration_system_2.osm')
   # end
 
   def test_roof_vegetation_rb
