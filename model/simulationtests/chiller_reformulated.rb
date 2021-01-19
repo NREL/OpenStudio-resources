@@ -35,6 +35,9 @@ chilledWaterInletNode = chilledWaterPlant.supplyInletNode
 chilledWaterDemandOutletNode = chilledWaterPlant.demandOutletNode
 chilledWaterDemandInletNode = chilledWaterPlant.demandInletNode
 
+pump2 = OpenStudio::Model::PumpVariableSpeed.new(model)
+pump2.addToNode(chilledWaterInletNode)
+
 chiller = OpenStudio::Model::ChillerElectricReformulatedEIR.new(model)
 
 node = chilledWaterPlant.supplySplitter.lastOutletModelObject.get.to_Node.get
@@ -63,9 +66,6 @@ sizingPlant.setLoopType('Condenser')
 sizingPlant.setDesignLoopExitTemperature(29.4)
 sizingPlant.setLoopDesignTemperatureDifference(5.6)
 
-# tower = OpenStudio::Model::CoolingTowerSingleSpeed.new(model)
-# condenserSystem.addSupplyBranchForComponent(tower)
-
 distHeating = OpenStudio::Model::DistrictHeating.new(model)
 condenserSystem.addSupplyBranchForComponent(distHeating)
 
@@ -80,7 +80,7 @@ condenserDemandInletNode = condenserSystem.demandInletNode
 pump3 = OpenStudio::Model::PumpVariableSpeed.new(model)
 pump3.addToNode(condenserSupplyInletNode)
 
-condenserSystem.addDemandBranchForComponent(chiller) # TODO: comment out?
+condenserSystem.addDemandBranchForComponent(chiller)
 
 condenserSupplyBypass = OpenStudio::Model::PipeAdiabatic.new(model)
 condenserSystem.addSupplyBranchForComponent(condenserSupplyBypass)
