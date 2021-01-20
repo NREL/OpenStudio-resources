@@ -38,7 +38,7 @@ end
 # make a 2 story, 100m X 50m, 10 zone core/perimeter building
 model.add_geometry({ 'length' => 100,
                      'width' => 50,
-                     'num_floors' => 2,
+                     'num_floors' => 1,
                      'floor_to_floor_height' => 4,
                      'plenum_height' => 1,
                      'perimeter_zone_depth' => 3 })
@@ -68,39 +68,15 @@ model.add_design_days
 # we sort the zones by names
 zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 
-boilers = model.getBoilerHotWaters.sort_by { |c| c.name.to_s }
-heating_loop = boilers.first.plantLoop.get
-
 i = 0
-
 zones.each do |z|
-  if i == 2
+  if i == 0
     compressor_rack = OpenStudio::Model::RefrigerationCompressorRack.new(model)
     compressor_rack.addCase(add_case(model, z, defrost_sch))
     compressor_rack.addCase(add_case(model, z, defrost_sch))
     compressor_rack.addWalkin(add_walkin(model, z, defrost_sch))
     compressor_rack.addWalkin(add_walkin(model, z, defrost_sch))
-
-    cooling_tower = model.getCoolingTowerSingleSpeeds.first
-    plant = cooling_tower.plantLoop.get
-    plant.addDemandBranchForComponent(compressor_rack)
-
-    water_tank = OpenStudio::Model::WaterHeaterMixed.new(model)
-    water_tank.setAmbientTemperatureIndicator('ThermalZone')
-    water_tank.setAmbientTemperatureThermalZone(z)
-    heating_loop.addSupplyBranchForComponent(water_tank)
-    # Schedule Ruleset
-    setpointTemperatureSchedule = OpenStudio::Model::ScheduleRuleset.new(model)
-    setpointTemperatureSchedule.setName('Setpoint Temperature Schedule')
-    setpointTemperatureSchedule.defaultDaySchedule.setName('Setpoint Temperature Schedule Default')
-    setpointTemperatureSchedule.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 70)
-
-    desuperheater = OpenStudio::Model::CoilWaterHeatingDesuperheater.new(model, setpointTemperatureSchedule)
-    water_tank.setSetpointTemperatureSchedule(setpointTemperatureSchedule)
-    desuperheater.addToHeatRejectionTarget(water_tank)
-    desuperheater.setHeatingSource(compressor_rack)
   end
-
   i += 1
 end
 
