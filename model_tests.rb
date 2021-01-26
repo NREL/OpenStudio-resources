@@ -357,6 +357,15 @@ class ModelTests < Minitest::Test
     result = sim_test('fan_systemmodel.rb')
   end
 
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_fan_componentmodel_osm
+  #   result = sim_test('fan_componentmodel.osm')
+  # end
+
+  def test_fan_componentmodel_rb
+    result = sim_test('fan_componentmodel.rb')
+  end
+
   def test_fluid_coolers_rb
     result = sim_test('fluid_coolers.rb')
   end
