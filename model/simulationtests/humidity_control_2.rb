@@ -42,7 +42,6 @@ zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 # Try out all 3 different types of humidity setpoint managers
 # on three different airloops in the same model.
 3.times do |i|
-
   zone = zones[i]
 
   # Add a humidistat at 50% RH to the zone
@@ -82,7 +81,6 @@ zones = model.getThermalZones.sort_by { |z| z.name.to_s }
     spm = OpenStudio::Model::SetpointManagerMultiZoneMinimumHumidityAverage.new(model)
     spm.addToNode(humidifier_outlet_node)
   end
-
 end
 
 # add output reports
