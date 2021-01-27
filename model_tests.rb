@@ -77,6 +77,24 @@ class ModelTests < Minitest::Test
     result = sim_test('airloop_and_zonehvac.osm')
   end
 
+  def test_ptac_othercoils_rb
+    result = sim_test('ptac_othercoils.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_ptac_othercoils_osm
+  # result = sim_test('ptac_othercoils.osm')
+  # end
+
+  def test_pthp_othercoils_rb
+    result = sim_test('pthp_othercoils.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_pthp_othercoils_osm
+  # result = sim_test('pthp_othercoils.osm')
+  # end
+
   def test_airloop_avms_rb
     result = sim_test('airloop_avms.rb')
   end
@@ -812,6 +830,14 @@ class ModelTests < Minitest::Test
 
   def test_setpoint_managers_osm
     result = sim_test('setpoint_managers.osm')
+  end
+
+  def test_shadingcontrol_singlezone_rb
+    result = sim_test('shadingcontrol_singlezone.rb')
+  end
+
+  def test_shadingcontrol_singlezone_osm
+    result = sim_test('shadingcontrol_singlezone.osm')
   end
 
   def test_shadowcalculation_rb
