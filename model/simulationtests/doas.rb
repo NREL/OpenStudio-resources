@@ -33,6 +33,7 @@ model.add_design_days
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
 zones = model.getThermalZones.sort_by { |z| z.name.to_s }
+zone = zones[0]
 
 controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
 oas = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controller)
