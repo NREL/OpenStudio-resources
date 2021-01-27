@@ -41,7 +41,7 @@ zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 
 # Try out all 3 different types of humidity setpoint managers
 # on three different airloops in the same model.
-for i in 0..2
+3.times do |i|
 
   zone = zones[i]
 
