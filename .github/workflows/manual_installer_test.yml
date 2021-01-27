@@ -41,8 +41,7 @@ jobs:
           branch_name=$(openstudio -e "puts OpenStudio::openStudioVersionBuildSHA")
         fi;
 
-        echo "::set-env name=branch_name::$branch_name"
-
+        echo branch_name=$branch_name >> $GITHUB_ENV
         git checkout -b $branch_name || git checkout $branch_name
 
     - name: Setup python deps
