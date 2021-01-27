@@ -30,7 +30,6 @@ model.set_space_type
 # add design days to the model (Chicago)
 model.add_design_days
 
-
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
 zones = model.getThermalZones.sort_by { |z| z.name.to_s }
