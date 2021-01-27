@@ -49,7 +49,6 @@ heating_loop = boilers.first.plantLoop.get
 
 alwaysOn = model.alwaysOnDiscreteSchedule
 
-
 ###############################################################################
 #                       D E M O N S T R A T E    A P I                        #
 ###############################################################################
@@ -64,9 +63,8 @@ sch.setName('Fan Avail Schedule')
 sch.setValue(1.0)
 fan.setAvailabilitySchedule(sch)
 
-
 vSDExample = OpenStudio::Model::CurveFanPressureRise.new(model)
-vSDExample.setName("VSD Example")
+vSDExample.setName('VSD Example')
 vSDExample.setCoefficient1C1(1446.75833497653)
 vSDExample.setCoefficient2C2(0.0)
 vSDExample.setCoefficient3C3(0.0)
@@ -79,7 +77,7 @@ vSDExample.setMinimumCurveOutput(0.0)
 vSDExample.setMaximumCurveOutput(5000.0)
 
 diagnosticSPR = OpenStudio::Model::CurveLinear.new(model)
-diagnosticSPR.setName("DiagnosticSPR")
+diagnosticSPR.setName('DiagnosticSPR')
 diagnosticSPR.setCoefficient1Constant(248.84)
 diagnosticSPR.setCoefficient2x(0.0)
 diagnosticSPR.setMinimumValueofx(0.0)
@@ -90,7 +88,7 @@ diagnosticSPR.setMaximumCurveOutput(248.84)
 # diagnosticSPR.setOutputUnitType("")
 
 fanEff120CPLANormal = OpenStudio::Model::CurveExponentialSkewNormal.new(model)
-fanEff120CPLANormal.setName("FanEff120CPLANormal")
+fanEff120CPLANormal.setName('FanEff120CPLANormal')
 fanEff120CPLANormal.setCoefficient1C1(0.072613)
 fanEff120CPLANormal.setCoefficient2C2(0.833213)
 fanEff120CPLANormal.setCoefficient3C3(0.0)
@@ -103,7 +101,7 @@ fanEff120CPLANormal.setMaximumCurveOutput(1.0)
 # fanEff120CPLANormal.setOutputUnitType("")
 
 fanEff120CPLAStall = OpenStudio::Model::CurveExponentialSkewNormal.new(model)
-fanEff120CPLAStall.setName("FanEff120CPLAStall")
+fanEff120CPLAStall.setName('FanEff120CPLAStall')
 fanEff120CPLAStall.setCoefficient1C1(-1.674931)
 fanEff120CPLAStall.setCoefficient2C2(1.980182)
 fanEff120CPLAStall.setCoefficient3C3(0.0)
@@ -116,7 +114,7 @@ fanEff120CPLAStall.setMaximumCurveOutput(1.0)
 # fanEff120CPLAStall.setOutputUnitType("")
 
 fanDimFlowNormal = OpenStudio::Model::CurveSigmoid.new(model)
-fanDimFlowNormal.setName("FanDimFlowNormal")
+fanDimFlowNormal.setName('FanDimFlowNormal')
 fanDimFlowNormal.setCoefficient1C1(0.0)
 fanDimFlowNormal.setCoefficient2C2(1.001423)
 fanDimFlowNormal.setCoefficient3C3(0.123935)
@@ -130,7 +128,7 @@ fanDimFlowNormal.setMaximumCurveOutput(1.0)
 # fanDimFlowNormal.setOutputUnitType("")
 
 fanDimFlowStall = OpenStudio::Model::CurveSigmoid.new(model)
-fanDimFlowStall.setName("FanDimFlowStall")
+fanDimFlowStall.setName('FanDimFlowStall')
 fanDimFlowStall.setCoefficient1C1(0.0)
 fanDimFlowStall.setCoefficient2C2(5.924993)
 fanDimFlowStall.setCoefficient3C3(-1.91636)
@@ -144,7 +142,7 @@ fanDimFlowStall.setMaximumCurveOutput(1.0)
 # fanDimFlowStall.setOutputUnitType("")
 
 beltMaxEffMedium = OpenStudio::Model::CurveQuartic.new(model)
-beltMaxEffMedium.setName("BeltMaxEffMedium")
+beltMaxEffMedium.setName('BeltMaxEffMedium')
 beltMaxEffMedium.setCoefficient1Constant(-0.09504)
 beltMaxEffMedium.setCoefficient2x(0.03415)
 beltMaxEffMedium.setCoefficient3xPOW2(-0.008897)
@@ -158,7 +156,7 @@ beltMaxEffMedium.setMaximumCurveOutput(0.0)
 # beltMaxEffMedium.setOutputUnitType("")
 
 beltPartLoadRegion1 = OpenStudio::Model::CurveRectangularHyperbola2.new(model)
-beltPartLoadRegion1.setName("BeltPartLoadRegion1")
+beltPartLoadRegion1.setName('BeltPartLoadRegion1')
 beltPartLoadRegion1.setCoefficient1C1(0.920797)
 beltPartLoadRegion1.setCoefficient2C2(0.0262686)
 beltPartLoadRegion1.setCoefficient3C3(0.151594)
@@ -169,8 +167,8 @@ beltPartLoadRegion1.setMaximumCurveOutput(1.0)
 # beltPartLoadRegion1.setInputUnitTypeforx("")
 # beltPartLoadRegion1.setOutputUnitType("")
 
-beltPartLoadRegion2= OpenStudio::Model::CurveExponentialDecay.new(model)
-beltPartLoadRegion2.setName("BeltPartLoadRegion2")
+beltPartLoadRegion2 = OpenStudio::Model::CurveExponentialDecay.new(model)
+beltPartLoadRegion2.setName('BeltPartLoadRegion2')
 beltPartLoadRegion2.setCoefficient1C1(1.011965)
 beltPartLoadRegion2.setCoefficient2C2(-0.339038)
 beltPartLoadRegion2.setCoefficient3C3(-3.43626)
@@ -182,7 +180,7 @@ beltPartLoadRegion2.setMaximumCurveOutput(1.0)
 # beltPartLoadRegion2.setOutputUnitType("")
 
 beltPartLoadRegion3 = OpenStudio::Model::CurveRectangularHyperbola2.new(model)
-beltPartLoadRegion3.setName("BeltPartLoadRegion3")
+beltPartLoadRegion3.setName('BeltPartLoadRegion3')
 beltPartLoadRegion3.setCoefficient1C1(1.037778)
 beltPartLoadRegion3.setCoefficient2C2(0.0103068)
 beltPartLoadRegion3.setCoefficient3C3(-0.0268146)
@@ -194,7 +192,7 @@ beltPartLoadRegion3.setMaximumCurveOutput(1.0)
 # beltPartLoadRegion3.setOutputUnitType("")
 
 motorMaxEffAvg = OpenStudio::Model::CurveRectangularHyperbola1.new(model)
-motorMaxEffAvg.setName("MotorMaxEffAvg")
+motorMaxEffAvg.setName('MotorMaxEffAvg')
 motorMaxEffAvg.setCoefficient1C1(0.29228)
 motorMaxEffAvg.setCoefficient2C2(3.368739)
 motorMaxEffAvg.setCoefficient3C3(0.762471)
@@ -206,7 +204,7 @@ motorMaxEffAvg.setMaximumCurveOutput(1.0)
 # motorMaxEffAvg.setOutputUnitType("")
 
 motorPartLoad = OpenStudio::Model::CurveRectangularHyperbola2.new(model)
-motorPartLoad.setName("MotorPartLoad")
+motorPartLoad.setName('MotorPartLoad')
 motorPartLoad.setCoefficient1C1(1.137209)
 motorPartLoad.setCoefficient2C2(0.0502359)
 motorPartLoad.setCoefficient3C3(-0.0891503)
@@ -218,7 +216,7 @@ motorPartLoad.setMaximumCurveOutput(1.0)
 # motorPartLoad.setOutputUnitType("")
 
 vFDPartLoad = OpenStudio::Model::CurveRectangularHyperbola2.new(model)
-vFDPartLoad.setName("VFDPartLoad")
+vFDPartLoad.setName('VFDPartLoad')
 vFDPartLoad.setCoefficient1C1(0.987405)
 vFDPartLoad.setCoefficient2C2(0.0155361)
 vFDPartLoad.setCoefficient3C3(-0.0059365)
@@ -229,26 +227,25 @@ vFDPartLoad.setMaximumCurveOutput(1.0)
 # vFDPartLoad.setInputUnitTypeforx("")
 # vFDPartLoad.setOutputUnitType("")
 
-
-fan.setName("Fan Component Model")
-fan.autosizeMaximumFlowRate()
-fan.autosizeMinimumFlowRate()
+fan.setName('Fan Component Model')
+fan.autosizeMaximumFlowRate
+fan.autosizeMinimumFlowRate
 fan.setFanSizingFactor(1.0)
 fan.setFanWheelDiameter(0.3048)
 fan.setFanOutletArea(0.0873288576)
 fan.setMaximumFanStaticEfficiency(0.514)
 fan.setEulerNumberatMaximumFanStaticEfficiency(9.76)
 fan.setMaximumDimensionlessFanAirflow(0.160331811647483)
-fan.autosizeMotorFanPulleyRatio()
-fan.autosizeBeltMaximumTorque()
+fan.autosizeMotorFanPulleyRatio
+fan.autosizeBeltMaximumTorque
 fan.setBeltSizingFactor(1.0)
 fan.setBeltFractionalTorqueTransition(0.167)
 fan.setMotorMaximumSpeed(1800.0)
-fan.autosizeMaximumMotorOutputPower()
+fan.autosizeMaximumMotorOutputPower
 fan.setMotorSizingFactor(1.0)
 fan.setMotorInAirstreamFraction(1.0)
-fan.setVFDEfficiencyType("Power")
-fan.autosizeMaximumVFDOutputPower()
+fan.setVFDEfficiencyType('Power')
+fan.autosizeMaximumVFDOutputPower
 fan.setVFDSizingFactor(1.0)
 fan.setFanPressureRiseCurve(vSDExample)
 fan.setDuctStaticPressureResetCurve(diagnosticSPR)
@@ -264,13 +261,10 @@ fan.setMaximumMotorEfficiencyCurve(motorMaxEffAvg)
 fan.setNormalizedMotorEfficiencyCurve(motorPartLoad)
 fan.setVFDEfficiencyCurve(vFDPartLoad)
 
-
-
 # Add this fan as the supply fan of a regular AirLoopHVAC, removing the
 # existing FanVariableVolume
 regularAirLoopHVAC.supplyFan.get.remove
 fan.addToNode(regularAirLoopHVAC.supplyOutletNode)
-
 
 # AirLoopHVACUnitarySystem
 unitary_system = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
@@ -300,11 +294,11 @@ zones.each_with_index do |z, i|
     unitary_systemAirLoopHVAC.addBranchForZone(z, new_terminal.to_StraightComponent)
     unitary_system.setControllingZoneorThermostatLocation(z)
 
-  # ZoneHVACEvaporativeCoolerUnit: not wrapped yet as of 3.1.0
-  # elsif i == 1
-  #   supplyFan = OpenStudio::Model::FanSystemModel.new(model)
-  #   zoneHVACEvaporativeCoolerUnit = OpenStudio::Model::ZoneHVACEvaporativeCoolerUnit.new(model, supplyFan)
-  #   zoneHVACEvaporativeCoolerUnit.addToThermalZone(z)
+    # ZoneHVACEvaporativeCoolerUnit: not wrapped yet as of 3.1.0
+    # elsif i == 1
+    #   supplyFan = OpenStudio::Model::FanSystemModel.new(model)
+    #   zoneHVACEvaporativeCoolerUnit = OpenStudio::Model::ZoneHVACEvaporativeCoolerUnit.new(model, supplyFan)
+    #   zoneHVACEvaporativeCoolerUnit.addToThermalZone(z)
 
   end
 end
