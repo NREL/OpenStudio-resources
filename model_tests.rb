@@ -193,6 +193,15 @@ class ModelTests < Minitest::Test
     result = sim_test('centralheatpumpsystem.rb')
   end
 
+  def test_chiller_reformulated_rb
+    result = sim_test('chiller_reformulated.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_chiller_reformulated_osm
+  #   result = sim_test('chiller_reformulated.osm')
+  # end
+
   def test_chillers_tertiary_rb
     result = sim_test('chillers_tertiary.rb')
   end
@@ -698,13 +707,22 @@ class ModelTests < Minitest::Test
     result = sim_test('pv_and_storage_demandleveling.osm')
   end
 
+  def test_refrigeration_system_rb
+    result = sim_test('refrigeration_system.rb')
+  end
+
   def test_refrigeration_system_osm
     result = sim_test('refrigeration_system.osm')
   end
 
-  def test_refrigeration_system_rb
-    result = sim_test('refrigeration_system.rb')
+  def test_refrigeration_system_2_rb
+    result = sim_test('refrigeration_system_2.rb')
   end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_refrigeration_system__2osm
+  #   result = sim_test('refrigeration_system_2.osm')
+  # end
 
   def test_roof_vegetation_rb
     result = sim_test('roof_vegetation.rb')
