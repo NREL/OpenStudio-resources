@@ -197,8 +197,9 @@ class ModelTests < Minitest::Test
     result = sim_test('chiller_reformulated.rb')
   end
 
+  # TODO: To be added in the next official release after: 3.1.0
   # def test_chiller_reformulated_osm
-  # result = sim_test('chiller_reformulated.osm')
+  #   result = sim_test('chiller_reformulated.osm')
   # end
 
   def test_chillers_tertiary_rb
