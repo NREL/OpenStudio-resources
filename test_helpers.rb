@@ -832,7 +832,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     'OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow' => [
       'autosizedHeatingDesignCapacity', # No OS methods for this field
       'autosizedCoolingDesignCapacity' # No OS methods for this field
-    ]
+    ],
   }
 
   # Aliases for some OS onjects
@@ -887,6 +887,9 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     'OS:ThermalStorage:ChilledWater:Stratified' => [
       'autosizedUseSideInletHeight',
       'autosizedSourceSideOutletHeight'
+    ],
+    'OS:Fan:ComponentModel' => [
+      'autosizedMinimumFlowRate', # Not in E+ SQL
     ]
 
   }
