@@ -18,7 +18,6 @@ model.add_windows({ 'wwr' => 0.4,
                     'offset' => 1,
                     'application_type' => 'Above Floor' })
 
-
 # assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions
 
@@ -32,14 +31,12 @@ model.add_design_days
 model.add_thermostats({ 'heating_setpoint' => 24,
                         'cooling_setpoint' => 28 })
 
-
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
 # (There's only one here, but just in case this would be copy pasted somewhere
 # else...)
 zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 z = zones[0]
-
 
 # Chilled Water Plant
 chw_loop = OpenStudio::Model::PlantLoop.new(model)
