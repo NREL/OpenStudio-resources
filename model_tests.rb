@@ -81,7 +81,7 @@ class ModelTests < Minitest::Test
     result = sim_test('ptac_othercoils.rb')
   end
 
-  # TODO
+  # TODO: To be added in the next official release after: 3.1.0
   # def test_ptac_othercoils_osm
   # result = sim_test('ptac_othercoils.osm')
   # end
@@ -90,7 +90,7 @@ class ModelTests < Minitest::Test
     result = sim_test('pthp_othercoils.rb')
   end
 
-  # TODO
+  # TODO: To be added in the next official release after: 3.1.0
   # def test_pthp_othercoils_osm
   # result = sim_test('pthp_othercoils.osm')
   # end
