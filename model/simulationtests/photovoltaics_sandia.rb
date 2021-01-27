@@ -78,12 +78,65 @@ inverter.setAvailabilitySchedule(model.alwaysOnDiscreteSchedule)
 inverter.setRadiativeFraction(0.0)
 inverter.setInverterEfficiency(1.0)
 
+
+# The above CTor has already filled up the data,
+# but demonstrate the API nonetheless
+sandiaPerf = panel.photovoltaicPerformance.to_PhotovoltaicPerformanceSandia.get
+sandiaPerf.setName("Aleo S16 165 [2007 (E)]")
+sandiaPerf = panel.photovoltaicPerformance.to_PhotovoltaicPerformanceSandia.get
+sandiaPerf.setActiveArea(1.378)
+sandiaPerf.setNumberofCellsinSeries(50) # Int
+sandiaPerf.setNumberofCellsinParallel(1) # Int
+sandiaPerf.setShortCircuitCurrent(7.9)
+sandiaPerf.setOpenCircuitVoltage(30.0)
+sandiaPerf.setCurrentatMaximumPowerPoint(7.08)
+sandiaPerf.setVoltageatMaximumPowerPoint(23.3)
+sandiaPerf.setSandiaDatabaseParameteraIsc(0.0008)
+sandiaPerf.setSandiaDatabaseParameteraImp(-0.0003)
+sandiaPerf.setSandiaDatabaseParameterc0(0.99)
+sandiaPerf.setSandiaDatabaseParameterc1(0.01)
+sandiaPerf.setSandiaDatabaseParameterBVoc0(-0.11)
+sandiaPerf.setSandiaDatabaseParametermBVoc(0.0)
+sandiaPerf.setSandiaDatabaseParameterBVmp0(-0.115)
+sandiaPerf.setSandiaDatabaseParametermBVmp(0.0)
+sandiaPerf.setDiodeFactor(1.35)
+sandiaPerf.setSandiaDatabaseParameterc2(-0.12)
+sandiaPerf.setSandiaDatabaseParameterc3(-11.08)
+sandiaPerf.setSandiaDatabaseParametera0(0.924)
+sandiaPerf.setSandiaDatabaseParametera1(0.06749)
+sandiaPerf.setSandiaDatabaseParametera2(-0.012549)
+sandiaPerf.setSandiaDatabaseParametera3(0.0010049)
+sandiaPerf.setSandiaDatabaseParametera4(-2.8797e-05)
+sandiaPerf.setSandiaDatabaseParameterb0(1.0)
+sandiaPerf.setSandiaDatabaseParameterb1(-0.002438)
+sandiaPerf.setSandiaDatabaseParameterb2(0.0003103)
+sandiaPerf.setSandiaDatabaseParameterb3(-1.246e-05)
+sandiaPerf.setSandiaDatabaseParameterb4(2.11e-07)
+sandiaPerf.setSandiaDatabaseParameterb5(-1.36e-09)
+sandiaPerf.setSandiaDatabaseParameterDeltaTc(3.0)
+sandiaPerf.setSandiaDatabaseParameterfd(1.0)
+sandiaPerf.setSandiaDatabaseParametera(-3.56)
+sandiaPerf.setSandiaDatabaseParameterb(-0.075)
+sandiaPerf.setSandiaDatabaseParameterc4(0.995)
+sandiaPerf.setSandiaDatabaseParameterc5(0.005)
+sandiaPerf.setSandiaDatabaseParameterIx0(7.8)
+sandiaPerf.setSandiaDatabaseParameterIxx0(4.92)
+sandiaPerf.setSandiaDatabaseParameterc6(1.15)
+sandiaPerf.setSandiaDatabaseParameterc7(-0.15)
+
+panel.setNumberOfModulesInParallel(3)
+panel.setNumberOfModulesInSeries(6)
+panel.setRatedElectricPowerOutput(20000)
+panel.setAvailabilitySchedule(model.alwaysOnDiscreteSchedule)
+
 # create the distribution system
 elcd = OpenStudio::Model::ElectricLoadCenterDistribution.new(model)
 elcd.setName("PV ELCD")
 elcd.addGenerator(panel)
+elcd.setGeneratorOperationSchemeType('Baseload')
 elcd.setElectricalBussType("DirectCurrentWithInverter")
 elcd.setInverter(inverter)
+elcd.setDemandLimitSchemePurchasedElectricDemandLimit(0.0)
 
 #save the OpenStudio model (.osm)
 model.save_openstudio_osm({"osm_save_directory" => Dir.pwd,
