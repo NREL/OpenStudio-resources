@@ -59,7 +59,7 @@ jobs:
 
         test_filter = f"/^({'|'.join(tests)})$/"
         with open(os.environ['GITHUB_ENV'], 'a') as f:
-            f.write(f"\TEST_FILTER={test_filter}")
+            f.write(f"\nTEST_FILTER={test_filter}")
 
     - name: Locate installer link
       shell: python
@@ -91,7 +91,7 @@ jobs:
             print(f"Defaulting installer link to the latest OpenStudio release: {installer_link}")
 
         with open(os.environ['GITHUB_ENV'], 'a') as f:
-            f.write(f"\INSTALLER_LINK={installer_link}")
+            f.write(f"\nINSTALLER_LINK={installer_link}")
 
     - name: Download and install OS SDK installer
       shell: bash
