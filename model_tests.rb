@@ -431,7 +431,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.1.0
   # def test_generator_windturbine_osm
-    # result = sim_test('generator_windturbine.osm')
+  # result = sim_test('generator_windturbine.osm')
   # end
 
   def test_coil_waterheating_desuperheater_osm
