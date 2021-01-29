@@ -116,10 +116,13 @@ jobs:
       shell: bash
       if: contains(github.event.pull_request.labels.*.name, 'NewTest')
       run: |
+        set -x
         python process_results.py test-stability clean
         python process_results.py test-stability run -n "'$TEST_FILTER'"
-        python process_results.py test-status --tagged --quiet
-        python process_results.py heatmap --tagged --quiet
+        ls
+        ls test/
+        python process_results.py test-status --tagged --quiet || true
+        python process_results.py heatmap --tagged --quiet || true
 
     - name: Archive test results?
       if: contains(github.event.pull_request.labels.*.name, 'NewTest')
