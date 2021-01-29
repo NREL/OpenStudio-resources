@@ -120,8 +120,7 @@ jobs:
         set -x
         python process_results.py test-stability clean
         python process_results.py test-stability run -n "'$TEST_FILTER'"
-        ls
-        ls test/
+        ls test/*_out_Linux_run1.osw || (echo "Seems like the tests didn't run!" && exit 1)
         python process_results.py test-status --tagged --quiet || true
         python process_results.py heatmap --tagged --quiet || true
 

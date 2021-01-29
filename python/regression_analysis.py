@@ -1808,13 +1808,17 @@ def cli_heatmap(tagged=False, all_osws=False,
                                     savefig=True,
                                     show_plot=False,
                                     save_indiv_figs_for_ax=True)
-    if s and not quiet:
-        if sys.platform.startswith('darwin'):
-            subprocess.call(('open', figname))
-        elif os.name == 'nt':
-            os.startfile(figname)
-        elif os.name == 'posix':
-            subprocess.call(('xdg-open', figname))
+    if s:
+        if quiet:
+            # Throw for stability error
+            exit(1)
+        else:
+            if sys.platform.startswith('darwin'):
+                subprocess.call(('open', figname))
+            elif os.name == 'nt':
+                os.startfile(figname)
+            elif os.name == 'posix':
+                subprocess.call(('xdg-open', figname))
 
 
 def cli_upload():
