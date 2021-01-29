@@ -17,7 +17,7 @@ jobs:
     - name: Setup python deps
       shell: bash
       run: |
-        pip install requests matplotlib numpy pandas seaborn lxml beautifulsoup4 df2gspread docopt tqdm xmldiff
+        pip install -r requirements.txt # requests matplotlib numpy pandas seaborn lxml beautifulsoup4 df2gspread docopt tqdm xmldiff
         git fetch --no-tags --depth=1 origin ${{ github.base_ref }}
         git fetch --no-tags --depth=1 origin ${{ github.head_ref }}
 
@@ -118,5 +118,12 @@ jobs:
       run: |
         python process_results.py test-stability clean
         python process_results.py test-stability run -n "'$TEST_FILTER'"
-        python process_results.py test-status --tagged
-        python process_results.py heatmap --tagged
+        python process_results.py test-status --tagged --quiet
+        python process_results.py heatmap --tagged --quiet
+
+    - name: Archive test results?
+      if: contains(github.event.pull_request.labels.*.name, 'NewTest')
+      uses: actions/upload-artifact@v2
+      with:
+          name: Test-Stability
+          path: Test-Stability/*
