@@ -7,6 +7,7 @@ on:
 jobs:
   test_installer:
     runs-on: ubuntu-18.04
+    if: "!(contains(github.event.head_commit.message, 'skip') && contains(github.event.head_commit.message, 'ci'))"
 
     steps:
     - uses: actions/checkout@v2
@@ -98,7 +99,7 @@ jobs:
       run: |
         set -x
         echo "Installer link: $INSTALLER_LINK"
-        wget $INSTALLER_LINK
+        wget --quiet $INSTALLER_LINK
         sudo apt install -y ./OpenStudio*.deb
         openstudio openstudio_version
 

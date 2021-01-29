@@ -1475,9 +1475,9 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
         filt = ''
     else:
         if test_filter.count('/') >= 2:
-            filt = "-n /{}/".format(test_filter)
-        else:
             filt = "-n {}".format(test_filter)
+        else:
+            filt = "-n /{}/".format(test_filter)
 
     # Default platform
     if platform_name is None:
