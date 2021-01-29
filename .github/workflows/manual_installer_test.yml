@@ -1,4 +1,4 @@
-name: Test OS SDK Installer
+name: Test OS SDK Installer - Full Suite
 
 on:
   workflow_dispatch:
@@ -57,14 +57,14 @@ jobs:
         N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
 
     - name: Run highlevel_tests
-      if: ${{ always() }}
+      if: always()
       shell: bash
       run: |
         set -x
         MT_CPU=$(nproc) openstudio highlevel_tests.rb
 
     - name: Commit results
-      if: ${{ always() }}
+      if: always()
       shell: bash
       run: |
         set -x
@@ -84,8 +84,16 @@ jobs:
         python process_results.py heatmap --quiet || true
 
     - name: Archive test results
-      if: ${{ always() }}
+      if: always()
       uses: actions/upload-artifact@v2
       with:
           name: Test-Results
           path: Test-Stability/*
+
+    - uses: 8398a7/action-slack@v3
+      if: always() # Pick up events even if the job fails or is canceled.
+      with:
+        status: ${{ job.status }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
