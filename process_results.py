@@ -12,6 +12,7 @@ Usage:
                              [--figname_with_thresholds]
                              [--figname_with_thresholds]
                              [--granular [--indiv_axes]]
+                             [--quiet]
   process_results.py upload
   process_results.py test-stability run -n <test_filter>
                                         [-N <n>]
@@ -21,7 +22,7 @@ Usage:
                                         [--save_idf]
                                         [--platform_name=<str>]
   process_results.py test-stability clean [--contains=<str> | --pattern=<pat>]
-  process_results.py test-status [--tagged | --all] [--entire_table]
+  process_results.py test-status [--tagged | --all] [--entire_table] [--quiet]
   process_results.py -h | --help
 
 Options:
@@ -35,6 +36,9 @@ Options:
   Both of these options make sense only after running test-stability
   --tagged  Only analyze custom tagged files
   --all     Analyze both tagged and non-tagged osws
+
+  --quiet   Accepts the default mapping to E+ version in case OS version isn't
+            in the compatbility matrix
 
   -r <r_t>, --row_threshold=<r_t>      Row Threshold [default: 0.01]
         Only display tests where there is at least one cell (=one OpenStudio
@@ -173,7 +177,8 @@ if __name__ == "__main__":
                     row_threshold=options['--row_threshold'],
                     display_threshold=options['--display_threshold'],
                     save_indiv_figs_for_ax=options['--indiv_axes'],
-                    figname_with_thresholds=options['--figname_with_thresholds'])
+                    figname_with_thresholds=options['--figname_with_thresholds'],
+                    quiet=options['--quiet'])
     elif options['upload']:
         cli_upload()
 
@@ -202,4 +207,5 @@ if __name__ == "__main__":
     elif options['test-status']:
         cli_test_status_html(entire_table=options['--entire_table'],
                              tagged=options['--tagged'],
-                             all_osws=options['--all'])
+                             all_osws=options['--all'],
+                             quiet=options['--quiet'])

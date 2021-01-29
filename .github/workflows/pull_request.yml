@@ -7,6 +7,7 @@ on:
 jobs:
   test_installer:
     runs-on: ubuntu-18.04
+    if: "!(contains(github.event.head_commit.message, 'skip') && contains(github.event.head_commit.message, 'ci'))"
 
     steps:
     - uses: actions/checkout@v2
@@ -17,7 +18,7 @@ jobs:
     - name: Setup python deps
       shell: bash
       run: |
-        pip install requests matplotlib numpy pandas seaborn lxml beautifulsoup4 df2gspread docopt tqdm xmldiff
+        pip install -r requirements.txt # requests matplotlib numpy pandas seaborn lxml beautifulsoup4 df2gspread docopt tqdm xmldiff
         git fetch --no-tags --depth=1 origin ${{ github.base_ref }}
         git fetch --no-tags --depth=1 origin ${{ github.head_ref }}
 
@@ -58,11 +59,13 @@ jobs:
                 tests.append(fname_to_test[test_filename])
 
         test_filter = f"/^({'|'.join(tests)})$/"
-        print("::set-env name=TEST_FILTER=::{}".format(test_filter))
+        with open(os.environ['GITHUB_ENV'], 'a') as f:
+            f.write(f"\nTEST_FILTER={test_filter}")
 
     - name: Locate installer link
       shell: python
       run: |
+        import os
         import re
         import requests
 
@@ -88,14 +91,15 @@ jobs:
             installer_link = matched_installers[0]
             print(f"Defaulting installer link to the latest OpenStudio release: {installer_link}")
 
-        print("::set-env name=INSTALLER_LINK::{}".format(installer_link))
+        with open(os.environ['GITHUB_ENV'], 'a') as f:
+            f.write(f"\nINSTALLER_LINK={installer_link}")
 
     - name: Download and install OS SDK installer
       shell: bash
       run: |
         set -x
         echo "Installer link: $INSTALLER_LINK"
-        wget $INSTALLER_LINK
+        wget --quiet $INSTALLER_LINK
         sudo apt install -y ./OpenStudio*.deb
         openstudio openstudio_version
 
@@ -108,3 +112,21 @@ jobs:
       shell: bash
       run: |
         MT_CPU=$(nproc) openstudio highlevel_tests.rb
+
+    - name: Test stability
+      shell: bash
+      if: contains(github.event.pull_request.labels.*.name, 'NewTest')
+      run: |
+        set -x
+        python process_results.py test-stability clean
+        python process_results.py test-stability run -n "'$TEST_FILTER'"
+        ls test/*_out_Linux_run1.osw || (echo "Seems like the tests didn't run!" && exit 1)
+        python process_results.py test-status --tagged --quiet || true
+        python process_results.py heatmap --tagged --quiet || true
+
+    - name: Archive test results?
+      if: contains(github.event.pull_request.labels.*.name, 'NewTest')
+      uses: actions/upload-artifact@v2
+      with:
+          name: Test-Stability
+          path: Test-Stability/*
