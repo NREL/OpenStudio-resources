@@ -47,23 +47,13 @@ jobs:
     - name: Setup python deps
       shell: bash
       run: |
-        pip install requests matplotlib numpy pandas seaborn jupyter lxml beautifulsoup4 df2gspread docopt tqdm xmldiff
-
-    #- name: Run highlevel_tests.rb
-      #shell: bash
-      #run: |
-        #CUSTOMTAG=SHA openstudio highlevel_tests.rb
+        pip install -r requirements.txt
 
     - name: Run model_tests.rb
       shell: bash
       run: |
         echo "nproc=$(nproc)"
-        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb -e /utility_bill02/
-
-    #- name: Analyze results
-      #shell: bash
-      #run: |
-        #process_results.py test-status --all
+        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
 
     - name: Run highlevel_tests
       if: ${{ always() }}
@@ -81,3 +71,17 @@ jobs:
 
         git commit -m "Add results from workflow_dispatch testing with ${{ github.event.inputs.os_installer_link }}"
         git push -u origin $branch_name
+
+    - name: Generate HTML and heatmap
+      if: ${{ always() }}
+      shell: bash
+      run: |
+        python process_results.py test-status --quiet || true
+        python process_results.py heatmap --quiet || true
+
+    - name: Archive test results
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+          name: Test-Results
+          path: Test-Stability/*
