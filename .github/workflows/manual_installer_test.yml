@@ -52,6 +52,7 @@ jobs:
     - name: Run model_tests.rb
       shell: bash
       run: |
+        set -x
         echo "nproc=$(nproc)"
         N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
 
@@ -59,12 +60,14 @@ jobs:
       if: ${{ always() }}
       shell: bash
       run: |
+        set -x
         MT_CPU=$(nproc) openstudio highlevel_tests.rb
 
     - name: Commit results
       if: ${{ always() }}
       shell: bash
       run: |
+        set -x
         git add -f test/*
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         git config --global user.name 'github-actions[bot]'
@@ -76,6 +79,7 @@ jobs:
       if: ${{ always() }}
       shell: bash
       run: |
+        set -x
         python process_results.py test-status --quiet || true
         python process_results.py heatmap --quiet || true
 
