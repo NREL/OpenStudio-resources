@@ -111,3 +111,12 @@ jobs:
       shell: bash
       run: |
         MT_CPU=$(nproc) openstudio highlevel_tests.rb
+
+    - name: Test stability
+      shell: bash
+      if: contains(github.event.pull_request.labels.*.name, 'NewTest')
+      run: |
+        python process_results.py test-stability clean
+        python process_results.py test-stability run -n "'$TEST_FILTER'"
+        python process_results.py test-status --tagged
+        python process_results.py heatmap --tagged
