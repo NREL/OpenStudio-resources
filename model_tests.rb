@@ -21,6 +21,26 @@ class ModelTests < Minitest::Test
 
   # simulation tests
 
+  def test_flex_measures_modulating_rb
+    result = sim_test('flex_measures_modulating.rb')
+  end
+
+  def test_flex_measures_dual_source_rb
+    result = sim_test('flex_measures_dual_source.rb')
+  end
+
+  def test_flex_measures_integrated_heat_pump_pcm_storage_rb
+    result = sim_test('flex_measures_integrated_heat_pump_pcm_storage.rb')
+  end
+
+  def test_flex_measures_integrated_heat_pump_ice_storage_rb
+    result = sim_test('flex_measures_integrated_heat_pump_ice_storage.rb')
+  end
+
+  def test_flex_measures_integrated_heat_pump_grid_ac_rb
+    result = sim_test('flex_measures_integrated_heat_pump_grid_ac.rb')
+  end
+
   def test_absorption_chillers_rb
     result = sim_test('absorption_chillers.rb')
   end
