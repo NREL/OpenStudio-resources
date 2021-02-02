@@ -27,9 +27,6 @@ model.set_space_type
 # add design days to the model (Chicago)
 model.add_design_days
 
-# add ASHRAE System type 03, PSZ-AC
-model.add_hvac({ 'ashrae_sys_num' => '03' })
-
 # add thermostats
 model.add_thermostats({ 'heating_setpoint' => 24,
                         'cooling_setpoint' => 28 })
@@ -41,7 +38,10 @@ zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 
 zone = zones[0]
 
-air_loop_hvac = OpenStudio::Model::AirLoopHVAC.new(model)
+air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
+supplyOutletNode = air_loop.supplyOutletNode
+
+chw_loop = OpenStudio::Model::PlantLoop.new(model)
 
 schedule = model.alwaysOnDiscreteSchedule
 fan = OpenStudio::Model::FanOnOff.new(model, schedule)
@@ -62,27 +62,27 @@ chilling_coil.addSpeed(chilling_coil_speed_1)
 # TODO: chilling_coil.setGridSignalSchedule(grid_signal_schedule)
 
 supp_chilling_coil = OpenStudio::Model::CoilCoolingWater.new(model)
+supp_chilling_coil.addToNode(supplyOutletNode)
+chw_loop.addDemandBranchForComponent(supp_chilling_coil)
 
 thermal_storage = OpenStudio::Model::ThermalStoragePcmSimple.new(model)
+chw_loop.addSupplyBranchForComponent(thermal_storage)
 
-coil_system = OpenStudio::Model::CoilSystemIntegratedHeatPumpAirSource.new(model)
-coil_system.setCoolingCoil(cooling_coil)
+coil_system = OpenStudio::Model::CoilSystemIntegratedHeatPumpAirSource.new(model, cooling_coil)
 coil_system.setHeatingCoil(heating_coil)
 coil_system.setChillingCoil(chilling_coil)
 coil_system.setSupplementalChillingCoil(supp_chilling_coil)
 coil_system.setStorageTank(thermal_storage)
 
-unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAir.new(model, schedule, fan, coil_system, coil_system, supp_heating_coil)
-
 thermal_storage_cooling_pair = OpenStudio::Model::ThermalStorageCoolingPair.new(model)
 thermal_storage_cooling_pair.setCoolingCoil(cooling_coil)
 thermal_storage_cooling_pair.setTank(thermal_storage)
 
-supplyOutletNode = air_loop_hvac.supplyOutletNode
+unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAir.new(model, schedule, fan, coil_system, coil_system, supp_heating_coil)
 unitary.addToNode(supplyOutletNode)
 
 terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, schedule)
-air_loop_hvac.addBranchForZone(zone, terminal.to_StraightComponent)
+air_loop.addBranchForZone(zone, terminal.to_StraightComponent)
 unitary.setControllingZone(zone)
 
 # save the OpenStudio model (.osm)

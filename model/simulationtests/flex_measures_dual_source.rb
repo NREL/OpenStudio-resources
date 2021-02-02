@@ -27,9 +27,6 @@ model.set_space_type
 # add design days to the model (Chicago)
 model.add_design_days
 
-# add ASHRAE System type 03, PSZ-AC
-model.add_hvac({ 'ashrae_sys_num' => '03' })
-
 # add thermostats
 model.add_thermostats({ 'heating_setpoint' => 24,
                         'cooling_setpoint' => 28 })
@@ -41,7 +38,8 @@ zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 
 zone = zones[0]
 
-air_loop_hvac = OpenStudio::Model::AirLoopHVAC.new(model)
+air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
+supplyOutletNode = air_loop.supplyOutletNode
 
 schedule = model.alwaysOnDiscreteSchedule
 fan = OpenStudio::Model::FanOnOff.new(model, schedule)
@@ -57,12 +55,10 @@ cooling_coil_speed_1 = OpenStudio::Model::CoilCoolingDXVariableSpeedSpeedData.ne
 cooling_coil.addSpeed(cooling_coil_speed_1)
 
 unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAir.new(model, schedule, fan, heating_coil, cooling_coil, supp_heating_coil)
-
-supplyOutletNode = air_loop_hvac.supplyOutletNode
 unitary.addToNode(supplyOutletNode)
 
 terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, schedule)
-air_loop_hvac.addBranchForZone(zone, terminal.to_StraightComponent)
+air_loop.addBranchForZone(zone, terminal.to_StraightComponent)
 unitary.setControllingZone(zone)
 
 # save the OpenStudio model (.osm)
