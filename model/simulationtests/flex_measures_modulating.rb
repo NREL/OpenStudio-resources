@@ -60,7 +60,7 @@ cooling_coil.setGridSignalSchedule(grid_signal_schedule)
 cooling_coil.setLowerBoundToApplyGridResponsiveControl(100)
 cooling_coil.setUpperBoundToApplyGridResponsiveControl(-100)
 cooling_coil.setMaxSpeedLevelDuringGridResponsiveControl(10)
-cooling_coil.setLoadControlDuringGridResponsiveControl("SenLat")
+cooling_coil.setLoadControlDuringGridResponsiveControl('SenLat')
 
 unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAir.new(model, schedule, fan, heating_coil, cooling_coil, supp_heating_coil)
 unitary.addToNode(supplyOutletNode)
