@@ -5,13 +5,13 @@ require 'lib/baseline_model'
 
 model = BaselineModel.new
 
-# make a 1 story, 100m X 50m, 10 zone core/perimeter building
+# make a 1 story, 100m X 50m, 1 zone building
 model.add_geometry({ 'length' => 100,
                      'width' => 50,
                      'num_floors' => 1,
                      'floor_to_floor_height' => 4,
-                     'plenum_height' => 1,
-                     'perimeter_zone_depth' => 3 })
+                     'plenum_height' => 0,
+                     'perimeter_zone_depth' => 0 })
 
 # add windows at a 40% window-to-wall ratio
 model.add_windows({ 'wwr' => 0.4,
@@ -35,7 +35,6 @@ model.add_thermostats({ 'heating_setpoint' => 24,
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
 zones = model.getThermalZones.sort_by { |z| z.name.to_s }
-
 zone = zones[0]
 
 air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
@@ -49,10 +48,19 @@ heating_coil = OpenStudio::Model::CoilHeatingDXVariableSpeed.new(model)
 heating_coil_speed_1 = OpenStudio::Model::CoilHeatingDXVariableSpeedSpeedData.new(model)
 heating_coil.addSpeed(heating_coil_speed_1)
 
+grid_signal_schedule = OpenStudio::Model::ScheduleRuleset.new(model)
+grid_signal_schedule.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 15, 0, 0), 5.5)
+grid_signal_schedule.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 20, 0, 0), 8.0)
+grid_signal_schedule.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 5.5)
+
 cooling_coil = OpenStudio::Model::CoilCoolingDXVariableSpeed.new(model)
 cooling_coil_speed_1 = OpenStudio::Model::CoilCoolingDXVariableSpeedSpeedData.new(model)
 cooling_coil.addSpeed(cooling_coil_speed_1)
-# TODO: cooling_coil.setGridSignalSchedule(grid_signal_schedule)
+cooling_coil.setGridSignalSchedule(grid_signal_schedule)
+cooling_coil.setLowerBoundToApplyGridResponsiveControl(100)
+cooling_coil.setUpperBoundToApplyGridResponsiveControl(-100)
+cooling_coil.setMaxSpeedLevelDuringGridResponsiveControl(10)
+cooling_coil.setLoadControlDuringGridResponsiveControl("SenLat")
 
 unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAir.new(model, schedule, fan, heating_coil, cooling_coil, supp_heating_coil)
 unitary.addToNode(supplyOutletNode)
