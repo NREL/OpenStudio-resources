@@ -100,7 +100,7 @@ unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAir.new(model, sched
 unitary.addToNode(supplyOutletNode)
 
 terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, schedule)
-air_loop_hvac.addBranchForZone(zone, terminal.to_StraightComponent)
+air_loop.addBranchForZone(zone, terminal.to_StraightComponent)
 unitary.setControllingZone(zone)
 
 # save the OpenStudio model (.osm)
