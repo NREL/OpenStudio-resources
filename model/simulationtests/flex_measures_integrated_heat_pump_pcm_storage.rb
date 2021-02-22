@@ -37,10 +37,35 @@ model.add_thermostats({ 'heating_setpoint' => 24,
 zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 zone = zones[0]
 
+# Air Loop
 air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
 supplyOutletNode = air_loop.supplyOutletNode
 
+# Chilled Water Plant
 chw_loop = OpenStudio::Model::PlantLoop.new(model)
+chw_loop.setName('Chilled Water Loop')
+chw_loop.setMaximumLoopTemperature(98)
+chw_loop.setMinimumLoopTemperature(1)
+chw_temp_f = 44
+chw_delta_t_r = 10.1 # 10.1F delta-T
+chw_temp_c = OpenStudio.convert(chw_temp_f, 'F', 'C').get
+chw_delta_t_k = OpenStudio.convert(chw_delta_t_r, 'R', 'K').get
+chw_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model)
+chw_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), chw_temp_c)
+sizing_plant = chw_loop.sizingPlant
+sizing_plant.setLoopType('Cooling')
+sizing_plant.setDesignLoopExitTemperature(chw_temp_c)
+sizing_plant.setLoopDesignTemperatureDifference(chw_delta_t_k)
+
+# Primary chilled water pump
+pri_chw_pump = OpenStudio::Model::HeaderedPumpsConstantSpeed.new(model)
+pri_chw_pump.setName('Chilled Water Loop Primary Pump')
+pri_chw_pump_head_ft_h2o = 15
+pri_chw_pump_head_press_pa = OpenStudio.convert(pri_chw_pump_head_ft_h2o, 'ftH_{2}O', 'Pa').get
+pri_chw_pump.setRatedPumpHead(pri_chw_pump_head_press_pa)
+pri_chw_pump.setMotorEfficiency(0.9)
+pri_chw_pump.setPumpControlType('Intermittent')
+pri_chw_pump.addToNode(chw_loop.supplyInletNode)
 
 schedule = model.alwaysOnDiscreteSchedule
 fan = OpenStudio::Model::FanOnOff.new(model, schedule)
@@ -82,12 +107,17 @@ chiller_coil.setLowerBoundToApplyGridResponsiveControl(100)
 chiller_coil.setUpperBoundToApplyGridResponsiveControl(-100)
 chiller_coil.setMaxSpeedLevelDuringGridResponsiveControl(10)
 
+plf_curve = OpenStudio::Model::CurveQuadratic.new(model)
+chiller_coil.setPartLoadFractionCorrelationCurve(plf_curve)
+
 supp_chiller_coil = OpenStudio::Model::CoilCoolingWater.new(model)
 supp_chiller_coil.addToNode(supplyOutletNode)
 chw_loop.addDemandBranchForComponent(supp_chiller_coil)
 
 thermal_storage = OpenStudio::Model::ThermalStoragePcmSimple.new(model)
 chw_loop.addSupplyBranchForComponent(thermal_storage)
+stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model, chw_temp_sch)
+stpt_manager.addToNode(thermal_storage.outletModelObject.get.to_Node.get)
 
 coil_system = OpenStudio::Model::CoilSystemIntegratedHeatPumpAirSource.new(model, space_cooling_coil, space_heating_coil)
 coil_system.setChillerCoil(chiller_coil)
