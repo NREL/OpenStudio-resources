@@ -74,7 +74,7 @@ pri_chw_pump.addToNode(chw_loop.supplyInletNode)
 
 schedule = model.alwaysOnDiscreteSchedule
 fan = OpenStudio::Model::FanOnOff.new(model, schedule)
-supp_heating_coil = OpenStudio::Model::CoilHeatingElectric.new(model, schedule)
+supp_heating_coil = OpenStudio::Model::CoilHeatingGas.new(model, schedule)
 
 space_heating_coil = OpenStudio::Model::CoilHeatingDXVariableSpeed.new(model)
 space_heating_coil_speed_1 = OpenStudio::Model::CoilHeatingDXVariableSpeedSpeedData.new(model)
@@ -127,6 +127,7 @@ chw_loop.setLoopTemperatureSetpointNode(thermal_storage.outletModelObject.get.to
 
 coil_system = OpenStudio::Model::CoilSystemIntegratedHeatPumpAirSource.new(model, space_cooling_coil, space_heating_coil)
 coil_system.setChillerCoil(chiller_coil)
+coil_system.setChillerCoilBelongstoaSingleorSeparateUnit('Separate')
 coil_system.setSupplementalChillerCoil(supp_chiller_coil)
 coil_system.setStorageTank(thermal_storage)
 
