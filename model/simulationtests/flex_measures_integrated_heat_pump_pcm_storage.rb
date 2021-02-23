@@ -31,7 +31,6 @@ model.add_design_days
 model.add_thermostats({ 'heating_setpoint' => 24,
                         'cooling_setpoint' => 28 })
 
-# pick out on of the zone/system pairs and add a humidifier
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
 zones = model.getThermalZones.sort_by { |z| z.name.to_s }
@@ -40,6 +39,12 @@ zone = zones[0]
 # Air Loop
 air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
 supplyOutletNode = air_loop.supplyOutletNode
+sat_f = 55
+sat_c = OpenStudio.convert(sat_f, 'F', 'C').get
+sat_sch = OpenStudio::Model::ScheduleRuleset.new(model)
+sat_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), sat_c)
+stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model, sat_sch)
+stpt_manager.addToNode(supplyOutletNode)
 
 # Chilled Water Plant
 chw_loop = OpenStudio::Model::PlantLoop.new(model)
@@ -118,6 +123,7 @@ thermal_storage = OpenStudio::Model::ThermalStoragePcmSimple.new(model)
 chw_loop.addSupplyBranchForComponent(thermal_storage)
 stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model, chw_temp_sch)
 stpt_manager.addToNode(thermal_storage.outletModelObject.get.to_Node.get)
+chw_loop.setLoopTemperatureSetpointNode(thermal_storage.outletModelObject.get.to_Node.get)
 
 coil_system = OpenStudio::Model::CoilSystemIntegratedHeatPumpAirSource.new(model, space_cooling_coil, space_heating_coil)
 coil_system.setChillerCoil(chiller_coil)
