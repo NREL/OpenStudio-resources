@@ -284,8 +284,9 @@ class ModelTests < Minitest::Test
     result = sim_test('dist_ht_cl.rb')
   end
 
+  # TODO: To be added in the next official release after: 3.1.0
   # def test_doas_osm
-    # result = sim_test('doas.osm')
+  #   result = sim_test('doas.osm')
   # end
 
   def test_doas_rb
