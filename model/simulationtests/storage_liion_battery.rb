@@ -54,7 +54,7 @@ inverter = OpenStudio::Model::ElectricLoadCenterInverterLookUpTable.new(model)
 # create the storage
 storage = OpenStudio::Model::ElectricLoadCenterStorageLiIonNMCBattery.new(model)
 storage.setRadiativeFraction(0)
-storage.setLifetimeModel("KandlerSmith")
+storage.setLifetimeModel('KandlerSmith')
 storage.setNumberofCellsinSeries(139)
 storage.setNumberofStringsinParallel(25)
 storage.setInitialFractionalStateofCharge(0.7)
