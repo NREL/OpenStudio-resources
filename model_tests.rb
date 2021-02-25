@@ -77,6 +77,24 @@ class ModelTests < Minitest::Test
     result = sim_test('airloop_and_zonehvac.osm')
   end
 
+  def test_ptac_othercoils_rb
+    result = sim_test('ptac_othercoils.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_ptac_othercoils_osm
+  # result = sim_test('ptac_othercoils.osm')
+  # end
+
+  def test_pthp_othercoils_rb
+    result = sim_test('pthp_othercoils.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_pthp_othercoils_osm
+  # result = sim_test('pthp_othercoils.osm')
+  # end
+
   def test_airloop_avms_rb
     result = sim_test('airloop_avms.rb')
   end
@@ -193,6 +211,15 @@ class ModelTests < Minitest::Test
     result = sim_test('centralheatpumpsystem.rb')
   end
 
+  def test_chiller_reformulated_rb
+    result = sim_test('chiller_reformulated.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_chiller_reformulated_osm
+  #   result = sim_test('chiller_reformulated.osm')
+  # end
+
   def test_chillers_tertiary_rb
     result = sim_test('chillers_tertiary.rb')
   end
@@ -297,6 +324,15 @@ class ModelTests < Minitest::Test
     result = sim_test('ducts_and_pipes.osm')
   end
 
+  def test_elcd_no_generators_rb
+    result = sim_test('elcd_no_generators.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_elcd_no_generators_osm
+  #   result = sim_test('elcd_no_generators.osm')
+  # end
+
   def test_electric_equipment_ITE_rb
     result = sim_test('electric_equipment_ITE.rb')
   end
@@ -397,6 +433,15 @@ class ModelTests < Minitest::Test
     result = sim_test('generator_microturbine.osm')
   end
 
+  def test_generator_windturbine_rb
+    result = sim_test('generator_windturbine.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_generator_windturbine_osm
+  # result = sim_test('generator_windturbine.osm')
+  # end
+
   def test_coil_waterheating_desuperheater_osm
     result = sim_test('coil_waterheating_desuperheater.osm')
   end
@@ -452,6 +497,15 @@ class ModelTests < Minitest::Test
   def test_humidity_control_osm
     result = sim_test('humidity_control.osm')
   end
+
+  def test_humidity_control_2_rb
+    result = sim_test('humidity_control_2.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_humidity_control_2_osm
+  #   result = sim_test('humidity_control_2.osm')
+  # end
 
   def test_ideal_plant_rb
     result = sim_test('ideal_plant.rb')
@@ -697,13 +751,22 @@ class ModelTests < Minitest::Test
     result = sim_test('pv_and_storage_demandleveling.osm')
   end
 
+  def test_refrigeration_system_rb
+    result = sim_test('refrigeration_system.rb')
+  end
+
   def test_refrigeration_system_osm
     result = sim_test('refrigeration_system.osm')
   end
 
-  def test_refrigeration_system_rb
-    result = sim_test('refrigeration_system.rb')
+  def test_refrigeration_system_2_rb
+    result = sim_test('refrigeration_system_2.rb')
   end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_refrigeration_system__2osm
+  #   result = sim_test('refrigeration_system_2.osm')
+  # end
 
   def test_roof_vegetation_rb
     result = sim_test('roof_vegetation.rb')
@@ -775,6 +838,14 @@ class ModelTests < Minitest::Test
 
   def test_setpoint_managers_osm
     result = sim_test('setpoint_managers.osm')
+  end
+
+  def test_shadingcontrol_singlezone_rb
+    result = sim_test('shadingcontrol_singlezone.rb')
+  end
+
+  def test_shadingcontrol_singlezone_osm
+    result = sim_test('shadingcontrol_singlezone.osm')
   end
 
   def test_shadowcalculation_rb
@@ -1012,6 +1083,15 @@ class ModelTests < Minitest::Test
   def test_zone_hvac2_osm
     result = sim_test('zone_hvac2.osm')
   end
+
+  def test_zone_hvac_cooling_panel_rb
+    result = sim_test('zone_hvac_cooling_panel.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_zone_hvac_cooling_panel_osm
+  #   result = sim_test('zone_hvac_cooling_panel.osm')
+  # end
 
   def test_zone_hvac_equipment_list_rb
     result = sim_test('zone_hvac_equipment_list.rb')

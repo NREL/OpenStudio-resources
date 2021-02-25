@@ -55,6 +55,9 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.join(this_dir, '..')))
 # Folder in which the out.osw are stored
 TEST_DIR = os.path.join(ROOT_DIR, 'test')
 
+# STABILITY_DIR
+STABILITY_DIR = os.path.join(ROOT_DIR, 'Test-Stability')
+
 # Google Spreadsheet URL
 SHEET_URL = ('https://docs.google.com/spreadsheets/d/1gL8KSwRPtMPYj-'
              'QrTwlCwHJvNRP7llQyEinfM1-1Usg/edit?usp=sharing')
@@ -328,7 +331,8 @@ def parse_model_tests_rb():
     return tests
 
 
-def find_info_osws(compat_matrix=None, test_dir=None, testtype='model'):
+def find_info_osws(compat_matrix=None, test_dir=None, testtype='model',
+                   quiet=False):
     """
     Looks for files in the test/ folder, and parses version and type (rb, osm)
     Constructs a dataframe that has E+/OS versions in column (by looking E+
@@ -436,19 +440,22 @@ def find_info_osws(compat_matrix=None, test_dir=None, testtype='model'):
             else:
                 is_correct = False
 
-            while not is_correct:
-                # Ask user. If blank, then default to latest eplus known
-                eplus = input(msg.format(v, latest_eplus))
-                if not eplus:
-                    eplus = latest_eplus
+            if quiet:
+                eplus = latest_eplus
+            else:
+                while not is_correct:
+                    # Ask user. If blank, then default to latest eplus known
+                    eplus = input(msg.format(v, latest_eplus))
+                    if not eplus:
+                        eplus = latest_eplus
 
-                # Sanitize: it should be in the form "X.Y.Z"
-                if len(eplus.split('.')) == 3:
-                    try:
-                        [float(x) for x in eplus.split('.')]
-                        is_correct = True
-                    except ValueError:
-                        pass
+                    # Sanitize: it should be in the form "X.Y.Z"
+                    if len(eplus.split('.')) == 3:
+                        try:
+                            [float(x) for x in eplus.split('.')]
+                            is_correct = True
+                        except ValueError:
+                            pass
             print("Mapping OS '{}' to '{}'".format(v, eplus))
             # Add to the version_dict
             version_dict[v] = eplus
@@ -464,7 +471,8 @@ def find_info_osws(compat_matrix=None, test_dir=None, testtype='model'):
 def find_info_osws_with_tags(compat_matrix=None,
                              test_dir=None,
                              tags_only=True,
-                             testtype='model'):
+                             testtype='model',
+                             quiet=False):
     """
     Looks for files in the test/ folder, and parses version
     and type (rb, osm, or osw)
@@ -577,19 +585,22 @@ def find_info_osws_with_tags(compat_matrix=None,
             else:
                 is_correct = False
 
-            while not is_correct:
-                # Ask user. If blank, then default to latest eplus known
-                eplus = input(msg.format(v, latest_eplus))
-                if not eplus:
-                    eplus = latest_eplus
+            if quiet:
+                eplus = latest_eplus
+            else:
+                while not is_correct:
+                    # Ask user. If blank, then default to latest eplus known
+                    eplus = input(msg.format(v, latest_eplus))
+                    if not eplus:
+                        eplus = latest_eplus
 
-                # Sanitize: it should be in the form "X.Y.Z"
-                if len(eplus.split('.')) == 3:
-                    try:
-                        [float(x) for x in eplus.split('.')]
-                        is_correct = True
-                    except ValueError:
-                        pass
+                    # Sanitize: it should be in the form "X.Y.Z"
+                    if len(eplus.split('.')) == 3:
+                        try:
+                            [float(x) for x in eplus.split('.')]
+                            is_correct = True
+                        except ValueError:
+                            pass
             print("Mapping OS '{}' to '{}'".format(v, eplus))
             # Add to the version_dict
             version_dict[v] = eplus
@@ -1304,8 +1315,10 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
         axes[-1].annotate(ann, xy=(0.0, 0.0), xycoords='figure fraction',
                           ha='left', va='bottom', style=style)
     if savefig:
+        if not os.path.exists(STABILITY_DIR):
+            os.makedirs(STABILITY_DIR)
         if figname is None:
-            figname = 'site_kbtu_pct_change.png'
+            figname = os.path.join(STABILITY_DIR, 'site_kbtu_pct_change.png')
         plt.savefig(figname, dpi=150, bbox_inches='tight')
         print("Saved to {}".format(os.path.abspath(figname)))
         if save_indiv_figs_for_ax:
@@ -1317,7 +1330,10 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
                 # extent = (ax.get_tightbbox(fig.canvas.renderer)
                 #             .transformed(fig.dpi_scale_trans.inverted()))
                 fname, fext = os.path.splitext(figname)
-                fig.savefig('{}_ax{}.png'.format(fname, i), dpi=150,
+
+                filepath = os.path.join(STABILITY_DIR,
+                                        '{}_ax{}.png'.format(fname, i))
+                fig.savefig(filepath, dpi=150,
                             bbox_inches=extent.expanded(1.3, 1.15))
 
     if show_plot:
@@ -1458,7 +1474,10 @@ def test_stability(os_cli=None, test_filter=None, run_n_times=5, start_at=1,
     if test_filter is None:
         filt = ''
     else:
-        filt = "-n /{}/".format(test_filter)
+        if test_filter.count('/') >= 2:
+            filt = "-n {}".format(test_filter)
+        else:
+            filt = "-n /{}/".format(test_filter)
 
     # Default platform
     if platform_name is None:
@@ -1675,15 +1694,16 @@ def getStyles():
 ###############################################################################
 
 
-def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
+def cli_test_status_html(entire_table=False, tagged=False, all_osws=False,
+                         quiet=False):
     if tagged:
         # Tagged-only
         df_files = find_info_osws_with_tags(compat_matrix=None,
-                                            tags_only=True)
+                                            tags_only=True, quiet=quiet)
     elif all_osws:
         # All osws
         df_files = find_info_osws_with_tags(compat_matrix=None,
-                                            tags_only=False)
+                                            tags_only=False, quiet=quiet)
     else:
         df_files = find_info_osws()
 
@@ -1719,7 +1739,7 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
         if success2.empty:
             print("\nOK: No Failing tests were found")
         else:
-            print("\nWARNING: you have failing tests")
+            print("\nWARNING: you have failing tests:")
             success = success2
             caption = 'Test Success - Failed only'
 
@@ -1733,24 +1753,28 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False):
                    .set_table_styles(styles)
                    .set_caption(caption)).render()
 
-    filepath = 'Regression_Test_Status.html'
+    if not os.path.exists(STABILITY_DIR):
+        os.makedirs(STABILITY_DIR)
+    filepath = os.path.join(STABILITY_DIR, 'Regression_Test_Status.html')
     with open(filepath, 'w') as f:
         f.write(html)
 
     print("HTML file saved in {}".format(os.path.join(os.getcwd(), filepath)))
-    if sys.platform.startswith('darwin'):
-        subprocess.call(('open', filepath))
-    elif os.name == 'nt':
-        os.startfile(filepath)
-    elif os.name == 'posix':
-        subprocess.call(('xdg-open', filepath))
+    if not quiet:
+        if sys.platform.startswith('darwin'):
+            subprocess.call(('open', filepath))
+        elif os.name == 'nt':
+            os.startfile(filepath)
+        elif os.name == 'posix':
+            subprocess.call(('xdg-open', filepath))
 
 
 def cli_heatmap(tagged=False, all_osws=False,
                 row_threshold=0.01,
                 display_threshold=0.001,
                 save_indiv_figs_for_ax=False,
-                figname_with_thresholds=True):
+                figname_with_thresholds=True,
+                quiet=False):
     """
     Helper function called from the CLI to plot the heatmap
     """
@@ -1758,11 +1782,11 @@ def cli_heatmap(tagged=False, all_osws=False,
     if tagged:
         # Tagged-only
         df_files = find_info_osws_with_tags(compat_matrix=None,
-                                            tags_only=True)
+                                            tags_only=True, quiet=quiet)
     elif all_osws:
         # All osws
         df_files = find_info_osws_with_tags(compat_matrix=None,
-                                            tags_only=False)
+                                            tags_only=False, quiet=quiet)
     else:
         df_files = find_info_osws()
 
@@ -1785,12 +1809,16 @@ def cli_heatmap(tagged=False, all_osws=False,
                                     show_plot=False,
                                     save_indiv_figs_for_ax=True)
     if s:
-        if sys.platform.startswith('darwin'):
-            subprocess.call(('open', figname))
-        elif os.name == 'nt':
-            os.startfile(figname)
-        elif os.name == 'posix':
-            subprocess.call(('xdg-open', figname))
+        if quiet:
+            # Throw for stability error
+            exit(1)
+        else:
+            if sys.platform.startswith('darwin'):
+                subprocess.call(('open', figname))
+            elif os.name == 'nt':
+                os.startfile(figname)
+            elif os.name == 'posix':
+                subprocess.call(('xdg-open', figname))
 
 
 def cli_upload():
