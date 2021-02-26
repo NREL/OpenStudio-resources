@@ -21,18 +21,13 @@ class ModelTests < Minitest::Test
 
   # simulation tests
 
-  # TODO: To be added in the next official release after: 3.1.0
-  # def test_flex_measures_modulating_osm
-  #   result = sim_test('flex_measures_modulating.osm')
-  # end
-
   def test_flex_measures_modulating_rb
     result = sim_test('flex_measures_modulating.rb')
   end
 
   # TODO: To be added in the next official release after: 3.1.0
-  # def test_flex_measures_dual_source_osm
-  #   result = sim_test('flex_measures_dual_source.osm')
+  # def test_flex_measures_modulating_osm
+  #   result = sim_test('flex_measures_modulating.osm')
   # end
 
   def test_flex_measures_dual_source_rb
@@ -40,8 +35,8 @@ class ModelTests < Minitest::Test
   end
 
   # TODO: To be added in the next official release after: 3.1.0
-  # def test_flex_measures_integrated_heat_pump_pcm_storage_osm
-  #   result = sim_test('flex_measures_integrated_heat_pump_pcm_storage.osm')
+  # def test_flex_measures_dual_source_osm
+  #   result = sim_test('flex_measures_dual_source.osm')
   # end
 
   def test_flex_measures_integrated_heat_pump_pcm_storage_rb
@@ -49,8 +44,8 @@ class ModelTests < Minitest::Test
   end
 
   # TODO: To be added in the next official release after: 3.1.0
-  # def test_flex_measures_integrated_heat_pump_ice_storage_osm
-  #   result = sim_test('flex_measures_integrated_heat_pump_ice_storage.osm')
+  # def test_flex_measures_integrated_heat_pump_pcm_storage_osm
+  #   result = sim_test('flex_measures_integrated_heat_pump_pcm_storage.osm')
   # end
 
   def test_flex_measures_integrated_heat_pump_ice_storage_rb
@@ -58,13 +53,18 @@ class ModelTests < Minitest::Test
   end
 
   # TODO: To be added in the next official release after: 3.1.0
-  # def test_flex_measures_integrated_heat_pump_grid_ac_osm
-  #   result = sim_test('flex_measures_integrated_heat_pump_grid_ac.osm')
+  # def test_flex_measures_integrated_heat_pump_ice_storage_osm
+  #   result = sim_test('flex_measures_integrated_heat_pump_ice_storage.osm')
   # end
 
   def test_flex_measures_integrated_heat_pump_grid_ac_rb
     result = sim_test('flex_measures_integrated_heat_pump_grid_ac.rb')
   end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_flex_measures_integrated_heat_pump_grid_ac_osm
+  #   result = sim_test('flex_measures_integrated_heat_pump_grid_ac.osm')
+  # end
 
   def test_absorption_chillers_rb
     result = sim_test('absorption_chillers.rb')
