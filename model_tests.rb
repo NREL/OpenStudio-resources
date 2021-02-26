@@ -893,7 +893,7 @@ class ModelTests < Minitest::Test
   end
 
   def test_storage_liion_battery_rb
-    result = sim_test('elcd_no_generators.rb')
+    result = sim_test('storage_liion_battery.rb')
   end
 
   # TODO: To be added in the next official release after: 3.1.0
