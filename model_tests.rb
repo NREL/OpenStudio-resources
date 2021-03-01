@@ -1201,7 +1201,7 @@ class ModelTests < Minitest::Test
     # puts "workflow = #{workflow}"
 
     # assert(/0.2.7/.match(standards))
-    assert(/2.0.1/.match(workflow))
+    assert(/2.2.0/.match(workflow))
   end
 
   def test_model_articulation1_bundle_git_osw
@@ -1209,7 +1209,10 @@ class ModelTests < Minitest::Test
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
     extra_options = { outdir: 'model_articulation1_bundle_git.osw',
-                      bundle: gemfile, bundle_path: bundle_path }
+                      bundle: gemfile, bundle_path: bundle_path,
+                      # TODO: Temp for debug for #134
+                      verbose: true, debug: true,
+    }
     result = sim_test('model_articulation1.osw', extra_options)
 
     # check that we got the right version of standards and workflow
@@ -1232,7 +1235,7 @@ class ModelTests < Minitest::Test
     # puts "workflow = #{workflow}"
 
     # assert(/0.2.7/.match(standards))
-    assert(/2.0.1/.match(workflow))
+    assert(/2.2.0/.match(workflow))
   end
 
   # intersection tests
