@@ -1200,7 +1200,10 @@ class ModelTests < Minitest::Test
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
     extra_options = { outdir: 'model_articulation1_bundle_git.osw',
-                      bundle: gemfile, bundle_path: bundle_path }
+                      bundle: gemfile, bundle_path: bundle_path,
+                      # TODO: Temp for debug for #134
+                      verbose: true, debug: true,
+    }
     result = sim_test('model_articulation1.osw', extra_options)
 
     # check that we got the right version of standards and workflow
