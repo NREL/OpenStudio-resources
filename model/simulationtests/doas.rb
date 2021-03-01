@@ -35,14 +35,16 @@ model.add_design_days
 zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 zone = zones[0]
 
-controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
-oas = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controller)
-doas = OpenStudio::Model::AirLoopHVACDedicatedOutdoorAirSystem.new(model, oas)
+controller1 = OpenStudio::Model::ControllerOutdoorAir.new(model)
+oas1 = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controller1)
 airloop = OpenStudio::Model::AirLoopHVAC.new(model)
-
-oas.addToNode(airloop.supplyOutletNode)
-doas.addAirLoop(airloop)
+oas1.addToNode(airloop.supplyOutletNode)
 airloop.addBranchForZone(zone)
+
+controller2 = OpenStudio::Model::ControllerOutdoorAir.new(model)
+oas2 = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controller2)
+doas = OpenStudio::Model::AirLoopHVACDedicatedOutdoorAirSystem.new(oas2)
+doas.addAirLoop(airloop)
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd, 'osm_name' => 'in.osm' })
