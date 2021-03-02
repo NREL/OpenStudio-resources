@@ -677,7 +677,7 @@ def sim_test(filename, options = {})
   # command to run the in_osw
   command = "\"#{$OpenstudioCli}\" #{extra_options} run #{extra_run_options} -w \"#{in_osw}\""
   if options[:debug]
-    puts "COMMAND:"
+    puts 'COMMAND:'
     puts command
   end
 
