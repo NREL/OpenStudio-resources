@@ -528,9 +528,9 @@ unitary.setControllingZoneorThermostatLocation(zones[27])
 # Necessary for autosizedDOASDXCoolingCoilLeavingMinimumAirTemperature
 unitary.setControlType('SingleZoneVAV')
 # E+ 9.5.0-IOFreeze crashes when this is blank. https://github.com/NREL/EnergyPlus/issues/8566
-unitary.setSupplyAirFlowRateMethodDuringCoolingOperation("SupplyAirFlowRate")
-unitary.setSupplyAirFlowRateMethodDuringHeatingOperation("SupplyAirFlowRate")
-unitary.setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("SupplyAirFlowRate")
+unitary.setSupplyAirFlowRateMethodDuringCoolingOperation('SupplyAirFlowRate')
+unitary.setSupplyAirFlowRateMethodDuringHeatingOperation('SupplyAirFlowRate')
+unitary.setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired('SupplyAirFlowRate')
 unitary.autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature
 
 term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
@@ -947,4 +947,3 @@ end
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
                             'osm_name' => 'in.osm' })
-
