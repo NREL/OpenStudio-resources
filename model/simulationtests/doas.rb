@@ -36,13 +36,14 @@ zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 zone1 = zones[0]
 zone2 = zones[1]
 
-# Outdoor Air System 1
+# Outdoor Air Systems
 controller1 = OpenStudio::Model::ControllerOutdoorAir.new(model)
 oas1 = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controller1)
 airloop1 = OpenStudio::Model::AirLoopHVAC.new(model)
 supplyOutletNode1 = airloop1.supplyOutletNode
 oas1.addToNode(supplyOutletNode1)
-airloop1.addBranchForZone(zone1)
+atu1 = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, model.alwaysOnDiscreteSchedule)
+airloop1.addBranchForZone(zone1, atu1)
 
 # Outdoor Air System 2
 controller2 = OpenStudio::Model::ControllerOutdoorAir.new(model)
@@ -50,7 +51,8 @@ oas2 = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controller2)
 airloop2 = OpenStudio::Model::AirLoopHVAC.new(model)
 supplyOutletNode2 = airloop2.supplyOutletNode
 oas2.addToNode(supplyOutletNode2)
-airloop2.addBranchForZone(zone2)
+atu2 = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, model.alwaysOnDiscreteSchedule)
+airloop2.addBranchForZone(zone2, atu2)
 
 # Dedicated Outdoor Air System
 controller = OpenStudio::Model::ControllerOutdoorAir.new(model) # this won't be translated
