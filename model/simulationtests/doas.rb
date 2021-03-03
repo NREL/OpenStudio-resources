@@ -82,7 +82,6 @@ fan.outletModelObject.get.setName("#{oas.nameString} Fan Outlet Node")
 coil_heating_water.airOutletModelObject.get.setName("#{oas.nameString} HC Outlet Node")
 coil_cooling_water.airOutletModelObject.get.setName("#{oas.nameString} CC Outlet Node")
 
-
 lat_temp_f = 70
 lat_temp_c = OpenStudio.convert(lat_temp_f, 'F', 'C').get
 lat_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model)
