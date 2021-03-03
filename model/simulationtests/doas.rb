@@ -46,6 +46,8 @@ fan1 = OpenStudio::Model::FanVariableVolume.new(model)
 fan1.addToNode(supplyOutletNode1)
 atu1 = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, model.alwaysOnDiscreteSchedule)
 airloop1.addBranchForZone(zone1, atu1)
+oas1.outboardOANode.get.setName("#{airloop1.nameString} OA Inlet Node")
+oas1.outboardReliefNode.get.setName("#{airloop1.nameString} Exhaust Node")
 
 # Outdoor Air System 2
 controller2 = OpenStudio::Model::ControllerOutdoorAir.new(model)
@@ -57,6 +59,8 @@ fan2 = OpenStudio::Model::FanVariableVolume.new(model)
 fan2.addToNode(supplyOutletNode2)
 atu2 = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, model.alwaysOnDiscreteSchedule)
 airloop2.addBranchForZone(zone2, atu2)
+oas2.outboardOANode.get.setName("#{airloop2.nameString} OA Inlet Node")
+oas2.outboardReliefNode.get.setName("#{airloop2.nameString} Exhaust Node")
 
 # Dedicated Outdoor Air System
 controller = OpenStudio::Model::ControllerOutdoorAir.new(model) # this won't be translated
@@ -73,6 +77,11 @@ fan = OpenStudio::Model::FanSystemModel.new(model)
 coil_cooling_water.addToNode(oas.outboardOANode.get)
 coil_heating_water.addToNode(oas.outboardOANode.get)
 fan.addToNode(oas.outboardOANode.get)
+oas.outboardOANode.get.setName("#{oas.nameString} OA Inlet Node")
+fan.outletModelObject.get.setName("#{oas.nameString} Fan Outlet Node")
+coil_heating_water.airOutletModelObject.get.setName("#{oas.nameString} HC Outlet Node")
+coil_cooling_water.airOutletModelObject.get.setName("#{oas.nameString} CC Outlet Node")
+
 
 lat_temp_f = 70
 lat_temp_c = OpenStudio.convert(lat_temp_f, 'F', 'C').get
