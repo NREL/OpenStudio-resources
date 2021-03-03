@@ -59,35 +59,56 @@ doas = OpenStudio::Model::AirLoopHVACDedicatedOutdoorAirSystem.new(oas)
 doas.addAirLoop(airloop1)
 doas.addAirLoop(airloop2)
 
+# Equipment
 coil_cooling_water = OpenStudio::Model::CoilCoolingWater.new(model)
 coil_heating_water = OpenStudio::Model::CoilHeatingWater.new(model)
 fan = OpenStudio::Model::FanVariableVolume.new(model)
-
 coil_cooling_water.addToNode(oas.outboardOANode.get)
 coil_heating_water.addToNode(oas.outboardOANode.get)
 fan.addToNode(oas.outboardOANode.get)
 
-chilled_water = OpenStudio::Model::PlantLoop.new(model)
-chilled_water.addDemandBranchForComponent(coil_cooling_water)
-chilled_water_inlet = chilled_water.supplyInletNode
-chilled_water_outlet = chilled_water.supplyOutletNode
-chilled_water_pump = OpenStudio::Model::PumpVariableSpeed.new(model)
-chilled_water_pump.addToNode(chilled_water_inlet)
-pipe = OpenStudio::Model::PipeAdiabatic.new(model)
-chilled_water.addSupplyBranchForComponent(pipe)
-pipe2 = OpenStudio::Model::PipeAdiabatic.new(model)
-pipe2.addToNode(chilled_water_outlet)
+# Chilled Water Plant
+chw_loop = OpenStudio::Model::PlantLoop.new(model)
+chw_loop.setMaximumLoopTemperature(98)
+chw_loop.setMinimumLoopTemperature(1)
+chw_temp_f = 44
+chw_delta_t_r = 10.1 # 10.1F delta-T
+chw_temp_c = OpenStudio.convert(chw_temp_f, 'F', 'C').get
+chw_delta_t_k = OpenStudio.convert(chw_delta_t_r, 'R', 'K').get
+chw_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model)
+chw_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), chw_temp_c)
+chw_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model, chw_temp_sch)
+chw_stpt_manager.addToNode(chw_loop.supplyOutletNode)
+sizing_plant = chw_loop.sizingPlant
+sizing_plant.setLoopType('Cooling')
+sizing_plant.setDesignLoopExitTemperature(chw_temp_c)
+sizing_plant.setLoopDesignTemperatureDifference(chw_delta_t_k)
+chw_pump = OpenStudio::Model::PumpVariableSpeed.new(model)
+chw_pump.addToNode(chw_loop.supplyInletNode)
+chw_loop.addDemandBranchForComponent(coil_cooling_water)
+chiller = OpenStudio::Model::ChillerElectricEIR.new(model)
+chw_loop.addSupplyBranchForComponent(chiller)
 
-hot_water = OpenStudio::Model::PlantLoop.new(model)
-hot_water.addDemandBranchForComponent(coil_heating_water)
-hot_water_inlet = hot_water_inlet.supplyInletNode
-hot_water_outlet = hot_water.supplyOutletNode
-hot_water_pump = OpenStudio::Model::PumpVariableSpeed.new(model)
-hot_water_pump.addToNode(hot_water_inlet)
-pipe = OpenStudio::Model::PipeAdiabatic.new(model)
-hot_water.addSupplyBranchForComponent(pipe)
-pipe2 = OpenStudio::Model::PipeAdiabatic.new(model)
-pipe2.addToNode(hot_water_outlet)
+# Hot Water Plant
+hw_loop = OpenStudio::Model::PlantLoop.new(model)
+hw_loop.setMinimumLoopTemperature(10)
+hw_temp_f = 140
+hw_delta_t_r = 20 # 20F delta-T
+hw_temp_c = OpenStudio.convert(hw_temp_f, 'F', 'C').get
+hw_delta_t_k = OpenStudio.convert(hw_delta_t_r, 'R', 'K').get
+hw_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model)
+hw_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), hw_temp_c)
+hw_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model, hw_temp_sch)
+hw_stpt_manager.addToNode(hw_loop.supplyOutletNode)
+sizingPlant = hw_loop.sizingPlant()
+sizingPlant.setLoopType('Heating')
+sizingPlant.setDesignLoopExitTemperature(82.0)
+sizingPlant.setLoopDesignTemperatureDifference(11.0)
+hw_pump = OpenStudio::Model::PumpVariableSpeed.new(model)
+hw_pump.addToNode(hw_loop.supplyInletNode)
+hw_loop.addDemandBranchForComponent(coil_heating_water)
+boiler = OpenStudio::Model::BoilerHotWater.new(model)
+hw_loop.addSupplyBranchForComponent(boiler)
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd, 'osm_name' => 'in.osm' })
