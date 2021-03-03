@@ -62,7 +62,7 @@ airloop2.addBranchForZone(zone2, atu2)
 controller = OpenStudio::Model::ControllerOutdoorAir.new(model) # this won't be translated
 oas = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controller)
 doas = OpenStudio::Model::AirLoopHVACDedicatedOutdoorAirSystem.new(oas)
-doas.setAvailabilitySchedule(model.alwaysOnDiscreteSchedule())
+doas.setAvailabilitySchedule(model.alwaysOnDiscreteSchedule)
 doas.addAirLoop(airloop1)
 doas.addAirLoop(airloop2)
 
@@ -83,13 +83,11 @@ lat_stpt_manager1.addToNode(coil_cooling_water.airOutletModelObject.get.to_Node.
 lat_stpt_manager2 = lat_stpt_manager1.clone(model).to_SetpointManagerScheduled.get
 lat_stpt_manager2.addToNode(coil_heating_water.airOutletModelObject.get.to_Node.get)
 
-
 lat_stpt_manager3 = lat_stpt_manager1.clone(model).to_SetpointManagerScheduled.get
 lat_stpt_manager3.addToNode(supplyOutletNode1)
 
 lat_stpt_manager4 = lat_stpt_manager1.clone(model).to_SetpointManagerScheduled.get
 lat_stpt_manager4.addToNode(supplyOutletNode2)
-
 
 # Chilled Water Plant
 chw_loop = OpenStudio::Model::PlantLoop.new(model)
