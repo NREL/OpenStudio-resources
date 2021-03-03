@@ -42,6 +42,8 @@ oas1 = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controller1)
 airloop1 = OpenStudio::Model::AirLoopHVAC.new(model)
 supplyOutletNode1 = airloop1.supplyOutletNode
 oas1.addToNode(supplyOutletNode1)
+fan1 = OpenStudio::Model::FanVariableVolume.new(model)
+fan1.addToNode(supplyOutletNode1)
 atu1 = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, model.alwaysOnDiscreteSchedule)
 airloop1.addBranchForZone(zone1, atu1)
 
@@ -51,6 +53,8 @@ oas2 = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controller2)
 airloop2 = OpenStudio::Model::AirLoopHVAC.new(model)
 supplyOutletNode2 = airloop2.supplyOutletNode
 oas2.addToNode(supplyOutletNode2)
+fan2 = OpenStudio::Model::FanVariableVolume.new(model)
+fan2.addToNode(supplyOutletNode2)
 atu2 = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, model.alwaysOnDiscreteSchedule)
 airloop2.addBranchForZone(zone2, atu2)
 
@@ -58,16 +62,34 @@ airloop2.addBranchForZone(zone2, atu2)
 controller = OpenStudio::Model::ControllerOutdoorAir.new(model) # this won't be translated
 oas = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controller)
 doas = OpenStudio::Model::AirLoopHVACDedicatedOutdoorAirSystem.new(oas)
+doas.setAvailabilitySchedule(model.alwaysOnDiscreteSchedule())
 doas.addAirLoop(airloop1)
 doas.addAirLoop(airloop2)
 
 # Equipment
 coil_cooling_water = OpenStudio::Model::CoilCoolingWater.new(model)
 coil_heating_water = OpenStudio::Model::CoilHeatingWater.new(model)
-fan = OpenStudio::Model::FanVariableVolume.new(model)
+fan = OpenStudio::Model::FanSystemModel.new(model)
 coil_cooling_water.addToNode(oas.outboardOANode.get)
 coil_heating_water.addToNode(oas.outboardOANode.get)
 fan.addToNode(oas.outboardOANode.get)
+
+lat_temp_f = 70
+lat_temp_c = OpenStudio.convert(lat_temp_f, 'F', 'C').get
+lat_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model)
+lat_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), lat_temp_c)
+lat_stpt_manager1 = OpenStudio::Model::SetpointManagerScheduled.new(model, lat_temp_sch)
+lat_stpt_manager1.addToNode(coil_cooling_water.airOutletModelObject.get.to_Node.get)
+lat_stpt_manager2 = lat_stpt_manager1.clone(model).to_SetpointManagerScheduled.get
+lat_stpt_manager2.addToNode(coil_heating_water.airOutletModelObject.get.to_Node.get)
+
+
+lat_stpt_manager3 = lat_stpt_manager1.clone(model).to_SetpointManagerScheduled.get
+lat_stpt_manager3.addToNode(supplyOutletNode1)
+
+lat_stpt_manager4 = lat_stpt_manager1.clone(model).to_SetpointManagerScheduled.get
+lat_stpt_manager4.addToNode(supplyOutletNode2)
+
 
 # Chilled Water Plant
 chw_loop = OpenStudio::Model::PlantLoop.new(model)
