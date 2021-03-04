@@ -40,6 +40,7 @@ zone2 = zones[1]
 controller1 = OpenStudio::Model::ControllerOutdoorAir.new(model)
 oas1 = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controller1)
 airloop1 = OpenStudio::Model::AirLoopHVAC.new(model)
+airloop1.setName("LOOP1")
 supplyOutletNode1 = airloop1.supplyOutletNode
 oas1.addToNode(supplyOutletNode1)
 fan1 = OpenStudio::Model::FanVariableVolume.new(model)
@@ -53,6 +54,7 @@ oas1.outboardReliefNode.get.setName("#{airloop1.nameString} Exhaust Node")
 controller2 = OpenStudio::Model::ControllerOutdoorAir.new(model)
 oas2 = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controller2)
 airloop2 = OpenStudio::Model::AirLoopHVAC.new(model)
+airloop2.setName("LOOP2")
 supplyOutletNode2 = airloop2.supplyOutletNode
 oas2.addToNode(supplyOutletNode2)
 fan2 = OpenStudio::Model::FanVariableVolume.new(model)
@@ -66,7 +68,6 @@ oas2.outboardReliefNode.get.setName("#{airloop2.nameString} Exhaust Node")
 controller = OpenStudio::Model::ControllerOutdoorAir.new(model) # this won't be translated
 oas = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controller)
 doas = OpenStudio::Model::AirLoopHVACDedicatedOutdoorAirSystem.new(oas)
-doas.setAvailabilitySchedule(model.alwaysOnDiscreteSchedule)
 doas.addAirLoop(airloop1)
 doas.addAirLoop(airloop2)
 
