@@ -244,6 +244,15 @@ class ModelTests < Minitest::Test
     result = sim_test('coilsystem_dxhx.osm')
   end
 
+  def test_coilsystem_integrated_heatpump_rb
+    result = sim_test('coilsystem_integrated_heatpump.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_coilsystem_integrated_heatpump_osm
+    # result = sim_test('coilsystem_integrated_heatpump.osm')
+  # end
+
   def test_coolingtowers_osm
     result = sim_test('coolingtowers.osm')
   end
