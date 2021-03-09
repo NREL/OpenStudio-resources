@@ -472,7 +472,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.1.0
   # def test_heatpump_varspeed_osm
-    # result = sim_test('heatpump_varspeed.osm')
+  # result = sim_test('heatpump_varspeed.osm')
   # end
 
   def test_hightemprad_rb
@@ -1211,8 +1211,7 @@ class ModelTests < Minitest::Test
     extra_options = { outdir: 'model_articulation1_bundle_git.osw',
                       bundle: gemfile, bundle_path: bundle_path,
                       # TODO: Temp for debug for #134
-                      verbose: true, debug: true,
-    }
+                      verbose: true, debug: true }
     result = sim_test('model_articulation1.osw', extra_options)
 
     # check that we got the right version of standards and workflow
