@@ -36,8 +36,8 @@ model.add_thermostats({ 'heating_setpoint' => 24,
 zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 zone = zones[0]
 
-air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
-supplyOutletNode = air_loop.supplyOutletNode
+air_loop_hvac = OpenStudio::Model::AirLoopHVAC.new(model)
+supplyOutletNode = air_loop_hvac.supplyOutletNode
 
 schedule = model.alwaysOnDiscreteSchedule
 fan = OpenStudio::Model::FanOnOff.new(model, schedule)
@@ -55,7 +55,7 @@ unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAir.new(model, sched
 unitary.addToNode(supplyOutletNode)
 
 terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, schedule)
-air_loop.addBranchForZone(zone, terminal.to_StraightComponent)
+air_loop_hvac.addBranchForZone(zone, terminal.to_StraightComponent)
 unitary.setControllingZone(zone)
 
 # save the OpenStudio model (.osm)
