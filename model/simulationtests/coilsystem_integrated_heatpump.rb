@@ -100,6 +100,17 @@ pump.addToNode(plant.supplyInletNode)
 tank = heat_pump_water_heater.tank
 plant.addSupplyBranchForComponent(tank)
 
+hot_water_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model)
+hot_water_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 55.0)
+hot_water_spm = OpenStudio::Model::SetpointManagerScheduled.new(model, hot_water_temp_sch)
+hot_water_spm.addToNode(plant.supplyOutletNode)
+
+water_connections = OpenStudio::Model::WaterUseConnections.new(model)
+plant.addDemandBranchForComponent(water_connections)
+water_def = OpenStudio::Model::WaterUseEquipmentDefinition.new(model)
+water_equipment = OpenStudio::Model::WaterUseEquipment.new(water_def)
+water_connections.addWaterUseEquipment(water_equipment)
+
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
                             'osm_name' => 'in.osm' })
