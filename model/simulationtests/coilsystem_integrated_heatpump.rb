@@ -43,45 +43,66 @@ schedule = model.alwaysOnDiscreteSchedule
 fan = OpenStudio::Model::FanOnOff.new(model, schedule)
 supp_heating_coil = OpenStudio::Model::CoilHeatingElectric.new(model, schedule)
 
-space_heating_coil = OpenStudio::Model::CoilHeatingDXVariableSpeed.new(model)
-space_heating_coil_speed_1 = OpenStudio::Model::CoilHeatingDXVariableSpeedSpeedData.new(model)
-space_heating_coil.addSpeed(space_heating_coil_speed_1)
-
 space_cooling_coil = OpenStudio::Model::CoilCoolingDXVariableSpeed.new(model)
+space_cooling_coil.setName("Heat Pump ACDXCoil 1")
 space_cooling_coil_speed_1 = OpenStudio::Model::CoilCoolingDXVariableSpeedSpeedData.new(model)
 space_cooling_coil.addSpeed(space_cooling_coil_speed_1)
 
+
+space_heating_coil = OpenStudio::Model::CoilHeatingDXVariableSpeed.new(model)
+space_heating_coil.setName("Heat Pump DX Heating Coil 1")
+space_heating_coil_speed_1 = OpenStudio::Model::CoilHeatingDXVariableSpeedSpeedData.new(model)
+space_heating_coil.addSpeed(space_heating_coil_speed_1)
+
+
 dedicated_water_heating_coil = OpenStudio::Model::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.new(model)
+dedicated_water_heating_coil.setName("HPWHOutdoorDXCoilVS")
 dedicated_water_heating_coil_speed_1 = OpenStudio::Model::CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.new(model)
 dedicated_water_heating_coil.addSpeed(dedicated_water_heating_coil_speed_1)
 
 scwh_coil = OpenStudio::Model::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.new(model)
+scwh_coil.setName("SCWHCoil1")
 scwh_coil_speed_1 = OpenStudio::Model::CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.new(model)
 scwh_coil.addSpeed(scwh_coil_speed_1)
 
 scdwh_cooling_coil = OpenStudio::Model::CoilCoolingDXVariableSpeed.new(model)
+scdwh_cooling_coil.setName("SCDWHCoolCoil1")
 scdwh_cooling_coil_speed_1 = OpenStudio::Model::CoilCoolingDXVariableSpeedSpeedData.new(model)
 scdwh_cooling_coil.addSpeed(scdwh_cooling_coil_speed_1)
 
 scdwh_water_heating_coil = OpenStudio::Model::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.new(model)
+scdwh_water_heating_coil.setName("SCDWHWHCoil1")
 scdwh_water_heating_coil_speed_1 = OpenStudio::Model::CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.new(model)
 scdwh_water_heating_coil.addSpeed(scdwh_water_heating_coil_speed_1)
 
 shdwh_heating_coil = OpenStudio::Model::CoilHeatingDXVariableSpeed.new(model)
+shdwh_heating_coil.setName("SHDWHHeatCoil1")
 shdwh_heating_coil_speed_1 = OpenStudio::Model::CoilHeatingDXVariableSpeedSpeedData.new(model)
 shdwh_heating_coil.addSpeed(shdwh_heating_coil_speed_1)
 
 shdwh_water_heating_coil = OpenStudio::Model::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.new(model)
+shdwh_water_heating_coil.setName("SHDWHWHCoil1")
 shdwh_water_heating_coil_speed_1 = OpenStudio::Model::CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.new(model)
 shdwh_water_heating_coil.addSpeed(shdwh_water_heating_coil_speed_1)
 
-coil_system = OpenStudio::Model::CoilSystemIntegratedHeatPumpAirSource.new(model, space_cooling_coil, space_heating_coil)
-coil_system.setDedicatedWaterHeatingCoil(dedicated_water_heating_coil)
-coil_system.setSCWHCoil(scwh_coil)
-coil_system.setSCDWHCoolingCoil(scdwh_cooling_coil)
-coil_system.setSCDWHWaterHeatingCoil(scdwh_water_heating_coil)
-coil_system.setSHDWHHeatingCoil(shdwh_heating_coil)
-coil_system.setSHDWHWaterHeatingCoil(shdwh_water_heating_coil)
+coil_system = OpenStudio::Model::CoilSystemIntegratedHeatPumpAirSource.new(model,
+    space_cooling_coil, space_heating_coil,
+    dedicated_water_heating_coil, scwh_coil,
+    scdwh_cooling_coil, scdwh_water_heating_coil,
+    shdwh_heating_coil, shdwh_water_heating_coil
+)
+
+coil_system.setIndoorTemperatureLimitForSCWHMode(23.0)
+coil_system.setAmbientTemperatureLimitForSCWHMode(28.0)
+coil_system.setIndoorTemperatureAboveWhichWHHasHigherPriority(20.0)
+coil_system.setAmbientTemperatureAboveWhichWHHasHigherPriority(16.0)
+coil_system.setFlagtoIndicateLoadControlInSCWHMode(0)
+coil_system.setMinimumSpeedLevelForSCWHMode(1)
+coil_system.setMaximumWaterFlowVolumeBeforeSwitchingfromSCDWHtoSCWHMode(3.0)
+coil_system.setMinimumSpeedLevelForSCDWHMode(1)
+coil_system.setMaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode(600.0)
+coil_system.setMinimumSpeedLevelForSHDWHMode(1)
+
 
 unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAir.new(model, schedule, fan, coil_system, coil_system, supp_heating_coil)
 unitary.addToNode(supplyOutletNode)
