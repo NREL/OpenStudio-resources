@@ -475,6 +475,15 @@ class ModelTests < Minitest::Test
     result = sim_test('heatpump_hot_water.osm')
   end
 
+  def test_heatpump_varspeed_rb
+    result = sim_test('heatpump_varspeed.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_heatpump_varspeed_osm
+  # result = sim_test('heatpump_varspeed.osm')
+  # end
+
   def test_hightemprad_rb
     result = sim_test('hightemprad.rb')
   end
