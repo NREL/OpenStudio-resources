@@ -54,8 +54,6 @@ space_heating_coil = OpenStudio::Model::CoilHeatingDXVariableSpeed.new(model)
 space_heating_coil.setName('Heat Pump DX Heating Coil 1')
 space_heating_coil_speed_1 = OpenStudio::Model::CoilHeatingDXVariableSpeedSpeedData.new(model)
 space_heating_coil.addSpeed(space_heating_coil_speed_1)
-space_heating_coil.setRatedHeatingCapacityAtSelectedNominalSpeedLevel(32000)
-space_heating_coil.setRatedAirFlowRateAtSelectedNominalSpeedLevel(1.7)
 
 dedicated_water_heating_coil = OpenStudio::Model::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.new(model)
 dedicated_water_heating_coil.setName('HPWHOutdoorDXCoilVS')
@@ -106,8 +104,6 @@ coil_system.setMinimumSpeedLevelForSHDWHMode(1)
 
 unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAir.new(model, schedule, fan, coil_system, coil_system, supp_heating_coil)
 unitary.addToNode(supplyOutletNode)
-unitary.setSupplyAirFlowRateDuringCoolingOperation(1.7)
-unitary.setSupplyAirFlowRateDuringHeatingOperation(1.7)
 
 terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, schedule)
 air_loop.addBranchForZone(zone, terminal.to_StraightComponent)
