@@ -118,7 +118,7 @@ unitary.setControllingZone(zone)
 heat_pump_water_heater = OpenStudio::Model::WaterHeaterHeatPump.new(model)
 heat_pump_water_heater.setCondenserWaterFlowRate(0.00016)
 heat_pump_water_heater.setEvaporatorAirFlowRate(0.2685)
-heat_pump_water_heater.setFanPlacement("BlowThrough")
+heat_pump_water_heater.setFanPlacement('BlowThrough')
 fan = heat_pump_water_heater.fan.to_FanOnOff.get
 fan.setMaximumFlowRate(0.2685)
 heat_pump_water_heater.setDXCoil(coil_system)
