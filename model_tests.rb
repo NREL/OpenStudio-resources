@@ -466,6 +466,15 @@ class ModelTests < Minitest::Test
     result = sim_test('heatpump_hot_water.osm')
   end
 
+  def test_heatpump_varspeed_rb
+    result = sim_test('heatpump_varspeed.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_heatpump_varspeed_osm
+  # result = sim_test('heatpump_varspeed.osm')
+  # end
+
   def test_hightemprad_rb
     result = sim_test('hightemprad.rb')
   end
@@ -1201,7 +1210,7 @@ class ModelTests < Minitest::Test
     # puts "workflow = #{workflow}"
 
     # assert(/0.2.7/.match(standards))
-    assert(/2.0.1/.match(workflow))
+    assert(/2.2.0/.match(workflow))
   end
 
   def test_model_articulation1_bundle_git_osw
@@ -1209,7 +1218,9 @@ class ModelTests < Minitest::Test
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
     extra_options = { outdir: 'model_articulation1_bundle_git.osw',
-                      bundle: gemfile, bundle_path: bundle_path }
+                      bundle: gemfile, bundle_path: bundle_path,
+                      # TODO: Temp for debug for #134
+                      verbose: true, debug: true }
     result = sim_test('model_articulation1.osw', extra_options)
 
     # check that we got the right version of standards and workflow
@@ -1232,7 +1243,7 @@ class ModelTests < Minitest::Test
     # puts "workflow = #{workflow}"
 
     # assert(/0.2.7/.match(standards))
-    assert(/2.0.1/.match(workflow))
+    assert(/2.2.0/.match(workflow))
   end
 
   # intersection tests

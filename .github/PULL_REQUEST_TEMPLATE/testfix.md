@@ -48,6 +48,8 @@ Please include a link to the specific test you are modifying, and a description 
 
         ```
 
+ - [ ] **If relevant, new fields that can be autosized have been added to `autosize_hvac.rb` to ensure the autosizedXXX values methods do work**
+
 ----------------------------------------------------------------------------------------------------------
 
 ### Review Checklist
@@ -57,6 +59,7 @@ Please include a link to the specific test you are modifying, and a description 
  - [ ] Matching OSM test has been added or `# TODO` added to `model_tests.rb`
  - [ ] Appropriate `out.osw` have been committed
  - [ ] Test is stable
+ - [ ] Object is tested in `autosize_hvac` as appropriate
  - [ ] The appropriate labels have been added to this PR:
    - [ ] One of: `NewTest`, `TestFix`, `NewTestForExisting`, `Other`
    - [ ] If `NewTest`: add `PendingOSM` if needed

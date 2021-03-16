@@ -5,7 +5,7 @@ require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 
-# make a 8 story, 100m X 50m, 40 zone core/perimeter building
+# make a 8 story, 100m X 50m, 40 + 8 zone core/perimeter building
 model.add_geometry({ 'length' => 100,
                      'width' => 50,
                      'num_floors' => 8,
@@ -295,6 +295,10 @@ chiller = OpenStudio::Model::ChillerAbsorption.new(model)
 chw_loop.addSupplyBranchForComponent(chiller)
 cw_loop.addDemandBranchForComponent(chiller)
 swh_loop.addDemandBranchForComponent(chiller) # Heat Recovery
+chiller = OpenStudio::Model::ChillerElectricReformulatedEIR.new(model)
+chw_loop.addSupplyBranchForComponent(chiller)
+cw_loop.addDemandBranchForComponent(chiller)
+swh_loop.addDemandBranchForComponent(chiller) # Heat Recovery
 
 chw_loop.addSupplyBranchForComponent(OpenStudio::Model::DistrictCooling.new(model))
 wwhp = OpenStudio::Model::HeatPumpWaterToWaterEquationFitCooling.new(model)
@@ -523,6 +527,10 @@ unitary.addToNode(unitary_loop.supplyOutletNode)
 unitary.setControllingZoneorThermostatLocation(zones[27])
 # Necessary for autosizedDOASDXCoolingCoilLeavingMinimumAirTemperature
 unitary.setControlType('SingleZoneVAV')
+# E+ 9.5.0-IOFreeze crashes when this is blank. https://github.com/NREL/EnergyPlus/issues/8566
+unitary.setSupplyAirFlowRateMethodDuringCoolingOperation('SupplyAirFlowRate')
+unitary.setSupplyAirFlowRateMethodDuringHeatingOperation('SupplyAirFlowRate')
+unitary.setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired('SupplyAirFlowRate')
 unitary.autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature
 
 term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
@@ -626,6 +634,8 @@ humidistat.setHumidifyingRelativeHumiditySetpointSchedule(dehumidify_sch)
 zones[33].setZoneControlHumidistat(humidistat)
 humidifier = OpenStudio::Model::HumidifierSteamElectric.new(model)
 humidifier.addToNode(unitary_loop.supplyOutletNode)
+humidifier_steam = OpenStudio::Model::HumidifierSteamGas.new(model)
+humidifier_steam.addToNode(unitary_loop.supplyOutletNode)
 spm = OpenStudio::Model::SetpointManagerSingleZoneHumidityMinimum.new(model)
 spm.addToNode(unitary_loop.supplyOutletNode)
 
@@ -918,6 +928,13 @@ zones.each_with_index do |zn, zone_index|
     low_temp_cst_rad = OpenStudio::Model::ZoneHVACLowTempRadiantConstFlow.new(model, s1, testHC, testCC)
     low_temp_cst_rad.setRadiantSurfaceType('Floors')
     low_temp_cst_rad.addToThermalZone(zn)
+
+  when 39
+    zoneHVACCoolingPanelRadiantConvectiveWater = OpenStudio::Model::ZoneHVACCoolingPanelRadiantConvectiveWater.new(model)
+    panel_coil = zoneHVACCoolingPanelRadiantConvectiveWater.coolingCoil.to_CoilCoolingWaterPanelRadiant.get
+
+    chw_loop.addDemandBranchForComponent(panel_coil)
+    zoneHVACCoolingPanelRadiantConvectiveWater.addToThermalZone(zn)
 
   when 26, 27, 28, 29, 30, 31, 32, 33, 38
     # Previously used for the unitary systems, dehum, etc
