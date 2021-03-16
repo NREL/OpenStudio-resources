@@ -38,6 +38,12 @@ zone = zones[0]
 
 air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
 supplyOutletNode = air_loop.supplyOutletNode
+sat_f = 55
+sat_c = OpenStudio.convert(sat_f, 'F', 'C').get
+sat_sch = OpenStudio::Model::ScheduleRuleset.new(model)
+sat_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), sat_c)
+stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model, sat_sch)
+stpt_manager.addToNode(supplyOutletNode)
 
 schedule = model.alwaysOnDiscreteSchedule
 fan = OpenStudio::Model::FanOnOff.new(model, schedule)
@@ -110,25 +116,48 @@ air_loop.addBranchForZone(zone, terminal.to_StraightComponent)
 unitary.setControllingZone(zone)
 
 heat_pump_water_heater = OpenStudio::Model::WaterHeaterHeatPump.new(model)
+heat_pump_water_heater.setCondenserWaterFlowRate(0.00016)
+heat_pump_water_heater.setEvaporatorAirFlowRate(0.2685)
+heat_pump_water_heater.setFanPlacement("BlowThrough")
+fan = heat_pump_water_heater.fan.to_FanOnOff.get
+fan.setMaximumFlowRate(0.2685)
 heat_pump_water_heater.setDXCoil(coil_system)
 heat_pump_water_heater.addToThermalZone(zone)
 
-plant = OpenStudio::Model::PlantLoop.new(model)
-pump = OpenStudio::Model::PumpConstantSpeed.new(model)
-pump.addToNode(plant.supplyInletNode)
-tank = heat_pump_water_heater.tank
-plant.addSupplyBranchForComponent(tank)
+tank = heat_pump_water_heater.tank.to_WaterHeaterMixed.get
+setpoint_temperature_schedule = tank.setpointTemperatureSchedule.get.to_ScheduleRuleset.get
+setpoint_temperature_schedule.defaultDaySchedule.clearValues
+setpoint_temperature_schedule.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 50.0) # tank setpoint must be less than heat pump cut-in
 
-hot_water_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model)
-hot_water_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 55.0)
-hot_water_spm = OpenStudio::Model::SetpointManagerScheduled.new(model, hot_water_temp_sch)
-hot_water_spm.addToNode(plant.supplyOutletNode)
+hw_loop = OpenStudio::Model::PlantLoop.new(model)
+hw_loop.setMinimumLoopTemperature(10)
+hw_temp_f = 140
+hw_delta_t_r = 20 # 20F delta-T
+hw_temp_c = OpenStudio.convert(hw_temp_f, 'F', 'C').get
+hw_delta_t_k = OpenStudio.convert(hw_delta_t_r, 'R', 'K').get
+hw_temp_sch = OpenStudio::Model::ScheduleRuleset.new(model)
+hw_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), hw_temp_c)
+hw_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model, hw_temp_sch)
+hw_stpt_manager.addToNode(hw_loop.supplyOutletNode)
+sizing_plant = hw_loop.sizingPlant
+sizing_plant.setLoopType('Heating')
+sizing_plant.setDesignLoopExitTemperature(hw_temp_c)
+sizing_plant.setLoopDesignTemperatureDifference(hw_delta_t_k)
 
-water_connections = OpenStudio::Model::WaterUseConnections.new(model)
-plant.addDemandBranchForComponent(water_connections)
-water_def = OpenStudio::Model::WaterUseEquipmentDefinition.new(model)
-water_equipment = OpenStudio::Model::WaterUseEquipment.new(water_def)
-water_connections.addWaterUseEquipment(water_equipment)
+hw_pump = OpenStudio::Model::PumpVariableSpeed.new(model)
+hw_pump_head_ft_h2o = 60.0
+hw_pump_head_press_pa = OpenStudio.convert(hw_pump_head_ft_h2o, 'ftH_{2}O', 'Pa').get
+hw_pump.setRatedPumpHead(hw_pump_head_press_pa)
+hw_pump.setPumpControlType('Intermittent')
+hw_pump.addToNode(hw_loop.supplyInletNode)
+
+boiler = OpenStudio::Model::BoilerHotWater.new(model)
+hw_loop.addSupplyBranchForComponent(boiler)
+hw_loop.addSupplyBranchForComponent(tank)
+
+htg_coil = OpenStudio::Model::CoilHeatingWater.new(model)
+htg_coil.addToNode(supplyOutletNode)
+hw_loop.addDemandBranchForComponent(htg_coil)
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
