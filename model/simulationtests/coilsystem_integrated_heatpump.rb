@@ -145,7 +145,7 @@ sizing_plant.setDesignLoopExitTemperature(hw_temp_c)
 sizing_plant.setLoopDesignTemperatureDifference(hw_delta_t_k)
 
 hw_pump = OpenStudio::Model::PumpVariableSpeed.new(model)
-hw_pump_head_ft_h2o = 60.0
+hw_pump_head_ft_h2o = 60
 hw_pump_head_press_pa = OpenStudio.convert(hw_pump_head_ft_h2o, 'ftH_{2}O', 'Pa').get
 hw_pump.setRatedPumpHead(hw_pump_head_press_pa)
 hw_pump.setPumpControlType('Intermittent')
