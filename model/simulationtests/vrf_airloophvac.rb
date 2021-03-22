@@ -45,13 +45,19 @@ controllerOutdoorAir = OpenStudio::Model::ControllerOutdoorAir.new(model)
 outdoorAirSystem = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controllerOutdoorAir)
 outdoorAirSystem.addToNode(airLoop.supplyOutletNode)
 
-
 vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlow.new(model)
 # E+ now throws when the CoolingEIRLowPLR has a curve minimum value of x which
 # is higher than the Minimum Heat Pump Part-Load Ratio.
 # The curve has a min of 0.5 here, so set the MinimumHeatPumpPartLoadRatio to
 # the same value
 vrf.setMinimumHeatPumpPartLoadRatio(0.5)
+
+def name_vrf_terminal(vrf_terminal, name)
+  vrf_terminal.setName(name)
+  vrf_terminal.coolingCoil.get.setName("#{name} CC")
+  vrf_terminal.heatingCoil.get.setName("#{name} HC")
+  vrf_terminal.supplyAirFan.setName("#{name} Fan")
+end
 
 zones.each_with_index do |z, i|
   if i == 0
@@ -60,6 +66,8 @@ zones.each_with_index do |z, i|
     vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model)
     vrf_terminal.addToNode(airLoop.supplyOutletNode)
     vrf_terminal.setControllingZoneorThermostatLocation(z)
+    name_vrf_terminal(vrf_terminal, 'VRF Terminal on Main Branch')
+    vrf_terminal.setSupplyAirFanPlacement('DrawThrough')
     vrf.addTerminal(vrf_terminal)
 
     # And we add an ATU Uncontroller for this zone
@@ -73,6 +81,8 @@ zones.each_with_index do |z, i|
     # And a regular (zonehvac) VRF terminal
     vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model)
     vrf_terminal.addToThermalZone(z)
+    vrf_terminal.setSupplyAirFanPlacement('BlowThrough')
+    name_vrf_terminal(vrf_terminal, 'Regular VRF Terminal')
     vrf.addTerminal(vrf_terminal)
   end
 end
@@ -80,8 +90,9 @@ end
 # Now we also create a VRF Terminal to place onto the OutdoorAirSystem, on the OA branch (for preheat/precool)
 oa_vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model)
 oa_vrf_terminal.addToNode(outdoorAirSystem.outboardOANode.get)
+name_vrf_terminal(oa_vrf_terminal, 'VRF Terminal on OA System')
+oa_vrf_terminal.setSupplyAirFanPlacement('DrawThrough')
 vrf.addTerminal(oa_vrf_terminal)
-
 
 lat_temp_f = 70.0
 lat_temp_c = OpenStudio.convert(lat_temp_f, 'F', 'C').get
@@ -90,8 +101,9 @@ lat_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), lat_
 lat_stpt_manager1 = OpenStudio::Model::SetpointManagerScheduled.new(model, lat_temp_sch)
 lat_stpt_manager1.addToNode(airLoop.supplyOutletNode)
 
-lat_stpt_manager2 = lat_stpt_manager1.clone(model).to_SetpointManagerScheduled.get
-lat_stpt_manager2.addToNode(oa_vrf_terminal.outletNode.get)
+# A default SPM Mixed air will be created by OpenStudio if not explictly set
+# lat_stpt_manager2 = lat_stpt_manager1.clone(model).to_SetpointManagerScheduled.get
+# lat_stpt_manager2.addToNode(oa_vrf_terminal.outletNode.get)
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
