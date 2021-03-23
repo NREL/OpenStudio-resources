@@ -45,6 +45,13 @@ controllerOutdoorAir = OpenStudio::Model::ControllerOutdoorAir.new(model)
 outdoorAirSystem = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controllerOutdoorAir)
 outdoorAirSystem.addToNode(airLoop.supplyOutletNode)
 
+# Create an AirLoopHVAC, with an OutdoorAirSystem, AND a supply fan on main
+# branch
+airLoopWithOwnFan = OpenStudio::Model::AirLoopHVAC.new(model)
+controllerOutdoorAir2 = OpenStudio::Model::ControllerOutdoorAir.new(model)
+outdoorAirSystem2 = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controllerOutdoorAir2)
+outdoorAirSystem2.addToNode(airLoopWithOwnFan.supplyOutletNode)
+
 vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlow.new(model)
 # E+ now throws when the CoolingEIRLowPLR has a curve minimum value of x which
 # is higher than the Minimum Heat Pump Part-Load Ratio.
@@ -73,10 +80,33 @@ zones.each_with_index do |z, i|
     # And we add an ATU Uncontroller for this zone
     atu = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, model.alwaysOnDiscreteSchedule)
     airLoop.addBranchForZone(z, atu)
+  elsif i == 1
+
+    # First zone, we place this VRF Terminal on the main branch of the AirLoopHVAC
+    # The default Ctor has a fan, which we actually don't need here since we
+    # place a fan on the AirLoopHVAC main branch (it won't be FT'ed)
+    vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model)
+    vrf_terminal.addToNode(airLoopWithOwnFan.supplyOutletNode)
+    vrf_terminal.setControllingZoneorThermostatLocation(z)
+    name_vrf_terminal(vrf_terminal, 'VRF Terminal on Main Branch that has a fan')
+    vrf_terminal.setSupplyAirFanPlacement('DrawThrough')
+    vrf.addTerminal(vrf_terminal)
+
+    # And we add an ATU Uncontroller for this zone
+    atu = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, model.alwaysOnDiscreteSchedule)
+    airLoopWithOwnFan.addBranchForZone(z, atu)
+
+    fan = OpenStudio::Model::FanSystemModel.new(model)
+    fan.addToNode(airLoopWithOwnFan.supplyOutletNode)
+
   else
     # We add an ATU, for outside air
     atu = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, model.alwaysOnDiscreteSchedule)
-    airLoop.addBranchForZone(z, atu)
+    if i.even?
+      airLoop.addBranchForZone(z, atu)
+    else
+      airLoopWithOwnFan.addBranchForZone(z, atu)
+    end
 
     # And a regular (zonehvac) VRF terminal
     vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model)
