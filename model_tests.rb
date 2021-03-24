@@ -3,7 +3,7 @@
 require 'openstudio' unless defined?(OpenStudio)
 
 # The config and helpers are inside this file
-require_relative 'test_helpers.rb'
+require_relative 'test_helpers'
 
 # TODO: Include the other ones?
 # require_relative 'highlevel_tests.rb'
@@ -524,6 +524,15 @@ class ModelTests < Minitest::Test
   def test_ideal_plant_osm
     result = sim_test('ideal_plant.osm')
   end
+
+  def test_infiltration_rb
+    result = sim_test('infiltration.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_infiltration_osm
+  #   result = sim_test('infiltration.osm')
+  # end
 
   def test_interior_partitions_rb
     result = sim_test('interior_partitions.rb')
