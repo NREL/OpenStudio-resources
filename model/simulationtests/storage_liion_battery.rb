@@ -52,17 +52,17 @@ generator = OpenStudio::Model::GeneratorPhotovoltaic.simple(model)
 inverter = OpenStudio::Model::ElectricLoadCenterInverterLookUpTable.new(model)
 
 # create the storage
-storage = OpenStudio::Model::ElectricLoadCenterStorageLiIonNMCBattery.new(model)
+nSeries = 139
+nParallel = 25
+mass = 342.0
+surfaceArea = 4.26
+storage = OpenStudio::Model::ElectricLoadCenterStorageLiIonNMCBattery.new(model, nSeries, nParallel, mass, surfaceArea)
 # storage.setAvailabilitySchedule()
 # storage.setThermalZone()
 storage.setRadiativeFraction(0)
 storage.setLifetimeModel('KandlerSmith')
-storage.setNumberofCellsinSeries(139)
-storage.setNumberofStringsinParallel(25)
 storage.setInitialFractionalStateofCharge(0.7)
 storage.setDCtoDCChargingEfficiency(0.95)
-storage.setBatteryMass(342)
-storage.setBatterySurfaceArea(4.26)
 storage.setBatterySpecificHeatCapacity(1500)
 storage.setHeatTransferCoefficientBetweenBatteryandAmbient(7.5)
 storage.setFullyChargedCellVoltage(4.2)
