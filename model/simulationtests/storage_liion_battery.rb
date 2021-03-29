@@ -8,10 +8,10 @@ require 'lib/baseline_model'
 
 model = BaselineModel.new
 
-# make a 1 story, 100m X 50m, 1 zone building
+# make a 2 story, 100m X 50m, 2 zone building
 model.add_geometry({ 'length' => 100,
                      'width' => 50,
-                     'num_floors' => 1,
+                     'num_floors' => 2,
                      'floor_to_floor_height' => 4,
                      'plenum_height' => 0,
                      'perimeter_zone_depth' => 0 })
@@ -39,46 +39,55 @@ model.add_design_days
 # (There's only one here, but just in case this would be copy pasted somewhere
 # else...)
 zones = model.getThermalZones.sort_by { |z| z.name.to_s }
-z = zones[0]
+zones.each_with_index do |zone, i|
 
-# create the distribution system
-elcd = OpenStudio::Model::ElectricLoadCenterDistribution.new(model)
-elcd.setElectricalBussType('DirectCurrentWithInverterDCStorage')
+  # create the distribution system
+  elcd = OpenStudio::Model::ElectricLoadCenterDistribution.new(model)
+  elcd.setElectricalBussType('DirectCurrentWithInverterDCStorage')
 
-# create a generator
-generator = OpenStudio::Model::GeneratorPhotovoltaic.simple(model)
+  # create a generator
+  generator = OpenStudio::Model::GeneratorPhotovoltaic.simple(model)
 
-# create the inverter
-inverter = OpenStudio::Model::ElectricLoadCenterInverterLookUpTable.new(model)
+  # create the inverter
+  inverter = OpenStudio::Model::ElectricLoadCenterInverterLookUpTable.new(model)
 
-# create the storage
-nSeries = 139
-nParallel = 25
-mass = 342.0
-surfaceArea = 4.26
-storage = OpenStudio::Model::ElectricLoadCenterStorageLiIonNMCBattery.new(model, nSeries, nParallel, mass, surfaceArea)
-# storage.setAvailabilitySchedule()
-# storage.setThermalZone()
-storage.setRadiativeFraction(0)
-storage.setLifetimeModel('KandlerSmith')
-storage.setInitialFractionalStateofCharge(0.7)
-storage.setDCtoDCChargingEfficiency(0.95)
-storage.setBatterySpecificHeatCapacity(1500)
-storage.setHeatTransferCoefficientBetweenBatteryandAmbient(7.5)
-storage.setFullyChargedCellVoltage(4.2)
-storage.setCellVoltageatEndofExponentialZone(3.53)
-storage.setCellVoltageatEndofNominalZone(3.342)
-storage.setDefaultNominalCellVoltage(3.342)
-storage.setFullyChargedCellCapacity(3.2)
-storage.setFractionofCellCapacityRemovedattheEndofExponentialZone(0.8075)
-storage.setFractionofCellCapacityRemovedattheEndofNominalZone(0.976875)
-storage.setChargeRateatWhichVoltagevsCapacityCurveWasGenerated(1)
-storage.setBatteryCellInternalElectricalResistance(0.09)
+  nSeries = 139
+  nParallel = 25
+  mass = 342.0
+  surfaceArea = 4.26
+  if i == 0
+    # create the storage using ctor 1
+    storage = OpenStudio::Model::ElectricLoadCenterStorageLiIonNMCBattery.new(model, nSeries, nParallel, mass, surfaceArea)
+  else
+    # create the storage using ctor 2
+    storage = OpenStudio::Model::ElectricLoadCenterStorageLiIonNMCBattery.new(model)
+    storage.setNumberofCellsinSeries(nSeries)
+    storage.setNumberofStringsinParallel(nParallel)
+    storage.setBatteryMass(mass)
+    storage.setBatterySurfaceArea(surfaceArea)
+  end
+  storage.setThermalZone(zone)
+  storage.setRadiativeFraction(0)
+  storage.setLifetimeModel('KandlerSmith')
+  storage.setInitialFractionalStateofCharge(0.7)
+  storage.setDCtoDCChargingEfficiency(0.95)
+  storage.setBatterySpecificHeatCapacity(1500)
+  storage.setHeatTransferCoefficientBetweenBatteryandAmbient(7.5)
+  storage.setFullyChargedCellVoltage(4.2)
+  storage.setCellVoltageatEndofExponentialZone(3.53)
+  storage.setCellVoltageatEndofNominalZone(3.342)
+  storage.setDefaultNominalCellVoltage(3.342)
+  storage.setFullyChargedCellCapacity(3.2)
+  storage.setFractionofCellCapacityRemovedattheEndofExponentialZone(0.8075)
+  storage.setFractionofCellCapacityRemovedattheEndofNominalZone(0.976875)
+  storage.setChargeRateatWhichVoltagevsCapacityCurveWasGenerated(1)
+  storage.setBatteryCellInternalElectricalResistance(0.09)
 
-# Add them to the ELCD
-elcd.addGenerator(generator)
-elcd.setInverter(inverter)
-elcd.setElectricalStorage(storage)
+  # Add them to the ELCD
+  elcd.addGenerator(generator)
+  elcd.setInverter(inverter)
+  elcd.setElectricalStorage(storage)
+end
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
