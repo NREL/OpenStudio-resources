@@ -40,7 +40,6 @@ model.add_design_days
 # else...)
 zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 zones.each_with_index do |zone, i|
-
   # create the distribution system
   elcd = OpenStudio::Model::ElectricLoadCenterDistribution.new(model)
   elcd.setElectricalBussType('DirectCurrentWithInverterDCStorage')
