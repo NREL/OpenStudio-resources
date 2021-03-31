@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# This test aims to test the new 'Adiabatic Surface Construction Name' field
-# added in the OS:DefaultConstructionSet
-
 require 'openstudio'
 require 'lib/baseline_model'
 
@@ -36,8 +33,6 @@ model.add_design_days
 
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
-# (There's only one here, but just in case this would be copy pasted somewhere
-# else...)
 zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 zones.each_with_index do |zone, i|
   # create the distribution system
