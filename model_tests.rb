@@ -715,6 +715,15 @@ class ModelTests < Minitest::Test
     result = sim_test('photovoltaics.osm')
   end
 
+  def test_photovoltaics_sandia_rb
+    result = sim_test('photovoltaics_sandia.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_photovoltaics_sandia_osm
+  #   result = sim_test('photovoltaics_sandia.osm')
+  # end
+
   def test_plant_op_schemes_rb
     result = sim_test('plant_op_schemes.rb')
   end
