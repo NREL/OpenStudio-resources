@@ -368,7 +368,7 @@ sat_sch = OpenStudio::Model::ScheduleRuleset.new(model)
 sat_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), sat_c)
 sat_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model, sat_sch)
 sat_stpt_manager.addToNode(out_1)
-fan = OpenStudio::Model::FanVariableVolume.new(model)
+fan = OpenStudio::Model::FanComponentModel.new(model)
 fan.addToNode(in_1)
 oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
 oa_controller.autosizeMinimumOutdoorAirFlowRate # OS has a bad default of zero, which disables autosizing
