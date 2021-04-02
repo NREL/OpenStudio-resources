@@ -3,7 +3,7 @@
 require 'openstudio' unless defined?(OpenStudio)
 
 # The config and helpers are inside this file
-require_relative 'test_helpers.rb'
+require_relative 'test_helpers'
 
 # TODO: Include the other ones?
 # require_relative 'highlevel_tests.rb'
@@ -289,6 +289,15 @@ class ModelTests < Minitest::Test
     result = sim_test('coilsystem_dxhx.osm')
   end
 
+  def test_coilsystem_integrated_heatpump_rb
+    result = sim_test('coilsystem_integrated_heatpump.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_coilsystem_integrated_heatpump_osm
+  # result = sim_test('coilsystem_integrated_heatpump.osm')
+  # end
+
   def test_coolingtowers_osm
     result = sim_test('coolingtowers.osm')
   end
@@ -327,6 +336,15 @@ class ModelTests < Minitest::Test
 
   def test_dist_ht_cl_rb
     result = sim_test('dist_ht_cl.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_doas_osm
+  #   result = sim_test('doas.osm')
+  # end
+
+  def test_doas_rb
+    result = sim_test('doas.rb')
   end
 
   def test_dsn_oa_w_ideal_loads_osm
@@ -430,6 +448,15 @@ class ModelTests < Minitest::Test
     result = sim_test('fan_systemmodel.rb')
   end
 
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_fan_componentmodel_osm
+  #   result = sim_test('fan_componentmodel.osm')
+  # end
+
+  def test_fan_componentmodel_rb
+    result = sim_test('fan_componentmodel.rb')
+  end
+
   def test_fluid_coolers_rb
     result = sim_test('fluid_coolers.rb')
   end
@@ -511,6 +538,15 @@ class ModelTests < Minitest::Test
     result = sim_test('heatpump_hot_water.osm')
   end
 
+  def test_heatpump_varspeed_rb
+    result = sim_test('heatpump_varspeed.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_heatpump_varspeed_osm
+  # result = sim_test('heatpump_varspeed.osm')
+  # end
+
   def test_hightemprad_rb
     result = sim_test('hightemprad.rb')
   end
@@ -551,6 +587,15 @@ class ModelTests < Minitest::Test
   def test_ideal_plant_osm
     result = sim_test('ideal_plant.osm')
   end
+
+  def test_infiltration_rb
+    result = sim_test('infiltration.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_infiltration_osm
+  #   result = sim_test('infiltration.osm')
+  # end
 
   def test_interior_partitions_rb
     result = sim_test('interior_partitions.rb')
@@ -723,6 +768,15 @@ class ModelTests < Minitest::Test
   def test_photovoltaics_osm
     result = sim_test('photovoltaics.osm')
   end
+
+  def test_photovoltaics_sandia_rb
+    result = sim_test('photovoltaics_sandia.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_photovoltaics_sandia_osm
+  #   result = sim_test('photovoltaics_sandia.osm')
+  # end
 
   def test_plant_op_schemes_rb
     result = sim_test('plant_op_schemes.rb')
@@ -936,6 +990,15 @@ class ModelTests < Minitest::Test
   def test_space_load_instances_osm
     result = sim_test('space_load_instances.osm')
   end
+
+  def test_storage_liion_battery_rb
+    result = sim_test('storage_liion_battery.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_storage_liion_battery_osm
+  #   result = sim_test('storage_liion_battery.osm')
+  # end
 
   def test_surfacecontrol_moveableinsulation_rb
     result = sim_test('surfacecontrol_moveableinsulation.rb')
@@ -1237,7 +1300,7 @@ class ModelTests < Minitest::Test
     # puts "workflow = #{workflow}"
 
     # assert(/0.2.7/.match(standards))
-    assert(/2.0.1/.match(workflow))
+    assert(/2.2.0/.match(workflow))
   end
 
   def test_model_articulation1_bundle_git_osw
@@ -1245,7 +1308,9 @@ class ModelTests < Minitest::Test
     gemfile = File.join(gemfile_dir, 'Gemfile')
     bundle_path = File.join(gemfile_dir, 'gems')
     extra_options = { outdir: 'model_articulation1_bundle_git.osw',
-                      bundle: gemfile, bundle_path: bundle_path }
+                      bundle: gemfile, bundle_path: bundle_path,
+                      # TODO: Temp for debug for #134
+                      verbose: true, debug: true }
     result = sim_test('model_articulation1.osw', extra_options)
 
     # check that we got the right version of standards and workflow
@@ -1268,7 +1333,7 @@ class ModelTests < Minitest::Test
     # puts "workflow = #{workflow}"
 
     # assert(/0.2.7/.match(standards))
-    assert(/2.0.1/.match(workflow))
+    assert(/2.2.0/.match(workflow))
   end
 
   # intersection tests

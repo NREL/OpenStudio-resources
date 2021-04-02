@@ -81,6 +81,8 @@ The following has been checked to ensure compliance with the guidelines:
 
         ```
 
+ - [ ] **Object has been added to `autosize_hvac.rb` to ensure the autosizedXXX values methods do work**
+
 ----------------------------------------------------------------------------------------------------------
 
 ### Case 2: Fix for an existing test
@@ -116,6 +118,9 @@ Please include a link to the specific test you are modifying, and a description 
         python process_results.py heatmap --tagged
 
         ```
+
+ - [ ] **If relevant, new fields that can be autosized have been added to `autosize_hvac.rb` to ensure the autosizedXXX values methods do work**
+
 
 ----------------------------------------------------------------------------------------------------------
 
@@ -154,6 +159,8 @@ The following has been checked to ensure compliance with the guidelines:
 
         ```
 
+ - [ ] **Object has been added to `autosize_hvac.rb` to ensure the autosizedXXX values methods do work**
+
 ----------------------------------------------------------------------------------------------------------
 
 ### Case 4: Other
@@ -170,6 +177,7 @@ Please be as explicit as possible about the changes you have made, and why they 
  - [ ] Matching OSM test has been added or `# TODO` added to `model_tests.rb`
  - [ ] Appropriate `out.osw` have been committed
  - [ ] Test is stable
+ - [ ] Object is tested in `autosize_hvac` as appropriate
  - [ ] The appropriate labels have been added to this PR:
    - [ ] One of: `NewTest`, `TestFix`, `NewTestForExisting`, `Other`
    - [ ] If `NewTest`: add `PendingOSM` or `AddedOSM`

@@ -676,8 +676,10 @@ def sim_test(filename, options = {})
 
   # command to run the in_osw
   command = "\"#{$OpenstudioCli}\" #{extra_options} run #{extra_run_options} -w \"#{in_osw}\""
-  # puts "COMMAND:"
-  # puts command
+  if options[:debug]
+    puts 'COMMAND:'
+    puts command
+  end
 
   run_command(command, dir, 3600)
 
@@ -887,6 +889,9 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     'OS:ThermalStorage:ChilledWater:Stratified' => [
       'autosizedUseSideInletHeight',
       'autosizedSourceSideOutletHeight'
+    ],
+    'OS:Fan:ComponentModel' => [
+      'autosizedMinimumFlowRate' # Not in E+ SQL
     ]
 
   }
