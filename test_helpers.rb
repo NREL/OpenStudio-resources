@@ -378,6 +378,26 @@ def parse_total_site_energy(out_osw_path)
     result_osw = JSON.parse(f.read, symbolize_names: true)
   end
 
+  if result_osw[:completed_status] == 'Fail'
+    puts "#{out_osw_path} is a failed workflow"
+    return nil
+  end
+
+  if !result_osw.has_key?(:steps)
+    puts "#{out_osw_path} doesn't have :steps"
+    return nil
+  end
+
+  if !result_osw[:steps].empty?
+    puts "#{out_osw_path} has empty :steps"
+    return nil
+  end
+
+  if !result_osw[:steps][0].has_key?(:result)
+    puts "#{out_osw_path} has steps without :result"
+    return nil
+  end
+
   if out_osw_path.include?('2.0.4')
     os_results = result_osw[:steps].select { |s| s[:measure_dir_name] == 'openstudio_results' }
   else
@@ -489,6 +509,8 @@ def postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui = true)
           end
         end
       end
+    else
+      raise "postprocess_out_osw_and_copy: there should always be one measure only!"
     end
 
     # The fuel cell tests produce out.osw files that are about 800 MB
