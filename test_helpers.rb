@@ -379,22 +379,22 @@ def parse_total_site_energy(out_osw_path)
   end
 
   if result_osw[:completed_status] == 'Fail'
-    puts "#{out_osw_path} is a failed workflow"
+    # puts "#{out_osw_path} is a failed workflow"
     return nil
   end
 
   if !result_osw.has_key?(:steps)
-    puts "#{out_osw_path} doesn't have :steps"
+    # puts "#{out_osw_path} doesn't have :steps"
     return nil
   end
 
   if !result_osw[:steps].empty?
-    puts "#{out_osw_path} has empty :steps"
+    # puts "#{out_osw_path} has empty :steps"
     return nil
   end
 
   if !result_osw[:steps][0].has_key?(:result)
-    puts "#{out_osw_path} has steps without :result"
+    # puts "#{out_osw_path} has steps without :result"
     return nil
   end
 
