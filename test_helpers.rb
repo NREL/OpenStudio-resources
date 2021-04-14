@@ -388,7 +388,7 @@ def parse_total_site_energy(out_osw_path)
     return nil
   end
 
-  if !result_osw[:steps].empty?
+  if result_osw[:steps].empty?
     # puts "#{out_osw_path} has empty :steps"
     return nil
   end
