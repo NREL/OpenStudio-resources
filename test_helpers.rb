@@ -383,7 +383,7 @@ def parse_total_site_energy(out_osw_path)
     return nil
   end
 
-  if !result_osw.has_key?(:steps)
+  if !result_osw.key?(:steps)
     # puts "#{out_osw_path} doesn't have :steps"
     return nil
   end
@@ -393,7 +393,7 @@ def parse_total_site_energy(out_osw_path)
     return nil
   end
 
-  if !result_osw[:steps][0].has_key?(:result)
+  if !result_osw[:steps][0].key?(:result)
     # puts "#{out_osw_path} has steps without :result"
     return nil
   end
@@ -510,7 +510,7 @@ def postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui = true)
         end
       end
     else
-      raise "postprocess_out_osw_and_copy: there should always be one measure only!"
+      raise 'postprocess_out_osw_and_copy: there should always be one measure only!'
     end
 
     # The fuel cell tests produce out.osw files that are about 800 MB

@@ -34,7 +34,6 @@ model.set_space_type
 # add design days to the model (Chicago)
 model.add_design_days
 
-
 # OutputEnvironmentalImpactFactors is the one object that will trigger the
 # ForwardTranslation of EnvironmentalImpactFactors and FuelFactors
 # If you do, then you **must** supply FuelFactors for **each** fuel you do use
@@ -43,7 +42,7 @@ model.add_design_days
 # for the lights, etc).
 
 output_env_factors = OpenStudio::Model::OutputEnvironmentalImpactFactors.new(model)
-output_env_factors.setReportingFrequency("Monthly")
+output_env_factors.setReportingFrequency('Monthly')
 
 # This one is a UniqueModelObject
 env_factors = model.getEnvironmentalImpactFactors
@@ -59,7 +58,7 @@ fuelFactors = OpenStudio::Model::FuelFactors.new(model)
 # From ElectricityUSAEnvironmentalImpactFactors.idf,
 # United States 1999 national average electricity emissions factors based on eGRID, 1605, AirData
 alwaysOn = model.alwaysOnContinuousSchedule
-fuelFactors.setExistingFuelResourceName("Electricity")
+fuelFactors.setExistingFuelResourceName('Electricity')
 fuelFactors.setSourceEnergyFactor(2.253)
 
 fuelFactors.setCO2EmissionFactor(168.33317)
