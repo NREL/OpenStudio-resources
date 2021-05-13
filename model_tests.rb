@@ -367,6 +367,15 @@ class ModelTests < Minitest::Test
     result = sim_test('ems.rb')
   end
 
+  def test_environmental_factors_rb
+    result = sim_test('environmental_factors.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.2.0
+  # def test_environmental_factors_osm
+  #   result = sim_test('environmental_factors.osm')
+  # end
+
   def test_evaporative_cooling_osm
     result = sim_test('evaporative_cooling.osm')
   end
