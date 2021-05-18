@@ -940,10 +940,9 @@ class ModelTests < Minitest::Test
     result = sim_test('storage_liion_battery.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.1.0
-  # def test_storage_liion_battery_osm
-  #   result = sim_test('storage_liion_battery.osm')
-  # end
+  def test_storage_liion_battery_osm
+    result = sim_test('storage_liion_battery.osm')
+  end
 
   def test_surfacecontrol_moveableinsulation_rb
     result = sim_test('surfacecontrol_moveableinsulation.rb')
