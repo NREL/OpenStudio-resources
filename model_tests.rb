@@ -1148,10 +1148,9 @@ class ModelTests < Minitest::Test
     result = sim_test('zone_hvac_cooling_panel.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.1.0
-  # def test_zone_hvac_cooling_panel_osm
-  #   result = sim_test('zone_hvac_cooling_panel.osm')
-  # end
+  def test_zone_hvac_cooling_panel_osm
+    result = sim_test('zone_hvac_cooling_panel.osm')
+  end
 
   def test_zone_hvac_equipment_list_rb
     result = sim_test('zone_hvac_equipment_list.rb')
