@@ -37,9 +37,9 @@ model.add_design_days
 # OutputEnvironmentalImpactFactors is the one object that will trigger the
 # ForwardTranslation of EnvironmentalImpactFactors and FuelFactors
 # If you do, then you **must** supply FuelFactors for **each** fuel you do use
-# in your model. At least one FuelFactors is required for the
-# ForwardTranslation (you always have at least one fuel... Electricity probably
-# for the lights, etc).
+# in your model. 
+# At least one FuelFactors is required for the ForwardTranslation
+# (you always have at least one fuel... Electricity probably for the lights, etc).
 
 output_env_factors = OpenStudio::Model::OutputEnvironmentalImpactFactors.new(model)
 output_env_factors.setReportingFrequency('Monthly')
