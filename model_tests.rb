@@ -804,10 +804,9 @@ class ModelTests < Minitest::Test
     result = sim_test('refrigeration_system_2.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.1.0
-  # def test_refrigeration_system__2osm
-  #   result = sim_test('refrigeration_system_2.osm')
-  # end
+  def test_refrigeration_system__2_osm
+    result = sim_test('refrigeration_system_2.osm')
+  end
 
   def test_roof_vegetation_rb
     result = sim_test('roof_vegetation.rb')
