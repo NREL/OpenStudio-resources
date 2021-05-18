@@ -537,10 +537,9 @@ class ModelTests < Minitest::Test
     result = sim_test('infiltration.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.1.0
-  # def test_infiltration_osm
-  #   result = sim_test('infiltration.osm')
-  # end
+  def test_infiltration_osm
+    result = sim_test('infiltration.osm')
+  end
 
   def test_interior_partitions_rb
     result = sim_test('interior_partitions.rb')
