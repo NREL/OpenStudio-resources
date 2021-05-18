@@ -77,7 +77,8 @@ ref_sys1 = nil
 cascade_condenser = nil
 
 zones.each do |z|
-  if i == 0
+  case i
+  when 0
     therm_zone = z
     ref_sys1 = OpenStudio::Model::RefrigerationSystem.new(model)
     ref_sys1.addCase(add_case(model, z, defrost_sch))
@@ -95,7 +96,7 @@ zones.each do |z|
     desuperheater.addToNode(node)
     node = desuperheater.outletModelObject.get.to_Node.get
     setpointMMA1.addToNode(node)
-  elsif i == 1
+  when 1
     ref_sys2 = OpenStudio::Model::RefrigerationSystem.new(model)
     ref_sys2.addCase(add_case(model, z, defrost_sch))
     ref_case_2 = add_case(model, z, defrost_sch)
@@ -146,7 +147,7 @@ zones.each do |z|
     mech_subcooler.setCapacityProvidingSystem(ref_sys1)
     ref_sys2.setMechanicalSubcooler(mech_subcooler)
     ref_sys2.setLiquidSuctionHeatExchangerSubcooler(OpenStudio::Model::RefrigerationSubcoolerLiquidSuction.new(model))
-  elsif i == 2
+  when 2
     ref_sys3 = OpenStudio::Model::RefrigerationSystem.new(model)
     ref_sys3.addCase(add_case(model, z, defrost_sch))
     ref_sys3.addCase(add_case(model, z, defrost_sch))
@@ -175,7 +176,7 @@ zones.each do |z|
     water_tank.setSetpointTemperatureSchedule(setpointTemperatureSchedule)
     desuperheater.addToHeatRejectionTarget(water_tank)
     desuperheater.setHeatingSource(water_cooled_condenser)
-  elsif i == 3
+  when 3
     ref_sys4 = OpenStudio::Model::RefrigerationSystem.new(model)
     ref_sys4.addCase(add_case(model, z, defrost_sch))
     ref_sys4.addWalkin(add_walkin(model, z, defrost_sch))
@@ -201,7 +202,7 @@ zones.each do |z|
     ref_sys5.addSecondarySystemLoad(secondary_sys)
     ref_sys5.setRefrigerationCondenser(OpenStudio::Model::RefrigerationCondenserAirCooled.new(model))
     ref_sys5.setSuctionPipingZone(z)
-  elsif i == 4
+  when 4
     ref_sys6 = OpenStudio::Model::RefrigerationTranscriticalSystem.new(model)
     ref_sys6.addMediumTemperatureCase(add_case(model, z, defrost_sch))
     ref_sys6.addMediumTemperatureCase(add_case(model, z, defrost_sch))

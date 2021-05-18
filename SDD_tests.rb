@@ -5,7 +5,7 @@ require 'openstudio' unless defined?(OpenStudio)
 # require 'equivalent-xml'
 
 # The config and helpers are inside this file
-require_relative 'test_helpers.rb'
+require_relative 'test_helpers'
 
 ###############################################################################
 #                     For comparison, pass ENV variables                      #

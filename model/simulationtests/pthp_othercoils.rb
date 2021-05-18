@@ -41,7 +41,8 @@ zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 alwaysOn = model.alwaysOnDiscreteSchedule
 
 [zones[0], zones[1], zones[2]].each_with_index do |zone, i|
-  if i == 0
+  case i
+  when 0
     # CoilHeatingDXSingleSpeed
     # CoilCoolingDXSingleSpeed
     htg_coil = OpenStudio::Model::CoilHeatingDXSingleSpeed.new(model)
@@ -50,7 +51,7 @@ alwaysOn = model.alwaysOnDiscreteSchedule
     fan = OpenStudio::Model::FanOnOff.new(model, alwaysOn)
     pthp = OpenStudio::Model::ZoneHVACPackagedTerminalHeatPump.new(model, alwaysOn, fan, htg_coil, clg_coil, supp_htg_coil)
     pthp.addToThermalZone(zone)
-  elsif i == 1
+  when 1
     # CoilHeatingDXVariableSpeed
     # CoilCoolingDXVariableSpeed
     htg_coil = OpenStudio::Model::CoilHeatingDXVariableSpeed.new(model)
@@ -63,7 +64,7 @@ alwaysOn = model.alwaysOnDiscreteSchedule
     fan = OpenStudio::Model::FanOnOff.new(model, alwaysOn)
     pthp = OpenStudio::Model::ZoneHVACPackagedTerminalHeatPump.new(model, alwaysOn, fan, htg_coil, clg_coil, supp_htg_coil)
     pthp.addToThermalZone(zone)
-  elsif i == 2
+  when 2
     # CoilHeatingDXSingleSpeed
     # CoilSystemCoolingDXHeatExchangerAssisted
     htg_coil = OpenStudio::Model::CoilHeatingDXSingleSpeed.new(model)

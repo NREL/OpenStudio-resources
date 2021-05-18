@@ -131,7 +131,8 @@ cooling_loop = chillers.first.plantLoop.get
 heating_loop = boilers.first.plantLoop.get
 
 zones.each_with_index do |z, i|
-  if i == 0
+  case i
+  when 0
     schedule = model.alwaysOnDiscreteSchedule
     fan = OpenStudio::Model::FanOnOff.new(model, schedule)
     heating_coil = OpenStudio::Model::CoilHeatingWater.new(model, schedule)
@@ -140,7 +141,7 @@ zones.each_with_index do |z, i|
     four_pipe_fan_coil.addToThermalZone(z)
     heating_loop.addDemandBranchForComponent(heating_coil)
     cooling_loop.addDemandBranchForComponent(cooling_coil)
-  elsif i == 1
+  when 1
     schedule = model.alwaysOnDiscreteSchedule
     fan = OpenStudio::Model::FanOnOff.new(model, schedule)
     heating_coil = OpenStudio::Model::CoilHeatingWaterToAirHeatPumpEquationFit.new(model)
@@ -150,7 +151,7 @@ zones.each_with_index do |z, i|
     water_to_air_heat_pump.addToThermalZone(z)
     heating_loop.addDemandBranchForComponent(heating_coil)
     cooling_loop.addDemandBranchForComponent(cooling_coil)
-  elsif i == 2
+  when 2
     thermal_zone_vector = OpenStudio::Model::ThermalZoneVector.new
     thermal_zone_vector << z
     hvac = OpenStudio::Model.addSystemType1(model, thermal_zone_vector)
@@ -160,7 +161,7 @@ zones.each_with_index do |z, i|
     fan_cv = ptacs[0].supplyAirFan
     ptacs[0].setSupplyAirFan(fan)
     fan_cv.remove
-  elsif i == 3
+  when 3
     thermal_zone_vector = OpenStudio::Model::ThermalZoneVector.new
     thermal_zone_vector << z
     hvac = OpenStudio::Model.addSystemType2(model, thermal_zone_vector)
@@ -170,7 +171,7 @@ zones.each_with_index do |z, i|
     fan_cv = pthps[0].supplyAirFan
     pthps[0].setSupplyAirFan(fan)
     fan_cv.remove
-  elsif i == 4
+  when 4
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
 

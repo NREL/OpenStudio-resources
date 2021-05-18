@@ -106,11 +106,11 @@ not_in_area_flag = false
 not_in_area_spaces = []
 in_area_spaces = [] # may want this to feed into HVAC script vs. entire model
 spaces.each do |space|
-  if !space.partofTotalFloorArea # Brent said this isnt' very relyable on typical IDF models. Will want to map just like any other space type)
+  if space.partofTotalFloorArea # Brent said this isnt' very relyable on typical IDF models. Will want to map just like any other space type)
+    in_area_spaces << space
+  else
     not_in_area_flag = true
     not_in_area_spaces << space
-  else
-    in_area_spaces << space
   end
 end
 

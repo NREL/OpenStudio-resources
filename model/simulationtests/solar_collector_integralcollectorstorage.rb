@@ -175,7 +175,7 @@ storage_water_loop.addSupplyBranchForComponent(collector)
 collector.setSurface(shade)
 
 collector.setMaximumFlowRate(0.001)
-# Note: there is no setter for bottomSurfaceBoundaryConditionsType
+# NOTE: there is no setter for bottomSurfaceBoundaryConditionsType
 # (nor Boundary Condition Model)
 
 # Modify the Performance object

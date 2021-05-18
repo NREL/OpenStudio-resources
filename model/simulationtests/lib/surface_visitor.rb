@@ -19,23 +19,24 @@ class SurfaceVisitor
     for surf in allsurfs do
       if !@surfs.include?(surf)
         other = surf.adjacentSurface
-        if !other.empty?
+        if other.empty?
+          @surfs << surf
+          exteriorSurface(model, surf)
+        else
+          # This is an exterior surface of some kind
           if !@surfs.include?(other.get)
             # This is an interior surface
             stype = surf.surfaceType
             @surfs << surf
-            if stype == 'Floor'
+            case stype
+            when 'Floor'
               interiorFloor(model, surf, other.get)
-            elsif stype == 'RoofCeiling'
+            when 'RoofCeiling'
               interiorRoofCeiling(model, surf, other.get)
             else # Wall
               interiorWall(model, surf, other.get)
             end
           end
-        else
-          # This is an exterior surface of some kind
-          @surfs << surf
-          exteriorSurface(model, surf)
         end
       end
     end
@@ -50,6 +51,6 @@ class SurfaceVisitor
   def exteriorSurface(model, surface); end
 
   def shutdown(model)
-    @summary = 'Visited ' + @surfs.size.to_s + ' surfaces'
+    @summary = "Visited #{@surfs.size} surfaces"
   end
 end
