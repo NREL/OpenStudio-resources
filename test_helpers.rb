@@ -493,28 +493,31 @@ def postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui = true)
     result_osw.delete(:started_at)
     result_osw.delete(:updated_at)
 
-    # Should always be true
-    if (result_osw[:steps].size == 1) && (result_osw[:steps].select { |s| s[:measure_dir_name] == 'openstudio_results' }.size == 1)
+    # steps.size == 1 Should always be true,
+    # unless this is one of the model_articulation ones...
+    if (result_osw[:steps].size >= 1) && (result_osw[:steps].select { |s| s[:measure_dir_name] == 'openstudio_results' }.size == 1)
       # If something went wrong, there wouldn't be results
-      if result_osw[:steps][0].keys.include?(:result)
-        result_osw[:steps][0][:result].delete(:completed_at)
-        result_osw[:steps][0][:result].delete(:started_at)
-        result_osw[:steps][0][:result].delete(:step_files)
+      result_osw[:steps].each_with_index do |hs, is|
+        if result_osw[:steps][is].keys.include?(:result)
+          result_osw[:steps][is][:result].delete(:completed_at)
+          result_osw[:steps][is][:result].delete(:started_at)
+          result_osw[:steps][is][:result].delete(:step_files)
 
-        # Round all numbers to 2 digits to avoid excessive diffs
-        # result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
-        result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
-          if h[:value].is_a? Float
-            result_osw[:steps][0][:result][:step_values][i][:value] = h[:value].round(2)
+          # Round all numbers to 2 digits to avoid excessive diffs
+          # result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
+          result_osw[:steps][is][:result][:step_values].each_with_index do |h, i|
+            if h[:value].is_a? Float
+              result_osw[:steps][is][:result][:step_values][i][:value] = h[:value].round(2)
+            end
           end
         end
       end
     else
-      raise "postprocess_out_osw_and_copy: there should always be one measure only!"
+      raise "postprocess_out_osw_and_copy: there should always be one openstudio_results measure!"
     end
 
-    # The fuel cell tests produce out.osw files that are about 800 MB
-    # because E+ throws a warning in the Regula Falsi routine (an E+ bug)
+    # The fuel cell tests produce out.osw files that are about 800 MB in old
+    # versions of E+, because E+ throws a warning in the Regula Falsi routine (an E+ bug)
     # which results in about 7.5 Million times the same warning
     # So if the file size is bigger than 100 KiB, we throw out the eplusout_err
     if File.size(out_osw) > 100000
