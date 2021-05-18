@@ -1083,6 +1083,15 @@ class ModelTests < Minitest::Test
     result = sim_test('vrf_watercooled.rb')
   end
 
+  # TODO: To be added in the next official release after: 3.1.0
+  # def test_vrf_airloophvac_osm
+  #   result = sim_test('vrf_airloophvac.osm')
+  # end
+
+  def test_vrf_airloophvac_rb
+    result = sim_test('vrf_airloophvac.rb')
+  end
+
   def test_water_economizer_osm
     result = sim_test('water_economizer.osm')
   end
