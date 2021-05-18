@@ -450,10 +450,9 @@ class ModelTests < Minitest::Test
     result = sim_test('generator_windturbine.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.1.0
-  # def test_generator_windturbine_osm
-  # result = sim_test('generator_windturbine.osm')
-  # end
+  def test_generator_windturbine_osm
+    result = sim_test('generator_windturbine.osm')
+  end
 
   def test_coil_waterheating_desuperheater_osm
     result = sim_test('coil_waterheating_desuperheater.osm')
