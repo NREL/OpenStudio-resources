@@ -9,8 +9,6 @@ require 'erb'
 require 'timeout'
 require 'open3'
 
-require 'etc'
-
 require 'minitest/autorun'
 begin
   require 'minitest/reporters'

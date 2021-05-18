@@ -432,7 +432,7 @@ if attic_flag == true
       attic_roof_const = template_construction.clone(model).to_Construction.get
       found_roof_flag = true
     end
-    if (found_roof_flag == true) && (found_roof_flag == true)
+    if (found_roof_flag == true) && (found_floor_flag == true)
       break
     end
   end

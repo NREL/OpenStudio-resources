@@ -9,8 +9,6 @@ require 'erb'
 require 'timeout'
 require 'open3'
 
-require 'etc'
-
 # ENV['N'] has to be before require 'minitest/autorun' as it will read it
 # Nowadays MT_CPU should be preferred instead of N, but old minitest versions
 # (like 5.4.3 bundled with OpenStudio 2.9.1)
