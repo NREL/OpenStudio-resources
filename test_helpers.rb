@@ -511,7 +511,7 @@ def postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui = true)
         end
       end
     else
-      raise 'postprocess_out_osw_and_copy: there should always be one openstudio_results measure!'
+      raise 'postprocess_out_osw_and_copy: there should always be one measure only!'
     end
 
     # The fuel cell tests produce out.osw files that are about 800 MB in old
