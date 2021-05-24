@@ -3,7 +3,7 @@
 require 'openstudio' unless defined?(OpenStudio)
 
 # The config and helpers are inside this file
-require_relative 'test_helpers.rb'
+require_relative 'test_helpers'
 
 # Some High level tests, that should help us in maintaining the repo/test suite
 # in an orderly fashion. These tests should ALWAYS pass, and other tests should
@@ -66,7 +66,7 @@ class HighLevelTests < MiniTest::Test
                           'afn_single_zone_ac.rb']
 
     content = File.read('model_tests.rb')
-    sim_test_commented_out_re = /TODO[ :\w ]+(\d\.\d\.\d).*?#\s*result = sim_test\('([\w\.]+)'\)/m
+    sim_test_commented_out_re = /TODO[ :\w]+(\d\.\d\.\d).*?#\s*result = sim_test\('([\w.]+)'\)/m
     # eg: [["3.1.0", "coil_cooling_dx.osm"], ["3.1.0", "swimmingpool_indoor.osm"]]
     matches = content.scan(sim_test_commented_out_re)
     files_with_todo = matches.map { |m| m[1] }
@@ -124,7 +124,7 @@ class HighLevelTests < MiniTest::Test
     end
 
     content = File.read('model_tests.rb')
-    sim_test_commented_out_re = /TODO[ :\w ]+(\d\.\d\.\d).*?#\s*result = sim_test\('([\w\.]+)'\)/m
+    sim_test_commented_out_re = /TODO[ :\w]+(\d\.\d\.\d).*?#\s*result = sim_test\('([\w.]+)'\)/m
     # eg: [["3.1.0", "coil_cooling_dx.osm"], ["3.1.0", "swimmingpool_indoor.osm"]]
     matches = content.scan(sim_test_commented_out_re)
     matches.each do |v, t|

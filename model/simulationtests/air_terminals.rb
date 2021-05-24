@@ -34,7 +34,8 @@ cooling_loop = chillers.first.plantLoop.get
 heating_loop = boilers.first.plantLoop.get
 
 zones.each_with_index do |z, i|
-  if i == 0
+  case i
+  when 0
     puts z.name.get
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
@@ -42,7 +43,7 @@ zones.each_with_index do |z, i|
     schedule = model.alwaysOnDiscreteSchedule
     new_terminal = OpenStudio::Model::AirTerminalSingleDuctVAVNoReheat.new(model, schedule)
     air_loop.addBranchForZone(z, new_terminal.to_StraightComponent)
-  elsif i == 1
+  when 1
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
 
@@ -52,7 +53,7 @@ zones.each_with_index do |z, i|
     air_loop.addBranchForZone(z, new_terminal.to_StraightComponent)
 
     heating_loop.addDemandBranchForComponent(coil)
-  elsif i == 2
+  when 2
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
 
@@ -60,7 +61,7 @@ zones.each_with_index do |z, i|
     coil = OpenStudio::Model::CoilHeatingElectric.new(model, schedule)
     new_terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeReheat.new(model, schedule, coil)
     air_loop.addBranchForZone(z, new_terminal.to_StraightComponent)
-  elsif i == 3
+  when 3
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
 
@@ -68,7 +69,7 @@ zones.each_with_index do |z, i|
     coil = OpenStudio::Model::CoilHeatingGas.new(model, schedule)
     new_terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeReheat.new(model, schedule, coil)
     air_loop.addBranchForZone(z, new_terminal.to_StraightComponent)
-  elsif i == 4
+  when 4
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
 
@@ -79,7 +80,7 @@ zones.each_with_index do |z, i|
     air_loop.addBranchForZone(z, new_terminal.to_StraightComponent)
 
     heating_loop.addDemandBranchForComponent(coil)
-  elsif i == 5
+  when 5
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
 
@@ -90,7 +91,7 @@ zones.each_with_index do |z, i|
     air_loop.addBranchForZone(z, new_terminal.to_StraightComponent)
 
     heating_loop.addDemandBranchForComponent(coil)
-  elsif i == 6
+  when 6
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
 

@@ -19,12 +19,12 @@ spaces = model.getSpaces.sort_by { |s| s.name.to_s }
 # collapse all spaces into one thermal zone
 thermalZone = nil
 spaces.each do |space|
-  if !thermalZone
-    thermalZone = space.thermalZone.get
-  else
+  if thermalZone
     temp = space.thermalZone.get
     space.setThermalZone(thermalZone)
     temp.remove
+  else
+    thermalZone = space.thermalZone.get
   end
 end
 

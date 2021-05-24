@@ -657,7 +657,7 @@ unitary_loop.setName('UnitarySystem CoilCoolingDX Loop')
 fan = OpenStudio::Model::FanVariableVolume.new(model, s1)
 
 speed_1 = OpenStudio::Model::CoilCoolingDXCurveFitSpeed.new(model)
-speed_1.setGrossTotalCoolingCapacityFraction(4015.05615933448 / 4015.05615933448)
+speed_1.setGrossTotalCoolingCapacityFraction(1.0)
 speed_1.setGrossSensibleHeatRatio(0.842150793933333)
 speed_1.setGrossCoolingCOP(5.48021287249984)
 

@@ -9,8 +9,6 @@ require 'erb'
 require 'timeout'
 require 'open3'
 
-require 'etc'
-
 # ENV['N'] has to be before require 'minitest/autorun' as it will read it
 # Nowadays MT_CPU should be preferred instead of N, but old minitest versions
 # (like 5.4.3 bundled with OpenStudio 2.9.1)
@@ -383,7 +381,7 @@ def parse_total_site_energy(out_osw_path)
     return nil
   end
 
-  if !result_osw.has_key?(:steps)
+  if !result_osw.key?(:steps)
     # puts "#{out_osw_path} doesn't have :steps"
     return nil
   end
@@ -393,7 +391,7 @@ def parse_total_site_energy(out_osw_path)
     return nil
   end
 
-  if !result_osw[:steps][0].has_key?(:result)
+  if !result_osw[:steps][0].key?(:result)
     # puts "#{out_osw_path} has steps without :result"
     return nil
   end
@@ -493,28 +491,31 @@ def postprocess_out_osw_and_copy(out_osw, cp_out_osw, compare_eui = true)
     result_osw.delete(:started_at)
     result_osw.delete(:updated_at)
 
-    # Should always be true
-    if (result_osw[:steps].size == 1) && (result_osw[:steps].select { |s| s[:measure_dir_name] == 'openstudio_results' }.size == 1)
+    # steps.size == 1 Should always be true,
+    # unless this is one of the model_articulation ones...
+    if (result_osw[:steps].size >= 1) && (result_osw[:steps].select { |s| s[:measure_dir_name] == 'openstudio_results' }.size == 1)
       # If something went wrong, there wouldn't be results
-      if result_osw[:steps][0].keys.include?(:result)
-        result_osw[:steps][0][:result].delete(:completed_at)
-        result_osw[:steps][0][:result].delete(:started_at)
-        result_osw[:steps][0][:result].delete(:step_files)
+      result_osw[:steps].each_with_index do |hs, is|
+        if result_osw[:steps][is].keys.include?(:result)
+          result_osw[:steps][is][:result].delete(:completed_at)
+          result_osw[:steps][is][:result].delete(:started_at)
+          result_osw[:steps][is][:result].delete(:step_files)
 
-        # Round all numbers to 2 digits to avoid excessive diffs
-        # result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
-        result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
-          if h[:value].is_a? Float
-            result_osw[:steps][0][:result][:step_values][i][:value] = h[:value].round(2)
+          # Round all numbers to 2 digits to avoid excessive diffs
+          # result_osw[:steps][0][:result][:step_values].each_with_index do |h, i|
+          result_osw[:steps][is][:result][:step_values].each_with_index do |h, i|
+            if h[:value].is_a? Float
+              result_osw[:steps][is][:result][:step_values][i][:value] = h[:value].round(2)
+            end
           end
         end
       end
     else
-      raise "postprocess_out_osw_and_copy: there should always be one measure only!"
+      raise 'postprocess_out_osw_and_copy: there should always be one openstudio_results measure!'
     end
 
-    # The fuel cell tests produce out.osw files that are about 800 MB
-    # because E+ throws a warning in the Regula Falsi routine (an E+ bug)
+    # The fuel cell tests produce out.osw files that are about 800 MB in old
+    # versions of E+, because E+ throws a warning in the Regula Falsi routine (an E+ bug)
     # which results in about 7.5 Million times the same warning
     # So if the file size is bigger than 100 KiB, we throw out the eplusout_err
     if File.size(out_osw) > 100000
@@ -563,10 +564,10 @@ def sim_test(filename, options = {})
     base_dir = $ModelDir
   end
 
-  if !options[:compare_eui].nil?
-    compare_eui = options[:compare_eui]
-  else
+  if options[:compare_eui].nil?
     compare_eui = true
+  else
+    compare_eui = options[:compare_eui]
   end
 
   # puts "Running sim_test(#{filename})"
@@ -577,17 +578,13 @@ def sim_test(filename, options = {})
 
   # If $DoNotReRunIfSuccess is true, we check if the out_osw already exists
   # and whether it was successful already
-  if $DoNotReRunIfSuccess
-    if File.exist?(cp_out_osw)
-      cp_result_osw = nil
-      File.open(cp_out_osw, 'r') do |f|
-        cp_result_osw = JSON.parse(f.read, symbolize_names: true)
-      end
-      if !cp_result_osw.nil?
-        if cp_result_osw[:completed_status] == 'Success'
-          skip 'Already ran with success'
-        end
-      end
+  if $DoNotReRunIfSuccess && File.exist?(cp_out_osw)
+    cp_result_osw = nil
+    File.open(cp_out_osw, 'r') do |f|
+      cp_result_osw = JSON.parse(f.read, symbolize_names: true)
+    end
+    if !cp_result_osw.nil? && (cp_result_osw[:completed_status] == 'Success')
+      skip 'Already ran with success'
     end
   end
 
@@ -600,7 +597,8 @@ def sim_test(filename, options = {})
   FileUtils.mkdir_p(dir)
 
   ext = File.extname(filename)
-  if (ext == '.osm') || (ext == '.xml')
+  case ext
+  when '.osm', '.xml'
 
     if ext == '.xml'
       new_filename = filename.sub('.xml', '.osm')
@@ -653,7 +651,7 @@ def sim_test(filename, options = {})
       FileUtils.cp(sch_ori_path, sch_target_path)
     end
 
-  elsif ext == '.rb'
+  when '.rb'
 
     # Copy the generic OSW file, needed to add design days in particular when
     # running the measure to generate the OSM, and then of course for the sim
@@ -670,7 +668,7 @@ def sim_test(filename, options = {})
       FileUtils.mv(out_osm, in_osm)
     end
 
-  elsif ext == '.osw'
+  when '.osw'
 
     # make an empty osm
     model = OpenStudio::Model::Model.new
@@ -770,9 +768,10 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     FileUtils.cp($OswFile, in_osw)
 
     ext = File.extname(filename)
-    if ext == '.osm'
+    case ext
+    when '.osm'
       FileUtils.cp(File.join($ModelDir, filename), in_osm)
-    elsif ext == '.rb'
+    when '.rb'
       command = "\"#{$OpenstudioCli}\" \"#{File.join($ModelDir, filename)}\""
       run_command(command, dir, 3600)
 
@@ -1010,8 +1009,8 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
 
       # Replace the getter name with known alias, if one exists
       obj_aliases = getter_aliases[os_type]
-      if obj_aliases
-        getter_name = obj_aliases[getter_name] unless obj_aliases[getter_name].nil?
+      if obj_aliases && !obj_aliases[getter_name].nil?
+        getter_name = obj_aliases[getter_name]
       end
 
       # Don't test this getter if it is designated to be skipped
@@ -1019,8 +1018,8 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
 
       # Don't test this getter if it is known to be missing from E+ output
       obj_missing_getters = missing_getters[os_type]
-      if obj_missing_getters
-        next if obj_missing_getters.include?(getter_name)
+      if obj_missing_getters&.include?(getter_name)
+        next
       end
 
       # Check if the autosizedFoo method has been implemented for this object
@@ -1247,7 +1246,7 @@ def sql_test(options = {})
     FileUtils.mkdir_p(dir)
     # FileUtils.cp($OswFile, osw)
 
-    # Note: If you give E+ a weather file that doesn't have a leap day
+    # NOTE: If you give E+ a weather file that doesn't have a leap day
     # It won't give you an output that has a leap day...
     # And it doesn't appear to let you know about it either
     if options[:isLeapYear]
@@ -1338,7 +1337,8 @@ def sql_test(options = {})
   # Check run period and annual series
   assert_equal(run_periods.dateTimes.length, 1)
   assert_equal(run_periods.values.length, 1)
-  if options[:type] == 'Full'
+  case options[:type]
+  when 'Full'
     assert(ts.is_initialized, "Timeseries isn't initialized")
     annuals = ts.get
     assert_equal(annuals.dateTimes.length, 1)
@@ -1346,9 +1346,9 @@ def sql_test(options = {})
     assert_equal(run_periods.dateTimes[0], annuals.dateTimes[0])
     assert_equal(run_periods.values[0], annuals.values[0])
     assert(annuals.values[0] == run_periods.values[0])
-  elsif options[:type] == 'Partial'
+  when 'Partial'
     assert(!ts.is_initialized, 'Timeseries is initialized')
-  elsif options[:type] == 'Wrap-around'
+  when 'Wrap-around'
     assert(ts.is_initialized, "Timeseries isn't initialized")
     annuals = ts.get
     assert_equal(run_periods.dateTimes.length, 1)

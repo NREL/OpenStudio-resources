@@ -32,15 +32,16 @@ south_zone = nil
 west_zone = nil
 core_zone = nil
 zones.each do |zone|
-  if /North/.match(zone.name.to_s)
+  case zone.name.to_s
+  when /North/
     north_zone = zone
-  elsif /East/.match(zone.name.to_s)
+  when /East/
     east_zone = zone
-  elsif /South/.match(zone.name.to_s)
+  when /South/
     south_zone = zone
-  elsif /West/.match(zone.name.to_s)
+  when /West/
     west_zone = zone
-  elsif /Core/.match(zone.name.to_s)
+  when /Core/
     core_zone = zone
   end
 end

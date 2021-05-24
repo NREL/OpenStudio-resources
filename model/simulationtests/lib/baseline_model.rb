@@ -333,28 +333,28 @@ class BaselineModel < OpenStudio::Model::Model
           setpoint_manager.setControlZone(zone)
         end
       # 5: Packaged VAV w/ Reheat
-      when '05' then
+      when '05'
         hvac = OpenStudio::Model.addSystemType5(self)
         hvac = hvac.to_AirLoopHVAC.get
         zones.each do |zone|
           hvac.addBranchForZone(zone)
         end
       # 6: Packaged VAV w/ PFP Boxes
-      when '06' then
+      when '06'
         hvac = OpenStudio::Model.addSystemType6(self)
         hvac = hvac.to_AirLoopHVAC.get
         zones.each do |zone|
           hvac.addBranchForZone(zone)
         end
       # 7: VAV w/ Reheat
-      when '07' then
+      when '07'
         hvac = OpenStudio::Model.addSystemType7(self)
         hvac = hvac.to_AirLoopHVAC.get
         zones.each do |zone|
           hvac.addBranchForZone(zone)
         end
       # 8: VAV w/ PFP Boxes
-      when '08' then
+      when '08'
         hvac = OpenStudio::Model.addSystemType8(self)
         hvac = hvac.to_AirLoopHVAC.get
         zones.each do |zone|
@@ -381,7 +381,7 @@ class BaselineModel < OpenStudio::Model::Model
           setpoint_manager.setControlZone(zone)
         end
       # if system number is not recognized
-      else puts 'cannot find system number ' + sys_num
+      else puts "cannot find system number #{sys_num}"
     end
   end
 
@@ -739,9 +739,10 @@ class BaselineModel < OpenStudio::Model::Model
 
     # Helper method to fill in hourly values
     add_vals_to_sch = lambda { |day_sch, sch_type, values|
-      if sch_type == 'Constant'
+      case sch_type
+      when 'Constant'
         day_sch.addValue(OpenStudio::Time.new(0, 24, 0, 0), values[0])
-      elsif sch_type == 'Hourly'
+      when 'Hourly'
         for i in 0..23
           next if values[i] == values[i + 1]
 
@@ -990,7 +991,8 @@ class BaselineModel < OpenStudio::Model::Model
     water_heater.setMaximumTemperatureLimit(OpenStudio.convert(180, 'F', 'C').get)
     water_heater.setOffCycleParasiticHeatFractiontoTank(0.8)
     water_heater.setIndirectWaterHeatingRecoveryTime(1.5) # 1.5hrs
-    if water_heater_fuel == 'Electricity'
+    case water_heater_fuel
+    when 'Electricity'
       water_heater.setHeaterFuelType('Electricity')
       water_heater.setHeaterThermalEfficiency(1.0)
       water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(68.24, 'Btu/hr', 'W').get)
@@ -1003,7 +1005,7 @@ class BaselineModel < OpenStudio::Model::Model
         water_heater.setOffCycleLossCoefficienttoAmbientTemperature(1.053)
         water_heater.setOnCycleLossCoefficienttoAmbientTemperature(1.053)
       end
-    elsif water_heater_fuel == 'Natural Gas'
+    when 'Natural Gas'
       water_heater.setHeaterFuelType('NaturalGas')
       water_heater.setHeaterThermalEfficiency(0.78)
       water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(68.24, 'Btu/hr', 'W').get)

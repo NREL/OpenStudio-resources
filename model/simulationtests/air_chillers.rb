@@ -59,7 +59,8 @@ heating_coil3 = nil
 cooling_coil1 = nil
 cooling_coil3 = nil
 zones.each_with_index do |z, i|
-  if i == 0
+  case i
+  when 0
     schedule = model.alwaysOnDiscreteSchedule
     fan = OpenStudio::Model::FanOnOff.new(model, schedule)
     heating_coil1 = OpenStudio::Model::CoilHeatingWater.new(model, schedule)
@@ -67,7 +68,7 @@ zones.each_with_index do |z, i|
     four_pipe_fan_coil = OpenStudio::Model::ZoneHVACFourPipeFanCoil.new(model, schedule, fan, cooling_coil1, heating_coil1)
     four_pipe_fan_coil.addToThermalZone(z)
     air_chiller1.addToThermalZone(z)
-  elsif i == 1
+  when 1
     air_chiller2.addToThermalZone(z)
     schedule = model.alwaysOnDiscreteSchedule
     fan = OpenStudio::Model::FanOnOff.new(model, schedule)
@@ -108,7 +109,8 @@ model.set_space_type
 model.add_design_days
 
 zones.each_with_index do |z, i|
-  if i == 0
+  case i
+  when 0
     new_thermostat = OpenStudio::Model::ThermostatSetpointDualSetpoint.new(model)
 
     new_thermostat.setHeatingSchedule(heating_sch)
@@ -142,7 +144,7 @@ zones.each_with_index do |z, i|
     four_pipe_fan_coil.addToThermalZone(z)
     heating_loop.addDemandBranchForComponent(heating_coil2)
     cooling_loop.addDemandBranchForComponent(cooling_coil2)
-  elsif i == 1
+  when 1
     new_thermostat = OpenStudio::Model::ThermostatSetpointDualSetpoint.new(model)
 
     new_thermostat.setHeatingSchedule(heating_sch)
@@ -164,7 +166,7 @@ zones.each_with_index do |z, i|
     air_chiller4.addToThermalZone(z)
     ref_sys7.addAirChiller(air_chiller3)
     ref_sys7.addAirChiller(air_chiller4)
-  elsif i == 2
+  when 2
     air_loop = z.airLoopHVAC.get
     air_loop.removeBranchForZone(z)
     new_thermostat = OpenStudio::Model::ThermostatSetpointDualSetpoint.new(model)

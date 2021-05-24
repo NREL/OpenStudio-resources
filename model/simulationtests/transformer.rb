@@ -82,10 +82,8 @@ if name_plate_rating == 0
     schedules[0].extensibleGroups.each do |eg|
       if /\A[+-]?\d+?(_?\d+)*(\.\d+e?\d*)?\Z/.match(eg.getString(0).to_s.strip)
         value = eg.getDouble(0)
-        if value.is_initialized
-          if value.get > max_energy
-            max_energy = value.get
-          end
+        if value.is_initialized && (value.get > max_energy)
+          max_energy = value.get
         end
       end
     end

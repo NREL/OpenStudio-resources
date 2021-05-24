@@ -34,22 +34,23 @@ day_schedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 0.0)
 systems = model.getAirLoopHVACs.sort_by { |a| a.thermalZones[0].name.to_s }
 systems.each_with_index do |system, i|
   system.setAvailabilitySchedule(schedule)
-  if i == 0
+  case i
+  when 0
     avm = OpenStudio::Model::AvailabilityManagerNightVentilation.new(model)
     ventilationTemperatureSchedule = OpenStudio::Model::ScheduleRuleset.new(model)
     ventilationTemperatureSchedule.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 18.0)
     avm.setVentilationTemperatureSchedule(ventilationTemperatureSchedule)
     system.setAvailabilityManager(avm)
 
-  elsif i == 1
+  when 1
     avm = OpenStudio::Model::AvailabilityManagerOptimumStart.new(model)
     system.setAvailabilityManager(avm)
 
-  elsif i == 2
+  when 2
     avm = OpenStudio::Model::AvailabilityManagerHybridVentilation.new(model)
     system.setAvailabilityManager(avm)
 
-  elsif i == 3
+  when 3
     system.setNightCycleControlType('CycleOnAny')
   end
 end

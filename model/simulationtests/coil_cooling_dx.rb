@@ -63,7 +63,7 @@ constant_biquadratic = curve_biquadratic(m, 1, 0, 0, 0, 0, 0, -100, 100, -100, 1
 # CoilCoolingDXCurveFitSpeed
 # speeds correspond to a variable speed central air conditioner
 speed_1 = OpenStudio::Model::CoilCoolingDXCurveFitSpeed.new(m)
-speed_1.setGrossTotalCoolingCapacityFraction(4015.05615933448 / 4015.05615933448)
+speed_1.setGrossTotalCoolingCapacityFraction(1.0)
 speed_1.setGrossSensibleHeatRatio(0.842150793933333)
 speed_1.setGrossCoolingCOP(5.48021287249984)
 
