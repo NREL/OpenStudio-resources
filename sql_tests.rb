@@ -3,7 +3,7 @@
 require 'openstudio' unless defined?(OpenStudio)
 
 # The config and helpers are inside this file
-require_relative 'test_helpers.rb'
+require_relative 'test_helpers'
 
 # the tests
 class SqlTests < MiniTest::Unit::TestCase

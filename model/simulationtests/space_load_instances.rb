@@ -44,7 +44,8 @@ spaces = model.getSpaces.sort_by { |s| s.name.to_s }
 zones.each { |z| z.setUseIdealAirLoads(true) }
 
 spaces.each_with_index do |space, i|
-  if i == 0
+  case i
+  when 0
     steam_def = OpenStudio::Model::SteamEquipmentDefinition.new(model)
     steam_def.setDesignLevel(1000)
     steam_def.setName('Steam Equipment Def 1kW')
@@ -59,7 +60,7 @@ spaces.each_with_index do |space, i|
     steam_eq.setSpace(space)
     steam_eq.setName("#{space.name} Steam Equipment")
 
-  elsif i == 1
+  when 1
     gas_def = OpenStudio::Model::GasEquipmentDefinition.new(model)
     gas_def.setWattsperSpaceFloorArea(10)
     gas_def.setName('Gas Equipment Def 10W/m2')
@@ -75,7 +76,7 @@ spaces.each_with_index do |space, i|
     gas_eq.setSpace(space)
     gas_eq.setName("#{space.name} Gas Equipment")
 
-  elsif i == 2
+  when 2
     hw_def = OpenStudio::Model::HotWaterEquipmentDefinition.new(model)
     # (Unusual to set dishwashing as per person, but I want to showcase the
     # ability to do so...)
@@ -93,7 +94,7 @@ spaces.each_with_index do |space, i|
     hw_eq.setSpace(space)
     hw_eq.setName("#{space.name} HotWater Equipment")
 
-  elsif i == 3
+  when 3
     other_def = OpenStudio::Model::OtherEquipmentDefinition.new(model)
     other_def.setDesignLevel(6766)
     other_def.setName('Other Equipment Def')
@@ -116,7 +117,7 @@ spaces.each_with_index do |space, i|
     other_eq.setSpace(space)
     other_eq.setName("#{space.name} Other Equipment")
 
-  elsif i == 4
+  when 4
     luminaire_def = OpenStudio::Model::LuminaireDefinition.new(model)
     luminaire_def.setLightingPower(40)
     luminaire_def.setName('A Luminaire')

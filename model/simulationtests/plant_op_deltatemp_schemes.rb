@@ -6,7 +6,7 @@
 # These three mostly apply to condenser equipment, but in order to not
 # duplicate tests unceserarilly, I will apply some to chiller/boiler loops
 
-# Note: All of these delta temp schemes compare based on
+# NOTE: All of these delta temp schemes compare based on
 # (Node condition - Outdoor condition)
 # Meaning if a range from 0 to 5 degC difference, means OA condition is between
 # 0 to 5 LOWER than the node
