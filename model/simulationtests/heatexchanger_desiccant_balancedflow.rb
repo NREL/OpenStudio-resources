@@ -36,11 +36,15 @@ model.add_hvac({ 'ashrae_sys_num' => '03' })
 
 air_systems = model.getAirLoopHVACs
 
-air_systems.each do |s|
+air_systems.each_with_index do |s, i|
   oa_node = s.airLoopHVACOutdoorAirSystem.get.outboardOANode.get
 
-  p = OpenStudio::Model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1.new(model)
-  hx = OpenStudio::Model::HeatExchangerDesiccantBalancedFlow.new(model, p)
+  if i == 0
+    p = OpenStudio::Model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1.new(model)
+    hx = OpenStudio::Model::HeatExchangerDesiccantBalancedFlow.new(model, p)
+  else # try convenience ctor
+    hx = OpenStudio::Model::HeatExchangerDesiccantBalancedFlow.new(model)
+  end
 
   hx.addToNode(oa_node)
 
