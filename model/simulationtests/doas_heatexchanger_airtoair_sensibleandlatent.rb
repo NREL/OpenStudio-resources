@@ -73,11 +73,8 @@ doas.addAirLoop(airloop2)
 
 # Equipment
 heatexchanger_airtoair_sensibleandlatent = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(model)
-fan = OpenStudio::Model::FanSystemModel.new(model)
 heatexchanger_airtoair_sensibleandlatent.addToNode(oas.outboardOANode.get)
-fan.addToNode(oas.outboardOANode.get)
 oas.outboardOANode.get.setName("#{oas.nameString} OA Inlet Node")
-fan.outletModelObject.get.setName("#{oas.nameString} Fan Outlet Node")
 heatexchanger_airtoair_sensibleandlatent.primaryAirOutletModelObject.get.setName("#{oas.nameString} CC Outlet Node")
 
 lat_temp_f = 70.0
