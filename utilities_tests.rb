@@ -3,7 +3,7 @@
 require 'openstudio' unless defined?(OpenStudio)
 
 # The config and helpers are inside this file
-require_relative 'test_helpers.rb'
+require_relative 'test_helpers'
 
 # Name the resulting file for a given test
 # Get caller (name of test), remove the "test_" portion, then append some stuff

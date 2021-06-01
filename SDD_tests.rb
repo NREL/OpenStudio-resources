@@ -5,7 +5,7 @@ require 'openstudio' unless defined?(OpenStudio)
 # require 'equivalent-xml'
 
 # The config and helpers are inside this file
-require_relative 'test_helpers.rb'
+require_relative 'test_helpers'
 
 ###############################################################################
 #                     For comparison, pass ENV variables                      #
@@ -265,6 +265,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('centralheatpumpsystem.osm')
   end
 
+  def test_FT_chiller_reformulated
+    sdd_ft_test('chiller_reformulated.osm')
+  end
+
   def test_FT_chillers_tertiary
     sdd_ft_test('chillers_tertiary.osm')
   end
@@ -275,6 +279,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_coilsystem_dxhx
     sdd_ft_test('coilsystem_dxhx.osm')
+  end
+
+  def test_FT_coilsystem_integrated_heatpump
+    sdd_ft_test('coilsystem_integrated_heatpump.osm')
   end
 
   def test_FT_coilsystem_waterhx
@@ -305,6 +313,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('dist_ht_cl.osm')
   end
 
+  def test_FT_doas
+    sdd_ft_test('doas.osm')
+  end
+
   def test_FT_dsn_oa_w_ideal_loads
     sdd_ft_test('dsn_oa_w_ideal_loads.osm')
   end
@@ -315,6 +327,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_ducts_and_pipes
     sdd_ft_test('ducts_and_pipes.osm')
+  end
+
+  def test_FT_elcd_no_generators
+    sdd_ft_test('elcd_no_generators.osm')
   end
 
   def test_FT_electric_equipment_ITE
@@ -345,6 +361,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('exterior_equipment.osm')
   end
 
+  def test_FT_fan_componentmodel
+    sdd_ft_test('fan_componentmodel.osm')
+  end
+
   def test_FT_fan_on_off
     sdd_ft_test('fan_on_off.osm')
   end
@@ -373,6 +393,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('generator_microturbine.osm')
   end
 
+  def test_FT_generator_windturbine
+    sdd_ft_test('generator_windturbine.osm')
+  end
+
   def test_FT_headered_pumps
     sdd_ft_test('headered_pumps.osm')
   end
@@ -383,6 +407,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_heatpump_hot_water
     sdd_ft_test('heatpump_hot_water.osm')
+  end
+
+  def test_FT_heatpump_varspeed
+    sdd_ft_test('heatpump_varspeed.osm')
   end
 
   def test_FT_hightemprad
@@ -397,12 +425,20 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('humidity_control.osm')
   end
 
+  def test_FT_humidity_control_2
+    sdd_ft_test('humidity_control_2.osm')
+  end
+
   def test_FT_ideal_loads_w_plenums
     sdd_ft_test('ideal_loads_w_plenums.osm')
   end
 
   def test_FT_ideal_plant
     sdd_ft_test('ideal_plant.osm')
+  end
+
+  def test_FT_infiltration
+    sdd_ft_test('infiltration.osm')
   end
 
   def test_FT_interior_partitions
@@ -449,6 +485,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('performanceprecisiontradeoffs.osm')
   end
 
+  def test_FT_photovoltaics_sandia
+    sdd_ft_test('photovoltaics_sandia.osm')
+  end
+
   def test_FT_outputcontrol_files
     sdd_ft_test('outputcontrol_files.osm')
   end
@@ -485,6 +525,14 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('plenums.osm')
   end
 
+  def test_FT_ptac_othercoils
+    sdd_ft_test('ptac_othercoils.osm')
+  end
+
+  def test_FT_pthp_othercoils
+    sdd_ft_test('pthp_othercoils.osm')
+  end
+
   def test_FT_pv_and_storage_demandleveling
     sdd_ft_test('pv_and_storage_demandleveling.osm')
   end
@@ -499,6 +547,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_refrigeration_system
     sdd_ft_test('refrigeration_system.osm')
+  end
+
+  def test_FT_refrigeration_system_2
+    sdd_ft_test('refrigeration_system_2.osm')
   end
 
   def test_FT_roof_vegetation
@@ -565,6 +617,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('space_load_instances.osm')
   end
 
+  def test_FT_storage_liion_battery
+    sdd_ft_test('storage_liion_battery.osm')
+  end
+
   def test_FT_surface_properties
     sdd_ft_test('surface_properties.osm')
   end
@@ -625,6 +681,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('vrf.osm')
   end
 
+  def test_FT_vrf_airloophvac
+    sdd_ft_test('vrf_airloophvac.osm')
+  end
+
   def test_FT_vrf_watercooled
     sdd_ft_test('vrf_watercooled.osm')
   end
@@ -655,6 +715,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_zone_hvac2
     sdd_ft_test('zone_hvac2.osm')
+  end
+
+  def test_FT_zone_hvac_cooling_panel
+    sdd_ft_test('zone_hvac_cooling_panel.osm')
   end
 
   def test_FT_zone_hvac_equipment_list

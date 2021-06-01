@@ -67,7 +67,8 @@ def name_vrf_terminal(vrf_terminal, name)
 end
 
 zones.each_with_index do |z, i|
-  if i == 0
+  case i
+  when 0
     # First zone, we place this VRF Terminal on the main branch of the AirLoopHVAC
     # The default Ctor has a fan, which we actually need here
     vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model)
@@ -80,7 +81,7 @@ zones.each_with_index do |z, i|
     # And we add an ATU Uncontroller for this zone
     atu = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, model.alwaysOnDiscreteSchedule)
     airLoop.addBranchForZone(z, atu)
-  elsif i == 1
+  when 1
 
     # First zone, we place this VRF Terminal on the main branch of the AirLoopHVAC
     # The default Ctor has a fan, which we actually don't need here since we

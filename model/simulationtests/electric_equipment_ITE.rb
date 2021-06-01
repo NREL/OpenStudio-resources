@@ -43,7 +43,8 @@ spaces = model.getSpaces.sort_by { |s| s.name.to_s }
 
 spaces.each_with_index do |space, i|
   # IT equipment with default curves
-  if i == 0
+  case i
+  when 0
     it_equipment_def = OpenStudio::Model::ElectricEquipmentITEAirCooledDefinition.new(model)
     it_equipment_def.setName('IT equipment def 1')
     it_equipment_def.setWattsperUnit(50000)
@@ -57,7 +58,7 @@ spaces.each_with_index do |space, i|
     it_equipment_def.setDesignPowerInputCalculationMethod('Watts/Area', it_equipment.floorArea)
 
     # IT equipment with customized curves
-  elsif i == 1
+  when 1
     cpu_power_curve = OpenStudio::Model::CurveBiquadratic.new(model)
     cpu_power_curve.setCoefficient1Constant(-0.035289)
     cpu_power_curve.setCoefficient2x(1.0)

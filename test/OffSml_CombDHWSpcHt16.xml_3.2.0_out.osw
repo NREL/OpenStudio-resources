@@ -1,0 +1,64 @@
+{
+  "completed_status": "Fail",
+  "current_step": 0,
+  "eplusout_err": [
+    "Program Version,EnergyPlus, Version 9.5.0-de239b2e5f, ",
+    "   ************* Beginning Zone Sizing Calculations",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"{2357A195-A18A-4A9D-BE0E-58EEE8D21F67}\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"{3FD193F7-7F8C-44E6-8523-BDFE0ACF39B0}\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"{5362A4DB-F0D1-4B95-8F4A-80554F2DD7B0}\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"{B2CCB9C1-BF59-491E-A2D0-7773D6CBC286}\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"{BB0980AC-88A6-4BCA-B92E-81AE32791640}\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Year=\"CORE_ZN TARGET SHW TEMP\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Year=\"PERIMETER_ZN_1 TARGET SHW TEMP\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Year=\"PERIMETER_ZN_2 TARGET SHW TEMP\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Year=\"PERIMETER_ZN_3 TARGET SHW TEMP\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Year=\"PERIMETER_ZN_4 TARGET SHW TEMP\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** Weather file location will be used rather than entered (IDF) Location object.",
+    "   **   ~~~   ** ..Location object={C1DBCC8F-B361-46CF-B243-1E3F8F465AB9}",
+    "   **   ~~~   ** ..Weather File Location=Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300",
+    "   **   ~~~   ** ..due to location differences, Latitude difference=[3.40] degrees, Longitude difference=[33.57] degrees.",
+    "   **   ~~~   ** ..Time Zone difference=[2.0] hour(s), Elevation difference=[4972.68] percent, [197.04] meters.",
+    "   ** Warning ** GetDaylightingControls: Fraction of Zone controlled by the Daylighting reference points is < 1.0.",
+    "   **   ~~~   ** ..discovered in \"Daylighting:Controls\" for Zone=\"PERIMETER_ZN_1 THERMAL ZONE\", only 0.915 of the zone is controlled.",
+    "   ** Warning ** GetDaylightingControls: Fraction of Zone controlled by the Daylighting reference points is < 1.0.",
+    "   **   ~~~   ** ..discovered in \"Daylighting:Controls\" for Zone=\"PERIMETER_ZN_2 THERMAL ZONE\", only 0.902 of the zone is controlled.",
+    "   ** Warning ** GetDaylightingControls: Fraction of Zone controlled by the Daylighting reference points is < 1.0.",
+    "   **   ~~~   ** ..discovered in \"Daylighting:Controls\" for Zone=\"PERIMETER_ZN_3 THERMAL ZONE\", only 0.901 of the zone is controlled.",
+    "   ** Warning ** GetDaylightingControls: Fraction of Zone controlled by the Daylighting reference points is < 1.0.",
+    "   **   ~~~   ** ..discovered in \"Daylighting:Controls\" for Zone=\"PERIMETER_ZN_4 THERMAL ZONE\", only 0.905 of the zone is controlled.",
+    "   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"ATTIC SPACE INFILTRATION DESIGN FLOW RATE 1\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Wall Area = 0.  0 Infiltration will result.",
+    "   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"CORE_ZN SPACE INFILTRATION DESIGN FLOW RATE 1\", Design Flow Rate Calculation Method specifies Flow per Exterior Surface Area, but Exterior Wall Area = 0.  0 Infiltration will result.",
+    "   ** Severe  ** Input Error: Pumps on both loop sides must utilize a common pipe",
+    "   **   ~~~   ** Occurs on plant loop name =\"SHWFLUIDSYS1\"",
+    "   **   ~~~   ** Add common pipe or remove one loop side pump",
+    "   **  Fatal  ** GetPlantInput: Previous Severe errors cause termination.",
+    "   ...Summary of Errors that led to program termination:",
+    "   ..... Reference severe error count=1",
+    "   ..... Last severe error=Input Error: Pumps on both loop sides must utilize a common pipe",
+    "   ************* Warning:  Node connection errors not checked - most system input has not been read (see previous warning).",
+    "   ************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages.",
+    "   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 19 Warning; 1 Severe Errors.",
+    "   ************* EnergyPlus Terminated--Fatal Error Detected. 19 Warning; 1 Severe Errors; "
+  ],
+  "file_paths": [
+    "/home/julien/Software/Others/OpenStudio-resources/testruns/OffSml_CombDHWSpcHt16.xml/generated_files",
+    "./files",
+    "./weather",
+    "../../files",
+    "../../weather",
+    "./"
+  ],
+  "seed_file": "in.osm",
+  "steps": [
+    {
+      "arguments": {
+      },
+      "measure_dir_name": "openstudio_results"
+    }
+  ],
+  "weather_file": "../../weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"
+}

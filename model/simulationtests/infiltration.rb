@@ -44,7 +44,8 @@ infilSch.setName('Infiltration Schedule')
 # we sort the spaces by names
 spaces = model.getSpaces.sort_by { |s| s.name.to_s }.reject { |s| s.nameString.downcase.include?('core') }
 spaces.each_with_index do |space, i|
-  if i == 0
+  case i
+  when 0
     infil = OpenStudio::Model::SpaceInfiltrationDesignFlowRate.new(model)
     infil.setSpace(space)
     infil.setSchedule(infilSch)
@@ -61,7 +62,7 @@ spaces.each_with_index do |space, i|
     infil.setVelocityTermCoefficient(0.0)
     infil.setVelocitySquaredTermCoefficient(0.0)
 
-  elsif i == 1
+  when 1
     infil = OpenStudio::Model::SpaceInfiltrationEffectiveLeakageArea.new(model)
     infil.setSpace(space)
     infil.setSchedule(infilSch)
@@ -69,7 +70,7 @@ spaces.each_with_index do |space, i|
     infil.setStackCoefficient(0.1)
     infil.setWindCoefficient(0.1)
 
-  elsif i == 2
+  when 2
     infil = OpenStudio::Model::SpaceInfiltrationFlowCoefficient.new(model)
     infil.setSpace(space)
     infil.setSchedule(infilSch)
