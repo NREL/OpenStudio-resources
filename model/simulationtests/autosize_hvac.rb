@@ -421,13 +421,13 @@ htg_coil.addToNode(out_1)
 ### Dual Duct Air loop ###
 air_loop_dual_duct = OpenStudio::Model::AirLoopHVAC.new(model, true)
 air_loop_dual_duct.setName('Dual Duct Air Loop')
+
+fan = OpenStudio::Model::FanVariableVolume.new(model)
+fan.addToNode(air_loop_dual_duct.supplyInletNode)
 oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
 oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, oa_controller)
-oa_system.addToNode(air_loop_dual_duct.supplyOutletNode)
-fan = OpenStudio::Model::FanVariableVolume.new(model)
-fan.addToNode(air_loop_dual_duct.supplyOutletNode)
-splitter = OpenStudio::Model::ConnectorSplitter.new(model)
-splitter.addToNode(air_loop_dual_duct.supplyOutletNode)
+oa_system.addToNode(air_loop_dual_duct.supplyInletNode)
+
 supply_outlet_nodes = air_loop_dual_duct.supplyOutletNodes
 heating_coil = OpenStudio::Model::CoilHeatingGas.new(model)
 heating_coil.addToNode(supply_outlet_nodes[0])
