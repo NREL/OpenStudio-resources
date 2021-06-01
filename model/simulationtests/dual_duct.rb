@@ -18,7 +18,8 @@ model.add_windows({ 'wwr' => 0.4,
                     'offset' => 1,
                     'application_type' => 'Above Floor' })
 
-air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
+# Make a Dual Duct AirLoopHVAC
+air_loop = OpenStudio::Model::AirLoopHVAC.new(model, true)
 
 oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
 oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, oa_controller)

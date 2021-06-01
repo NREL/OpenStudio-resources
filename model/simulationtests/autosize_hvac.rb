@@ -419,7 +419,7 @@ htg_coil.addSpeed(coil_data)
 htg_coil.addToNode(out_1)
 
 ### Dual Duct Air loop ###
-air_loop_dual_duct = OpenStudio::Model::AirLoopHVAC.new(model)
+air_loop_dual_duct = OpenStudio::Model::AirLoopHVAC.new(model, true)
 air_loop_dual_duct.setName('Dual Duct Air Loop')
 oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
 oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, oa_controller)
