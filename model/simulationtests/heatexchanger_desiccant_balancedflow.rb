@@ -39,9 +39,9 @@ air_systems = model.getAirLoopHVACs
 air_systems.each_with_index do |s, i|
   if i == 0
     hx_performance = OpenStudio::Model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1.new(model)
-    hx_performance.autosizeNominalAirFlowRate();
-    hx_performance.autosizeNominalAirFaceVelocity();
-    hx_performance.setNominalElectricPower(0);
+    hx_performance.autosizeNominalAirFlowRate
+    hx_performance.autosizeNominalAirFaceVelocity
+    hx_performance.setNominalElectricPower(0)
     hx_performance.setTemperatureEquationCoefficient1(-7.18302E+00)
     hx_performance.setTemperatureEquationCoefficient2(-1.84967E+02)
     hx_performance.setTemperatureEquationCoefficient3(1.00051E+00)
@@ -94,7 +94,7 @@ air_systems.each_with_index do |s, i|
     availability_schedule = OpenStudio::Model::ScheduleConstant.new(model)
     availability_schedule.setValue(0.5)
     hx.setAvailabilitySchedule(availability_schedule)
-    hx.setEconomizerLockout(false)    
+    hx.setEconomizerLockout(false)
   elsif i == 1 # try convenience ctor
     hx = OpenStudio::Model::HeatExchangerDesiccantBalancedFlow.new(model)
     availability_schedule = OpenStudio::Model::ScheduleConstant.new(model)
@@ -104,7 +104,7 @@ air_systems.each_with_index do |s, i|
     hx_performance = OpenStudio::Model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1.new(model)
     hx_performance.setNominalAirFlowRate(1.0)
     hx_performance.setNominalAirFaceVelocity(2.0)
-    hx_performance.setNominalElectricPower(0);
+    hx_performance.setNominalElectricPower(0)
     hx_performance.setTemperatureEquationCoefficient1(-7.18302E+00)
     hx_performance.setTemperatureEquationCoefficient2(-1.84967E+02)
     hx_performance.setTemperatureEquationCoefficient3(1.00051E+00)
