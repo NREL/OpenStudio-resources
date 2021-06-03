@@ -239,7 +239,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.2.0
   # def test_coilsystem_waterhx_desiccant_balancedflow_osm
-    # result = sim_test('coilsystem_waterhx_desiccant_balancedflow.osm')
+  # result = sim_test('coilsystem_waterhx_desiccant_balancedflow.osm')
   # end
 
   def test_coilsystem_dxhx_rb
@@ -256,7 +256,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.2.0
   # def test_coilsystem_dxhx_desiccant_balancedflow_osm
-    # result = sim_test('coilsystem_dxhx_desiccant_balancedflow.osm')
+  # result = sim_test('coilsystem_dxhx_desiccant_balancedflow.osm')
   # end
 
   def test_coilsystem_integrated_heatpump_rb
