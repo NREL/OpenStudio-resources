@@ -702,6 +702,42 @@ unitary.setControllingZoneorThermostatLocation(zones[38])
 term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 unitary_loop.addBranchForZone(zones[38], term)
 
+# CoilSystemCoolingDXHeatExchangerAssisted with HeatExchangerDesiccantBalancedFlow
+unitary_loop = OpenStudio::Model::AirLoopHVAC.new(model)
+unitary_loop.setName('UnitarySystem CoilSystemCoolingDXHeatExchangerAssisted Loop')
+
+hx = OpenStudio::Model::HeatExchangerDesiccantBalancedFlow.new(model)
+coil_system = OpenStudio::Model::CoilSystemCoolingDXHeatExchangerAssisted.new(model, hx)
+
+unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
+unitary.setName('UnitarySystem CoilSystemCoolingDXHeatExchangerAssisted')
+unitary.setCoolingCoil(coil_system)
+unitary.setControllingZoneorThermostatLocation(zones[40])
+
+coil = unitary_loop.supplyComponents(OpenStudio::Model::CoilCoolingDXSingleSpeed.iddObjectType).first.to_CoilCoolingDXSingleSpeed.get
+unitary.addToNode(coil.outletModelObject.get.to_Node.get)
+coil.remove
+
+term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
+unitary_loop.addBranchForZone(zones[40], term)
+
+# CoilSystemCoolingWaterHeatExchangerAssisted with HeatExchangerDesiccantBalancedFlow
+unitary_loop = OpenStudio::Model::AirLoopHVAC.new(model)
+unitary_loop.setName('UnitarySystem CoilSystemCoolingWaterHeatExchangerAssisted Loop')
+
+hx = OpenStudio::Model::HeatExchangerDesiccantBalancedFlow.new(model)
+coil_system = OpenStudio::Model::CoilSystemCoolingWaterHeatExchangerAssisted.new(model, hx)
+water_coil = coil_system.coolingCoil.to_CoilCoolingWater.get
+
+coil = unitary_loop.supplyComponents(OpenStudio::Model::CoilCoolingWater.iddObjectType).first.to_CoilCoolingWater.get
+coil_system.addToNode(coil.airOutletModelObject.get.to_Node.get)
+plant = coil.plantLoop.get
+plant.addDemandBranchForComponent(water_coil)
+coil.remove
+
+term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
+unitary_loop.addBranchForZone(zones[41], term)
+
 ### Zone HVAC and Terminals ###
 # Add one of every single kind of Zone HVAC equipment supported by OS
 zones.each_with_index do |zn, zone_index|

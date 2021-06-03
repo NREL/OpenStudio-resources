@@ -65,6 +65,9 @@ coil.remove
 
 hx = coil_system.heatExchanger
 hx.setName('CoilSystemWaterHX HX')
+hx_performance = hx.heatExchangerPerformance
+hx_performance.setNominalAirFlowRate(1.05)
+hx_performance.setNominalAirFaceVelocity(3.25)
 
 # Rename some nodes and such, for ease of debugging
 airloop.supplyInletNode.setName("#{airloop.name} Supply Inlet Node")
