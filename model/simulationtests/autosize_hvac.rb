@@ -5,12 +5,12 @@ require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 
-# make a 8 story, 100m X 50m, 40 + 8 zone core/perimeter building
+# make a 9 story, 100m X 50m, 45 zone core/perimeter building
 model.add_geometry({ 'length' => 100,
                      'width' => 50,
-                     'num_floors' => 8,
+                     'num_floors' => 9,
                      'floor_to_floor_height' => 4,
-                     'plenum_height' => 1,
+                     'plenum_height' => 0,
                      'perimeter_zone_depth' => 3 })
 
 # add thermostats
