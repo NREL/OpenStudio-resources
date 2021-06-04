@@ -156,15 +156,24 @@ air_systems.each_with_index do |s, i|
     hx.setHeatExchangerPerformance(hx_performance)
   end
 
-  oa_node = s.airLoopHVACOutdoorAirSystem.get.outboardOANode.get
-
+  oa_system = s.airLoopHVACOutdoorAirSystem.get
+  oa_node = oa_system.outboardOANode.get
   hx.addToNode(oa_node)
 
-  spm = OpenStudio::Model::SetpointManagerMixedAir.new(model)
+  spm_oa_pretreat = OpenStudio::Model::SetpointManagerOutdoorAirPretreat.new(model)
+  spm_oa_pretreat.setMinimumSetpointTemperature(-99.0)
+  spm_oa_pretreat.setMaximumSetpointTemperature(99.0)
+  spm_oa_pretreat.setMinimumSetpointHumidityRatio(0.00001)
+  spm_oa_pretreat.setMaximumSetpointHumidityRatio(1.0)
+  mixed_air_node = oa_system.mixedAirModelObject.get.to_Node.get
+  spm_oa_pretreat.setReferenceSetpointNode(mixed_air_node)
+  spm_oa_pretreat.setMixedAirStreamNode(mixed_air_node)
+  spm_oa_pretreat.setOutdoorAirStreamNode(oa_system.outboardOANode.get)
+  return_air_node = oa_system.returnAirModelObject.get.to_Node.get
+  spm_oa_pretreat.setReturnAirStreamNode(return_air_node)
+  hx_outlet = hx.primaryAirOutletModelObject.get.to_Node.get
+  spm_oa_pretreat.addToNode(hx_outlet)
 
-  outlet_node = hx.primaryAirOutletModelObject.get.to_Node.get
-
-  spm.addToNode(outlet_node)
 end
 
 # save the OpenStudio model (.osm)
