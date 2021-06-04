@@ -731,7 +731,6 @@ spm_oa_pretreat.setReturnAirStreamNode(return_air_node)
 hx_outlet = hx.primaryAirOutletModelObject.get.to_Node.get
 spm_oa_pretreat.addToNode(hx_outlet)
 
-
 # Heating -> Cooling -> Fan
 htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model)
 htg_coil.addToNode(hx_dessicant_loop.supplyOutletNode)

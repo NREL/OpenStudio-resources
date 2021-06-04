@@ -173,7 +173,6 @@ air_systems.each_with_index do |s, i|
   spm_oa_pretreat.setReturnAirStreamNode(return_air_node)
   hx_outlet = hx.primaryAirOutletModelObject.get.to_Node.get
   spm_oa_pretreat.addToNode(hx_outlet)
-
 end
 
 # save the OpenStudio model (.osm)
