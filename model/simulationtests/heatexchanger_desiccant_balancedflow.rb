@@ -39,8 +39,8 @@ air_systems = model.getAirLoopHVACs
 air_systems.each_with_index do |s, i|
   if i == 0
     hx_performance = OpenStudio::Model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1.new(model)
-    hx_performance.setNominalAirFlowRate(1.05)
-    hx_performance.setNominalAirFaceVelocity(3.25)
+    hx_performance.autosizeNominalAirFlowRate
+    hx_performance.autosizeNominalAirFaceVelocity
     hx_performance.setNominalElectricPower(0)
     hx_performance.setTemperatureEquationCoefficient1(-7.18302E+00)
     hx_performance.setTemperatureEquationCoefficient2(-1.84967E+02)

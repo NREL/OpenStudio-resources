@@ -45,6 +45,7 @@ airloop.setName('AirLoopHVAC CoilSystemWaterHX')
 
 # create a CoilSystem object, that creates both a Water Coil and a HX
 hx = OpenStudio::Model::HeatExchangerDesiccantBalancedFlow.new(m)
+hx.setName('CoilSystemWaterHX HX')
 coil_system = OpenStudio::Model::CoilSystemCoolingWaterHeatExchangerAssisted.new(m, hx)
 coil_system.setName('CoilSystemWaterHX')
 
@@ -62,12 +63,6 @@ plant = coil.plantLoop.get
 # But we have to connect the water_coil itself...
 plant.addDemandBranchForComponent(water_coil)
 coil.remove
-
-hx = coil_system.heatExchanger
-hx.setName('CoilSystemWaterHX HX')
-hx_performance = hx.heatExchangerPerformance
-hx_performance.setNominalAirFlowRate(1.05)
-hx_performance.setNominalAirFaceVelocity(3.25)
 
 # Rename some nodes and such, for ease of debugging
 airloop.supplyInletNode.setName("#{airloop.name} Supply Inlet Node")

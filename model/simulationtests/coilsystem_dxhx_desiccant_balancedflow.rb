@@ -45,15 +45,11 @@ airloop.setName('AirLoopHVAC CoilSystemDXHX')
 
 # create a CoilSystem object, that creates both a DX Cooling Coil and a HX
 hx = OpenStudio::Model::HeatExchangerDesiccantBalancedFlow.new(m)
+hx.setName('CoilSystemDXHX HX')
 coil_system = OpenStudio::Model::CoilSystemCoolingDXHeatExchangerAssisted.new(m, hx)
 coil_system.setName('CoilSystemDXHX')
 dx_coil = coil_system.coolingCoil.to_CoilCoolingDXSingleSpeed.get
 dx_coil.setName('CoilSystemDXHX CoolingCoil')
-hx = coil_system.heatExchanger
-hx.setName('CoilSystemDXHX HX')
-hx_performance = hx.heatExchangerPerformance
-hx_performance.setNominalAirFlowRate(1.05)
-hx_performance.setNominalAirFaceVelocity(3.25)
 
 # Note JM 2019-03-13: At this point in time
 # CoilSystemCoolingDXHeatExchangerAssisted is NOT allowed on a Branch directly
