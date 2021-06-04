@@ -58,6 +58,9 @@ jobs:
             if test_filename in fname_to_test:
                 tests.append(fname_to_test[test_filename])
 
+        # Append the autosize_hvac.rb test
+        tests.append('test_autosizing_rb')
+
         test_filter = f"/^({'|'.join(tests)})$/"
         with open(os.environ['GITHUB_ENV'], 'a') as f:
             f.write(f"\nTEST_FILTER={test_filter}")
