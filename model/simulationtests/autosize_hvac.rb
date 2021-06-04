@@ -707,6 +707,9 @@ unitary_loop = OpenStudio::Model::AirLoopHVAC.new(model)
 unitary_loop.setName('UnitarySystem CoilSystemCoolingDXHeatExchangerAssisted Loop')
 
 hx = OpenStudio::Model::HeatExchangerDesiccantBalancedFlow.new(model)
+hxPerfDataType1 = hx.heatExchangerPerformance
+hxPerfDataType1.autosizeNominalAirFlowRate
+hxPerfDataType1.autosizeNominalAirFaceVelocity
 coil_system = OpenStudio::Model::CoilSystemCoolingDXHeatExchangerAssisted.new(model, hx)
 
 unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
@@ -720,23 +723,6 @@ coil.remove
 
 term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 unitary_loop.addBranchForZone(zones[40], term)
-
-# CoilSystemCoolingWaterHeatExchangerAssisted with HeatExchangerDesiccantBalancedFlow
-unitary_loop = OpenStudio::Model::AirLoopHVAC.new(model)
-unitary_loop.setName('UnitarySystem CoilSystemCoolingWaterHeatExchangerAssisted Loop')
-
-hx = OpenStudio::Model::HeatExchangerDesiccantBalancedFlow.new(model)
-coil_system = OpenStudio::Model::CoilSystemCoolingWaterHeatExchangerAssisted.new(model, hx)
-water_coil = coil_system.coolingCoil.to_CoilCoolingWater.get
-
-coil = unitary_loop.supplyComponents(OpenStudio::Model::CoilCoolingWater.iddObjectType).first.to_CoilCoolingWater.get
-coil_system.addToNode(coil.airOutletModelObject.get.to_Node.get)
-plant = coil.plantLoop.get
-plant.addDemandBranchForComponent(water_coil)
-coil.remove
-
-term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
-unitary_loop.addBranchForZone(zones[41], term)
 
 ### Zone HVAC and Terminals ###
 # Add one of every single kind of Zone HVAC equipment supported by OS
@@ -972,7 +958,7 @@ zones.each_with_index do |zn, zone_index|
     chw_loop.addDemandBranchForComponent(panel_coil)
     zoneHVACCoolingPanelRadiantConvectiveWater.addToThermalZone(zn)
 
-  when 26, 27, 28, 29, 30, 31, 32, 33, 38
+  when 26, 27, 28, 29, 30, 31, 32, 33, 38, 40
     # Previously used for the unitary systems, dehum, etc
   else
     puts "Nothing added to #{zn.name}, index #{zone_index}"
