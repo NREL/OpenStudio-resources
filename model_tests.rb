@@ -233,15 +233,6 @@ class ModelTests < Minitest::Test
     result = sim_test('coilsystem_waterhx.osm')
   end
 
-  def test_coilsystem_waterhx_desiccant_balancedflow_rb
-    result = sim_test('coilsystem_waterhx_desiccant_balancedflow.rb')
-  end
-
-  # TODO: To be added in the next official release after: 3.2.0
-  # def test_coilsystem_waterhx_desiccant_balancedflow_osm
-  # result = sim_test('coilsystem_waterhx_desiccant_balancedflow.osm')
-  # end
-
   def test_coilsystem_dxhx_rb
     result = sim_test('coilsystem_dxhx.rb')
   end
