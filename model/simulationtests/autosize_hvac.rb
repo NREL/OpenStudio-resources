@@ -716,10 +716,7 @@ unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
 unitary.setName('UnitarySystem CoilSystemCoolingDXHeatExchangerAssisted')
 unitary.setCoolingCoil(coil_system)
 unitary.setControllingZoneorThermostatLocation(zones[40])
-
-coil = unitary_loop.supplyComponents(OpenStudio::Model::CoilCoolingDXSingleSpeed.iddObjectType).first.to_CoilCoolingDXSingleSpeed.get
-unitary.addToNode(coil.outletModelObject.get.to_Node.get)
-coil.remove
+unitary.addToNode(unitary_loop.supplyInletNode)
 
 term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 unitary_loop.addBranchForZone(zones[40], term)
