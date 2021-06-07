@@ -1053,7 +1053,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.2.0
   # def test_unitary_vav_bypass_coiltypes_osm
-    # result = sim_test('unitary_vav_bypass_coiltypes.osm')
+  # result = sim_test('unitary_vav_bypass_coiltypes.osm')
   # end
 
   def test_unitary_systems_airloop_and_zonehvac_rb
