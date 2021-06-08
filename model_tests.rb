@@ -250,6 +250,15 @@ class ModelTests < Minitest::Test
     result = sim_test('coilsystem_dxhx.osm')
   end
 
+  def test_coilsystem_dxhx_desiccant_balancedflow_rb
+    result = sim_test('coilsystem_dxhx_desiccant_balancedflow.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.2.0
+  # def test_coilsystem_dxhx_desiccant_balancedflow_osm
+  # result = sim_test('coilsystem_dxhx_desiccant_balancedflow.osm')
+  # end
+
   def test_coilsystem_integrated_heatpump_rb
     result = sim_test('coilsystem_integrated_heatpump.rb')
   end
@@ -503,6 +512,15 @@ class ModelTests < Minitest::Test
   def test_heatexchanger_airtoair_sensibleandlatent_rb
     result = sim_test('heatexchanger_airtoair_sensibleandlatent.rb')
   end
+
+  def test_heatexchanger_desiccant_balancedflow_rb
+    result = sim_test('heatexchanger_desiccant_balancedflow.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.2.0
+  # def test_heatexchanger_desiccant_balancedflow_osm
+  # result = sim_test('heatexchanger_desiccant_balancedflow.osm')
+  # end
 
   def test_heatpump_hot_water_rb
     result = sim_test('heatpump_hot_water.rb')
