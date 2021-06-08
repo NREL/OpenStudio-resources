@@ -1017,9 +1017,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
 
       # Don't test this getter if it is known to be missing from E+ output
       obj_missing_getters = missing_getters[os_type]
-      if obj_missing_getters.include?(getter_name)
-        next
-      end
+      next if obj_missing_getters && obj_missing_getters.include?(getter_name)
 
       # Check if the autosizedFoo method has been implemented for this object
       unless obj.respond_to? getter_name
