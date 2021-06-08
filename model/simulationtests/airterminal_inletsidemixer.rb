@@ -70,15 +70,15 @@ fc.addToNode(atu.outletModelObject.get.to_Node.get)
 # write the DSOA into the field in E+.
 atu.setControlForOutdoorAir(true)
 
-atu.setPerPersonVentilationRateMode("CurrentOccupancy")
+atu.setPerPersonVentilationRateMode('CurrentOccupancy')
 
 # Rename some nodes for ease of browsing when looking at the IDF
-z.zoneAirNode().setName("Zone Air Node")
-z.returnAirModelObjects[0].setName("Zone Return Air Node")
-atu.inletModelObject.get.setName("ATU InletSideMixer Inlet Node")
-atu.outletModelObject().get.setName("ATU InletSideMixer Outlet to FC Inlet Node")
-fc.outletNode().get.setName("FC Outlet Node")
-z.exhaustPortList.modelObjects[0].setName("Zone Exhaust Air Node")
+z.zoneAirNode.setName('Zone Air Node')
+z.returnAirModelObjects[0].setName('Zone Return Air Node')
+atu.inletModelObject.get.setName('ATU InletSideMixer Inlet Node')
+atu.outletModelObject.get.setName('ATU InletSideMixer Outlet to FC Inlet Node')
+fc.outletNode.get.setName('FC Outlet Node')
+z.exhaustPortList.modelObjects[0].setName('Zone Exhaust Air Node')
 
 # save the OpenStudio model (.osm)
 m.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
