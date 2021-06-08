@@ -72,7 +72,7 @@ atu.setControlForOutdoorAir(true)
 
 atu.setPerPersonVentilationRateMode('CurrentOccupancy')
 
-# Rename some nodes for ease of browsing when looking at the IDF
+# Rename some nodes to facilitate looking at the resulting IDF
 z.zoneAirNode.setName('Zone Air Node')
 z.returnAirModelObjects[0].setName('Zone Return Air Node')
 atu.inletModelObject.get.setName('ATU InletSideMixer Inlet Node')
