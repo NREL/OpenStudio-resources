@@ -5,12 +5,12 @@ require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 
-# make a 8 story, 100m X 50m, 40 + 8 zone core/perimeter building
+# make a 9 story, 100m X 50m, 45 zone core/perimeter building
 model.add_geometry({ 'length' => 100,
                      'width' => 50,
-                     'num_floors' => 8,
+                     'num_floors' => 9,
                      'floor_to_floor_height' => 4,
-                     'plenum_height' => 1,
+                     'plenum_height' => 0,
                      'perimeter_zone_depth' => 3 })
 
 # add thermostats
@@ -702,6 +702,48 @@ unitary.setControllingZoneorThermostatLocation(zones[38])
 term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 unitary_loop.addBranchForZone(zones[38], term)
 
+# HeatExchangerDesiccantBalancedFlowPerformanceDataType1
+hx_dessicant_loop = OpenStudio::Model::AirLoopHVAC.new(model)
+hx_dessicant_loop.setName('HeatExchangerDesiccantBalancedFlow Loop')
+
+hx = OpenStudio::Model::HeatExchangerDesiccantBalancedFlow.new(model)
+hxPerfDataType1 = hx.heatExchangerPerformance
+hxPerfDataType1.autosizeNominalAirFlowRate
+hxPerfDataType1.autosizeNominalAirFaceVelocity
+# Add the HX on the Outdoor Air System
+oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
+oa_controller.autosizeMinimumOutdoorAirFlowRate # OS has a bad default of zero, which disables autosizing
+oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, oa_controller)
+oa_system.addToNode(hx_dessicant_loop.supplyOutletNode)
+hx.addToNode(oa_system.outboardOANode.get)
+
+spm_oa_pretreat = OpenStudio::Model::SetpointManagerOutdoorAirPretreat.new(model)
+spm_oa_pretreat.setMinimumSetpointTemperature(-99.0)
+spm_oa_pretreat.setMaximumSetpointTemperature(99.0)
+spm_oa_pretreat.setMinimumSetpointHumidityRatio(0.00001)
+spm_oa_pretreat.setMaximumSetpointHumidityRatio(1.0)
+mixed_air_node = oa_system.mixedAirModelObject.get.to_Node.get
+spm_oa_pretreat.setReferenceSetpointNode(mixed_air_node)
+spm_oa_pretreat.setMixedAirStreamNode(mixed_air_node)
+spm_oa_pretreat.setOutdoorAirStreamNode(oa_system.outboardOANode.get)
+return_air_node = oa_system.returnAirModelObject.get.to_Node.get
+spm_oa_pretreat.setReturnAirStreamNode(return_air_node)
+hx_outlet = hx.primaryAirOutletModelObject.get.to_Node.get
+spm_oa_pretreat.addToNode(hx_outlet)
+
+# Heating -> Cooling -> Fan
+htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model)
+htg_coil.addToNode(hx_dessicant_loop.supplyOutletNode)
+clg_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
+clg_coil.addToNode(hx_dessicant_loop.supplyOutletNode)
+fan = OpenStudio::Model::FanComponentModel.new(model)
+fan.addToNode(hx_dessicant_loop.supplyOutletNode)
+sat_stpt_manager = sat_stpt_manager.clone(model).to_SetpointManagerScheduled.get
+sat_stpt_manager.addToNode(hx_dessicant_loop.supplyOutletNode)
+
+term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
+hx_dessicant_loop.addBranchForZone(zones[40], term)
+
 ### Zone HVAC and Terminals ###
 # Add one of every single kind of Zone HVAC equipment supported by OS
 zones.each_with_index do |zn, zone_index|
@@ -936,7 +978,7 @@ zones.each_with_index do |zn, zone_index|
     chw_loop.addDemandBranchForComponent(panel_coil)
     zoneHVACCoolingPanelRadiantConvectiveWater.addToThermalZone(zn)
 
-  when 26, 27, 28, 29, 30, 31, 32, 33, 38
+  when 26, 27, 28, 29, 30, 31, 32, 33, 38, 40
     # Previously used for the unitary systems, dehum, etc
   else
     puts "Nothing added to #{zn.name}, index #{zone_index}"
