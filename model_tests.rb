@@ -53,6 +53,15 @@ class ModelTests < Minitest::Test
     result = sim_test('airterminal_fourpipebeam.osm')
   end
 
+  def test_airterminal_inletsidemixer_rb
+    result = sim_test('airterminal_inletsidemixer.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.2.1
+  # def test_airterminal_inletsidemixer_osm
+  #   result = sim_test('airterminal_inletsidemixer.osm')
+  # end
+
   def test_air_chillers_osm
     result = sim_test('air_chillers.osm')
   end
