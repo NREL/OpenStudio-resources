@@ -108,7 +108,13 @@ jobs:
     - name: Run changed model_tests
       shell: bash
       run: |
+
         MT_CPU=$(nproc) openstudio model_tests.rb -n "'$TEST_FILTER'"
+
+    - name: Run autosizing test
+      shell: bash
+      run: |
+        MT_CTU=$(nproc) openstudio model_tests.rb -n test_autosizing_rb
 
     - name: Run highlevel_tests
       shell: bash
