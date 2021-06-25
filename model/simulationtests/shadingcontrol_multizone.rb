@@ -68,17 +68,17 @@ end
 
 # sub surfaces
 sub_surface1 = sub_surfaces1[0] # zone 1
-sub_surface1.setName("ZONE 1 - Sub Surface 1")
+sub_surface1.setName('ZONE 1 - Sub Surface 1')
 sub_surface2 = sub_surfaces1[1] # zone 1
-sub_surface2.setName("ZONE 1 - Sub Surface 2")
+sub_surface2.setName('ZONE 1 - Sub Surface 2')
 sub_surface3 = sub_surfaces2[0] # zone 2
-sub_surface3.setName("ZONE 2 - Sub Surface 1")
+sub_surface3.setName('ZONE 2 - Sub Surface 1')
 sub_surface4 = sub_surfaces2[1] # zone 2
-sub_surface4.setName("ZONE 2 - Sub Surface 2")
+sub_surface4.setName('ZONE 2 - Sub Surface 2')
 sub_surface5 = sub_surfaces3[0] # zone 3
-sub_surface5.setName("ZONE 3 - Sub Surface 1")
+sub_surface5.setName('ZONE 3 - Sub Surface 1')
 sub_surface6 = sub_surfaces3[1] # zone 3
-sub_surface6.setName("ZONE 3 - Sub Surface 2")
+sub_surface6.setName('ZONE 3 - Sub Surface 2')
 
 # Use Ideal Air Loads
 zones.each { |z| z.setUseIdealAirLoads(true) }
@@ -102,25 +102,25 @@ zones.each { |z| z.setUseIdealAirLoads(true) }
 
 # shading materials
 blind1 = OpenStudio::Model::Blind.new(m)
-blind1.setName("BLIND 1")
+blind1.setName('BLIND 1')
 blind2 = OpenStudio::Model::Blind.new(m)
-blind2.setName("BLIND 2")
+blind2.setName('BLIND 2')
 
 # construction
 simple_glazing = OpenStudio::Model::SimpleGlazing.new(m)
 construction1 = OpenStudio::Model::Construction.new(m)
-construction1.setName("CONSTRUCTION 1")
+construction1.setName('CONSTRUCTION 1')
 construction1.insertLayer(0, simple_glazing)
 
 # shading controls
 shading_control1 = OpenStudio::Model::ShadingControl.new(blind1)
-shading_control1.setName("SHADING CONTROL 1")
+shading_control1.setName('SHADING CONTROL 1')
 shading_control2 = OpenStudio::Model::ShadingControl.new(blind1)
-shading_control2.setName("SHADING CONTROL 2")
+shading_control2.setName('SHADING CONTROL 2')
 shading_control3 = OpenStudio::Model::ShadingControl.new(blind2)
-shading_control3.setName("SHADING CONTROL 3")
+shading_control3.setName('SHADING CONTROL 3')
 shading_control4 = OpenStudio::Model::ShadingControl.new(construction1)
-shading_control4.setName("SHADING CONTROL 4")
+shading_control4.setName('SHADING CONTROL 4')
 
 # SHADING CONTROL 1
 shading_control1.addSubSurface(sub_surface1)
