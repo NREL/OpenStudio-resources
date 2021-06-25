@@ -80,7 +80,7 @@ zones.each { |z| z.setUseIdealAirLoads(true) }
 # SHADING CONTROL 1 (BLIND 1)
 # SUB SURFACE 1 (ZONE 1)
 # SUB SURFACE 2 (ZONE 1)
-# SHADING CONTROL 2 (BLIND 1)
+# SHADING CONTROL 2 (BLIND 1) - doesn't show up in "Window Control" table
 # SUB SURFACE 1 (ZONE 1)
 # SUB SURFACE 2 (ZONE 1)
 # SHADING CONTROL 3 (BLIND 2)
