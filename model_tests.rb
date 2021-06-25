@@ -918,13 +918,13 @@ class ModelTests < Minitest::Test
     result = sim_test('setpoint_managers.osm')
   end
 
-  def test_shadingcontrol_multiplezones_rb
-    result = sim_test('shadingcontrol_multiplezones.rb')
+  def test_shadingcontrol_multizone_rb
+    result = sim_test('shadingcontrol_multizone.rb')
   end
 
   # TODO: To be added in the next official release after: 3.2.1
-  # def test_shadingcontrol_multiplezones_osm
-    # result = sim_test('shadingcontrol_multiplezones.osm')
+  # def test_shadingcontrol_multizone_osm
+    # result = sim_test('shadingcontrol_multizone.osm')
   # end
 
   def test_shadingcontrol_singlezone_rb
