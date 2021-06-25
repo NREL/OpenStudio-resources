@@ -68,71 +68,79 @@ end
 
 # sub surfaces
 sub_surface1 = sub_surfaces1[0] # zone 1
+sub_surface1.setName('ZONE 1 - Sub Surface 1')
 sub_surface2 = sub_surfaces1[1] # zone 1
+sub_surface2.setName('ZONE 1 - Sub Surface 2')
 sub_surface3 = sub_surfaces2[0] # zone 2
+sub_surface3.setName('ZONE 2 - Sub Surface 1')
 sub_surface4 = sub_surfaces2[1] # zone 2
+sub_surface4.setName('ZONE 2 - Sub Surface 2')
 sub_surface5 = sub_surfaces3[0] # zone 3
+sub_surface5.setName('ZONE 3 - Sub Surface 1')
 sub_surface6 = sub_surfaces3[1] # zone 3
+sub_surface6.setName('ZONE 3 - Sub Surface 2')
 
 # Use Ideal Air Loads
 zones.each { |z| z.setUseIdealAirLoads(true) }
 
 # SHADING CONTROL 1 (BLIND 1)
 # SUB SURFACE 1 (ZONE 1)
-# SUB SURFACE 2 (ZONE 1)
+# SUB SURFACE 3 (ZONE 2)
+# SUB SURFACE 5 (ZONE 3)
 # SHADING CONTROL 2 (BLIND 1) - doesn't show up in "Window Control" table
 # SUB SURFACE 1 (ZONE 1)
-# SUB SURFACE 2 (ZONE 1)
-# SHADING CONTROL 3 (BLIND 2)
 # SUB SURFACE 3 (ZONE 2)
-# SUB SURFACE 4 (ZONE 2)
-# SHADING CONTROL 4 (CONSTRUCTION 1)
 # SUB SURFACE 5 (ZONE 3)
+# SHADING CONTROL 3 (BLIND 2) - doesn't show up in "Window Control" table
+# SUB SURFACE 1 (ZONE 1)
+# SUB SURFACE 3 (ZONE 2)
+# SUB SURFACE 5 (ZONE 3)
+# SHADING CONTROL 4 (CONSTRUCTION 1)
+# SUB SURFACE 2 (ZONE 1)
+# SUB SURFACE 4 (ZONE 2)
 # SUB SURFACE 6 (ZONE 3)
 
 # shading materials
 blind1 = OpenStudio::Model::Blind.new(m)
+blind1.setName('BLIND 1')
 blind2 = OpenStudio::Model::Blind.new(m)
+blind2.setName('BLIND 2')
 
 # construction
 simple_glazing = OpenStudio::Model::SimpleGlazing.new(m)
 construction1 = OpenStudio::Model::Construction.new(m)
+construction1.setName('CONSTRUCTION 1')
 construction1.insertLayer(0, simple_glazing)
 
 # shading controls
 shading_control1 = OpenStudio::Model::ShadingControl.new(blind1)
+shading_control1.setName('SHADING CONTROL 1')
 shading_control2 = OpenStudio::Model::ShadingControl.new(blind1)
+shading_control2.setName('SHADING CONTROL 2')
 shading_control3 = OpenStudio::Model::ShadingControl.new(blind2)
+shading_control3.setName('SHADING CONTROL 3')
 shading_control4 = OpenStudio::Model::ShadingControl.new(construction1)
+shading_control4.setName('SHADING CONTROL 4')
 
-# add sub surface 1 to shading control 1
+# SHADING CONTROL 1
 shading_control1.addSubSurface(sub_surface1)
+shading_control1.addSubSurface(sub_surface3)
+shading_control1.addSubSurface(sub_surface5)
 
-# bulk add sub surfaces to shading control 1
-sub_surfaces = OpenStudio::Model::SubSurfaceVector.new
-[sub_surface2].each do |sub_surface|
-  sub_surfaces << sub_surface
-end
-shading_control1.addSubSurfaces(sub_surfaces)
+# SHADING CONTROL 2
+shading_control2.addSubSurface(sub_surface1)
+shading_control2.addSubSurface(sub_surface3)
+shading_control2.addSubSurface(sub_surface5)
 
-# add shading control to sub suface 1, sub surface 2
-sub_surface1.addShadingControl(shading_control2)
-sub_surface2.addShadingControl(shading_control2)
+# SHADING CONTROL 3
+shading_control3.addSubSurface(sub_surface1)
+shading_control3.addSubSurface(sub_surface3)
+shading_control3.addSubSurface(sub_surface5)
 
-# bulk add shading controls to sub surface 3, sub surface 4
-shading_controls = OpenStudio::Model::ShadingControlVector.new
-[shading_control3].each do |shading_control|
-  shading_controls << shading_control
-end
-sub_surface3.addShadingControls(shading_controls)
-sub_surface4.addShadingControls(shading_controls)
-
-# bulk add sub surface5, sub surface 6 to shading control 4
-sub_surfaces = OpenStudio::Model::SubSurfaceVector.new
-[sub_surface5, sub_surface6].each do |sub_surface|
-  sub_surfaces << sub_surface
-end
-shading_control4.addSubSurfaces(sub_surfaces)
+# SHADING CONTROL 4
+shading_control4.addSubSurface(sub_surface2)
+shading_control4.addSubSurface(sub_surface4)
+shading_control4.addSubSurface(sub_surface6)
 
 # save the OpenStudio model (.osm)
 m.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
