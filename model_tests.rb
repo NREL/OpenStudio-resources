@@ -536,7 +536,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.2.0
   # def test_heatpump_plantloop_eir_osm
-    # result = sim_test('heatpump_plantloop_eir.osm')
+  # result = sim_test('heatpump_plantloop_eir.osm')
   # end
 
   def test_heatpump_varspeed_rb
