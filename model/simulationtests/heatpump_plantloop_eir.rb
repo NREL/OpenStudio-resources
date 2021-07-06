@@ -33,7 +33,7 @@ model.add_design_days
 
 # In order to produce more consistent results between different runs,
 # we sort the zones by names (only one here anyways...)
-zones = m.getThermalZones.sort_by { |z| z.name.to_s }
+zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 zone = zones[0]
 
 # PlantLoopHeatPump_EIR_WaterSource.idf
@@ -52,6 +52,9 @@ plhp_htg.setReferenceSourceSideFlowRate(0.002)
 plhp_htg.setReferenceCapacity(80000)
 plhp_htg.setReferenceCoefficientofPerformance(3.5)
 plhp_htg.setSizingFactor(1)
+plhp_htg.capacityModifierFunctionofTemperatureCurve.setName('CapCurveFuncTemp')
+plhp_htg.electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setName('EIRCurveFuncTemp')
+plhp_htg.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.setName('EIRCurveFuncPLR')
 
 plhp_clg.setName('Cooling Coil')
 plhp_clg.setCompanionHeatingHeatPump(plhp_htg)
@@ -61,6 +64,9 @@ plhp_clg.setReferenceSourceSideFlowRate(0.003)
 plhp_clg.setReferenceCapacity(400000)
 plhp_clg.setReferenceCoefficientofPerformance(3.5)
 plhp_clg.setSizingFactor(1)
+plhp_clg.capacityModifierFunctionofTemperatureCurve.setName('CapCurveFuncTemp2')
+plhp_clg.electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setName('EIRCurveFuncTemp2')
+plhp_clg.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.setName('EIRCurveFuncPLR2')
 
 hw_loop.addSupplyBranchForComponent(plhp_htg)
 chw_loop.addDemandBranchForComponent(plhp_htg)
