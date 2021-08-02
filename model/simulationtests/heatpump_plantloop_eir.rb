@@ -37,6 +37,9 @@ zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 zone = zones[0]
 
 # PlantLoopHeatPump_EIR_WaterSource.idf
+
+############### HEATING / COOLING (LOAD) LOOPS  ###############
+
 hw_loop = OpenStudio::Model::PlantLoop.new(model)
 hw_loop.setName('Hot Water Loop')
 hw_loop.setMinimumLoopTemperature(10)
@@ -59,31 +62,6 @@ hw_pump_head_press_pa = OpenStudio.convert(hw_pump_head_ft_h2o, 'ftH_{2}O', 'Pa'
 hw_pump.setRatedPumpHead(hw_pump_head_press_pa)
 hw_pump.setPumpControlType('Intermittent')
 hw_pump.addToNode(hw_loop.supplyInletNode)
-
-cw_loop = OpenStudio::Model::PlantLoop.new(model)
-cw_loop.setName('Condenser Water Loop')
-cw_loop.setMaximumLoopTemperature(80)
-cw_loop.setMinimumLoopTemperature(5)
-cw_temp_f = 70 # CW setpoint 70F
-cw_temp_sizing_f = 102 # CW sized to deliver 102F
-cw_delta_t_r = 10 # 10F delta-T
-cw_approach_delta_t_r = 7 # 7F approach
-cw_temp_c = OpenStudio.convert(cw_temp_f, 'F', 'C').get
-cw_temp_sizing_c = OpenStudio.convert(cw_temp_sizing_f, 'F', 'C').get
-cw_delta_t_k = OpenStudio.convert(cw_delta_t_r, 'R', 'K').get
-cw_approach_delta_t_k = OpenStudio.convert(cw_approach_delta_t_r, 'R', 'K').get
-float_down_to_f = 70
-float_down_to_c = OpenStudio.convert(float_down_to_f, 'F', 'C').get
-cw_t_stpt_manager = OpenStudio::Model::SetpointManagerFollowOutdoorAirTemperature.new(model)
-cw_t_stpt_manager.setReferenceTemperatureType('OutdoorAirWetBulb')
-cw_t_stpt_manager.setMaximumSetpointTemperature(cw_temp_sizing_c)
-cw_t_stpt_manager.setMinimumSetpointTemperature(float_down_to_c)
-cw_t_stpt_manager.setOffsetTemperatureDifference(cw_approach_delta_t_k)
-cw_t_stpt_manager.addToNode(cw_loop.supplyOutletNode)
-sizing_plant = cw_loop.sizingPlant
-sizing_plant.setLoopType('Condenser')
-sizing_plant.setDesignLoopExitTemperature(cw_temp_sizing_c)
-sizing_plant.setLoopDesignTemperatureDifference(cw_delta_t_k)
 
 chw_loop = OpenStudio::Model::PlantLoop.new(model)
 chw_loop.setName('Chilled Water Loop')
@@ -110,6 +88,46 @@ pri_chw_pump.setRatedPumpHead(pri_chw_pump_head_press_pa)
 pri_chw_pump.setMotorEfficiency(0.9)
 pri_chw_pump.setPumpControlType('Intermittent')
 pri_chw_pump.addToNode(chw_loop.supplyInletNode)
+
+###############################################################
+
+############   C O N D E N S E R    S I D E  ##################
+
+cw_loop = OpenStudio::Model::PlantLoop.new(model)
+cw_loop.setName('Condenser Water Loop')
+cw_loop.setMaximumLoopTemperature(80)
+cw_loop.setMinimumLoopTemperature(5)
+cw_temp_f = 70 # CW setpoint 70F
+cw_temp_sizing_f = 102 # CW sized to deliver 102F
+cw_delta_t_r = 10 # 10F delta-T
+cw_approach_delta_t_r = 7 # 7F approach
+cw_temp_c = OpenStudio.convert(cw_temp_f, 'F', 'C').get
+cw_temp_sizing_c = OpenStudio.convert(cw_temp_sizing_f, 'F', 'C').get
+cw_delta_t_k = OpenStudio.convert(cw_delta_t_r, 'R', 'K').get
+cw_approach_delta_t_k = OpenStudio.convert(cw_approach_delta_t_r, 'R', 'K').get
+float_down_to_f = 70
+float_down_to_c = OpenStudio.convert(float_down_to_f, 'F', 'C').get
+cw_t_stpt_manager = OpenStudio::Model::SetpointManagerFollowOutdoorAirTemperature.new(model)
+cw_t_stpt_manager.setReferenceTemperatureType('OutdoorAirWetBulb')
+cw_t_stpt_manager.setMaximumSetpointTemperature(cw_temp_sizing_c)
+cw_t_stpt_manager.setMinimumSetpointTemperature(float_down_to_c)
+cw_t_stpt_manager.setOffsetTemperatureDifference(cw_approach_delta_t_k)
+cw_t_stpt_manager.addToNode(cw_loop.supplyOutletNode)
+sizing_plant = cw_loop.sizingPlant
+sizing_plant.setLoopType('Condenser')
+sizing_plant.setDesignLoopExitTemperature(cw_temp_sizing_c)
+sizing_plant.setLoopDesignTemperatureDifference(cw_delta_t_k)
+
+cw_pump = OpenStudio::Model::PumpConstantSpeed.new(model)
+cw_pump.setName('Condenser Water Loop Pump')
+cw_pump_head_ft_h2o = 60.0
+cw_pump_head_press_pa = OpenStudio.convert(cw_pump_head_ft_h2o, 'ftH_{2}O', 'Pa').get
+cw_pump.setRatedPumpHead(cw_pump_head_press_pa)
+cw_pump.addToNode(cw_loop.supplyInletNode)
+
+cw_loop.addSupplyBranchForComponent(OpenStudio::Model::CoolingTowerSingleSpeed.new(model))
+
+###############################################################
 
 plhp_htg = OpenStudio::Model::HeatPumpPlantLoopEIRHeating.new(model)
 plhp_clg = OpenStudio::Model::HeatPumpPlantLoopEIRCooling.new(model)

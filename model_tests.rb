@@ -534,7 +534,7 @@ class ModelTests < Minitest::Test
     result = sim_test('heatpump_plantloop_eir.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.2.0
+  # TODO: To be added in the next official release after: 3.2.1
   # def test_heatpump_plantloop_eir_osm
   # result = sim_test('heatpump_plantloop_eir.osm')
   # end
