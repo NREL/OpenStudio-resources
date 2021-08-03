@@ -5,13 +5,13 @@ require 'lib/baseline_model'
 
 model = BaselineModel.new
 
-# make a 2 story, 100m X 50m, 10 zone core/perimeter building
+# make a 1 story, 100m X 50m, 1 zone building
 model.add_geometry({ 'length' => 100,
                      'width' => 50,
-                     'num_floors' => 2,
+                     'num_floors' => 1,
                      'floor_to_floor_height' => 4,
-                     'plenum_height' => 1,
-                     'perimeter_zone_depth' => 3 })
+                     'plenum_height' => 0,
+                     'perimeter_zone_depth' => 0 })
 
 # add windows at a 40% window-to-wall ratio
 model.add_windows({ 'wwr' => 0.4,
@@ -42,6 +42,14 @@ sub_surfaces.each do |sub_surface|
   windows << sub_surface
 end
 
+# DaylightingDeviceShelf
+sub_surface = windows[0]
+shelf = OpenStudio::Model::DaylightingDeviceShelf.new(sub_surface)
+# shelf.setInsideShelf()
+# shelf.setOutsideShelf()
+# shelf.setViewFactortoOutsideShelf()
+
+# DaylightingDeviceTubular
 material = OpenStudio::Model::StandardOpaqueMaterial.new(model)
 material.setThickness(0.2032)
 material.setConductivity(1.3114056)
@@ -50,9 +58,24 @@ material.setSpecificHeat(837.4)
 construction = OpenStudio::Model::Construction.new(model)
 construction.insertLayer(0, material)
 
-shelf = OpenStudio::Model::DaylightingDeviceShelf.new(windows[0])
-tubular = OpenStudio::Model::DaylightingDeviceTubular.new(windows[1], windows[2], construction, 2, 5)
-light_well = OpenStudio::Model::DaylightingDeviceLightWell.new(windows[3])
+thermal_zone = OpenStudio::Model::ThermalZone.new
+transition_zone = OpenStudio::Model::TransitionZone.new(thermal_zone, 1)
+
+dome = windows[1]
+diffuser = windows[2]
+tubular = OpenStudio::Model::DaylightingDeviceTubular.new(dome, diffuser, construction)
+tubular.setDiameter(0.3556)
+tubular.setTotalLength(1.4)
+tubular.setEffectiveThermalResistance(0.28)
+tubular.addTransitionZone(transition_zone)
+
+# DaylightingDeviceLightWell
+sub_surface = windows[3]
+light_well = OpenStudio::Model::DaylightingDeviceLightWell.new(sub_surface)
+light_well.setHeightofWell(1.2)
+light_well.setPerimeterofBottomofWell(12.0)
+light_well.setAreaofBottomofWell(9.0)
+light_well.setVisibleReflectanceofWellWalls(0.7)
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,

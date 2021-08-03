@@ -289,7 +289,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.2.0
   # def test_daylighting_devices_osm
-  # result = sim_test('daylighting_devices_rb.osm')
+  # result = sim_test('daylighting_devices.osm')
   # end
 
   def test_daylighting_no_shades_rb
