@@ -638,6 +638,9 @@ humidifier_steam = OpenStudio::Model::HumidifierSteamGas.new(model)
 humidifier_steam.addToNode(unitary_loop.supplyOutletNode)
 spm = OpenStudio::Model::SetpointManagerSingleZoneHumidityMinimum.new(model)
 spm.addToNode(unitary_loop.supplyOutletNode)
+spm2 = spm.clone.to_SetpointManagerSingleZoneHumidityMinimum.get
+spm2.addToNode(humidifier.outletModelObject.get.to_Node.get)
+
 
 # Create an  internal source construction for the radiant systems
 int_src_const = OpenStudio::Model::ConstructionWithInternalSource.new(model)
