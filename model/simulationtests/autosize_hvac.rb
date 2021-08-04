@@ -360,7 +360,7 @@ cw_loop.addDemandBranchForComponent(wwhp)
 hx = OpenStudio::Model::HeatExchangerFluidToFluid.new(model)
 hx.setControlType('HeatingSetpointModulated')
 hw_loop.addSupplyBranchForComponent(hx)
-# cw_loop.addDemandBranchForComponent(hx)
+cw_loop.addDemandBranchForComponent(hx)
 
 plhp_htg = OpenStudio::Model::HeatPumpPlantLoopEIRHeating.new(model)
 plhp_htg.autosizeReferenceCapacity
