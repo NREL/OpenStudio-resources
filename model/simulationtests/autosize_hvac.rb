@@ -311,13 +311,16 @@ storage_loop.addDemandBranchForComponent(chw_storage)
 
 # This is problematic, will make E+ crash if I put it on the chw_loop, so try
 # storage_loop instead
-plhp_watersource_clg = OpenStudio::Model::HeatPumpPlantLoopEIRCooling.new(model)
-plhp_watersource_clg.autosizeReferenceCapacity
-plhp_watersource_clg.autosizeReferenceSourceSideFlowRate
-plhp_watersource_clg.autosizeReferenceLoadSideFlowRate
-storage_loop.addSupplyBranchForComponent(plhp_watersource_clg)
+plhp_clg = OpenStudio::Model::HeatPumpPlantLoopEIRCooling.new(model)
+plhp_clg.autosizeReferenceCapacity
+plhp_clg.autosizeReferenceSourceSideFlowRate
+plhp_clg.autosizeReferenceLoadSideFlowRate
+plhp_clg.setSizingFactor(0.1)
+# storage_loop.addSupplyBranchForComponent(plhp_clg)
+chw_loop.addSupplyBranchForComponent(plhp_clg)
+# cw_loop.addDemandBranchForComponent(plhp_clg)
+
 # chw_loop.addSupplyBranchForComponent(OpenStudio::Model::ChillerHeaterPerformanceElectricEIR.new(model))
-# cw_loop.addDemandBranchForComponent(plhp_watersource_clg)
 
 ### Hot water loop ###
 hw_loop.setName('Hot Water Loop')
@@ -357,22 +360,23 @@ cw_loop.addDemandBranchForComponent(wwhp)
 hx = OpenStudio::Model::HeatExchangerFluidToFluid.new(model)
 hx.setControlType('HeatingSetpointModulated')
 hw_loop.addSupplyBranchForComponent(hx)
-cw_loop.addDemandBranchForComponent(hx)
+# cw_loop.addDemandBranchForComponent(hx)
 
-plhp_watersource_htg = OpenStudio::Model::HeatPumpPlantLoopEIRHeating.new(model)
-plhp_watersource_htg.autosizeReferenceCapacity
-plhp_watersource_htg.autosizeReferenceSourceSideFlowRate
-plhp_watersource_htg.autosizeReferenceLoadSideFlowRate
+plhp_htg = OpenStudio::Model::HeatPumpPlantLoopEIRHeating.new(model)
+plhp_htg.autosizeReferenceCapacity
+plhp_htg.autosizeReferenceSourceSideFlowRate
+plhp_htg.autosizeReferenceLoadSideFlowRate
+plhp_htg.setSizingFactor(0.1)
 # Can't get it to work if I put it on the HW loop, so put it on the SHW loop
-swh_loop.addSupplyBranchForComponent(plhp_watersource_htg)
-#hw_loop.addSupplyBranchForComponent(plhp_watersource_htg)
-#cw_loop.addDemandBranchForComponent(plhp_watersource_htg)
+# swh_loop.addSupplyBranchForComponent(plhp_htg)
+hw_loop.addSupplyBranchForComponent(plhp_htg)
+cw_loop.addDemandBranchForComponent(plhp_htg)
 
-# plhp_watersource_clg.setCompanionHeatingHeatPump(plhp_watersource_htg)
-# plhp_watersource_htg.setCompanionCoolingHeatPump(plhp_watersource_clg)
+plhp_clg.setCompanionHeatingHeatPump(plhp_htg)
+plhp_htg.setCompanionCoolingHeatPump(plhp_clg)
 
 
-# This is an Uncontrolled component
+# This is an Uncontrolled component, should be last
 hw_loop.addSupplyBranchForComponent(OpenStudio::Model::PlantComponentTemperatureSource.new(model))
 # hw_loop.addSupplyBranchForComponent(OpenStudio::Model::SolarCollectorFlatPlatePhotovoltaicThermal.new(model))
 # hw_loop.addSupplyBranchForComponent(OpenStudio::Model::CoilWaterHeatingAirToWaterHeatPump.new(model))
@@ -736,6 +740,21 @@ hx = OpenStudio::Model::HeatExchangerDesiccantBalancedFlow.new(model)
 hxPerfDataType1 = hx.heatExchangerPerformance
 hxPerfDataType1.autosizeNominalAirFlowRate
 hxPerfDataType1.autosizeNominalAirFaceVelocity
+# This object is problematic, try to relax the min/max boundaries...
+
+# Instead of 21.83
+hxPerfDataType1.setMaximumProcessInletAirTemperatureforTemperatureEquation(30.0)
+hxPerfDataType1.setMaximumProcessInletAirTemperatureforHumidityRatioEquation(30.0)
+
+#Instead of 2.286
+hxPerfDataType1.setMinimumRegenerationAirVelocityforTemperatureEquation(1.0)
+hxPerfDataType1.setMinimumRegenerationAirVelocityforHumidityRatioEquation(1.0)
+
+# Instead of 80.0
+hxPerfDataType1.setMinimumProcessInletAirRelativeHumidityforTemperatureEquation(35.0)
+hxPerfDataType1.setMinimumProcessInletAirRelativeHumidityforHumidityRatioEquation(35.0)
+
+
 # Add the HX on the Outdoor Air System
 oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
 oa_controller.autosizeMinimumOutdoorAirFlowRate # OS has a bad default of zero, which disables autosizing
@@ -762,13 +781,23 @@ htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model)
 htg_coil.addToNode(hx_dessicant_loop.supplyOutletNode)
 clg_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
 clg_coil.addToNode(hx_dessicant_loop.supplyOutletNode)
-fan = OpenStudio::Model::FanComponentModel.new(model)
+fan = OpenStudio::Model::FanVariableVolume.new(model)
 fan.addToNode(hx_dessicant_loop.supplyOutletNode)
 sat_stpt_manager = sat_stpt_manager.clone(model).to_SetpointManagerScheduled.get
 sat_stpt_manager.addToNode(hx_dessicant_loop.supplyOutletNode)
 
 term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 hx_dessicant_loop.addBranchForZone(zones[40], term)
+
+spm_max_hum = OpenStudio::Model::SetpointManagerSingleZoneHumidityMaximum.new(model)
+spm_max_hum.setControlZone(zones[40])
+spm_max_hum.addToNode(hx_outlet)
+dehumidify_sch = OpenStudio::Model::ScheduleConstant.new(model)
+dehumidify_sch.setValue(45)
+humidistat = OpenStudio::Model::ZoneControlHumidistat.new(model)
+humidistat.setHumidifyingRelativeHumiditySetpointSchedule(dehumidify_sch)
+zones[40].setZoneControlHumidistat(humidistat)
+
 
 ### Zone HVAC and Terminals ###
 # Add one of every single kind of Zone HVAC equipment supported by OS
