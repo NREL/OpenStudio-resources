@@ -375,7 +375,6 @@ hw_loop.addSupplyBranchForComponent(plhp_htg)
 plhp_clg.setCompanionHeatingHeatPump(plhp_htg)
 plhp_htg.setCompanionCoolingHeatPump(plhp_clg)
 
-
 # This is an Uncontrolled component, should be last
 hw_loop.addSupplyBranchForComponent(OpenStudio::Model::PlantComponentTemperatureSource.new(model))
 # hw_loop.addSupplyBranchForComponent(OpenStudio::Model::SolarCollectorFlatPlatePhotovoltaicThermal.new(model))
@@ -746,14 +745,13 @@ hxPerfDataType1.autosizeNominalAirFaceVelocity
 hxPerfDataType1.setMaximumProcessInletAirTemperatureforTemperatureEquation(30.0)
 hxPerfDataType1.setMaximumProcessInletAirTemperatureforHumidityRatioEquation(30.0)
 
-#Instead of 2.286
+# Instead of 2.286
 hxPerfDataType1.setMinimumRegenerationAirVelocityforTemperatureEquation(1.0)
 hxPerfDataType1.setMinimumRegenerationAirVelocityforHumidityRatioEquation(1.0)
 
 # Instead of 80.0
 hxPerfDataType1.setMinimumProcessInletAirRelativeHumidityforTemperatureEquation(35.0)
 hxPerfDataType1.setMinimumProcessInletAirRelativeHumidityforHumidityRatioEquation(35.0)
-
 
 # Add the HX on the Outdoor Air System
 oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
@@ -797,7 +795,6 @@ dehumidify_sch.setValue(45)
 humidistat = OpenStudio::Model::ZoneControlHumidistat.new(model)
 humidistat.setHumidifyingRelativeHumiditySetpointSchedule(dehumidify_sch)
 zones[40].setZoneControlHumidistat(humidistat)
-
 
 ### Zone HVAC and Terminals ###
 # Add one of every single kind of Zone HVAC equipment supported by OS
