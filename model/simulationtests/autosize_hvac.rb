@@ -641,7 +641,6 @@ spm.addToNode(unitary_loop.supplyOutletNode)
 spm2 = spm.clone.to_SetpointManagerSingleZoneHumidityMinimum.get
 spm2.addToNode(humidifier.outletModelObject.get.to_Node.get)
 
-
 # Create an  internal source construction for the radiant systems
 int_src_const = OpenStudio::Model::ConstructionWithInternalSource.new(model)
 int_src_const.setSourcePresentAfterLayerNumber(3)
