@@ -370,7 +370,7 @@ plhp_htg.setSizingFactor(0.1)
 # Can't get it to work if I put it on the HW loop, so put it on the SHW loop
 # swh_loop.addSupplyBranchForComponent(plhp_htg)
 hw_loop.addSupplyBranchForComponent(plhp_htg)
-cw_loop.addDemandBranchForComponent(plhp_htg)
+# cw_loop.addDemandBranchForComponent(plhp_htg)
 
 plhp_clg.setCompanionHeatingHeatPump(plhp_htg)
 plhp_htg.setCompanionCoolingHeatPump(plhp_clg)
