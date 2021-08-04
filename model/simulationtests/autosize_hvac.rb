@@ -300,13 +300,6 @@ chw_loop.addSupplyBranchForComponent(chiller)
 cw_loop.addDemandBranchForComponent(chiller)
 swh_loop.addDemandBranchForComponent(chiller) # Heat Recovery
 
-plhp_watersource_clg = OpenStudio::Model::HeatPumpPlantLoopEIRCooling.new(model)
-plhp_watersource_clg.autosizeReferenceCapacity
-plhp_watersource_clg.autosizeReferenceSourceSideFlowRate
-plhp_watersource_clg.autosizeReferenceLoadSideFlowRate
-chw_loop.addSupplyBranchForComponent(plhp_watersource_clg)
-cw_loop.addDemandBranchForComponent(plhp_watersource_clg)
-
 chw_loop.addSupplyBranchForComponent(OpenStudio::Model::DistrictCooling.new(model))
 wwhp = OpenStudio::Model::HeatPumpWaterToWaterEquationFitCooling.new(model)
 chw_loop.addSupplyBranchForComponent(wwhp)
@@ -316,7 +309,15 @@ chw_storage.setSetpointTemperatureSchedule(chw_temp_sch)
 chw_loop.addSupplyBranchForComponent(chw_storage)
 storage_loop.addDemandBranchForComponent(chw_storage)
 
+# This is problematic, will make E+ crash if I put it on the chw_loop, so try
+# storage_loop instead
+plhp_watersource_clg = OpenStudio::Model::HeatPumpPlantLoopEIRCooling.new(model)
+plhp_watersource_clg.autosizeReferenceCapacity
+plhp_watersource_clg.autosizeReferenceSourceSideFlowRate
+plhp_watersource_clg.autosizeReferenceLoadSideFlowRate
+storage_loop.addSupplyBranchForComponent(plhp_watersource_clg)
 # chw_loop.addSupplyBranchForComponent(OpenStudio::Model::ChillerHeaterPerformanceElectricEIR.new(model))
+# cw_loop.addDemandBranchForComponent(plhp_watersource_clg)
 
 ### Hot water loop ###
 hw_loop.setName('Hot Water Loop')
@@ -354,21 +355,27 @@ wwhp = OpenStudio::Model::HeatPumpWaterToWaterEquationFitHeating.new(model)
 hw_loop.addSupplyBranchForComponent(wwhp)
 cw_loop.addDemandBranchForComponent(wwhp)
 hx = OpenStudio::Model::HeatExchangerFluidToFluid.new(model)
+hx.setControlType('HeatingSetpointModulated')
 hw_loop.addSupplyBranchForComponent(hx)
 cw_loop.addDemandBranchForComponent(hx)
-hw_loop.addSupplyBranchForComponent(OpenStudio::Model::PlantComponentTemperatureSource.new(model))
-# hw_loop.addSupplyBranchForComponent(OpenStudio::Model::SolarCollectorFlatPlatePhotovoltaicThermal.new(model))
-# hw_loop.addSupplyBranchForComponent(OpenStudio::Model::CoilWaterHeatingAirToWaterHeatPump.new(model))
 
 plhp_watersource_htg = OpenStudio::Model::HeatPumpPlantLoopEIRHeating.new(model)
 plhp_watersource_htg.autosizeReferenceCapacity
 plhp_watersource_htg.autosizeReferenceSourceSideFlowRate
 plhp_watersource_htg.autosizeReferenceLoadSideFlowRate
-chw_loop.addSupplyBranchForComponent(plhp_watersource_htg)
-cw_loop.addDemandBranchForComponent(plhp_watersource_htg)
+# Can't get it to work if I put it on the HW loop, so put it on the SHW loop
+swh_loop.addSupplyBranchForComponent(plhp_watersource_htg)
+#hw_loop.addSupplyBranchForComponent(plhp_watersource_htg)
+#cw_loop.addDemandBranchForComponent(plhp_watersource_htg)
 
-plhp_watersource_clg.setCompanionHeatingHeatPump(plhp_watersource_htg)
-plhp_watersource_htg.setCompanionCoolingHeatPump(plhp_watersource_clg)
+# plhp_watersource_clg.setCompanionHeatingHeatPump(plhp_watersource_htg)
+# plhp_watersource_htg.setCompanionCoolingHeatPump(plhp_watersource_clg)
+
+
+# This is an Uncontrolled component
+hw_loop.addSupplyBranchForComponent(OpenStudio::Model::PlantComponentTemperatureSource.new(model))
+# hw_loop.addSupplyBranchForComponent(OpenStudio::Model::SolarCollectorFlatPlatePhotovoltaicThermal.new(model))
+# hw_loop.addSupplyBranchForComponent(OpenStudio::Model::CoilWaterHeatingAirToWaterHeatPump.new(model))
 
 ### Air loop ###
 air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
