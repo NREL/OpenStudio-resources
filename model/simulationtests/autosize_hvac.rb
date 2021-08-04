@@ -300,6 +300,13 @@ chw_loop.addSupplyBranchForComponent(chiller)
 cw_loop.addDemandBranchForComponent(chiller)
 swh_loop.addDemandBranchForComponent(chiller) # Heat Recovery
 
+plhp_watersource_clg = OpenStudio::Model::HeatPumpPlantLoopEIRCooling.new(model)
+plhp_watersource_clg.autosizeReferenceCapacity
+plhp_watersource_clg.autosizeReferenceSourceSideFlowRate
+plhp_watersource_clg.autosizeReferenceLoadSideFlowRate
+chw_loop.addSupplyBranchForComponent(plhp_watersource_clg)
+cw_loop.addDemandBranchForComponent(plhp_watersource_clg)
+
 chw_loop.addSupplyBranchForComponent(OpenStudio::Model::DistrictCooling.new(model))
 wwhp = OpenStudio::Model::HeatPumpWaterToWaterEquationFitCooling.new(model)
 chw_loop.addSupplyBranchForComponent(wwhp)
@@ -352,6 +359,16 @@ cw_loop.addDemandBranchForComponent(hx)
 hw_loop.addSupplyBranchForComponent(OpenStudio::Model::PlantComponentTemperatureSource.new(model))
 # hw_loop.addSupplyBranchForComponent(OpenStudio::Model::SolarCollectorFlatPlatePhotovoltaicThermal.new(model))
 # hw_loop.addSupplyBranchForComponent(OpenStudio::Model::CoilWaterHeatingAirToWaterHeatPump.new(model))
+
+plhp_watersource_htg = OpenStudio::Model::HeatPumpPlantLoopEIRHeating.new(model)
+plhp_watersource_htg.autosizeReferenceCapacity
+plhp_watersource_htg.autosizeReferenceSourceSideFlowRate
+plhp_watersource_htg.autosizeReferenceLoadSideFlowRate
+chw_loop.addSupplyBranchForComponent(plhp_watersource_htg)
+cw_loop.addDemandBranchForComponent(plhp_watersource_htg)
+
+plhp_watersource_clg.setCompanionHeatingHeatPump(plhp_watersource_htg)
+plhp_watersource_htg.setCompanionCoolingHeatPump(plhp_watersource_clg)
 
 ### Air loop ###
 air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
@@ -640,7 +657,6 @@ spm = OpenStudio::Model::SetpointManagerSingleZoneHumidityMinimum.new(model)
 spm.addToNode(unitary_loop.supplyOutletNode)
 spm2 = spm.clone.to_SetpointManagerSingleZoneHumidityMinimum.get
 spm2.addToNode(humidifier.outletModelObject.get.to_Node.get)
-
 
 # Create an  internal source construction for the radiant systems
 int_src_const = OpenStudio::Model::ConstructionWithInternalSource.new(model)

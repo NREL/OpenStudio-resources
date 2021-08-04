@@ -126,11 +126,11 @@ ground_temp.setAllMonthlyTemperatures(
   [13.03, 13.03, 13.13, 13.30, 13.43, 13.52, 13.62, 13.77, 13.78, 13.55, 13.44, 13.20]
 )
 spm_ground = OpenStudio::Model::SetpointManagerFollowGroundTemperature.new(model)
-spm_ground.setControlVariable("Temperature")
+spm_ground.setControlVariable('Temperature')
 spm_ground.setOffsetTemperatureDifference(0.0)
 spm_ground.setMaximumSetpointTemperature(80.0)
 spm_ground.setMinimumSetpointTemperature(10.0)
-spm_ground.setReferenceGroundTemperatureObjectType("Site:GroundTemperature:Deep")
+spm_ground.setReferenceGroundTemperatureObjectType('Site:GroundTemperature:Deep')
 spm_ground.addToNode(cw_loop.supplyOutletNode)
 
 ###############################################################################
@@ -179,7 +179,6 @@ plhp_airsource_clg.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurv
 
 hw_loop.addSupplyBranchForComponent(plhp_airsource_htg)
 chw_loop.addSupplyBranchForComponent(plhp_airsource_clg)
-
 
 ###############################################################
 
