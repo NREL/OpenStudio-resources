@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'openstudio'
-require 'lib/baseline_model'
+require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 
@@ -18,9 +18,6 @@ model.add_windows({ 'wwr' => 0.4,
                     'offset' => 1,
                     'application_type' => 'Above Floor' })
 
-# add ASHRAE System type 01, PTAC, Residential
-model.add_hvac({ 'ashrae_sys_num' => '01' })
-
 # add thermostats
 model.add_thermostats({ 'heating_setpoint' => 24,
                         'cooling_setpoint' => 28 })
@@ -34,6 +31,7 @@ model.set_space_type
 # add design days to the model (Chicago)
 model.add_design_days
 
+thermal_zones = model.getThermalZones.sort_by { |tz| tz.name.to_s }
 sub_surfaces = model.getSubSurfaces.sort_by { |ss| ss.name.to_s }
 windows = []
 sub_surfaces.each do |sub_surface|
@@ -41,13 +39,6 @@ sub_surfaces.each do |sub_surface|
 
   windows << sub_surface
 end
-
-# DaylightingDeviceShelf
-sub_surface = windows[0]
-shelf = OpenStudio::Model::DaylightingDeviceShelf.new(sub_surface)
-# shelf.setInsideShelf()
-# shelf.setOutsideShelf()
-# shelf.setViewFactortoOutsideShelf()
 
 # DaylightingDeviceTubular
 material = OpenStudio::Model::StandardOpaqueMaterial.new(model)
@@ -58,19 +49,37 @@ material.setSpecificHeat(837.4)
 construction = OpenStudio::Model::Construction.new(model)
 construction.insertLayer(0, material)
 
-thermal_zone = OpenStudio::Model::ThermalZone.new
-transition_zone = OpenStudio::Model::TransitionZone.new(thermal_zone, 1)
+points = OpenStudio::Point3dVector.new
+points << OpenStudio::Point3d.new(0, 1, 0.2)
+points << OpenStudio::Point3d.new(0, 0, 0.2)
+points << OpenStudio::Point3d.new(1, 0, 0.2)
+points << OpenStudio::Point3d.new(1, 1, 0.2)
+dome = OpenStudio::Model::SubSurface.new(points, model)
+dome.setName('Dome')
+dome.setSubSurfaceType('TubularDaylightDome')
+dome.setSurface(windows[0].surface.get)
 
-dome = windows[1]
-diffuser = windows[2]
+points = OpenStudio::Point3dVector.new
+points << OpenStudio::Point3d.new(0, 1, 0.1)
+points << OpenStudio::Point3d.new(0, 0, 0.1)
+points << OpenStudio::Point3d.new(1, 0, 0.1)
+points << OpenStudio::Point3d.new(1, 1, 0.1)
+diffuser = OpenStudio::Model::SubSurface.new(points, model)
+diffuser.setName('Diffuser')
+diffuser.setSubSurfaceType('TubularDaylightDiffuser')
+diffuser.setSurface(windows[0].surface.get)
+
 tubular = OpenStudio::Model::DaylightingDeviceTubular.new(dome, diffuser, construction)
-tubular.setDiameter(0.3556)
+tubular.setDiameter(1.1)
 tubular.setTotalLength(1.4)
 tubular.setEffectiveThermalResistance(0.28)
+
+thermal_zone = thermal_zones[0]
+transition_zone = OpenStudio::Model::TransitionZone.new(thermal_zone, 1)
 tubular.addTransitionZone(transition_zone)
 
 # DaylightingDeviceLightWell
-sub_surface = windows[3]
+sub_surface = windows[0]
 light_well = OpenStudio::Model::DaylightingDeviceLightWell.new(sub_surface)
 light_well.setHeightofWell(1.2)
 light_well.setPerimeterofBottomofWell(12.0)
