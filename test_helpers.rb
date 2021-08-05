@@ -854,7 +854,12 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     'OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow' => [
       'autosizedHeatingDesignCapacity', # No OS methods for this field
       'autosizedCoolingDesignCapacity' # No OS methods for this field
-    ]
+    ],
+
+    # CANNOT get autosize to work: https://github.com/NREL/EnergyPlus/issues/8948
+    'OS:HeatPump:PlantLoop:EIR:Heating' => 'all',
+    'OS:HeatPump:PlantLoop:EIR:Cooling' => 'all',
+
   }
 
   # Aliases for some OS onjects

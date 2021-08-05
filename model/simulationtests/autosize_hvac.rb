@@ -309,16 +309,13 @@ chw_storage.setSetpointTemperatureSchedule(chw_temp_sch)
 chw_loop.addSupplyBranchForComponent(chw_storage)
 storage_loop.addDemandBranchForComponent(chw_storage)
 
-# This is problematic, will make E+ crash if I put it on the chw_loop, so try
-# storage_loop instead
-plhp_clg = OpenStudio::Model::HeatPumpPlantLoopEIRCooling.new(model)
-plhp_clg.autosizeReferenceCapacity
-plhp_clg.autosizeReferenceSourceSideFlowRate
-plhp_clg.autosizeReferenceLoadSideFlowRate
-plhp_clg.setSizingFactor(0.1)
-# storage_loop.addSupplyBranchForComponent(plhp_clg)
-chw_loop.addSupplyBranchForComponent(plhp_clg)
-# cw_loop.addDemandBranchForComponent(plhp_clg)
+# TODO: I CANNOT GET autosizeReferenceCapacity to work in E+: see https://github.com/NREL/EnergyPlus/issues/8948
+# plhp_clg = OpenStudio::Model::HeatPumpPlantLoopEIRCooling.new(model)
+# plhp_clg.autosizeReferenceCapacity
+# plhp_clg.autosizeReferenceSourceSideFlowRate
+# plhp_clg.autosizeReferenceLoadSideFlowRate
+# plhp_clg.setSizingFactor(1)
+# chw_loop.addSupplyBranchForComponent(plhp_clg)
 
 # chw_loop.addSupplyBranchForComponent(OpenStudio::Model::ChillerHeaterPerformanceElectricEIR.new(model))
 
@@ -362,18 +359,16 @@ hx.setControlType('HeatingSetpointModulated')
 hw_loop.addSupplyBranchForComponent(hx)
 cw_loop.addDemandBranchForComponent(hx)
 
-plhp_htg = OpenStudio::Model::HeatPumpPlantLoopEIRHeating.new(model)
-plhp_htg.autosizeReferenceCapacity
-plhp_htg.autosizeReferenceSourceSideFlowRate
-plhp_htg.autosizeReferenceLoadSideFlowRate
-plhp_htg.setSizingFactor(0.1)
-# Can't get it to work if I put it on the HW loop, so put it on the SHW loop
-# swh_loop.addSupplyBranchForComponent(plhp_htg)
-hw_loop.addSupplyBranchForComponent(plhp_htg)
-# cw_loop.addDemandBranchForComponent(plhp_htg)
-
-plhp_clg.setCompanionHeatingHeatPump(plhp_htg)
-plhp_htg.setCompanionCoolingHeatPump(plhp_clg)
+# TODO: I CANNOT GET autosizeReferenceCapacity to work in E+: see https://github.com/NREL/EnergyPlus/issues/8948
+# plhp_htg = OpenStudio::Model::HeatPumpPlantLoopEIRHeating.new(model)
+# plhp_htg.autosizeReferenceCapacity()
+# plhp_htg.autosizeReferenceSourceSideFlowRate
+# plhp_htg.autosizeReferenceLoadSideFlowRate
+# plhp_htg.setSizingFactor(1.0)
+# hw_loop.addSupplyBranchForComponent(plhp_htg)
+#
+# plhp_clg.setCompanionHeatingHeatPump(plhp_htg)
+# plhp_htg.setCompanionCoolingHeatPump(plhp_clg)
 
 # This is an Uncontrolled component, should be last
 hw_loop.addSupplyBranchForComponent(OpenStudio::Model::PlantComponentTemperatureSource.new(model))
