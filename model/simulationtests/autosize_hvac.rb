@@ -314,8 +314,8 @@ storage_loop.addDemandBranchForComponent(chw_storage)
 plhp_clg = OpenStudio::Model::HeatPumpPlantLoopEIRCooling.new(model)
 plhp_clg.setReferenceCapacity(400000)
 # plhp_clg.autosizeReferenceCapacity
-plhp_clg.autosizeReferenceSourceSideFlowRate
-plhp_clg.autosizeReferenceLoadSideFlowRate
+plhp_clg.autosizeSourceSideReferenceFlowRate
+plhp_clg.autosizeLoadSideReferenceFlowRate
 plhp_clg.setSizingFactor(1)
 chw_loop.addSupplyBranchForComponent(plhp_clg)
 # The Source Side Volume Flow Rate is reported only for WaterSource apparently
@@ -366,8 +366,8 @@ cw_loop.addDemandBranchForComponent(hx)
 plhp_htg = OpenStudio::Model::HeatPumpPlantLoopEIRHeating.new(model)
 plhp_htg.setReferenceCapacity(80000)
 # plhp_htg.autosizeReferenceCapacity()
-plhp_htg.autosizeReferenceSourceSideFlowRate
-plhp_htg.autosizeReferenceLoadSideFlowRate
+plhp_htg.autosizeSourceSideReferenceFlowRate
+plhp_htg.autosizeLoadSideReferenceFlowRate
 plhp_htg.setSizingFactor(1.0)
 hw_loop.addSupplyBranchForComponent(plhp_htg)
 # The Source Side Volume Flow Rate is reported only for WaterSource apparently

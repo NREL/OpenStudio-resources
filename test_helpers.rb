@@ -930,14 +930,6 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     'OS:HeatPump:WaterToWater:EquationFit:Cooling' => {
       'autosizedReferenceCoolingCapacity' => 'autosizedRatedCoolingCapacity',
       'autosizedReferenceCoolingPowerConsumption' => 'autosizedRatedCoolingPowerConsumption'
-    },
-    'OS:HeatPump:PlantLoop:EIR:Cooling' => {
-      'autosizedLoadSideReferenceFlowRate' => 'autosizedReferenceLoadSideFlowRate',
-      'autosizedSourceSideReferenceFlowRate' => 'autosizedReferenceSourceSideFlowRate'
-    },
-    'OS:HeatPump:PlantLoop:EIR:Heating' => {
-      'autosizedLoadSideReferenceFlowRate' => 'autosizedReferenceLoadSideFlowRate',
-      'autosizedSourceSideReferenceFlowRate' => 'autosizedReferenceSourceSideFlowRate'
     }
   }
 
