@@ -858,7 +858,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
 
     # CANNOT get autosize to work: https://github.com/NREL/EnergyPlus/issues/8948
     'OS:HeatPump:PlantLoop:EIR:Heating' => 'all',
-    'OS:HeatPump:PlantLoop:EIR:Cooling' => 'all',
+    'OS:HeatPump:PlantLoop:EIR:Cooling' => 'all'
 
   }
 
