@@ -355,7 +355,6 @@ wwhp = OpenStudio::Model::HeatPumpWaterToWaterEquationFitHeating.new(model)
 hw_loop.addSupplyBranchForComponent(wwhp)
 cw_loop.addDemandBranchForComponent(wwhp)
 hx = OpenStudio::Model::HeatExchangerFluidToFluid.new(model)
-hx.setControlType('HeatingSetpointModulated')
 hw_loop.addSupplyBranchForComponent(hx)
 cw_loop.addDemandBranchForComponent(hx)
 
