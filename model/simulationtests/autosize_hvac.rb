@@ -349,6 +349,8 @@ cw_loop.addDemandBranchForComponent(wwhp)
 hx = OpenStudio::Model::HeatExchangerFluidToFluid.new(model)
 hw_loop.addSupplyBranchForComponent(hx)
 cw_loop.addDemandBranchForComponent(hx)
+
+# This is an Uncontrolled component, should be last
 hw_loop.addSupplyBranchForComponent(OpenStudio::Model::PlantComponentTemperatureSource.new(model))
 # hw_loop.addSupplyBranchForComponent(OpenStudio::Model::SolarCollectorFlatPlatePhotovoltaicThermal.new(model))
 # hw_loop.addSupplyBranchForComponent(OpenStudio::Model::CoilWaterHeatingAirToWaterHeatPump.new(model))
@@ -712,6 +714,20 @@ hx = OpenStudio::Model::HeatExchangerDesiccantBalancedFlow.new(model)
 hxPerfDataType1 = hx.heatExchangerPerformance
 hxPerfDataType1.autosizeNominalAirFlowRate
 hxPerfDataType1.autosizeNominalAirFaceVelocity
+# This object is problematic, try to relax the min/max boundaries...
+
+# Instead of 21.83
+hxPerfDataType1.setMaximumProcessInletAirTemperatureforTemperatureEquation(30.0)
+hxPerfDataType1.setMaximumProcessInletAirTemperatureforHumidityRatioEquation(30.0)
+
+# Instead of 2.286
+hxPerfDataType1.setMinimumRegenerationAirVelocityforTemperatureEquation(1.0)
+hxPerfDataType1.setMinimumRegenerationAirVelocityforHumidityRatioEquation(1.0)
+
+# Instead of 80.0
+hxPerfDataType1.setMinimumProcessInletAirRelativeHumidityforTemperatureEquation(35.0)
+hxPerfDataType1.setMinimumProcessInletAirRelativeHumidityforHumidityRatioEquation(35.0)
+
 # Add the HX on the Outdoor Air System
 oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
 oa_controller.autosizeMinimumOutdoorAirFlowRate # OS has a bad default of zero, which disables autosizing
@@ -745,6 +761,15 @@ sat_stpt_manager.addToNode(hx_dessicant_loop.supplyOutletNode)
 
 term = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 hx_dessicant_loop.addBranchForZone(zones[40], term)
+
+spm_max_hum = OpenStudio::Model::SetpointManagerSingleZoneHumidityMaximum.new(model)
+spm_max_hum.setControlZone(zones[40])
+spm_max_hum.addToNode(hx_outlet)
+dehumidify_sch = OpenStudio::Model::ScheduleConstant.new(model)
+dehumidify_sch.setValue(45)
+humidistat = OpenStudio::Model::ZoneControlHumidistat.new(model)
+humidistat.setHumidifyingRelativeHumiditySetpointSchedule(dehumidify_sch)
+zones[40].setZoneControlHumidistat(humidistat)
 
 ### Zone HVAC and Terminals ###
 # Add one of every single kind of Zone HVAC equipment supported by OS
