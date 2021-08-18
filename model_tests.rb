@@ -254,7 +254,7 @@ class ModelTests < Minitest::Test
     result = sim_test('coilsystem_dxhx_desiccant_balancedflow.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.2.0
+  # TODO: To be added in the next official release after: 3.2.1
   # def test_coilsystem_dxhx_desiccant_balancedflow_osm
   # result = sim_test('coilsystem_dxhx_desiccant_balancedflow.osm')
   # end
@@ -517,7 +517,7 @@ class ModelTests < Minitest::Test
     result = sim_test('heatexchanger_desiccant_balancedflow.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.2.0
+  # TODO: To be added in the next official release after: 3.2.1
   # def test_heatexchanger_desiccant_balancedflow_osm
   # result = sim_test('heatexchanger_desiccant_balancedflow.osm')
   # end
