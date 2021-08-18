@@ -315,19 +315,17 @@ class ModelTests < Minitest::Test
     result = sim_test('doas.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.2.0
-  # def test_doas_coil_cooling_dx_two_speed_osm
-  # result = sim_test('doas_coil_cooling_dx_two_speed.osm')
-  # end
+  def test_doas_coil_cooling_dx_two_speed_osm
+    result = sim_test('doas_coil_cooling_dx_two_speed.osm')
+  end
 
   def test_doas_coil_cooling_dx_two_speed_rb
     result = sim_test('doas_coil_cooling_dx_two_speed.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.2.0
-  # def test_doas_heatexchanger_airtoair_sensibleandlatent_osm
-  # result = sim_test('doas_heatexchanger_airtoair_sensibleandlatent.osm')
-  # end
+  def test_doas_heatexchanger_airtoair_sensibleandlatent_osm
+    result = sim_test('doas_heatexchanger_airtoair_sensibleandlatent.osm')
+  end
 
   def test_doas_heatexchanger_airtoair_sensibleandlatent_rb
     result = sim_test('doas_heatexchanger_airtoair_sensibleandlatent.rb')
