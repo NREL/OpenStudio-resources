@@ -32,12 +32,20 @@ model.set_space_type
 model.add_design_days
 
 thermal_zones = model.getThermalZones.sort_by { |tz| tz.name.to_s }
-sub_surfaces = model.getSubSurfaces.sort_by { |ss| ss.name.to_s }
-windows = []
-sub_surfaces.each do |sub_surface|
-  next if sub_surface.subSurfaceType != 'FixedWindow'
+thermal_zone = thermal_zones[0]
+spaces = thermal_zone.spaces.sort_by { |s| s.name.to_s }
 
-  windows << sub_surface
+windows = []
+spaces.each do |space|
+  surfaces = space.surfaces.sort_by {|s| s.name.to_s }
+  surfaces.each do |surface|
+    sub_surfaces = surface.subSurfaces.sort_by { |ss| ss.name.to_s }
+    sub_surfaces.each do |sub_surface|
+      next if sub_surface.subSurfaceType != 'FixedWindow'
+
+      windows << sub_surface
+    end
+  end
 end
 
 window1 = windows[0]
@@ -77,7 +85,6 @@ tubular.setDiameter(1.1)
 tubular.setTotalLength(1.4)
 tubular.setEffectiveThermalResistance(0.28)
 
-thermal_zone = thermal_zones[0]
 transition_zone = OpenStudio::Model::TransitionZone.new(thermal_zone, 1)
 tubular.addTransitionZone(transition_zone)
 
