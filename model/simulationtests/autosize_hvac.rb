@@ -309,6 +309,18 @@ chw_storage.setSetpointTemperatureSchedule(chw_temp_sch)
 chw_loop.addSupplyBranchForComponent(chw_storage)
 storage_loop.addDemandBranchForComponent(chw_storage)
 
+# TODO: I CANNOT GET autosizeReferenceCapacity to work in E+: see https://github.com/NREL/EnergyPlus/issues/8948
+# Yet it is still reported... so whatever
+plhp_clg = OpenStudio::Model::HeatPumpPlantLoopEIRCooling.new(model)
+plhp_clg.setReferenceCapacity(400000)
+# plhp_clg.autosizeReferenceCapacity
+plhp_clg.autosizeSourceSideReferenceFlowRate
+plhp_clg.autosizeLoadSideReferenceFlowRate
+plhp_clg.setSizingFactor(1)
+chw_loop.addSupplyBranchForComponent(plhp_clg)
+# The Source Side Volume Flow Rate is reported only for WaterSource apparently
+cw_loop.addDemandBranchForComponent(plhp_clg)
+
 # chw_loop.addSupplyBranchForComponent(OpenStudio::Model::ChillerHeaterPerformanceElectricEIR.new(model))
 
 ### Hot water loop ###
@@ -349,6 +361,20 @@ cw_loop.addDemandBranchForComponent(wwhp)
 hx = OpenStudio::Model::HeatExchangerFluidToFluid.new(model)
 hw_loop.addSupplyBranchForComponent(hx)
 cw_loop.addDemandBranchForComponent(hx)
+
+# TODO: I CANNOT GET autosizeReferenceCapacity to work in E+: see https://github.com/NREL/EnergyPlus/issues/8948
+plhp_htg = OpenStudio::Model::HeatPumpPlantLoopEIRHeating.new(model)
+plhp_htg.setReferenceCapacity(80000)
+# plhp_htg.autosizeReferenceCapacity()
+plhp_htg.autosizeSourceSideReferenceFlowRate
+plhp_htg.autosizeLoadSideReferenceFlowRate
+plhp_htg.setSizingFactor(1.0)
+hw_loop.addSupplyBranchForComponent(plhp_htg)
+# The Source Side Volume Flow Rate is reported only for WaterSource apparently
+cw_loop.addDemandBranchForComponent(plhp_htg)
+
+plhp_clg.setCompanionHeatingHeatPump(plhp_htg)
+plhp_htg.setCompanionCoolingHeatPump(plhp_clg)
 
 # This is an Uncontrolled component, should be last
 hw_loop.addSupplyBranchForComponent(OpenStudio::Model::PlantComponentTemperatureSource.new(model))
@@ -754,7 +780,7 @@ htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model)
 htg_coil.addToNode(hx_dessicant_loop.supplyOutletNode)
 clg_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
 clg_coil.addToNode(hx_dessicant_loop.supplyOutletNode)
-fan = OpenStudio::Model::FanComponentModel.new(model)
+fan = OpenStudio::Model::FanVariableVolume.new(model)
 fan.addToNode(hx_dessicant_loop.supplyOutletNode)
 sat_stpt_manager = sat_stpt_manager.clone(model).to_SetpointManagerScheduled.get
 sat_stpt_manager.addToNode(hx_dessicant_loop.supplyOutletNode)
