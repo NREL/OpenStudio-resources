@@ -40,6 +40,9 @@ sub_surfaces.each do |sub_surface|
   windows << sub_surface
 end
 
+window1 = windows[0]
+window2 = windows[1]
+
 # DaylightingDeviceTubular
 material = OpenStudio::Model::StandardOpaqueMaterial.new(model)
 material.setThickness(0.2032)
@@ -57,7 +60,7 @@ points << OpenStudio::Point3d.new(1, 1, 0.2)
 dome = OpenStudio::Model::SubSurface.new(points, model)
 dome.setName('Dome')
 dome.setSubSurfaceType('TubularDaylightDome')
-dome.setSurface(windows[0].surface.get)
+dome.setSurface(window1.surface.get)
 
 points = OpenStudio::Point3dVector.new
 points << OpenStudio::Point3d.new(0, 1, 0.1)
@@ -67,7 +70,7 @@ points << OpenStudio::Point3d.new(1, 1, 0.1)
 diffuser = OpenStudio::Model::SubSurface.new(points, model)
 diffuser.setName('Diffuser')
 diffuser.setSubSurfaceType('TubularDaylightDiffuser')
-diffuser.setSurface(windows[0].surface.get)
+diffuser.setSurface(window1.surface.get)
 
 tubular = OpenStudio::Model::DaylightingDeviceTubular.new(dome, diffuser, construction)
 tubular.setDiameter(1.1)
@@ -79,12 +82,35 @@ transition_zone = OpenStudio::Model::TransitionZone.new(thermal_zone, 1)
 tubular.addTransitionZone(transition_zone)
 
 # DaylightingDeviceLightWell
-sub_surface = windows[0]
+sub_surface = window1
+
 light_well = OpenStudio::Model::DaylightingDeviceLightWell.new(sub_surface)
 light_well.setHeightofWell(1.2)
 light_well.setPerimeterofBottomofWell(12.0)
 light_well.setAreaofBottomofWell(9.0)
 light_well.setVisibleReflectanceofWellWalls(0.7)
+
+# DaylightingDeviceShelf
+sub_surface = window2
+
+points = OpenStudio::Point3dVector.new
+points << OpenStudio::Point3d.new(0, 1, 0.3)
+points << OpenStudio::Point3d.new(0, 0, 0.3)
+points << OpenStudio::Point3d.new(1, 0, 0.3)
+points << OpenStudio::Point3d.new(1, 1, 0.3)
+inside_shelf = OpenStudio::Model::InteriorPartitionSurface.new(points, model)
+
+points = OpenStudio::Point3dVector.new
+points << OpenStudio::Point3d.new(0, 1, 0.4)
+points << OpenStudio::Point3d.new(0, 0, 0.4)
+points << OpenStudio::Point3d.new(1, 0, 0.4)
+points << OpenStudio::Point3d.new(1, 1, 0.4)
+outside_shelf = OpenStudio:Model::ShadingSurface.new(points, model)
+
+shelf = OpenStudio::Model::DaylightingDeviceShelf.new(sub_surface)
+shelf.setInsideShelf(inside_shelf)
+shelf.setOutsideShelf(outside_shelf)
+shelf.setViewFactortoOutsideShelf(0.5)
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
