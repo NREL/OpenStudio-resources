@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'openstudio'
-require 'lib/baseline_model'
+require_relative 'lib/baseline_model'
 
 # Creates a simple condenser loop with a CT SingleSpeed, a Pump:VariableSpeed
 # and a SPM:FollowOutdoorAirTemperature on the supply side
