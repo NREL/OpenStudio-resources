@@ -287,7 +287,7 @@ class ModelTests < Minitest::Test
     result = sim_test('daylighting_devices.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.2.0
+  # TODO: To be added in the next official release after: 3.2.1
   # def test_daylighting_devices_osm
   # result = sim_test('daylighting_devices.osm')
   # end
