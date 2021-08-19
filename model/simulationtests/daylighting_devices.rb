@@ -112,7 +112,7 @@ points << OpenStudio::Point3d.new(0, 1, 0.4)
 points << OpenStudio::Point3d.new(0, 0, 0.4)
 points << OpenStudio::Point3d.new(1, 0, 0.4)
 points << OpenStudio::Point3d.new(1, 1, 0.4)
-outside_shelf = OpenStudio:Model::ShadingSurface.new(points, model)
+outside_shelf = OpenStudio::Model::ShadingSurface.new(points, model)
 
 shelf = OpenStudio::Model::DaylightingDeviceShelf.new(sub_surface)
 shelf.setInsideShelf(inside_shelf)
