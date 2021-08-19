@@ -3,7 +3,7 @@
 # This tests the classes that derive from ExteriorLoadDefinition and ExteriorLoadInstance
 
 require 'openstudio'
-require 'lib/baseline_model'
+require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 
