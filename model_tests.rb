@@ -1085,7 +1085,7 @@ class ModelTests < Minitest::Test
     result = sim_test('unitary_vav_bypass_coiltypes.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.2.0
+  # TODO: To be added in the next official release after: 3.2.1
   # def test_unitary_vav_bypass_coiltypes_osm
   # result = sim_test('unitary_vav_bypass_coiltypes.osm')
   # end
