@@ -3,6 +3,8 @@
 require 'openstudio'
 require_relative 'lib/baseline_model'
 
+t = Time.now
+
 model = BaselineModel.new
 
 # make a 2 story, 100m X 50m, 10 zone core/perimeter building
@@ -88,5 +90,16 @@ end
 # remove airloop
 air_loop.remove
 
+puts "#{Time.now - t}"
+t = Time.now
+
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd, 'osm_name' => 'in.osm' })
+
+puts "#{Time.now - t}"
+t = Time.now
+
+ft = OpenStudio::EnergyPlus::ForwardTranslator.new
+w = ft.translateModel(model)
+
+puts "#{Time.now - t}"
