@@ -5,7 +5,7 @@
 # This feature was added in 3.2.0
 
 require 'openstudio'
-require 'lib/baseline_model'
+require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 

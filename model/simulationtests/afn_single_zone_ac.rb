@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'openstudio'
-require 'lib/baseline_model'
-require 'lib/surface_visitor'
+require_relative 'lib/baseline_model'
+require_relative 'lib/surface_visitor'
 
 class SurfaceNetworkBuilder < SurfaceVisitor
   def initialize(model)
