@@ -33,6 +33,7 @@ model.add_design_days
 
 thermal_zones = model.getThermalZones.sort_by { |tz| tz.name.to_s }
 thermal_zone = thermal_zones[0]
+thermal_zone.setUseIdealAirLoads(true)
 spaces = thermal_zone.spaces.sort_by { |s| s.name.to_s }
 
 windows = []
@@ -109,21 +110,14 @@ light_well.setVisibleReflectanceofWellWalls(0.7)
 
 sub_surface = window2
 
-#### Inside shelf
-partitionGroup = OpenStudio::Model::InteriorPartitionSurfaceGroup.new(model)
-partitionGroup.setSpace(sub_surface.space.get)
-
-points = OpenStudio::Point3dVector.new
-points << OpenStudio::Point3d.new(0, 1, 0.3)
-points << OpenStudio::Point3d.new(0, 0, 0.3)
-points << OpenStudio::Point3d.new(1, 0, 0.3)
-points << OpenStudio::Point3d.new(1, 1, 0.3)
-inside_shelf = OpenStudio::Model::InteriorPartitionSurface.new(points, model)
-inside_shelf.setInteriorPartitionSurfaceGroup(partitionGroup)
-
 #### Outside Shelf
 # This shading sf must have a construction as  it's used as an outside shelf
-shadingSurface = sub_surface.addOverhangByProjectionFactor(0.5, 0.1).get
+projectionFactor = 0.7
+# Note that E+ will fatal is the width of the wndow and outside shelf do not
+# match
+offsetFraction = 0
+shadingSurface = sub_surface.addOverhangByProjectionFactor(projectionFactor, offsetFraction).get
+shadingSurface.setName("Outside Shelf Shading Surface")
 shadingMat = OpenStudio::Model::StandardOpaqueMaterial.new(model)
 shadingMat.setName('C12 - 2 IN HW CONCRETE - PAINTED WHITE')
 shadingMat.setRoughness('MediumRough')
@@ -140,11 +134,54 @@ shadingConstruction.setName('Outside Shelf Construction')
 
 shadingSurface.setConstruction(shadingConstruction)
 
+#### Inside shelf
+partitionGroup = OpenStudio::Model::InteriorPartitionSurfaceGroup.new(model)
+partitionGroup.setSpace(sub_surface.space.get)
+
+# We'll mimic what the add addOverhangByProjectionFactor does to create a
+# symetrical (w/ respect to window plane) inside shelf
+# so in the end it looks like this from the side
+# out    in
+#  v     v
+# ___ | ___
+#     ^
+#    window
+vertices = sub_surface.vertices
+transformation = OpenStudio::Transformation::alignFace(vertices)
+faceVertices = transformation.inverse * vertices
+
+# new coordinate system has z' in direction of outward normal, y' is up
+xmin = faceVertices.map{|v| v.x}.min
+xmax = faceVertices.map{|v| v.x}.max
+ymin = faceVertices.map{|v| v.y}.min
+ymax = faceVertices.map{|v| v.y}.max
+
+raise if ((xmin > xmax) || (ymin > ymax))
+
+offset = offsetFraction * (ymax - ymin)
+depth = projectionFactor * (offset + (ymax - ymin))
+
+interiorVertices = OpenStudio::Point3dVector.new
+# Make them counterclockwise order
+interiorVertices << OpenStudio::Point3d.new(xmax + offset, ymax + offset, -depth) # Inverse of the shading surface (+depth)
+interiorVertices << OpenStudio::Point3d.new(xmin - offset, ymax + offset, -depth) # Inverse of the shading surface (+depth)
+interiorVertices << OpenStudio::Point3d.new(xmin - offset, ymax + offset, 0)
+interiorVertices << OpenStudio::Point3d.new(xmax + offset, ymax + offset, 0)
+
+interiorPts = transformation * interiorVertices
+
+inside_shelf = OpenStudio::Model::InteriorPartitionSurface.new(interiorPts, model)
+inside_shelf.setName("Inside Shelf Partition Surface")
+inside_shelf.setInteriorPartitionSurfaceGroup(partitionGroup)
+
+
 #### Shelf itself
 shelf = OpenStudio::Model::DaylightingDeviceShelf.new(sub_surface)
+shelf.setName("DaylightingDeviceShelf")
 shelf.setInsideShelf(inside_shelf)
 shelf.setOutsideShelf(shadingSurface)
-shelf.setViewFactortoOutsideShelf(0.5)
+# Will be automacilly calculated
+shelf.resetViewFactortoOutsideShelf()
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
