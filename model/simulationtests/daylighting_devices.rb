@@ -117,7 +117,7 @@ projectionFactor = 0.7
 # match
 offsetFraction = 0
 shadingSurface = sub_surface.addOverhangByProjectionFactor(projectionFactor, offsetFraction).get
-shadingSurface.setName("Outside Shelf Shading Surface")
+shadingSurface.setName('Outside Shelf Shading Surface')
 shadingMat = OpenStudio::Model::StandardOpaqueMaterial.new(model)
 shadingMat.setName('C12 - 2 IN HW CONCRETE - PAINTED WHITE')
 shadingMat.setRoughness('MediumRough')
@@ -147,16 +147,16 @@ partitionGroup.setSpace(sub_surface.space.get)
 #     ^
 #    window
 vertices = sub_surface.vertices
-transformation = OpenStudio::Transformation::alignFace(vertices)
+transformation = OpenStudio::Transformation.alignFace(vertices)
 faceVertices = transformation.inverse * vertices
 
 # new coordinate system has z' in direction of outward normal, y' is up
-xmin = faceVertices.map{|v| v.x}.min
-xmax = faceVertices.map{|v| v.x}.max
-ymin = faceVertices.map{|v| v.y}.min
-ymax = faceVertices.map{|v| v.y}.max
+xmin = faceVertices.map(&:x).min
+xmax = faceVertices.map(&:x).max
+ymin = faceVertices.map(&:y).min
+ymax = faceVertices.map(&:y).max
 
-raise if ((xmin > xmax) || (ymin > ymax))
+raise if (xmin > xmax) || (ymin > ymax)
 
 offset = offsetFraction * (ymax - ymin)
 depth = projectionFactor * (offset + (ymax - ymin))
@@ -171,17 +171,16 @@ interiorVertices << OpenStudio::Point3d.new(xmax + offset, ymax + offset, 0)
 interiorPts = transformation * interiorVertices
 
 inside_shelf = OpenStudio::Model::InteriorPartitionSurface.new(interiorPts, model)
-inside_shelf.setName("Inside Shelf Partition Surface")
+inside_shelf.setName('Inside Shelf Partition Surface')
 inside_shelf.setInteriorPartitionSurfaceGroup(partitionGroup)
-
 
 #### Shelf itself
 shelf = OpenStudio::Model::DaylightingDeviceShelf.new(sub_surface)
-shelf.setName("DaylightingDeviceShelf")
+shelf.setName('DaylightingDeviceShelf')
 shelf.setInsideShelf(inside_shelf)
 shelf.setOutsideShelf(shadingSurface)
 # Will be automacilly calculated
-shelf.resetViewFactortoOutsideShelf()
+shelf.resetViewFactortoOutsideShelf
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
