@@ -37,7 +37,7 @@ spaces = thermal_zone.spaces.sort_by { |s| s.name.to_s }
 
 windows = []
 spaces.each do |space|
-  surfaces = space.surfaces.sort_by {|s| s.name.to_s }
+  surfaces = space.surfaces.sort_by { |s| s.name.to_s }
   surfaces.each do |surface|
     sub_surfaces = surface.subSurfaces.sort_by { |ss| ss.name.to_s }
     sub_surfaces.each do |sub_surface|
