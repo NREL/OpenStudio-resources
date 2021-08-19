@@ -4,7 +4,7 @@
 # and MeterCustomDecrement
 #
 require 'openstudio'
-require 'lib/baseline_model'
+require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 
