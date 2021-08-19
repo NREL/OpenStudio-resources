@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'openstudio'
-require 'lib/baseline_model'
+require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 
@@ -18,19 +18,17 @@ model.add_windows({ 'wwr' => 0.4,
                     'offset' => 1,
                     'application_type' => 'Above Floor' })
 
-air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
+# Make a Dual Duct AirLoopHVAC
+air_loop = OpenStudio::Model::AirLoopHVAC.new(model, true)
+
+fan = OpenStudio::Model::FanVariableVolume.new(model)
+fan.addToNode(air_loop.supplyInletNode)
 
 oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
 oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, oa_controller)
-oa_system.addToNode(air_loop.supplyOutletNode)
+oa_system.addToNode(air_loop.supplyInletNode)
 
-fan = OpenStudio::Model::FanVariableVolume.new(model)
-fan.addToNode(air_loop.supplyOutletNode)
-
-splitter = OpenStudio::Model::ConnectorSplitter.new(model)
-splitter.addToNode(air_loop.supplyOutletNode)
-
-# After adding the splitter, we will now have two supply outlet nodes
+# After the splitter, we will now have two supply outlet nodes
 supply_outlet_nodes = air_loop.supplyOutletNodes
 
 heating_coil = OpenStudio::Model::CoilHeatingGas.new(model)
