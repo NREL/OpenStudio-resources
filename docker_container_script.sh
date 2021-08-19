@@ -84,6 +84,5 @@ fi
 
 # From within a testruns/modelxxx/ directory:
 # cp in.osm ~/test/`basename ${PWD%.*}`.osm
-
-
-
+# Locally:
+# cp in.osm ../../model/simulationtests/`basename ${PWD%.*}`.osm

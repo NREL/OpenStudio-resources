@@ -5,7 +5,7 @@
 # (OutdoorWetBulb is tested in plant_op_schemes.rb)
 
 require 'openstudio'
-require 'lib/baseline_model'
+require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 

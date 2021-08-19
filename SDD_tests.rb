@@ -317,6 +317,14 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('doas.osm')
   end
 
+  def test_FT_doas_coil_cooling_dx_two_speed
+    sdd_ft_test('doas_coil_cooling_dx_two_speed.osm')
+  end
+
+  def test_FT_doas_heatexchanger_airtoair_sensibleandlatent
+    sdd_ft_test('doas_heatexchanger_airtoair_sensibleandlatent.osm')
+  end
+
   def test_FT_dsn_oa_w_ideal_loads
     sdd_ft_test('dsn_oa_w_ideal_loads.osm')
   end
@@ -347,6 +355,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_ems_scott
     sdd_ft_test('ems_scott.osm')
+  end
+
+  def test_FT_environmental_factors
+    sdd_ft_test('environmental_factors.osm')
   end
 
   def test_FT_epw_design_conditions
