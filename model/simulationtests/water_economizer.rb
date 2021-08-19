@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'openstudio'
-require 'lib/baseline_model'
+require_relative 'lib/baseline_model'
 # use line below when running in ruby 2.0
 # require_relative 'lib/baseline_model'
 

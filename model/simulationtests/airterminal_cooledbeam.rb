@@ -3,7 +3,7 @@
 # require 'C:/Users/aparker/Documents/GitHub/OpenStudio/build/OpenStudioCore-prefix/src/OpenStudioCore-build/ruby/Debug/openstudio'
 # require 'C:/Projects/OpenStudio-Resources/model/simulationtests/lib/baseline_model'
 require 'openstudio'
-require 'lib/baseline_model'
+require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 

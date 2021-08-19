@@ -2,7 +2,7 @@
 
 require 'openstudio'
 # require 'C:/Projects/OpenStudio_branch/build/OpenStudioCore-prefix/src/OpenStudioCore-build/ruby/Debug/openstudio.rb'
-require 'lib/baseline_model'
+require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 

@@ -4,7 +4,7 @@
 # added in the OS:DefaultConstructionSet
 
 require 'openstudio'
-require 'lib/baseline_model'
+require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 
