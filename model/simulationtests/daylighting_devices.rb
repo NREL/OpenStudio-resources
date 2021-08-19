@@ -51,7 +51,10 @@ end
 window1 = windows[0]
 window2 = windows[1]
 
-# DaylightingDeviceTubular
+###############################################################################
+#                          DaylightingDeviceTubular                           #
+###############################################################################
+
 material = OpenStudio::Model::StandardOpaqueMaterial.new(model)
 material.setThickness(0.2032)
 material.setConductivity(1.3114056)
@@ -88,7 +91,10 @@ tubular.setEffectiveThermalResistance(0.28)
 transition_zone = OpenStudio::Model::TransitionZone.new(thermal_zone, 1)
 tubular.addTransitionZone(transition_zone)
 
-# DaylightingDeviceLightWell
+###############################################################################
+#                         DaylightingDeviceLightWell                          #
+###############################################################################
+
 sub_surface = window1
 
 light_well = OpenStudio::Model::DaylightingDeviceLightWell.new(sub_surface)
@@ -97,8 +103,15 @@ light_well.setPerimeterofBottomofWell(12.0)
 light_well.setAreaofBottomofWell(9.0)
 light_well.setVisibleReflectanceofWellWalls(0.7)
 
-# DaylightingDeviceShelf
+###############################################################################
+#                           DaylightingDeviceShelf                            #
+###############################################################################
+
 sub_surface = window2
+
+#### Inside shelf
+partitionGroup = OpenStudio::Model::InteriorPartitionSurfaceGroup.new(model)
+partitionGroup.setSpace(sub_surface.space.get)
 
 points = OpenStudio::Point3dVector.new
 points << OpenStudio::Point3d.new(0, 1, 0.3)
@@ -106,17 +119,31 @@ points << OpenStudio::Point3d.new(0, 0, 0.3)
 points << OpenStudio::Point3d.new(1, 0, 0.3)
 points << OpenStudio::Point3d.new(1, 1, 0.3)
 inside_shelf = OpenStudio::Model::InteriorPartitionSurface.new(points, model)
+inside_shelf.setInteriorPartitionSurfaceGroup(partitionGroup)
 
-points = OpenStudio::Point3dVector.new
-points << OpenStudio::Point3d.new(0, 1, 0.4)
-points << OpenStudio::Point3d.new(0, 0, 0.4)
-points << OpenStudio::Point3d.new(1, 0, 0.4)
-points << OpenStudio::Point3d.new(1, 1, 0.4)
-outside_shelf = OpenStudio::Model::ShadingSurface.new(points, model)
+#### Outside Shelf
+# This shading sf must have a construction as  it's used as an outside shelf
+shadingSurface = sub_surface.addOverhangByProjectionFactor(0.5, 0.1).get
+shadingMat = OpenStudio::Model::StandardOpaqueMaterial.new(model)
+shadingMat.setName('C12 - 2 IN HW CONCRETE - PAINTED WHITE')
+shadingMat.setRoughness('MediumRough')
+shadingMat.setThickness(OpenStudio.convert(2, 'in', 'm').get)
+shadingMat.setConductivity(1.729577)
+shadingMat.setDensity(2242.585)
+shadingMat.setSpecificHeat(836.8)
+shadingMat.setThermalAbsorptance(0.9)
+shadingMat.setSolarAbsorptance(0.3)
+shadingMat.setVisibleAbsorptance(0.3)
 
+shadingConstruction = OpenStudio::Model::Construction.new([shadingMat])
+shadingConstruction.setName('Outside Shelf Construction')
+
+shadingSurface.setConstruction(shadingConstruction)
+
+#### Shelf itself
 shelf = OpenStudio::Model::DaylightingDeviceShelf.new(sub_surface)
 shelf.setInsideShelf(inside_shelf)
-shelf.setOutsideShelf(outside_shelf)
+shelf.setOutsideShelf(shadingSurface)
 shelf.setViewFactortoOutsideShelf(0.5)
 
 # save the OpenStudio model (.osm)
