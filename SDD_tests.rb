@@ -357,6 +357,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('ems_scott.osm')
   end
 
+  def test_FT_environmental_factors
+    sdd_ft_test('environmental_factors.osm')
+  end
+
   def test_FT_epw_design_conditions
     sdd_ft_test('epw_design_conditions.osm')
   end
