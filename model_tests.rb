@@ -283,6 +283,15 @@ class ModelTests < Minitest::Test
     result = sim_test('cooling_coils.osm')
   end
 
+  def test_daylighting_devices_rb
+    result = sim_test('daylighting_devices.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.2.1
+  # def test_daylighting_devices_osm
+  # result = sim_test('daylighting_devices.osm')
+  # end
+
   def test_daylighting_no_shades_rb
     result = sim_test('daylighting_no_shades.rb')
   end
