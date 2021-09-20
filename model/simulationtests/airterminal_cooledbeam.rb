@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# require 'C:/Users/aparker/Documents/GitHub/OpenStudio/build/OpenStudioCore-prefix/src/OpenStudioCore-build/ruby/Debug/openstudio'
-# require 'C:/Projects/OpenStudio-Resources/model/simulationtests/lib/baseline_model'
 require 'openstudio'
 require_relative 'lib/baseline_model'
 
