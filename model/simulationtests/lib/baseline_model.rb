@@ -593,9 +593,22 @@ class BaselineModel < OpenStudio::Model::Model
     end
   end
 
+  # Historically, YearDescription had a default of 'Thursday' but that
+  # option was not supported until 3.3.0. So it would instead default to
+  # assumedBaseYear which is 2009, which starts on a Thursday.
+  # Except that 3.3.0 does take it into account and Chicago EPW has a start day
+  # of Sunday (and changes year to 2006). So to avoid problems, we force it to
+  # Thursday explicitly
+  def force_year_description
+    yd = getYearDescription
+    yd.setDayofWeekforStartDay('Thursday')
+  end
+
   def save_openstudio_osm(params)
     osm_save_directory = params['osm_save_directory']
     osm_name = params['osm_name']
+
+    force_year_description
 
     save_path = OpenStudio::Path.new("#{osm_save_directory}/#{osm_name}")
     save(save_path, true)
