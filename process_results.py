@@ -8,6 +8,7 @@ Usage:
   process_results.py heatmap [--tagged | --all]
                              [-r <r_t> | --row_threshold=<r_t>]
                              [-d <d_t> | --display_threshold=<d_t>]
+                             [--max_eplus_versions=<n_versions>]
                              [--indiv_axes]
                              [--figname_with_thresholds]
                              [--figname_with_thresholds]
@@ -48,6 +49,9 @@ Options:
   -d <d_t>, --display_threshold=<d_t>  Display threshold [default: 0.001]
         Apply the colorscale to the cells that are above this threshold,
         otherwise they get greyed out.
+
+  --max_eplus_versions=<n_versions>  Limit column output to the N
+        most recent E+ versions
 
   -g, --granular    Defaults row and display thresholds, see examples section
 
@@ -157,6 +161,13 @@ if __name__ == "__main__":
     # exit()
 
     if options['heatmap']:
+        max_eplus_versions = options['--max_eplus_versions']
+        if max_eplus_versions is not None:
+            try:
+                max_eplus_versions = int(max_eplus_versions)
+            except ValueError:
+                raise ValueError("max_eplus_versions must be an int")
+
         if options['--granular']:
             options['--row_threshold'] = 0.0005
             options['--display_threshold'] = 0.0001
@@ -169,8 +180,7 @@ if __name__ == "__main__":
                 d_t = float(options['--display_threshold'])
                 options['--display_threshold'] = d_t
             except ValueError:
-                print("row_threshold and display_threshold must be numeric")
-                exit()
+                raise ValueError("row_threshold and display_threshold must be numeric")
 
         cli_heatmap(tagged=options['--tagged'],
                     all_osws=options['--all'],
@@ -178,7 +188,8 @@ if __name__ == "__main__":
                     display_threshold=options['--display_threshold'],
                     save_indiv_figs_for_ax=options['--indiv_axes'],
                     figname_with_thresholds=options['--figname_with_thresholds'],
-                    quiet=options['--quiet'])
+                    quiet=options['--quiet'],
+                    max_eplus_versions=max_eplus_versions)
     elif options['upload']:
         cli_upload()
 

@@ -1774,7 +1774,8 @@ def cli_heatmap(tagged=False, all_osws=False,
                 display_threshold=0.001,
                 save_indiv_figs_for_ax=False,
                 figname_with_thresholds=True,
-                quiet=False):
+                quiet=False,
+                max_eplus_versions=None):
     """
     Helper function called from the CLI to plot the heatmap
     """
@@ -1790,6 +1791,12 @@ def cli_heatmap(tagged=False, all_osws=False,
     else:
         df_files = find_info_osws()
 
+    if max_eplus_versions is not None:
+        df_files = df_files[
+            df_files.columns.get_level_values(level='E+')
+            .unique()[-max_eplus_versions:]
+        ]
+
     site_kbtu = df_files.applymap(parse_total_site_energy)
 
     if figname_with_thresholds:
@@ -1799,7 +1806,7 @@ def cli_heatmap(tagged=False, all_osws=False,
         figname = 'site_kbtu_pct_change.png'
 
     if os._exists(figname):
-        os.remvove(figname)
+        os.remove(figname)
 
     s = heatmap_sitekbtu_pct_change(site_kbtu=site_kbtu,
                                     row_threshold=row_threshold,
