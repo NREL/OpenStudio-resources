@@ -340,8 +340,12 @@ def run_command(command, dir, timeout)
 
       result = w.value.exitstatus
       if result != 0
-        Dir.chdir(pwd)
-        raise "Exit code #{result}:\n#{out}"
+        # If you can find an out.osw, don't throw. It means E+ fataled out
+        # https://github.com/NREL/OpenStudio/pull/4370 changed return code to 1
+        if !File.exist?('out.osw')
+          Dir.chdir(pwd)
+          raise "Exit code #{result}:\n#{out}"
+        end
       end
     rescue Timeout::Error
       # Process.kill does not work on Windows
