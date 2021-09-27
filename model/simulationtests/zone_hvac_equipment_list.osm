@@ -628,347 +628,347 @@ OS:ThermostatSetpoint:DualSetpoint,
   {ad251b10-9b0d-4d4e-96dc-f37c94831a6c}; !- Cooling Setpoint Temperature Schedule Name
 
 OS:DefaultConstructionSet,
-  {07b7061a-8e1e-4e30-a93c-e5dff4ae4beb}, ! Handle
-  ASHRAE_189.1-2009_ClimateZone 4-5 (mdoff)_ConstSet, ! Name
-  {0cb51af9-33ef-42da-8d3c-b47596796c62}, ! Default Exterior Surface Constructions Name
-  {8b4199ba-a6d0-4fa9-baea-d7bbbf350ea9}, ! Default Interior Surface Constructions Name
-  {6adc0e48-358f-4240-8177-33e7f40af496}, ! Default Ground Contact Surface Constructions Name
-  {3919ac83-d92c-4b79-b18d-160e8cd3226b}, ! Default Exterior SubSurface Constructions Name
-  {9b55a62f-270f-420d-9695-3e6fd475d8f5}, ! Default Interior SubSurface Constructions Name
-  {302f52e9-6e33-4795-ae67-1d31f81038f1}, ! Interior Partition Construction Name
-  ,                                       ! Space Shading Construction Name
-  ,                                       ! Building Shading Construction Name
-  ,                                       ! Site Shading Construction Name
+  {07b7061a-8e1e-4e30-a93c-e5dff4ae4beb}, !- Handle
+  ASHRAE_189.1-2009_ClimateZone 4-5 (mdoff)_ConstSet, !- Name
+  {0cb51af9-33ef-42da-8d3c-b47596796c62}, !- Default Exterior Surface Constructions Name
+  {8b4199ba-a6d0-4fa9-baea-d7bbbf350ea9}, !- Default Interior Surface Constructions Name
+  {6adc0e48-358f-4240-8177-33e7f40af496}, !- Default Ground Contact Surface Constructions Name
+  {3919ac83-d92c-4b79-b18d-160e8cd3226b}, !- Default Exterior SubSurface Constructions Name
+  {9b55a62f-270f-420d-9695-3e6fd475d8f5}, !- Default Interior SubSurface Constructions Name
+  {302f52e9-6e33-4795-ae67-1d31f81038f1}, !- Interior Partition Construction Name
+  ,                                       !- Space Shading Construction Name
+  ,                                       !- Building Shading Construction Name
+  ,                                       !- Site Shading Construction Name
   ;                                       !- Adiabatic Surface Construction Name
 
 OS:DefaultSurfaceConstructions,
-  {0cb51af9-33ef-42da-8d3c-b47596796c62}, ! Handle
-  ASHRAE_189.1-2009_ClimateZone 4-5 (mdoff)_Exterior_DefSurfCons, ! Name
-  {3f703e42-e0c0-4398-8352-38b2e43381fb}, ! Floor Construction Name
-  {a9127569-319c-49cb-8ae0-d4c9771e9249}, ! Wall Construction Name
-  {42a3d50b-6240-40a7-b722-52b0f99234b5}; ! Roof Ceiling Construction Name
+  {0cb51af9-33ef-42da-8d3c-b47596796c62}, !- Handle
+  ASHRAE_189.1-2009_ClimateZone 4-5 (mdoff)_Exterior_DefSurfCons, !- Name
+  {3f703e42-e0c0-4398-8352-38b2e43381fb}, !- Floor Construction Name
+  {a9127569-319c-49cb-8ae0-d4c9771e9249}, !- Wall Construction Name
+  {42a3d50b-6240-40a7-b722-52b0f99234b5}; !- Roof Ceiling Construction Name
 
 OS:DefaultSurfaceConstructions,
-  {8b4199ba-a6d0-4fa9-baea-d7bbbf350ea9}, ! Handle
-  000_Interior_DefSurfCons,               ! Name
-  {bd6d3150-38e8-4846-a20d-6e708230a3e8}, ! Floor Construction Name
-  {1a27c6b4-f53b-4845-b6e0-079b2212de17}, ! Wall Construction Name
-  {2a60fc4e-566c-41e2-9d6d-f9f06753ba1b}; ! Roof Ceiling Construction Name
+  {8b4199ba-a6d0-4fa9-baea-d7bbbf350ea9}, !- Handle
+  000_Interior_DefSurfCons,               !- Name
+  {bd6d3150-38e8-4846-a20d-6e708230a3e8}, !- Floor Construction Name
+  {1a27c6b4-f53b-4845-b6e0-079b2212de17}, !- Wall Construction Name
+  {2a60fc4e-566c-41e2-9d6d-f9f06753ba1b}; !- Roof Ceiling Construction Name
 
 OS:DefaultSurfaceConstructions,
-  {6adc0e48-358f-4240-8177-33e7f40af496}, ! Handle
-  000_Ground_DefSurfCons,                 ! Name
-  {3f703e42-e0c0-4398-8352-38b2e43381fb}, ! Floor Construction Name
-  {3f703e42-e0c0-4398-8352-38b2e43381fb}, ! Wall Construction Name
-  {3f703e42-e0c0-4398-8352-38b2e43381fb}; ! Roof Ceiling Construction Name
+  {6adc0e48-358f-4240-8177-33e7f40af496}, !- Handle
+  000_Ground_DefSurfCons,                 !- Name
+  {3f703e42-e0c0-4398-8352-38b2e43381fb}, !- Floor Construction Name
+  {3f703e42-e0c0-4398-8352-38b2e43381fb}, !- Wall Construction Name
+  {3f703e42-e0c0-4398-8352-38b2e43381fb}; !- Roof Ceiling Construction Name
 
 OS:DefaultSubSurfaceConstructions,
-  {3919ac83-d92c-4b79-b18d-160e8cd3226b}, ! Handle
-  ASHRAE_189.1-2009_ClimateZone 4-5 (mdoff)_Exterior_DefSubCons, ! Name
-  {14828b6c-1f10-4e42-8873-964a40e58e54}, ! Fixed Window Construction Name
-  {14828b6c-1f10-4e42-8873-964a40e58e54}, ! Operable Window Construction Name
-  {90b3b7f2-47aa-469f-ac9f-afa6ee7d3805}, ! Door Construction Name
-  {d5c18170-f771-4797-96e8-4fc878381bc7}, ! Glass Door Construction Name
-  ,                                       ! Overhead Door Construction Name
-  {d5c18170-f771-4797-96e8-4fc878381bc7}, ! Skylight Construction Name
-  {fd771ac9-63aa-4030-a69b-f76627b3bb5d}, ! Tubular Daylight Dome Construction Name
-  {fd771ac9-63aa-4030-a69b-f76627b3bb5d}; ! Tubular Daylight Diffuser Construction Name
+  {3919ac83-d92c-4b79-b18d-160e8cd3226b}, !- Handle
+  ASHRAE_189.1-2009_ClimateZone 4-5 (mdoff)_Exterior_DefSubCons, !- Name
+  {14828b6c-1f10-4e42-8873-964a40e58e54}, !- Fixed Window Construction Name
+  {14828b6c-1f10-4e42-8873-964a40e58e54}, !- Operable Window Construction Name
+  {90b3b7f2-47aa-469f-ac9f-afa6ee7d3805}, !- Door Construction Name
+  {d5c18170-f771-4797-96e8-4fc878381bc7}, !- Glass Door Construction Name
+  ,                                       !- Overhead Door Construction Name
+  {d5c18170-f771-4797-96e8-4fc878381bc7}, !- Skylight Construction Name
+  {fd771ac9-63aa-4030-a69b-f76627b3bb5d}, !- Tubular Daylight Dome Construction Name
+  {fd771ac9-63aa-4030-a69b-f76627b3bb5d}; !- Tubular Daylight Diffuser Construction Name
 
 OS:DefaultSubSurfaceConstructions,
-  {9b55a62f-270f-420d-9695-3e6fd475d8f5}, ! Handle
-  000_Interior_DefSubCons,                ! Name
-  {fd771ac9-63aa-4030-a69b-f76627b3bb5d}, ! Fixed Window Construction Name
-  {fd771ac9-63aa-4030-a69b-f76627b3bb5d}, ! Operable Window Construction Name
-  {e289e5fe-5fc4-4b10-add4-e4ea1c5f8a97}, ! Door Construction Name
-  {d5c18170-f771-4797-96e8-4fc878381bc7}, ! Glass Door Construction Name
-  ,                                       ! Overhead Door Construction Name
-  {d5c18170-f771-4797-96e8-4fc878381bc7}, ! Skylight Construction Name
-  {fd771ac9-63aa-4030-a69b-f76627b3bb5d}, ! Tubular Daylight Dome Construction Name
-  {fd771ac9-63aa-4030-a69b-f76627b3bb5d}; ! Tubular Daylight Diffuser Construction Name
+  {9b55a62f-270f-420d-9695-3e6fd475d8f5}, !- Handle
+  000_Interior_DefSubCons,                !- Name
+  {fd771ac9-63aa-4030-a69b-f76627b3bb5d}, !- Fixed Window Construction Name
+  {fd771ac9-63aa-4030-a69b-f76627b3bb5d}, !- Operable Window Construction Name
+  {e289e5fe-5fc4-4b10-add4-e4ea1c5f8a97}, !- Door Construction Name
+  {d5c18170-f771-4797-96e8-4fc878381bc7}, !- Glass Door Construction Name
+  ,                                       !- Overhead Door Construction Name
+  {d5c18170-f771-4797-96e8-4fc878381bc7}, !- Skylight Construction Name
+  {fd771ac9-63aa-4030-a69b-f76627b3bb5d}, !- Tubular Daylight Dome Construction Name
+  {fd771ac9-63aa-4030-a69b-f76627b3bb5d}; !- Tubular Daylight Diffuser Construction Name
 
 OS:Construction,
-  {302f52e9-6e33-4795-ae67-1d31f81038f1}, ! Handle
-  000_Interior Partition,                 ! Name
-  ,                                       ! Surface Rendering Name
-  {0350a894-09d9-4310-8fac-975b299f3b7f}; ! Layer 1
+  {302f52e9-6e33-4795-ae67-1d31f81038f1}, !- Handle
+  000_Interior Partition,                 !- Name
+  ,                                       !- Surface Rendering Name
+  {0350a894-09d9-4310-8fac-975b299f3b7f}; !- Layer 1
 
 OS:Construction,
-  {3f703e42-e0c0-4398-8352-38b2e43381fb}, ! Handle
-  000_ExtSlabCarpet_4in_ClimateZone 1-8,  ! Name
-  ,                                       ! Surface Rendering Name
-  {d3b63662-8ca7-41f9-bec9-1a96d9982269}, ! Layer 1
-  {6993bc3c-2735-4f65-8f33-c21b8e55c469}; ! Layer 2
+  {3f703e42-e0c0-4398-8352-38b2e43381fb}, !- Handle
+  000_ExtSlabCarpet_4in_ClimateZone 1-8,  !- Name
+  ,                                       !- Surface Rendering Name
+  {d3b63662-8ca7-41f9-bec9-1a96d9982269}, !- Layer 1
+  {6993bc3c-2735-4f65-8f33-c21b8e55c469}; !- Layer 2
 
 OS:Construction,
-  {a9127569-319c-49cb-8ae0-d4c9771e9249}, ! Handle
-  ASHRAE_189.1-2009_ExtWall_SteelFrame_ClimateZone 4-8, ! Name
-  ,                                       ! Surface Rendering Name
-  {7287f714-fede-49f6-b2c7-71602144b218}, ! Layer 1
-  {e5e85b97-b1c2-47e8-835d-71f71cd87045}, ! Layer 2
-  {46c7def6-b81c-41c9-bfca-7c7073538871}; ! Layer 3
+  {a9127569-319c-49cb-8ae0-d4c9771e9249}, !- Handle
+  ASHRAE_189.1-2009_ExtWall_SteelFrame_ClimateZone 4-8, !- Name
+  ,                                       !- Surface Rendering Name
+  {7287f714-fede-49f6-b2c7-71602144b218}, !- Layer 1
+  {e5e85b97-b1c2-47e8-835d-71f71cd87045}, !- Layer 2
+  {46c7def6-b81c-41c9-bfca-7c7073538871}; !- Layer 3
 
 OS:Construction,
-  {42a3d50b-6240-40a7-b722-52b0f99234b5}, ! Handle
-  ASHRAE_189.1-2009_ExtRoof_IEAD_ClimateZone 2-5, ! Name
-  ,                                       ! Surface Rendering Name
-  {b24d12d2-44a8-4d8e-98f5-7b16872288d4}, ! Layer 1
-  {fb4310b7-2ca9-4f01-9c66-b4808f5e4203}, ! Layer 2
-  {cddca960-7f83-4697-83f3-58c3728ab8fc}; ! Layer 3
+  {42a3d50b-6240-40a7-b722-52b0f99234b5}, !- Handle
+  ASHRAE_189.1-2009_ExtRoof_IEAD_ClimateZone 2-5, !- Name
+  ,                                       !- Surface Rendering Name
+  {b24d12d2-44a8-4d8e-98f5-7b16872288d4}, !- Layer 1
+  {fb4310b7-2ca9-4f01-9c66-b4808f5e4203}, !- Layer 2
+  {cddca960-7f83-4697-83f3-58c3728ab8fc}; !- Layer 3
 
 OS:Construction,
-  {bd6d3150-38e8-4846-a20d-6e708230a3e8}, ! Handle
-  000_Interior Floor,                     ! Name
-  ,                                       ! Surface Rendering Name
-  {1d211673-9167-4d0e-9bcc-33efe7919154}, ! Layer 1
-  {df921280-d963-4a89-ba52-418a8a5cf934}, ! Layer 2
-  {65104dc1-ff2c-41ec-9be8-584967a24bda}; ! Layer 3
+  {bd6d3150-38e8-4846-a20d-6e708230a3e8}, !- Handle
+  000_Interior Floor,                     !- Name
+  ,                                       !- Surface Rendering Name
+  {1d211673-9167-4d0e-9bcc-33efe7919154}, !- Layer 1
+  {df921280-d963-4a89-ba52-418a8a5cf934}, !- Layer 2
+  {65104dc1-ff2c-41ec-9be8-584967a24bda}; !- Layer 3
 
 OS:Construction,
-  {1a27c6b4-f53b-4845-b6e0-079b2212de17}, ! Handle
-  000_Interior Wall,                      ! Name
-  ,                                       ! Surface Rendering Name
-  {2698d8e4-1706-4a4a-9c36-6ed46860c8a1}, ! Layer 1
-  {b9325f8d-84e3-4081-a77e-9b1259167810}, ! Layer 2
-  {2698d8e4-1706-4a4a-9c36-6ed46860c8a1}; ! Layer 3
+  {1a27c6b4-f53b-4845-b6e0-079b2212de17}, !- Handle
+  000_Interior Wall,                      !- Name
+  ,                                       !- Surface Rendering Name
+  {2698d8e4-1706-4a4a-9c36-6ed46860c8a1}, !- Layer 1
+  {b9325f8d-84e3-4081-a77e-9b1259167810}, !- Layer 2
+  {2698d8e4-1706-4a4a-9c36-6ed46860c8a1}; !- Layer 3
 
 OS:Construction,
-  {2a60fc4e-566c-41e2-9d6d-f9f06753ba1b}, ! Handle
-  000_Interior Ceiling,                   ! Name
-  ,                                       ! Surface Rendering Name
-  {65104dc1-ff2c-41ec-9be8-584967a24bda}, ! Layer 1
-  {df921280-d963-4a89-ba52-418a8a5cf934}, ! Layer 2
-  {1d211673-9167-4d0e-9bcc-33efe7919154}; ! Layer 3
+  {2a60fc4e-566c-41e2-9d6d-f9f06753ba1b}, !- Handle
+  000_Interior Ceiling,                   !- Name
+  ,                                       !- Surface Rendering Name
+  {65104dc1-ff2c-41ec-9be8-584967a24bda}, !- Layer 1
+  {df921280-d963-4a89-ba52-418a8a5cf934}, !- Layer 2
+  {1d211673-9167-4d0e-9bcc-33efe7919154}; !- Layer 3
 
 OS:Construction,
-  {14828b6c-1f10-4e42-8873-964a40e58e54}, ! Handle
-  ASHRAE_189.1-2009_ExtWindow_ClimateZone 4-5, ! Name
-  ,                                       ! Surface Rendering Name
-  {29ed4351-1c6e-4f68-b11e-b5fdb9c12ff2}; ! Layer 1
+  {14828b6c-1f10-4e42-8873-964a40e58e54}, !- Handle
+  ASHRAE_189.1-2009_ExtWindow_ClimateZone 4-5, !- Name
+  ,                                       !- Surface Rendering Name
+  {29ed4351-1c6e-4f68-b11e-b5fdb9c12ff2}; !- Layer 1
 
 OS:Construction,
-  {90b3b7f2-47aa-469f-ac9f-afa6ee7d3805}, ! Handle
-  000_Exterior Door,                      ! Name
-  ,                                       ! Surface Rendering Name
-  {0b13c9b6-ef92-445c-8605-fa68ecce4594}, ! Layer 1
-  {e7a814be-466c-4efa-aaa9-d5c5664e3f33}; ! Layer 2
+  {90b3b7f2-47aa-469f-ac9f-afa6ee7d3805}, !- Handle
+  000_Exterior Door,                      !- Name
+  ,                                       !- Surface Rendering Name
+  {0b13c9b6-ef92-445c-8605-fa68ecce4594}, !- Layer 1
+  {e7a814be-466c-4efa-aaa9-d5c5664e3f33}; !- Layer 2
 
 OS:Construction,
-  {d5c18170-f771-4797-96e8-4fc878381bc7}, ! Handle
-  000_Exterior Window,                    ! Name
-  ,                                       ! Surface Rendering Name
-  {256b7509-a460-4c22-8365-b4244efc7790}, ! Layer 1
-  {564f14b5-0cbf-495f-a3a2-3f51875767eb}, ! Layer 2
-  {256b7509-a460-4c22-8365-b4244efc7790}; ! Layer 3
+  {d5c18170-f771-4797-96e8-4fc878381bc7}, !- Handle
+  000_Exterior Window,                    !- Name
+  ,                                       !- Surface Rendering Name
+  {256b7509-a460-4c22-8365-b4244efc7790}, !- Layer 1
+  {564f14b5-0cbf-495f-a3a2-3f51875767eb}, !- Layer 2
+  {256b7509-a460-4c22-8365-b4244efc7790}; !- Layer 3
 
 OS:Construction,
-  {fd771ac9-63aa-4030-a69b-f76627b3bb5d}, ! Handle
-  000_Interior Window,                    ! Name
-  ,                                       ! Surface Rendering Name
-  {256b7509-a460-4c22-8365-b4244efc7790}; ! Layer 1
+  {fd771ac9-63aa-4030-a69b-f76627b3bb5d}, !- Handle
+  000_Interior Window,                    !- Name
+  ,                                       !- Surface Rendering Name
+  {256b7509-a460-4c22-8365-b4244efc7790}; !- Layer 1
 
 OS:Construction,
-  {e289e5fe-5fc4-4b10-add4-e4ea1c5f8a97}, ! Handle
-  000_Interior Door,                      ! Name
-  ,                                       ! Surface Rendering Name
-  {0350a894-09d9-4310-8fac-975b299f3b7f}; ! Layer 1
+  {e289e5fe-5fc4-4b10-add4-e4ea1c5f8a97}, !- Handle
+  000_Interior Door,                      !- Name
+  ,                                       !- Surface Rendering Name
+  {0350a894-09d9-4310-8fac-975b299f3b7f}; !- Layer 1
 
 OS:Material,
-  {0350a894-09d9-4310-8fac-975b299f3b7f}, ! Handle
-  000_G05 25mm wood,                      ! Name
-  MediumSmooth,                           ! Roughness
-  0.025399999999999999,                   ! Thickness
-  0.14999999999999999,                    ! Conductivity
-  608,                                    ! Density
-  1630;                                   ! Specific Heat
+  {0350a894-09d9-4310-8fac-975b299f3b7f}, !- Handle
+  000_G05 25mm wood,                      !- Name
+  MediumSmooth,                           !- Roughness
+  0.025399999999999999,                   !- Thickness
+  0.14999999999999999,                    !- Conductivity
+  608,                                    !- Density
+  1630;                                   !- Specific Heat
 
 OS:Material,
-  {d3b63662-8ca7-41f9-bec9-1a96d9982269}, ! Handle
-  MAT-CC05 4 HW CONCRETE,                 ! Name
-  Rough,                                  ! Roughness
-  0.1016,                                 ! Thickness
-  1.3109999999999999,                     ! Conductivity
-  2240,                                   ! Density
-  836.79999999999995,                     ! Specific Heat
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.69999999999999996,                    ! Solar Absorptance
-  0.69999999999999996;                    ! Visible Absorptance
+  {d3b63662-8ca7-41f9-bec9-1a96d9982269}, !- Handle
+  MAT-CC05 4 HW CONCRETE,                 !- Name
+  Rough,                                  !- Roughness
+  0.1016,                                 !- Thickness
+  1.3109999999999999,                     !- Conductivity
+  2240,                                   !- Density
+  836.79999999999995,                     !- Specific Heat
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.69999999999999996,                    !- Solar Absorptance
+  0.69999999999999996;                    !- Visible Absorptance
 
 OS:Material:NoMass,
-  {6993bc3c-2735-4f65-8f33-c21b8e55c469}, ! Handle
-  CP02 CARPET PAD,                        ! Name
-  VeryRough,                              ! Roughness
-  0.2165,                                 ! Thermal Resistance
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.69999999999999996,                    ! Solar Absorptance
-  0.80000000000000004;                    ! Visible Absorptance
+  {6993bc3c-2735-4f65-8f33-c21b8e55c469}, !- Handle
+  CP02 CARPET PAD,                        !- Name
+  VeryRough,                              !- Roughness
+  0.2165,                                 !- Thermal Resistance
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.69999999999999996,                    !- Solar Absorptance
+  0.80000000000000004;                    !- Visible Absorptance
 
 OS:Material:NoMass,
-  {7287f714-fede-49f6-b2c7-71602144b218}, ! Handle
-  MAT-SHEATH,                             ! Name
-  Rough,                                  ! Roughness
-  0.36259999999999998,                    ! Thermal Resistance
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.69999999999999996,                    ! Solar Absorptance
-  0.69999999999999996;                    ! Visible Absorptance
+  {7287f714-fede-49f6-b2c7-71602144b218}, !- Handle
+  MAT-SHEATH,                             !- Name
+  Rough,                                  !- Roughness
+  0.36259999999999998,                    !- Thermal Resistance
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.69999999999999996,                    !- Solar Absorptance
+  0.69999999999999996;                    !- Visible Absorptance
 
 OS:Material,
-  {e5e85b97-b1c2-47e8-835d-71f71cd87045}, ! Handle
-  Wall Insulation [39],                   ! Name
-  MediumRough,                            ! Roughness
-  0.11840000000000001,                    ! Thickness
-  0.044999999999999998,                   ! Conductivity
-  265,                                    ! Density
-  836.79999999999995,                     ! Specific Heat
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.69999999999999996,                    ! Solar Absorptance
-  0.69999999999999996;                    ! Visible Absorptance
+  {e5e85b97-b1c2-47e8-835d-71f71cd87045}, !- Handle
+  Wall Insulation [39],                   !- Name
+  MediumRough,                            !- Roughness
+  0.11840000000000001,                    !- Thickness
+  0.044999999999999998,                   !- Conductivity
+  265,                                    !- Density
+  836.79999999999995,                     !- Specific Heat
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.69999999999999996,                    !- Solar Absorptance
+  0.69999999999999996;                    !- Visible Absorptance
 
 OS:Material,
-  {46c7def6-b81c-41c9-bfca-7c7073538871}, ! Handle
-  1/2IN Gypsum,                           ! Name
-  Smooth,                                 ! Roughness
-  0.012699999999999999,                   ! Thickness
-  0.16,                                   ! Conductivity
-  784.89999999999998,                     ! Density
-  830,                                    ! Specific Heat
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.92000000000000004,                    ! Solar Absorptance
-  0.92000000000000004;                    ! Visible Absorptance
+  {46c7def6-b81c-41c9-bfca-7c7073538871}, !- Handle
+  1/2IN Gypsum,                           !- Name
+  Smooth,                                 !- Roughness
+  0.012699999999999999,                   !- Thickness
+  0.16,                                   !- Conductivity
+  784.89999999999998,                     !- Density
+  830,                                    !- Specific Heat
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.92000000000000004,                    !- Solar Absorptance
+  0.92000000000000004;                    !- Visible Absorptance
 
 OS:Material,
-  {b24d12d2-44a8-4d8e-98f5-7b16872288d4}, ! Handle
-  Roof Membrane,                          ! Name
-  VeryRough,                              ! Roughness
-  0.0094999999999999998,                  ! Thickness
-  0.16,                                   ! Conductivity
-  1121.29,                                ! Density
-  1460,                                   ! Specific Heat
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.69999999999999996,                    ! Solar Absorptance
-  0.69999999999999996;                    ! Visible Absorptance
+  {b24d12d2-44a8-4d8e-98f5-7b16872288d4}, !- Handle
+  Roof Membrane,                          !- Name
+  VeryRough,                              !- Roughness
+  0.0094999999999999998,                  !- Thickness
+  0.16,                                   !- Conductivity
+  1121.29,                                !- Density
+  1460,                                   !- Specific Heat
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.69999999999999996,                    !- Solar Absorptance
+  0.69999999999999996;                    !- Visible Absorptance
 
 OS:Material,
-  {fb4310b7-2ca9-4f01-9c66-b4808f5e4203}, ! Handle
-  Roof Insulation [21],                   ! Name
-  MediumRough,                            ! Roughness
-  0.21049999999999999,                    ! Thickness
-  0.049000000000000002,                   ! Conductivity
-  265,                                    ! Density
-  836.79999999999995,                     ! Specific Heat
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.69999999999999996,                    ! Solar Absorptance
-  0.69999999999999996;                    ! Visible Absorptance
+  {fb4310b7-2ca9-4f01-9c66-b4808f5e4203}, !- Handle
+  Roof Insulation [21],                   !- Name
+  MediumRough,                            !- Roughness
+  0.21049999999999999,                    !- Thickness
+  0.049000000000000002,                   !- Conductivity
+  265,                                    !- Density
+  836.79999999999995,                     !- Specific Heat
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.69999999999999996,                    !- Solar Absorptance
+  0.69999999999999996;                    !- Visible Absorptance
 
 OS:Material,
-  {cddca960-7f83-4697-83f3-58c3728ab8fc}, ! Handle
-  Metal Decking,                          ! Name
-  MediumSmooth,                           ! Roughness
-  0.0015,                                 ! Thickness
-  45.006,                                 ! Conductivity
-  7680,                                   ! Density
-  418.39999999999998,                     ! Specific Heat
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.69999999999999996,                    ! Solar Absorptance
-  0.29999999999999999;                    ! Visible Absorptance
+  {cddca960-7f83-4697-83f3-58c3728ab8fc}, !- Handle
+  Metal Decking,                          !- Name
+  MediumSmooth,                           !- Roughness
+  0.0015,                                 !- Thickness
+  45.006,                                 !- Conductivity
+  7680,                                   !- Density
+  418.39999999999998,                     !- Specific Heat
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.69999999999999996,                    !- Solar Absorptance
+  0.29999999999999999;                    !- Visible Absorptance
 
 OS:Material,
-  {1d211673-9167-4d0e-9bcc-33efe7919154}, ! Handle
-  000_F16 Acoustic tile,                  ! Name
-  MediumSmooth,                           ! Roughness
-  0.019099999999999999,                   ! Thickness
-  0.059999999999999998,                   ! Conductivity
-  368,                                    ! Density
-  590;                                    ! Specific Heat
+  {1d211673-9167-4d0e-9bcc-33efe7919154}, !- Handle
+  000_F16 Acoustic tile,                  !- Name
+  MediumSmooth,                           !- Roughness
+  0.019099999999999999,                   !- Thickness
+  0.059999999999999998,                   !- Conductivity
+  368,                                    !- Density
+  590;                                    !- Specific Heat
 
 OS:Material:AirGap,
-  {df921280-d963-4a89-ba52-418a8a5cf934}, ! Handle
-  000_F05 Ceiling air space resistance,   ! Name
-  0.17999999999999999;                    ! Thermal Resistance
+  {df921280-d963-4a89-ba52-418a8a5cf934}, !- Handle
+  000_F05 Ceiling air space resistance,   !- Name
+  0.17999999999999999;                    !- Thermal Resistance
 
 OS:Material,
-  {65104dc1-ff2c-41ec-9be8-584967a24bda}, ! Handle
-  000_M11 100mm lightweight concrete,     ! Name
-  MediumRough,                            ! Roughness
-  0.1016,                                 ! Thickness
-  0.53000000000000003,                    ! Conductivity
-  1280,                                   ! Density
-  840;                                    ! Specific Heat
+  {65104dc1-ff2c-41ec-9be8-584967a24bda}, !- Handle
+  000_M11 100mm lightweight concrete,     !- Name
+  MediumRough,                            !- Roughness
+  0.1016,                                 !- Thickness
+  0.53000000000000003,                    !- Conductivity
+  1280,                                   !- Density
+  840;                                    !- Specific Heat
 
 OS:Material,
-  {2698d8e4-1706-4a4a-9c36-6ed46860c8a1}, ! Handle
-  000_G01a 19mm gypsum board,             ! Name
-  MediumSmooth,                           ! Roughness
-  0.019,                                  ! Thickness
-  0.16,                                   ! Conductivity
-  800,                                    ! Density
-  1090;                                   ! Specific Heat
+  {2698d8e4-1706-4a4a-9c36-6ed46860c8a1}, !- Handle
+  000_G01a 19mm gypsum board,             !- Name
+  MediumSmooth,                           !- Roughness
+  0.019,                                  !- Thickness
+  0.16,                                   !- Conductivity
+  800,                                    !- Density
+  1090;                                   !- Specific Heat
 
 OS:Material:AirGap,
-  {b9325f8d-84e3-4081-a77e-9b1259167810}, ! Handle
-  000_F04 Wall air space resistance,      ! Name
-  0.14999999999999999;                    ! Thermal Resistance
+  {b9325f8d-84e3-4081-a77e-9b1259167810}, !- Handle
+  000_F04 Wall air space resistance,      !- Name
+  0.14999999999999999;                    !- Thermal Resistance
 
 OS:WindowMaterial:Glazing,
-  {29ed4351-1c6e-4f68-b11e-b5fdb9c12ff2}, ! Handle
-  Theoretical Glass [207],                ! Name
-  SpectralAverage,                        ! Optical Data Type
-  ,                                       ! Window Glass Spectral Data Set Name
-  0.0030000000000000001,                  ! Thickness
-  0.33110000000000001,                    ! Solar Transmittance at Normal Incidence
-  0.61890000000000001,                    ! Front Side Solar Reflectance at Normal Incidence
-  0.61890000000000001,                    ! Back Side Solar Reflectance at Normal Incidence
-  0.44,                                   ! Visible Transmittance at Normal Incidence
-  0.51000000000000001,                    ! Front Side Visible Reflectance at Normal Incidence
-  0.51000000000000001,                    ! Back Side Visible Reflectance at Normal Incidence
-  0,                                      ! Infrared Transmittance at Normal Incidence
-  0.90000000000000002,                    ! Front Side Infrared Hemispherical Emissivity
-  0.90000000000000002,                    ! Back Side Infrared Hemispherical Emissivity
-  0.013299999999999999,                   ! Conductivity
-  1,                                      ! Dirt Correction Factor for Solar and Visible Transmittance
-  No;                                     ! Solar Diffusing
+  {29ed4351-1c6e-4f68-b11e-b5fdb9c12ff2}, !- Handle
+  Theoretical Glass [207],                !- Name
+  SpectralAverage,                        !- Optical Data Type
+  ,                                       !- Window Glass Spectral Data Set Name
+  0.0030000000000000001,                  !- Thickness
+  0.33110000000000001,                    !- Solar Transmittance at Normal Incidence
+  0.61890000000000001,                    !- Front Side Solar Reflectance at Normal Incidence
+  0.61890000000000001,                    !- Back Side Solar Reflectance at Normal Incidence
+  0.44,                                   !- Visible Transmittance at Normal Incidence
+  0.51000000000000001,                    !- Front Side Visible Reflectance at Normal Incidence
+  0.51000000000000001,                    !- Back Side Visible Reflectance at Normal Incidence
+  0,                                      !- Infrared Transmittance at Normal Incidence
+  0.90000000000000002,                    !- Front Side Infrared Hemispherical Emissivity
+  0.90000000000000002,                    !- Back Side Infrared Hemispherical Emissivity
+  0.013299999999999999,                   !- Conductivity
+  1,                                      !- Dirt Correction Factor for Solar and Visible Transmittance
+  No;                                     !- Solar Diffusing
 
 OS:Material,
-  {0b13c9b6-ef92-445c-8605-fa68ecce4594}, ! Handle
-  000_F08 Metal surface,                  ! Name
-  Smooth,                                 ! Roughness
-  0.00080000000000000004,                 ! Thickness
-  45.280000000000001,                     ! Conductivity
-  7824,                                   ! Density
-  500;                                    ! Specific Heat
+  {0b13c9b6-ef92-445c-8605-fa68ecce4594}, !- Handle
+  000_F08 Metal surface,                  !- Name
+  Smooth,                                 !- Roughness
+  0.00080000000000000004,                 !- Thickness
+  45.280000000000001,                     !- Conductivity
+  7824,                                   !- Density
+  500;                                    !- Specific Heat
 
 OS:Material,
-  {e7a814be-466c-4efa-aaa9-d5c5664e3f33}, ! Handle
-  000_I01 25mm insulation board,          ! Name
-  MediumRough,                            ! Roughness
-  0.025399999999999999,                   ! Thickness
-  0.029999999999999999,                   ! Conductivity
-  43,                                     ! Density
-  1210;                                   ! Specific Heat
+  {e7a814be-466c-4efa-aaa9-d5c5664e3f33}, !- Handle
+  000_I01 25mm insulation board,          !- Name
+  MediumRough,                            !- Roughness
+  0.025399999999999999,                   !- Thickness
+  0.029999999999999999,                   !- Conductivity
+  43,                                     !- Density
+  1210;                                   !- Specific Heat
 
 OS:WindowMaterial:Glazing,
-  {256b7509-a460-4c22-8365-b4244efc7790}, ! Handle
-  000_Clear 3mm,                          ! Name
-  SpectralAverage,                        ! Optical Data Type
-  ,                                       ! Window Glass Spectral Data Set Name
-  0.0030000000000000001,                  ! Thickness
-  0.83699999999999997,                    ! Solar Transmittance at Normal Incidence
-  0.074999999999999997,                   ! Front Side Solar Reflectance at Normal Incidence
-  0.074999999999999997,                   ! Back Side Solar Reflectance at Normal Incidence
-  0.89800000000000002,                    ! Visible Transmittance at Normal Incidence
-  0.081000000000000003,                   ! Front Side Visible Reflectance at Normal Incidence
-  0.081000000000000003,                   ! Back Side Visible Reflectance at Normal Incidence
-  0,                                      ! Infrared Transmittance at Normal Incidence
-  0.83999999999999997,                    ! Front Side Infrared Hemispherical Emissivity
-  0.83999999999999997,                    ! Back Side Infrared Hemispherical Emissivity
-  0.90000000000000002,                    ! Conductivity
-  ,                                       ! Dirt Correction Factor for Solar and Visible Transmittance
-  ;                                       ! Solar Diffusing
+  {256b7509-a460-4c22-8365-b4244efc7790}, !- Handle
+  000_Clear 3mm,                          !- Name
+  SpectralAverage,                        !- Optical Data Type
+  ,                                       !- Window Glass Spectral Data Set Name
+  0.0030000000000000001,                  !- Thickness
+  0.83699999999999997,                    !- Solar Transmittance at Normal Incidence
+  0.074999999999999997,                   !- Front Side Solar Reflectance at Normal Incidence
+  0.074999999999999997,                   !- Back Side Solar Reflectance at Normal Incidence
+  0.89800000000000002,                    !- Visible Transmittance at Normal Incidence
+  0.081000000000000003,                   !- Front Side Visible Reflectance at Normal Incidence
+  0.081000000000000003,                   !- Back Side Visible Reflectance at Normal Incidence
+  0,                                      !- Infrared Transmittance at Normal Incidence
+  0.83999999999999997,                    !- Front Side Infrared Hemispherical Emissivity
+  0.83999999999999997,                    !- Back Side Infrared Hemispherical Emissivity
+  0.90000000000000002,                    !- Conductivity
+  ,                                       !- Dirt Correction Factor for Solar and Visible Transmittance
+  ;                                       !- Solar Diffusing
 
 OS:WindowMaterial:Gas,
-  {564f14b5-0cbf-495f-a3a2-3f51875767eb}, ! Handle
-  000_Air 13mm,                           ! Name
-  Air,                                    ! Gas Type
-  0.012699999999999999;                   ! Thickness
+  {564f14b5-0cbf-495f-a3a2-3f51875767eb}, !- Handle
+  000_Air 13mm,                           !- Name
+  Air,                                    !- Gas Type
+  0.012699999999999999;                   !- Thickness
 
 OS:Building,
   {f5140be4-a93e-485a-b807-eaf0e0a3c143}, !- Handle
@@ -981,14 +981,14 @@ OS:Building,
   ;                                       !- Default Schedule Set Name
 
 OS:Construction,
-  {f758c449-95fa-4ca2-9689-d2a5cee7c6a9}, ! Handle
-  Air_Wall,                               ! Name
-  ,                                       ! Surface Rendering Name
-  {69eec32d-a9b9-4bd8-baa8-79e16773953c}; ! Layer 1
+  {f758c449-95fa-4ca2-9689-d2a5cee7c6a9}, !- Handle
+  Air_Wall,                               !- Name
+  ,                                       !- Surface Rendering Name
+  {69eec32d-a9b9-4bd8-baa8-79e16773953c}; !- Layer 1
 
 OS:Material:AirWall,
-  {69eec32d-a9b9-4bd8-baa8-79e16773953c}, ! Handle
-  OS:Material:AirWall 1;                  ! Name
+  {69eec32d-a9b9-4bd8-baa8-79e16773953c}, !- Handle
+  OS:Material:AirWall 1;                  !- Name
 
 OS:SpaceType,
   {bfafb884-507f-4ad6-863d-2d4740438732}, !- Handle
