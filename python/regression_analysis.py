@@ -1736,6 +1736,8 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False,
     # Filter all NA rows
     success = success.loc[success.any(axis=1)]
 
+    return_code = 0
+
     if not entire_table:
         ruby_or_osm_fail = (success.groupby(level='Test')['n_fail+missing']
                                    .sum().sort_values(ascending=False) > 0)
@@ -1745,12 +1747,22 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False,
         # success = success[success['n_fail+missing'] > 0]
         success2 = success.loc[[x for x in success.index if x[0]
                                in ruby_or_osm_fail.index[ruby_or_osm_fail]]]
+
         if success2.empty:
             print("\nOK: No Failing tests were found")
         else:
-            print("\nWARNING: you have failing tests:")
             success = success2
             caption = 'Test Success - Failed only'
+
+            new_failures = success2.index[(success2.iloc[:, -4] != 'Success') &
+                                          (success2.iloc[:, -5] == 'Success')]
+            if new_failures.empty:
+                print("\nInfo: you have failing tests, but no new failures")
+            else:
+                failures = [f"{x[0]}.{x[1]}" for x in new_failures]
+                print(f"\nWARNING: you have {len(failures)} NEW failing tests:"
+                      "\n{failures}")
+                return_code = 1
 
     html = (success.style
                    .set_table_attributes('style="border:1px solid black;'
@@ -1776,6 +1788,8 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False,
             os.startfile(filepath)
         elif os.name == 'posix':
             subprocess.call(('xdg-open', filepath))
+
+    return return_code
 
 
 def cli_heatmap(tagged=False, all_osws=False,
@@ -1817,7 +1831,7 @@ def cli_heatmap(tagged=False, all_osws=False,
     if os._exists(figname):
         os.remove(figname)
 
-    s = heatmap_sitekbtu_pct_change(site_kbtu=site_kbtu.pct_change(axis=1),
+    s = heatmap_sitekbtu_pct_change(site_kbtu_change=site_kbtu.pct_change(axis=1),
                                     row_threshold=row_threshold,
                                     display_threshold=display_threshold,
                                     figname=figname,
@@ -1881,7 +1895,7 @@ if __name__ == "__main__":
         if site_kbtu is None:
             df_files = find_info_osws()
             site_kbtu = df_files.applymap(parse_total_site_energy)
-        heatmap_sitekbtu_pct_change(site_kbtu=site_kbtu.pct_change(axis=1),
+        heatmap_sitekbtu_pct_change(site_kbtu_change=site_kbtu.pct_change(axis=1),
                                     row_threshold=threshold,
                                     savefig=True,
                                     show_plot=False)

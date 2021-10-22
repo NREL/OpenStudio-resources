@@ -222,9 +222,10 @@ if __name__ == "__main__":
                 max_eplus_versions = int(max_eplus_versions)
             except ValueError:
                 raise ValueError("max_eplus_versions must be an int")
-         cli_test_status_html(
+        return_code = cli_test_status_html(
             entire_table=options['--entire_table'],
             tagged=options['--tagged'],
             all_osws=options['--all'],
             quiet=options['--quiet'],
             max_eplus_versions=max_eplus_versions)
+        exit(return_code)

@@ -691,8 +691,7 @@ class ModelTests < Minitest::Test
   end
 
   def test_outputcontrol_files_rb
-    extra_options = { compare_eui: false }
-    result = sim_test('outputcontrol_files.rb', extra_options)
+    result = sim_test('outputcontrol_files.rb', { compare_eui: false })
 
     # We enabled only a few files, so check that
     run_dir = File.join($TestDir, 'outputcontrol_files.rb', 'run')
