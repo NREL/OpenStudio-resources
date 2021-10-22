@@ -73,7 +73,7 @@ export N=8
 
 You can also call the command as `N=8 openstudio model_tests.rb` directly.
 
-**Three additional environment variables can be set to customize the behavior of the testing**:
+**Additional environment variables can be set to customize the behavior of the testing**:
 
 * `CUSTOMTAG`: if set, it will be appended to the `out.osw`. For eg, if I set `CUSTOMTAG=Ubuntu_run1`, my output files will be named like `testname_X.Y.Z_out_Ubuntu_run1.osw`.
 Custom tagged OSWs are gitignored. They are useful for appreciating the stability of a test (eg. run it 5 times, compare resulting total site kbtu).
@@ -83,6 +83,8 @@ There is one special value, `SHA` (case-insensitive) that will append the build 
 
 * `DONOTRERUNIFSUCCESS`: if set to True (case-insensitive), before running a test we check if there is already a corresponding `out.osw` and if it was successful already,
 we skip the test.
+
+* `USE_EPLUS_SPACES`: if set to True (case-insensitive) or False, forces the `--[no-]space-translation` argument to the openstudio `run` method
 
 Example usage:
 

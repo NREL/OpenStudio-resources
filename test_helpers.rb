@@ -115,6 +115,15 @@ if ENV['SAVE_IDF'].to_s.downcase == 'true'
   puts 'SAVE_IDF: Will save the IDF files in the test/ directory'
 end
 
+$UseEplusSpaces = nil
+if ENV['USE_EPLUS_SPACES'].to_s.downcase == 'true'
+  puts "USE_EPLUS_SPACES=true: Will use the E+ Space Feature"
+  $UseEplusSpaces = true
+elsif ENV['USE_EPLUS_SPACES'].to_s.downcase == 'false'
+  puts "USE_EPLUS_SPACES=false: Will force not using the E+ Space Feature"
+  $UseEplusSpaces = false
+end
+
 # config stuff
 $OpenstudioCli = OpenStudio.getOpenStudioCLI
 $RootDir = File.absolute_path(File.dirname(__FILE__))
@@ -696,6 +705,13 @@ def sim_test(filename, options = {})
 
   extra_run_options = ''
   extra_run_options += '--debug ' if options[:debug]
+  if !$UseEplusSpaces.nil?
+    if $UseEplusSpaces
+      extra_run_options += '--space-translation '
+    else
+      extra_run_options += '--no-space-translation '
+    end
+  end
 
   # command to run the in_osw
   command = "\"#{$OpenstudioCli}\" #{extra_options} run #{extra_run_options} -w \"#{in_osw}\""
@@ -703,7 +719,7 @@ def sim_test(filename, options = {})
     puts 'COMMAND:'
     puts command
   end
-
+  puts command
   run_command(command, dir, 3600)
 
   if $Save_idf
