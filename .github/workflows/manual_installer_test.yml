@@ -49,19 +49,28 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-    - name: Run model_tests.rb
+    - name: Run model_tests.rb: first pass
+      continue-on-error: true
       shell: bash
       run: |
         set -x
         echo "nproc=$(nproc)"
-        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
+        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb || true
 
-    - name: Run highlevel_tests
-      if: always()
+    - name: Run model_tests: second pass for failed tests
+      continue-on-error: true
       shell: bash
       run: |
         set -x
-        MT_CPU=$(nproc) openstudio highlevel_tests.rb
+        echo "nproc=$(nproc)"
+        DONOTRERUNIFSUCCESS=true N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb || true
+
+    # This is a failing step!
+    - name: Run highlevel_tests: first pass
+      shell: bash
+      run: |
+        set -x
+        N=$(nproc) openstudio highlevel_tests.rb
 
     - name: Commit results
       if: always()
@@ -80,8 +89,8 @@ jobs:
       shell: bash
       run: |
         set -x
-        python process_results.py test-status --quiet || true
-        python process_results.py heatmap --quiet || true
+        python process_results.py test-status --max_eplus_versions=3 --quiet || true
+        python process_results.py heatmap --max_eplus_versions=3 --quiet || true
 
     - name: Archive test results
       if: always()
@@ -89,6 +98,17 @@ jobs:
       with:
           name: Test-Results
           path: Test-Stability/*
+
+     # This is a failing step: We check the last version on record:
+    # * if there are NEW test failures, we set the job to failed
+    # * if there are NEW EUI deviations above threshold, we set the job to failed
+    - name: Recheck test-status and fail the job if needed
+      if: ${{ always() }}
+      shell: bash
+      run: |
+        set -x
+        python process_results.py test-status --max_eplus_versions=3 --quiet --ci
+        python process_results.py heatmap --max_eplus_versions=3 --quiet --ci
 
     - uses: 8398a7/action-slack@v3
       if: always() # Pick up events even if the job fails or is canceled.

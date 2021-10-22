@@ -89,6 +89,7 @@ OS_EPLUS_DICT = {'2.4.4': '8.9.0'}
 # From https://semver.org/
 SEMVER_REGEX = re.compile(r'^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$')
 
+
 def isnotebook():
     """
     Helper function: is this running in a jupyter notebook?
@@ -304,7 +305,7 @@ def parse_model_tests_rb():
     test_pat = re.compile(r'^\s*def test_(.+)_(rb|osm|osw)\s*$')
     # The intersect tests are special, so we only parse autosizing and sim
     res_pat = re.compile(r"^\s*result\s*=\s*(?:autosizing|sim)_test"
-                         r"\('(.*)\.(rb|osm|osw)'\)\s*")
+                         r"\('(.*)\.(rb|osm|osw)',*.*\)\s*")
 
     # minitests = []
     tests = []
@@ -924,6 +925,7 @@ def encoding_sheet_utilities(df_files):
     return (df_files.loc['path_special_chars_pwd']
                     .applymap(parse_status_encoding))
 
+
 def success_sheet_sql(df_files):
     """
     High-level method to construct a dataframe of Success for sql tests
@@ -952,6 +954,7 @@ def success_sheet_sql(df_files):
 
     success = success.reindex(index=order_n_fail.index, level=0)
     return success
+
 
 def test_implemented_sheet(df_files, success=None, model_test_cases=None,
                            only_for_mising_osm=False):
@@ -1177,7 +1180,7 @@ def dataframe_row_chunks(df, n):
         yield df.iloc[i:i + n]
 
 
-def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
+def heatmap_sitekbtu_pct_change(site_kbtu_change, row_threshold=0.005,
                                 display_threshold=0.001,
                                 show_plot=True, savefig=False,
                                 figname=None,
@@ -1194,6 +1197,7 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     -----
     * site_kbtu_change (pd.DataFrame): typically gotten from
     `df_files.applymap(regression_analysis.parse_total_site_energy)`
+    then calling `site_kbtu.pct_change(axis=1)`
 
     * row_threshold (float): only display tests where there is at least one
     cell that has a change greater than this. This value is a percentage,
@@ -1214,10 +1218,9 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
 
     Returns:
     --------
-    True if draws the plot, False otherwise
+    True if there are diffs above the threshold, False otherwise
     """
 
-    site_kbtu_change = site_kbtu.pct_change(axis=1)
     g_toplot = site_kbtu_change[(site_kbtu_change.abs() >
                                  row_threshold).any(axis=1)]
     g_toplot.index = [".".join(x) for x in g_toplot.index]
@@ -1246,6 +1249,9 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
         return False
     else:
         print("Max Absolute difference: {:.4%}".format(max_abs_diff))
+        max_last_diff = site_kbtu_change.iloc[:, -1].abs().max()
+        print("Max Absolute difference of last version: "
+              "{:.4%}".format(max_last_diff))
     if figsize is None:
         w = 16
         h = max(w * g_toplot.shape[0] / (3 * g_toplot.shape[1]), 4.0)
@@ -1694,8 +1700,33 @@ def getStyles():
 ###############################################################################
 
 
+def make_ci_annotations(failures_index, title, message, log_level='error',
+                        pct_diffs=None):
+    accepted_log_levels = ['error', 'warning', 'notice']
+    if log_level not in accepted_log_levels:
+        raise ValueError(
+            f'log_level must be one of {accepted_log_levels}, not {log_level}')
+    for (test_name, test_type) in failures_index:
+        if test_name == 'autosizing':
+            test_name = 'autosize_hvac'
+        fname = f"{test_name}.{test_type}"
+        test_file = os.path.join('model/simulationtests', fname)
+        if os.path.exists(test_file):
+            name = test_file
+        else:
+            # Annotate on model_tests.rb
+            name = 'model_tests.rb'
+
+        line = 1
+        endLine = 2
+        title = f"{title}: {name}"
+        print(f"::{log_level} file={name},line={line},endLine={endLine},"
+              f"title={title}::{message}")
+
+
 def cli_test_status_html(entire_table=False, tagged=False, all_osws=False,
-                         quiet=False):
+                         quiet=False, max_eplus_versions=None,
+                         ci_annotations=False):
     if tagged:
         # Tagged-only
         df_files = find_info_osws_with_tags(compat_matrix=None,
@@ -1706,6 +1737,12 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False,
                                             tags_only=False, quiet=quiet)
     else:
         df_files = find_info_osws()
+
+    if max_eplus_versions is not None:
+        df_files = df_files[
+            df_files.columns.get_level_values(level='E+')
+            .unique()[-max_eplus_versions:]
+        ]
 
     styles = getStyles()
 
@@ -1727,6 +1764,8 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False,
     # Filter all NA rows
     success = success.loc[success.any(axis=1)]
 
+    return_code = 0
+
     if not entire_table:
         ruby_or_osm_fail = (success.groupby(level='Test')['n_fail+missing']
                                    .sum().sort_values(ascending=False) > 0)
@@ -1736,12 +1775,30 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False,
         # success = success[success['n_fail+missing'] > 0]
         success2 = success.loc[[x for x in success.index if x[0]
                                in ruby_or_osm_fail.index[ruby_or_osm_fail]]]
+
         if success2.empty:
             print("\nOK: No Failing tests were found")
         else:
-            print("\nWARNING: you have failing tests:")
             success = success2
             caption = 'Test Success - Failed only'
+
+            failures_idx = success.index[(success.iloc[:, -4] != 'Success') &
+                                         (success.iloc[:, -5] == 'Success')]
+            if failures_idx.empty:
+                print("\nInfo: you have failing tests, but no new failures")
+            else:
+                failures = [f"{x[0]}.{x[1]}" for x in failures_idx]
+                print(f"\nWARNING: you have {len(failures)} NEW failing tests:"
+                      "\n{failures}")
+                return_code = 1
+                if ci_annotations:
+                    make_ci_annotations(
+                        failures_index=failures_idx,
+                        title='New failure',
+                        message=('This file passed in the last version but '
+                                 'is now failing'),
+                        log_level='error',
+                    )
 
     html = (success.style
                    .set_table_attributes('style="border:1px solid black;'
@@ -1768,6 +1825,8 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False,
         elif os.name == 'posix':
             subprocess.call(('xdg-open', filepath))
 
+    return return_code
+
 
 def cli_heatmap(tagged=False, all_osws=False,
                 row_threshold=0.01,
@@ -1775,7 +1834,8 @@ def cli_heatmap(tagged=False, all_osws=False,
                 save_indiv_figs_for_ax=False,
                 figname_with_thresholds=True,
                 quiet=False,
-                max_eplus_versions=None):
+                max_eplus_versions=None,
+                ci_annotations=False):
     """
     Helper function called from the CLI to plot the heatmap
     """
@@ -1808,15 +1868,50 @@ def cli_heatmap(tagged=False, all_osws=False,
     if os._exists(figname):
         os.remove(figname)
 
-    s = heatmap_sitekbtu_pct_change(site_kbtu=site_kbtu,
-                                    row_threshold=row_threshold,
-                                    display_threshold=display_threshold,
-                                    figname=figname,
-                                    savefig=True,
-                                    show_plot=False,
-                                    save_indiv_figs_for_ax=True)
-    if s:
-        if quiet:
+    site_kbtu_change = site_kbtu.pct_change(axis=1)
+
+    hasDiffs = heatmap_sitekbtu_pct_change(
+        site_kbtu_change=site_kbtu_change,
+        row_threshold=row_threshold,
+        display_threshold=display_threshold,
+        figname=figname, savefig=True, show_plot=False,
+        save_indiv_figs_for_ax=True)
+
+    if hasDiffs:
+
+        if ci_annotations:
+
+            # Create annotations for diffs in the last version
+            s_last_diff = site_kbtu_change.iloc[:, -1].sort_values()
+            fail_mask = s_last_diff.abs() > row_threshold
+            failures_idx = s_last_diff.index[fail_mask]
+            if not failures_idx.empty:
+                make_ci_annotations(
+                    failures_index=failures_idx,
+                    title='EUI deviation too large',
+                    message=('This file exceeds the threshold of '
+                             f'{row_threshold:.2%}'),
+                    log_level='error',
+                    pct_diffs=s_last_diff[failures_idx]
+                )
+            else:
+                hasDiffs = False
+
+            warn_mask = s_last_diff.abs() > display_threshold
+            warnings_idx = s_last_diff.index[warn_mask & ~fail_mask]
+            make_ci_annotations(
+                failures_index=warnings_idx,
+                title='EUI deviation is concerning',
+                message=('This file exceeds the display threshold of '
+                         f'{display_threshold:.2%}'),
+                log_level='warning',
+                pct_diffs=s_last_diff[warnings_idx]
+            )
+
+            if hasDiffs:
+                exit(1)
+
+        elif quiet:
             # Throw for stability error
             exit(1)
         else:
@@ -1872,7 +1967,7 @@ if __name__ == "__main__":
         if site_kbtu is None:
             df_files = find_info_osws()
             site_kbtu = df_files.applymap(parse_total_site_energy)
-        heatmap_sitekbtu_pct_change(site_kbtu=site_kbtu,
+        heatmap_sitekbtu_pct_change(site_kbtu_change=site_kbtu.pct_change(axis=1),
                                     row_threshold=threshold,
                                     savefig=True,
                                     show_plot=False)
