@@ -183,9 +183,9 @@ class BaselineModel < OpenStudio::Model::Model
 
       # Rename all surfaces with a unique name for easy diffing
       space.surfaces.each do |s|
-        fromSpaceName = space.nameString()
+        fromSpaceName = space.nameString
         surfaceType = s.surfaceType()
-        boundaryCondition = s.outsideBoundaryCondition()
+        boundaryCondition = s.outsideBoundaryCondition
         if boundaryCondition.downcase == 'ground'
           s.setName("#{fromSpaceName} Exterior Ground Floor")
         elsif boundaryCondition.downcase == 'outdoors'
@@ -197,18 +197,20 @@ class BaselineModel < OpenStudio::Model::Model
             # This shouldn't happen in our code
             s.setName("#{fromSpaceName} Exterior Floor")
           else
-            raise "Unknown surfaceType #{surfaceType} for #{s.briefDescription()}"
+            raise "Unknown surfaceType #{surfaceType} for #{s.briefDescription}"
           end
         elsif boundaryCondition.downcase == 'surface'
 
           next if renamed_surfaces.include?(s)
-          adjacent_s_ = s.adjacentSurface()
-          raise "#{s.briefDescription()} is listed as outside boundary condition = 'Surface' but it does not have an adjacent surface" if !adjacent_s_.is_initialized()
-          adjacent_s = adjacent_s_.get()
-          adjacent_space_ = adjacent_s.space()
-          raise "Adjacent Surface #{adjacent_s} does not have a Space" if !adjacent_space_.is_initialized()
 
-          toSpaceName = adjacent_space_.get().nameString()
+          adjacent_s_ = s.adjacentSurface
+          raise "#{s.briefDescription} is listed as outside boundary condition = 'Surface' but it does not have an adjacent surface" if !adjacent_s_.is_initialized
+
+          adjacent_s = adjacent_s_.get
+          adjacent_space_ = adjacent_s.space
+          raise "Adjacent Surface #{adjacent_s} does not have a Space" if !adjacent_space_.is_initialized
+
+          toSpaceName = adjacent_space_.get.nameString
 
           s.setName("#{fromSpaceName} to #{toSpaceName} Interior #{s.surfaceType}")
           adjacent_s.setName("#{toSpaceName} to #{fromSpaceName} Interior #{s.surfaceType}")
@@ -250,8 +252,8 @@ class BaselineModel < OpenStudio::Model::Model
 
       new_window = s.setWindowToWallRatio(wwr, offset, heightOffsetFromFloor)
       # Name it like the wall (new_window will be initialized only for walls)
-      if new_window.is_initialized()
-        new_window.get().setName("#{s.nameString} Window")
+      if new_window.is_initialized
+        new_window.get.setName("#{s.nameString} Window")
       end
     end
   end
