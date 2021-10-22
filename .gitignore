@@ -6,6 +6,7 @@ database
 Dockerfile
 out.txt
 out.log
+tmp/
 
 *.ipynb
 !Analyzing_Regression_Tests.ipynb
@@ -29,6 +30,9 @@ test/*_3.2.2*_out.osw
 test/*_3.2.2*_out*.status
 test/*_3.2.2*_out.sqltest
 test/*_3.2.2*_out*.xml
+# Ignore alphas and rcs?
+test/*_[0-9].[0-9].[0-9]-*_out*
+
 
 Regression_Test_Status.html
 

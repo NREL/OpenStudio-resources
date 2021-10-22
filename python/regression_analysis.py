@@ -1177,7 +1177,7 @@ def dataframe_row_chunks(df, n):
         yield df.iloc[i:i + n]
 
 
-def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
+def heatmap_sitekbtu_pct_change(site_kbtu_change, row_threshold=0.005,
                                 display_threshold=0.001,
                                 show_plot=True, savefig=False,
                                 figname=None,
@@ -1193,7 +1193,8 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     Args
     -----
     * site_kbtu_change (pd.DataFrame): typically gotten from
-    `df_files.applymap(regression_analysis.parse_total_site_energy)`
+    `site_kbtu = df_files.applymap(regression_analysis.parse_total_site_energy)`
+    then calling `site_kbtu.pct_change(axis=1)`
 
     * row_threshold (float): only display tests where there is at least one
     cell that has a change greater than this. This value is a percentage,
@@ -1217,7 +1218,6 @@ def heatmap_sitekbtu_pct_change(site_kbtu, row_threshold=0.005,
     True if draws the plot, False otherwise
     """
 
-    site_kbtu_change = site_kbtu.pct_change(axis=1)
     g_toplot = site_kbtu_change[(site_kbtu_change.abs() >
                                  row_threshold).any(axis=1)]
     g_toplot.index = [".".join(x) for x in g_toplot.index]
@@ -1808,7 +1808,7 @@ def cli_heatmap(tagged=False, all_osws=False,
     if os._exists(figname):
         os.remove(figname)
 
-    s = heatmap_sitekbtu_pct_change(site_kbtu=site_kbtu,
+    s = heatmap_sitekbtu_pct_change(site_kbtu=site_kbtu.pct_change(axis=1),
                                     row_threshold=row_threshold,
                                     display_threshold=display_threshold,
                                     figname=figname,
@@ -1872,7 +1872,7 @@ if __name__ == "__main__":
         if site_kbtu is None:
             df_files = find_info_osws()
             site_kbtu = df_files.applymap(parse_total_site_energy)
-        heatmap_sitekbtu_pct_change(site_kbtu=site_kbtu,
+        heatmap_sitekbtu_pct_change(site_kbtu=site_kbtu.pct_change(axis=1),
                                     row_threshold=threshold,
                                     savefig=True,
                                     show_plot=False)
