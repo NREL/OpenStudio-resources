@@ -719,7 +719,6 @@ def sim_test(filename, options = {})
     puts 'COMMAND:'
     puts command
   end
-  puts command
   run_command(command, dir, 3600)
 
   if $Save_idf
