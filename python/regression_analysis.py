@@ -1882,9 +1882,9 @@ def cli_heatmap(tagged=False, all_osws=False,
         if ci_annotations:
 
             # Create annotations for diffs in the last version
-            s_last_abs_diff = site_kbtu_change.iloc[:, -1].abs()
-            fail_mask = s_last_abs_diff.abs() > row_threshold
-            failures_idx = s_last_abs_diff.index[fail_mask]
+            s_last_diff = site_kbtu_change.iloc[:, -1].sort_values()
+            fail_mask = s_last_diff.abs() > row_threshold
+            failures_idx = s_last_diff.index[fail_mask]
             if not failures_idx.empty:
                 make_ci_annotations(
                     failures_index=failures_idx,
@@ -1892,20 +1892,20 @@ def cli_heatmap(tagged=False, all_osws=False,
                     message=('This file exceeds the threshold of '
                              f'{row_threshold:.2%}'),
                     log_level='error',
-                    pct_diffs=s_last_abs_diff[failures_idx]
+                    pct_diffs=s_last_diff[failures_idx]
                 )
             else:
                 hasDiffs = False
 
-            warn_mask = s_last_abs_diff.abs() > display_threshold
-            warnings_idx = s_last_abs_diff.index[warn_mask & ~fail_mask]
+            warn_mask = s_last_diff.abs() > display_threshold
+            warnings_idx = s_last_diff.index[warn_mask & ~fail_mask]
             make_ci_annotations(
                 failures_index=warnings_idx,
                 title='EUI deviation is concerning',
                 message=('This file exceeds the display threshold of '
                          f'{display_threshold:.2%}'),
                 log_level='warning',
-                pct_diffs=s_last_abs_diff[warnings_idx]
+                pct_diffs=s_last_diff[warnings_idx]
             )
 
             if hasDiffs:
