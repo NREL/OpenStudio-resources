@@ -1792,7 +1792,7 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False,
             else:
                 failures = [f"{x[0]}.{x[1]}" for x in failures_idx]
                 print(f"\nWARNING: you have {len(failures)} NEW failing tests:"
-                      "\n{failures}")
+                      f"\n{failures}")
                 return_code = 1
                 if ci_annotations:
                     make_ci_annotations(

@@ -72,27 +72,21 @@ jobs:
         set -x
         N=$(nproc) openstudio highlevel_tests.rb
 
-    - name: Commit results
-      if: always()
-      shell: bash
-      run: |
-        set -x
-        git add -f test/*
-        git add -f site_kbtu_pct_change.png
-        git add -f Test-Stability/Regression_Test_Status.html
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git config --global user.name 'github-actions[bot]'
-
-        git commit -m "Add results from workflow_dispatch testing with ${{ github.event.inputs.os_installer_link }}"
-        git push -u origin $branch_name
-
-    - name: Generate HTML and heatmap
+    # This is a failing step: We check the last version on record, if there are NEW test failures, we set the job to failed
+    - name: Check Test Status and Generate HTML
       if: ${{ always() }}
       shell: bash
       run: |
         set -x
-        python process_results.py test-status --max_eplus_versions=3 --all --quiet || true
-        python process_results.py heatmap --max_eplus_versions=3 --all --quiet || true
+        python process_results.py test-status --max_eplus_versions=3 --all --quiet --ci
+
+    # This is a failing step: We check the last version on record, if there are NEW EUI deviations above threshold, we set the job to failed
+    - name: Check EUI and Generate heatmap
+      if: ${{ always() }}
+      shell: bash
+      run: |
+        set -x
+        python process_results.py heatmap --max_eplus_versions=3 --all --quiet --ci
 
     - name: Archive test results
       if: always()
@@ -101,16 +95,19 @@ jobs:
           name: Test-Results
           path: Test-Stability/*
 
-     # This is a failing step: We check the last version on record:
-    # * if there are NEW test failures, we set the job to failed
-    # * if there are NEW EUI deviations above threshold, we set the job to failed
-    - name: Recheck test-status and fail the job if needed
-      if: ${{ always() }}
+    - name: Commit results
+      if: always()
       shell: bash
       run: |
         set -x
-        python process_results.py test-status --max_eplus_versions=3 --all --quiet --ci
-        python process_results.py heatmap --max_eplus_versions=3 --all --quiet --ci
+        git add -f test/*
+        git add -f site_kbtu_pct_change.png || true
+        git add -f Test-Stability/Regression_Test_Status.html || true
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git config --global user.name 'github-actions[bot]'
+
+        git commit -m "Add results from workflow_dispatch testing with ${{ github.event.inputs.os_installer_link }}"
+        git push -u origin $branch_name
 
     - uses: 8398a7/action-slack@v3
       if: always() # Pick up events even if the job fails or is canceled.
