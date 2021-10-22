@@ -21,6 +21,10 @@ jobs:
       with:
         python-version: '3.8.x'
 
+    - uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+
     - name: Download and install OS SDK installer
       shell: bash
       run: |
@@ -31,6 +35,7 @@ jobs:
         wget '${{ github.event.inputs.os_installer_link }}'
         sudo apt install -y ./OpenStudio*.deb
         openstudio openstudio_version
+        gem install bundler -v '~> 2.1.4'
 
     - name: Checkout the branch
       shell: bash
