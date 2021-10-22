@@ -89,8 +89,8 @@ jobs:
       shell: bash
       run: |
         set -x
-        python process_results.py test-status --max_eplus_versions=3 --quiet || true
-        python process_results.py heatmap --max_eplus_versions=3 --quiet || true
+        python process_results.py test-status --max_eplus_versions=3 --all --quiet || true
+        python process_results.py heatmap --max_eplus_versions=3 --all --quiet || true
 
     - name: Archive test results
       if: always()
@@ -107,8 +107,8 @@ jobs:
       shell: bash
       run: |
         set -x
-        python process_results.py test-status --max_eplus_versions=3 --quiet --ci
-        python process_results.py heatmap --max_eplus_versions=3 --quiet --ci
+        python process_results.py test-status --max_eplus_versions=3 --all --quiet --ci
+        python process_results.py heatmap --max_eplus_versions=3 --all --quiet --ci
 
     - uses: 8398a7/action-slack@v3
       if: always() # Pick up events even if the job fails or is canceled.
