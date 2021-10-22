@@ -172,6 +172,7 @@ class BaselineModel < OpenStudio::Model::Model
     # Match surfaces for each space in the vector
     OpenStudio::Model.matchSurfaces(spaces)
 
+    renamed_surfaces = Set.new
     # Apply a thermal zone to each space in the model if that space has no thermal zone already
     spaces.each do |space|
       if space.thermalZone.empty?
@@ -179,7 +180,44 @@ class BaselineModel < OpenStudio::Model::Model
         space.setThermalZone(new_thermal_zone)
         new_thermal_zone.setName(space.name.get.sub('Space', 'Thermal Zone'))
       end
-    end
+
+      # Rename all surfaces with a unique name for easy diffing
+      space.surfaces.each do |s|
+        fromSpaceName = space.nameString()
+        surfaceType = s.surfaceType()
+        boundaryCondition = s.outsideBoundaryCondition()
+        if boundaryCondition.downcase == 'ground'
+          s.setName("#{fromSpaceName} Exterior Ground Floor")
+        elsif boundaryCondition.downcase == 'outdoors'
+          if surfaceType.downcase == 'wall'
+            s.setName("#{fromSpaceName} Exterior Wall")
+          elsif surfaceType.downcase == 'roofceiling'
+            s.setName("#{fromSpaceName} Exterior Roof")
+          elsif surfaceType.downcase == 'floor'
+            # This shouldn't happen in our code
+            s.setName("#{fromSpaceName} Exterior Floor")
+          else
+            raise "Unknown surfaceType #{surfaceType} for #{s.briefDescription()}"
+          end
+        elsif boundaryCondition.downcase == 'surface'
+
+          next if renamed_surfaces.include?(s)
+          adjacent_s_ = s.adjacentSurface()
+          raise "#{s.briefDescription()} is listed as outside boundary condition = 'Surface' but it does not have an adjacent surface" if !adjacent_s_.is_initialized()
+          adjacent_s = adjacent_s_.get()
+          adjacent_space_ = adjacent_s.space()
+          raise "Adjacent Surface #{adjacent_s} does not have a Space" if !adjacent_space_.is_initialized()
+
+          toSpaceName = adjacent_space_.get().nameString()
+
+          s.setName("#{fromSpaceName} to #{toSpaceName} Interior #{s.surfaceType}")
+          adjacent_s.setName("#{toSpaceName} to #{fromSpaceName} Interior #{s.surfaceType}")
+
+          renamed_surfaces.add(s)
+          renamed_surfaces.add(adjacent_s)
+        end
+      end # End rename surfaces
+    end # End loop on spaces to add thermal zone and rename surfaces
   end
 
   def add_windows(params)
@@ -211,6 +249,10 @@ class BaselineModel < OpenStudio::Model::Model
       next if s.outsideBoundaryCondition != 'Outdoors'
 
       new_window = s.setWindowToWallRatio(wwr, offset, heightOffsetFromFloor)
+      # Name it like the wall (new_window will be initialized only for walls)
+      if new_window.is_initialized()
+        new_window.get().setName("#{s.nameString} Window")
+      end
     end
   end
 
