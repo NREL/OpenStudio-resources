@@ -13,7 +13,7 @@ Usage:
                              [--figname_with_thresholds]
                              [--figname_with_thresholds]
                              [--granular [--indiv_axes]]
-                             [--quiet]
+                             [--quiet] [--ci]
   process_results.py upload
   process_results.py test-stability run -n <test_filter>
                                         [-N <n>]
@@ -24,7 +24,7 @@ Usage:
                                         [--platform_name=<str>]
   process_results.py test-stability clean [--contains=<str> | --pattern=<pat>]
   process_results.py test-status [--tagged | --all] [--entire_table] [--quiet]
-                                 [--max_eplus_versions=<n_versions>]
+                                 [--max_eplus_versions=<n_versions>] [--ci]
   process_results.py -h | --help
 
 Options:
@@ -62,6 +62,8 @@ Options:
 
   -f, --figname_with_thresholds
         Append row and display thresholds to the heatmap figure name
+
+  --ci  Creates annotations for github actions
 
  test-stability:
  ---------------
@@ -102,7 +104,7 @@ Options:
  This will create an HTML of the test status, by default only for failing tests
  and non tagged files.
 
-  See --tagged, --all and --max_eplus_versions in the heatmap section above
+  See --tagged, --all, --ci, --max_eplus_versions in the heatmap section above
 
   --entire_table  Output also tests that have no missing/fail tests
                   (makes a much bigger table)
@@ -189,7 +191,8 @@ if __name__ == "__main__":
                     save_indiv_figs_for_ax=options['--indiv_axes'],
                     figname_with_thresholds=options['--figname_with_thresholds'],
                     quiet=options['--quiet'],
-                    max_eplus_versions=max_eplus_versions)
+                    max_eplus_versions=max_eplus_versions,
+                    ci_annotations=options['--ci'])
     elif options['upload']:
         cli_upload()
 
@@ -227,5 +230,6 @@ if __name__ == "__main__":
             tagged=options['--tagged'],
             all_osws=options['--all'],
             quiet=options['--quiet'],
-            max_eplus_versions=max_eplus_versions)
+            max_eplus_versions=max_eplus_versions,
+            ci_annotations=options['--ci'])
         exit(return_code)

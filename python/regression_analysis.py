@@ -1218,7 +1218,7 @@ def heatmap_sitekbtu_pct_change(site_kbtu_change, row_threshold=0.005,
 
     Returns:
     --------
-    True if draws the plot, False otherwise
+    True if there are diffs above the threshold, False otherwise
     """
 
     g_toplot = site_kbtu_change[(site_kbtu_change.abs() >
@@ -1249,6 +1249,9 @@ def heatmap_sitekbtu_pct_change(site_kbtu_change, row_threshold=0.005,
         return False
     else:
         print("Max Absolute difference: {:.4%}".format(max_abs_diff))
+        max_last_diff = site_kbtu_change.iloc[:, -1].abs().max()
+        print("Max Absolute difference of last version: "
+              "{:.4%}".format(max_last_diff))
     if figsize is None:
         w = 16
         h = max(w * g_toplot.shape[0] / (3 * g_toplot.shape[1]), 4.0)
@@ -1697,8 +1700,33 @@ def getStyles():
 ###############################################################################
 
 
+def make_ci_annotations(failures_index, title, message, log_level='error',
+                        pct_diffs=None):
+    accepted_log_levels = ['error', 'warning', 'notice']
+    if log_level not in accepted_log_levels:
+        raise ValueError(
+            f'log_level must be one of {accepted_log_levels}, not {log_level}')
+    for (test_name, test_type) in failures_index:
+        if test_name == 'autosizing':
+            test_name = 'autosize_hvac'
+        fname = f"{test_name}.{test_type}"
+        test_file = os.path.join('model/simulationtests', fname)
+        if os.path.exists(test_file):
+            name = test_file
+        else:
+            # Annotate on model_tests.rb
+            name = 'model_tests.rb'
+
+        line = 1
+        endLine = 2
+        title = f"{title}: {name}"
+        print(f"::{log_level} file={name},line={line},endLine={endLine},"
+              f"title={title}::{message}")
+
+
 def cli_test_status_html(entire_table=False, tagged=False, all_osws=False,
-                         quiet=False, max_eplus_versions=None):
+                         quiet=False, max_eplus_versions=None,
+                         ci_annotations=False):
     if tagged:
         # Tagged-only
         df_files = find_info_osws_with_tags(compat_matrix=None,
@@ -1754,15 +1782,23 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False,
             success = success2
             caption = 'Test Success - Failed only'
 
-            new_failures = success2.index[(success2.iloc[:, -4] != 'Success') &
-                                          (success2.iloc[:, -5] == 'Success')]
-            if new_failures.empty:
+            failures_idx = success.index[(success.iloc[:, -4] != 'Success') &
+                                         (success.iloc[:, -5] == 'Success')]
+            if failures_idx.empty:
                 print("\nInfo: you have failing tests, but no new failures")
             else:
-                failures = [f"{x[0]}.{x[1]}" for x in new_failures]
+                failures = [f"{x[0]}.{x[1]}" for x in failures_idx]
                 print(f"\nWARNING: you have {len(failures)} NEW failing tests:"
                       "\n{failures}")
                 return_code = 1
+                if ci_annotations:
+                    make_ci_annotations(
+                        failures_index=failures_idx,
+                        title='New failure',
+                        message=('This file passed in the last version but '
+                                 'is now failing'),
+                        log_level='error',
+                    )
 
     html = (success.style
                    .set_table_attributes('style="border:1px solid black;'
@@ -1798,7 +1834,8 @@ def cli_heatmap(tagged=False, all_osws=False,
                 save_indiv_figs_for_ax=False,
                 figname_with_thresholds=True,
                 quiet=False,
-                max_eplus_versions=None):
+                max_eplus_versions=None,
+                ci_annotations=False):
     """
     Helper function called from the CLI to plot the heatmap
     """
@@ -1831,15 +1868,50 @@ def cli_heatmap(tagged=False, all_osws=False,
     if os._exists(figname):
         os.remove(figname)
 
-    s = heatmap_sitekbtu_pct_change(site_kbtu_change=site_kbtu.pct_change(axis=1),
-                                    row_threshold=row_threshold,
-                                    display_threshold=display_threshold,
-                                    figname=figname,
-                                    savefig=True,
-                                    show_plot=False,
-                                    save_indiv_figs_for_ax=True)
-    if s:
-        if quiet:
+    site_kbtu_change = site_kbtu.pct_change(axis=1)
+
+    hasDiffs = heatmap_sitekbtu_pct_change(
+        site_kbtu_change=site_kbtu_change,
+        row_threshold=row_threshold,
+        display_threshold=display_threshold,
+        figname=figname, savefig=True, show_plot=False,
+        save_indiv_figs_for_ax=True)
+
+    if hasDiffs:
+
+        if ci_annotations:
+
+            # Create annotations for diffs in the last version
+            s_last_abs_diff = site_kbtu_change.iloc[:, -1].abs()
+            fail_mask = s_last_abs_diff.abs() > row_threshold
+            failures_idx = s_last_abs_diff.index[fail_mask]
+            if not failures_idx.empty:
+                make_ci_annotations(
+                    failures_index=failures_idx,
+                    title='EUI deviation too large',
+                    message=('This file exceeds the threshold of '
+                             f'{row_threshold:.2%}'),
+                    log_level='error',
+                    pct_diffs=s_last_abs_diff[failures_idx]
+                )
+            else:
+                hasDiffs = False
+
+            warn_mask = s_last_abs_diff.abs() > display_threshold
+            warnings_idx = s_last_abs_diff.index[warn_mask & ~fail_mask]
+            make_ci_annotations(
+                failures_index=warnings_idx,
+                title='EUI deviation is concerning',
+                message=('This file exceeds the display threshold of '
+                         f'{display_threshold:.2%}'),
+                log_level='warning',
+                pct_diffs=s_last_abs_diff[warnings_idx]
+            )
+
+            if hasDiffs:
+                exit(1)
+
+        elif quiet:
             # Throw for stability error
             exit(1)
         else:
