@@ -89,6 +89,7 @@ OS_EPLUS_DICT = {'2.4.4': '8.9.0'}
 # From https://semver.org/
 SEMVER_REGEX = re.compile(r'^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$')
 
+
 def isnotebook():
     """
     Helper function: is this running in a jupyter notebook?
@@ -304,7 +305,7 @@ def parse_model_tests_rb():
     test_pat = re.compile(r'^\s*def test_(.+)_(rb|osm|osw)\s*$')
     # The intersect tests are special, so we only parse autosizing and sim
     res_pat = re.compile(r"^\s*result\s*=\s*(?:autosizing|sim)_test"
-                         r"\('(.*)\.(rb|osm|osw)'\)\s*")
+                         r"\('(.*)\.(rb|osm|osw)',*.*\)\s*")
 
     # minitests = []
     tests = []
@@ -924,6 +925,7 @@ def encoding_sheet_utilities(df_files):
     return (df_files.loc['path_special_chars_pwd']
                     .applymap(parse_status_encoding))
 
+
 def success_sheet_sql(df_files):
     """
     High-level method to construct a dataframe of Success for sql tests
@@ -952,6 +954,7 @@ def success_sheet_sql(df_files):
 
     success = success.reindex(index=order_n_fail.index, level=0)
     return success
+
 
 def test_implemented_sheet(df_files, success=None, model_test_cases=None,
                            only_for_mising_osm=False):
@@ -1193,7 +1196,7 @@ def heatmap_sitekbtu_pct_change(site_kbtu_change, row_threshold=0.005,
     Args
     -----
     * site_kbtu_change (pd.DataFrame): typically gotten from
-    `site_kbtu = df_files.applymap(regression_analysis.parse_total_site_energy)`
+    `df_files.applymap(regression_analysis.parse_total_site_energy)`
     then calling `site_kbtu.pct_change(axis=1)`
 
     * row_threshold (float): only display tests where there is at least one
@@ -1695,7 +1698,7 @@ def getStyles():
 
 
 def cli_test_status_html(entire_table=False, tagged=False, all_osws=False,
-                         quiet=False):
+                         quiet=False, max_eplus_versions=None):
     if tagged:
         # Tagged-only
         df_files = find_info_osws_with_tags(compat_matrix=None,
@@ -1706,6 +1709,12 @@ def cli_test_status_html(entire_table=False, tagged=False, all_osws=False,
                                             tags_only=False, quiet=quiet)
     else:
         df_files = find_info_osws()
+
+    if max_eplus_versions is not None:
+        df_files = df_files[
+            df_files.columns.get_level_values(level='E+')
+            .unique()[-max_eplus_versions:]
+        ]
 
     styles = getStyles()
 

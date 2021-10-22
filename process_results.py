@@ -24,6 +24,7 @@ Usage:
                                         [--platform_name=<str>]
   process_results.py test-stability clean [--contains=<str> | --pattern=<pat>]
   process_results.py test-status [--tagged | --all] [--entire_table] [--quiet]
+                                 [--max_eplus_versions=<n_versions>]
   process_results.py -h | --help
 
 Options:
@@ -101,11 +102,10 @@ Options:
  This will create an HTML of the test status, by default only for failing tests
  and non tagged files.
 
-  See --tagged and --all in the heatmap section above
+  See --tagged, --all and --max_eplus_versions in the heatmap section above
 
   --entire_table  Output also tests that have no missing/fail tests
                   (makes a much bigger table)
-
 
  other:
  ------
@@ -216,7 +216,15 @@ if __name__ == "__main__":
         elif options['analyze']:
             pass
     elif options['test-status']:
-        cli_test_status_html(entire_table=options['--entire_table'],
-                             tagged=options['--tagged'],
-                             all_osws=options['--all'],
-                             quiet=options['--quiet'])
+        max_eplus_versions = options['--max_eplus_versions']
+        if max_eplus_versions is not None:
+            try:
+                max_eplus_versions = int(max_eplus_versions)
+            except ValueError:
+                raise ValueError("max_eplus_versions must be an int")
+         cli_test_status_html(
+            entire_table=options['--entire_table'],
+            tagged=options['--tagged'],
+            all_osws=options['--all'],
+            quiet=options['--quiet'],
+            max_eplus_versions=max_eplus_versions)
