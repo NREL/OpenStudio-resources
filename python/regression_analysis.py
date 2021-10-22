@@ -1706,7 +1706,7 @@ def make_ci_annotations(failures_index, title, message, log_level='error',
     if log_level not in accepted_log_levels:
         raise ValueError(
             f'log_level must be one of {accepted_log_levels}, not {log_level}')
-    for (test_name, test_type) in failures_index:
+    for i, (test_name, test_type) in enumerate(failures_index):
         if test_name == 'autosizing':
             test_name = 'autosize_hvac'
         fname = f"{test_name}.{test_type}"
@@ -1719,9 +1719,12 @@ def make_ci_annotations(failures_index, title, message, log_level='error',
 
         line = 1
         endLine = 2
-        title = f"{title}: {name}"
+        thisTitle = f"{title}: {fname}"
+        thisMessage = message
+        if pct_diffs is not None:
+            thisMessage += f': {pct_diffs[i]:.3%}'
         print(f"::{log_level} file={name},line={line},endLine={endLine},"
-              f"title={title}::{message}")
+              f"title={thisTitle}::{thisMessage}")
 
 
 def cli_test_status_html(entire_table=False, tagged=False, all_osws=False,
