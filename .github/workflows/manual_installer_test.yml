@@ -49,7 +49,7 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-    - name: Run model_tests.rb: first pass
+    - name: Run model_tests.rb - first pass
       continue-on-error: true
       shell: bash
       run: |
@@ -57,7 +57,7 @@ jobs:
         echo "nproc=$(nproc)"
         N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb || true
 
-    - name: Run model_tests: second pass for failed tests
+    - name: Run model_tests - second pass for failed tests
       continue-on-error: true
       shell: bash
       run: |
@@ -66,7 +66,7 @@ jobs:
         DONOTRERUNIFSUCCESS=true N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb || true
 
     # This is a failing step!
-    - name: Run highlevel_tests: first pass
+    - name: Run highlevel_tests
       shell: bash
       run: |
         set -x
