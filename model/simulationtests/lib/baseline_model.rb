@@ -655,6 +655,7 @@ class BaselineModel < OpenStudio::Model::Model
     force_year_description
 
     save_path = OpenStudio::Path.new("#{osm_save_directory}/#{osm_name}")
+    # puts "Saving to #{save_path}"
     save(save_path, true)
   end
 

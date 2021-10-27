@@ -309,27 +309,21 @@ end
 # returns full directory name gemfile_dir
 # gemfile at gemfile_dir + 'Gemfile', bundle at gemfile_dir + 'gems'
 def bundle_install(gemfile_dirname, force_install)
-  original_dir = Dir.pwd
   gemfile_dir = File.join($RootDir, 'gemfiles', gemfile_dirname)
   raise "Gemfile dir '#{gemfile_dir}' does not exist" if !File.exist?(gemfile_dir)
 
-  Dir.chdir(gemfile_dir)
-
   if force_install
-    FileUtils.rm_rf('Gemfile.lock') if File.exist?('Gemfile.lock')
-    FileUtils.rm_rf('./gems') if File.exist?('./gems')
-    FileUtils.rm_rf('./bundle') if File.exist?('./bundle')
+    ['Gemfile.lock', 'gems', 'bundle'].each do |x|
+      target = File.join(gemfile_dir, x)
+      FileUtils.rm_rf(target) if target
+    end
   end
 
-  assert(system('bundle install --path ./gems'))
+  run_command('bundle install --path ./gems', gemfile_dir, 3600)
 
-  Dir.chdir(gemfile_dir)
-
-  assert(system('bundle lock --add_platform ruby'))
+  run_command('bundle lock --add_platform ruby', gemfile_dir, 3600)
 
   return gemfile_dir
-ensure
-  Dir.chdir(original_dir)
 end
 
 # run a command in directory dir, throws exception on timeout or exit status != 0, always returns to initial directory
