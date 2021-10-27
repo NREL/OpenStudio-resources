@@ -117,10 +117,10 @@ end
 
 $UseEplusSpaces = nil
 if ENV['USE_EPLUS_SPACES'].to_s.downcase == 'true'
-  puts "USE_EPLUS_SPACES=true: Will use the E+ Space Feature"
+  puts 'USE_EPLUS_SPACES=true: Will use the E+ Space Feature'
   $UseEplusSpaces = true
 elsif ENV['USE_EPLUS_SPACES'].to_s.downcase == 'false'
-  puts "USE_EPLUS_SPACES=false: Will force not using the E+ Space Feature"
+  puts 'USE_EPLUS_SPACES=false: Will force not using the E+ Space Feature'
   $UseEplusSpaces = false
 end
 
@@ -328,9 +328,8 @@ end
 
 # run a command in directory dir, throws exception on timeout or exit status != 0, always returns to initial directory
 def run_command(command, dir, timeout)
-
   result = nil
-  Open3.popen3(command, :chdir => dir) do |i, o, e, w|
+  Open3.popen3(command, chdir: dir) do |i, o, e, w|
     out = ''
     begin
       Timeout.timeout(timeout) do
