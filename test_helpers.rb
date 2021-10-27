@@ -334,11 +334,9 @@ end
 
 # run a command in directory dir, throws exception on timeout or exit status != 0, always returns to initial directory
 def run_command(command, dir, timeout)
-  pwd = Dir.pwd
-  Dir.chdir(dir)
 
   result = nil
-  Open3.popen3(command) do |i, o, e, w|
+  Open3.popen3(command, :chdir => dir) do |i, o, e, w|
     out = ''
     begin
       Timeout.timeout(timeout) do
@@ -346,13 +344,15 @@ def run_command(command, dir, timeout)
         out += o.readpartial(100) until o.eof?
         out += e.readpartial(100) until e.eof?
       end
-
+      # Debug
+      # puts "\n\n#{command} in dir=#{dir}, pwd=#{Dir.pwd}"
+      # puts out
+      # puts "\n\n"
       result = w.value.exitstatus
       if result != 0
         # If you can find an out.osw, don't throw. It means E+ fataled out
         # https://github.com/NREL/OpenStudio/pull/4370 changed return code to 1
         if !File.exist?('out.osw')
-          Dir.chdir(pwd)
           raise "Exit code #{result}:\n#{out}"
         end
       end
@@ -364,12 +364,9 @@ def run_command(command, dir, timeout)
       else
         Process.kill('KILL', w.pid)
       end
-      Dir.chdir(pwd)
       raise "Timeout #{timeout}:\n#{out}"
     end
   end
-ensure
-  Dir.chdir(pwd)
 end
 
 # Finds the 'total_site_energy' (kBTU) in an out_osw_path that has the
