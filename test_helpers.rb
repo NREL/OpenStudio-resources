@@ -117,10 +117,10 @@ end
 
 $UseEplusSpaces = nil
 if ENV['USE_EPLUS_SPACES'].to_s.downcase == 'true'
-  puts "USE_EPLUS_SPACES=true: Will use the E+ Space Feature"
+  puts 'USE_EPLUS_SPACES=true: Will use the E+ Space Feature'
   $UseEplusSpaces = true
 elsif ENV['USE_EPLUS_SPACES'].to_s.downcase == 'false'
-  puts "USE_EPLUS_SPACES=false: Will force not using the E+ Space Feature"
+  puts 'USE_EPLUS_SPACES=false: Will force not using the E+ Space Feature'
   $UseEplusSpaces = false
 end
 
@@ -309,36 +309,27 @@ end
 # returns full directory name gemfile_dir
 # gemfile at gemfile_dir + 'Gemfile', bundle at gemfile_dir + 'gems'
 def bundle_install(gemfile_dirname, force_install)
-  original_dir = Dir.pwd
   gemfile_dir = File.join($RootDir, 'gemfiles', gemfile_dirname)
   raise "Gemfile dir '#{gemfile_dir}' does not exist" if !File.exist?(gemfile_dir)
 
-  Dir.chdir(gemfile_dir)
-
   if force_install
-    FileUtils.rm_rf('Gemfile.lock') if File.exist?('Gemfile.lock')
-    FileUtils.rm_rf('./gems') if File.exist?('./gems')
-    FileUtils.rm_rf('./bundle') if File.exist?('./bundle')
+    ['Gemfile.lock', 'gems', 'bundle'].each do |x|
+      target = File.join(gemfile_dir, x)
+      FileUtils.rm_rf(target) if target
+    end
   end
 
-  assert(system('bundle install --path ./gems'))
+  run_command('bundle install --path ./gems', gemfile_dir, 3600)
 
-  Dir.chdir(gemfile_dir)
-
-  assert(system('bundle lock --add_platform ruby'))
+  run_command('bundle lock --add_platform ruby', gemfile_dir, 3600)
 
   return gemfile_dir
-ensure
-  Dir.chdir(original_dir)
 end
 
 # run a command in directory dir, throws exception on timeout or exit status != 0, always returns to initial directory
 def run_command(command, dir, timeout)
-  pwd = Dir.pwd
-  Dir.chdir(dir)
-
   result = nil
-  Open3.popen3(command) do |i, o, e, w|
+  Open3.popen3(command, chdir: dir) do |i, o, e, w|
     out = ''
     begin
       Timeout.timeout(timeout) do
@@ -346,13 +337,15 @@ def run_command(command, dir, timeout)
         out += o.readpartial(100) until o.eof?
         out += e.readpartial(100) until e.eof?
       end
-
+      # Debug
+      # puts "\n\n#{command} in dir=#{dir}, pwd=#{Dir.pwd}"
+      # puts out
+      # puts "\n\n"
       result = w.value.exitstatus
       if result != 0
         # If you can find an out.osw, don't throw. It means E+ fataled out
         # https://github.com/NREL/OpenStudio/pull/4370 changed return code to 1
         if !File.exist?('out.osw')
-          Dir.chdir(pwd)
           raise "Exit code #{result}:\n#{out}"
         end
       end
@@ -364,12 +357,9 @@ def run_command(command, dir, timeout)
       else
         Process.kill('KILL', w.pid)
       end
-      Dir.chdir(pwd)
       raise "Timeout #{timeout}:\n#{out}"
     end
   end
-ensure
-  Dir.chdir(pwd)
 end
 
 # Finds the 'total_site_energy' (kBTU) in an out_osw_path that has the
@@ -676,8 +666,7 @@ def sim_test(filename, options = {})
     # tests used to write out.osm
     out_osm = File.join(dir, 'out.osm')
     if File.exist?(out_osm)
-      # puts "moving #{out_osm} to #{in_osm}"
-      FileUtils.mv(out_osm, in_osm)
+      raise "You cannot use out.osm as an osm_name, use in.osm! Occurred in #{filename}"
     end
 
   when '.osw'
