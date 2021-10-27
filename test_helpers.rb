@@ -676,8 +676,7 @@ def sim_test(filename, options = {})
     # tests used to write out.osm
     out_osm = File.join(dir, 'out.osm')
     if File.exist?(out_osm)
-      # puts "moving #{out_osm} to #{in_osm}"
-      FileUtils.mv(out_osm, in_osm)
+      raise "You cannot use out.osm as an osm_name, use in.osm! Occurred in #{filename}"
     end
 
   when '.osw'
