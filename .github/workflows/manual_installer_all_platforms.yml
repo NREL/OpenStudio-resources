@@ -127,60 +127,6 @@ jobs:
           name: Test-Results
           path: Test-Stability/*
 
-
-  installer_ubuntu_2004:
-    runs-on: ubuntu-20.04
-
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-      with:
-        python-version: '3.8.x'
-
-    - name: Download and install OS SDK installer
-      shell: bash
-      run: |
-        set -x
-        echo "Installer link: ${{ github.event.inputs.os_installer_ubuntu_2004 }}"
-        sudo apt update
-        wget '${{ github.event.inputs.os_installer_ubuntu_2004 }}'
-        sudo apt install -y ./OpenStudio*.deb
-        openstudio openstudio_version
-
-    - name: Setup python deps
-      shell: bash
-      run: |
-        pip install -r requirements.txt
-
-   # - name: Run model_tests.rb
-   #   shell: bash
-   #   run: |
-   #     set -x
-   #     echo "nproc=$(nproc)"
-   #     N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
-
-    - name: Run highlevel_tests
-      if: always()
-      shell: bash
-      run: |
-        set -x
-        MT_CPU=$(nproc) openstudio highlevel_tests.rb
-
-    - name: Generate HTML and heatmap
-      if: ${{ always() }}
-      shell: bash
-      run: |
-        set -x
-        python process_results.py test-status --quiet || true
-        python process_results.py heatmap --quiet || true
-
-    - name: Archive test results
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-          name: Test-Results
-          path: Test-Stability/*
-
   installer_windows:
     runs-on: windows-2019
 
@@ -233,7 +179,6 @@ jobs:
       with:
           name: Test-Results
           path: Test-Stability/*
-
 
   installer_mac_osx:
     runs-on: macos-10.15
