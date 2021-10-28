@@ -201,7 +201,7 @@ jobs:
         sed -i -e "s|REPLACEME|$HOME/Applications|" ci/install-mac.qs
         hdiutil attach ${OS_NAME}
         sudo /Volumes/${OS_NAME_NO_EXT}/${OS_NAME_NO_EXT}.app/Contents/MacOS/${OS_NAME_NO_EXT} --script ci/install-mac.qs
-        hdiutil detach /Volumes/${OS_NAME_NO_EX} -force
+        hdiutil detach /Volumes/${OS_NAME_NO_EXT} -force
         openstudio openstudio_version
 
     - name: Setup python deps
