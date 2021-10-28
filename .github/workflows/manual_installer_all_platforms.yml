@@ -141,7 +141,7 @@ jobs:
       run: |
         set -x
         echo "Installer link: ${{ github.event.inputs.os_installer_windows }}"
-        wget '${{ github.event.inputs.os_installer_windows }}'
+        curl -SLO '${{ github.event.inputs.os_installer_windows }}'
         # script installs to /c/openstudio
         ${{ github.event.inputs.os_installer_windows }} --script ci/install-windows.qs
         /c/openstudio/bin/openstudio.exe openstudio_version
@@ -198,7 +198,7 @@ jobs:
         OS_NAME=$(ls *.dmg)
         OS_NAME_NO_EXT=$(basename $OS_NAME .dmg)
         sed -i -e "s|REPLACEME|$HOME/Applications|" ci/install-mac.qs
-        hdiutil attach ${OS_NAME}.dmg
+        hdiutil attach ${OS_NAME}
         sudo /Volumes/${OS_NAME_NO_EXT}/${OS_NAME_NO_EXT}.app/Contents/MacOS/${OS_NAME_NO_EXT} --script ci/install-mac.qs
         hdiutil detach /Volumes/${OS_NAME_NO_EX} -force
         openstudio openstudio_version
