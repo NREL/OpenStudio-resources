@@ -142,8 +142,9 @@ jobs:
         set -x
         echo "Installer link: ${{ github.event.inputs.os_installer_windows }}"
         curl -SLO '${{ github.event.inputs.os_installer_windows }}'
+        OS_NAME=$(ls *.exe)
         # script installs to /c/openstudio
-        ${{ github.event.inputs.os_installer_windows }} --script ci/install-windows.qs
+        $OS_NAME --script ci/install-windows.qs
         /c/openstudio/bin/openstudio.exe openstudio_version
 
     - name: Setup python deps
