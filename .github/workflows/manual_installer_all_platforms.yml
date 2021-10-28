@@ -29,6 +29,9 @@ jobs:
     - uses: actions/setup-python@v2
       with:
         python-version: '3.8.x'
+    - uses: actions/setup-ruby@v1
+      with:
+        ruby-version: '2.7'
 
     - name: Download and install OS SDK installer
       shell: bash
@@ -58,6 +61,16 @@ jobs:
       run: |
         set -x
         MT_CPU=$(nproc) openstudio highlevel_tests.rb
+
+    - name: Run highlevel_tests (Ruby bindings)
+      if: always()
+      shell: bash
+      run: |
+        set -x
+        RUBYPATH=$(find /usr/local -type d -regex ".*openstudio.*/Ruby$")
+        export RUBYLIB=$RUBYPATH
+        ruby -v
+        MT_CPU=$(nproc) ruby highlevel_tests.rb
 
     - name: Generate HTML and heatmap
       if: ${{ always() }}
@@ -198,7 +211,7 @@ jobs:
         wget '${{ github.event.inputs.os_installer_osx }}'
         OS_NAME=$(ls *.dmg)
         OS_NAME_NO_EXT=$(basename $OS_NAME .dmg)
-        sed -i -e "s|REPLACEME|$HOME/Applications|" ci/install-mac.qs
+        sed -i -e "s|REPLACEME|$HOME/openstudio|" ci/install-mac.qs
         hdiutil attach ${OS_NAME}
         sudo /Volumes/${OS_NAME_NO_EXT}/${OS_NAME_NO_EXT}.app/Contents/MacOS/${OS_NAME_NO_EXT} --script ci/install-mac.qs
         hdiutil detach /Volumes/${OS_NAME_NO_EXT} -force
