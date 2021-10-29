@@ -48,12 +48,12 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-   # - name: Run model_tests.rb
-   #   shell: bash
-   #   run: |
-   #     set -x
-   #     echo "nproc=$(nproc)"
-   #     N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
+    - name: Run model_tests.rb
+      shell: bash
+      run: |
+        set -x
+        echo "nproc=$(nproc)"
+        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
 
     - name: Run highlevel_tests
       if: always()
@@ -71,6 +71,16 @@ jobs:
         export RUBYLIB=$RUBYPATH
         ruby -v
         MT_CPU=$(nproc) ruby highlevel_tests.rb
+
+    - name: Run model_tests.rb (Ruby bindings)
+      if: always()
+      shell: bash
+      run: |
+        set -x
+        RUBYPATH=$(find /usr/local -type d -regex ".*openstudio.*/Ruby$")
+        export RUBYLIB=$RUBYPATH
+        ruby -v
+        MT_CPU=$(nproc) ruby model_tests.rb
 
     - name: Generate HTML and heatmap
       if: ${{ always() }}
@@ -114,12 +124,12 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-   # - name: Run model_tests.rb
-   #   shell: bash
-   #   run: |
-   #     set -x
-   #     echo "nproc=$(nproc)"
-   #     N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
+    - name: Run model_tests.rb
+      shell: bash
+      run: |
+        set -x
+        echo "nproc=$(nproc)"
+        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
 
     - name: Run highlevel_tests
       if: always()
@@ -137,6 +147,16 @@ jobs:
         export RUBYLIB=$RUBYPATH
         ruby -v
         MT_CPU=$(nproc) ruby highlevel_tests.rb
+
+    - name: Run model_tests.rb (Ruby bindings)
+      if: always()
+      shell: bash
+      run: |
+        set -x
+        RUBYPATH=$(find /usr/local -type d -regex ".*openstudio.*/Ruby$")
+        export RUBYLIB=$RUBYPATH
+        ruby -v
+        MT_CPU=$(nproc) ruby model_tests.rb
 
     - name: Generate HTML and heatmap
       if: ${{ always() }}
@@ -181,12 +201,12 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-   # - name: Run model_tests.rb
-   #   shell: bash
-   #   run: |
-   #     set -x
-   #     echo "nproc=$(nproc)"
-   #     N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
+    - name: Run model_tests.rb
+      shell: bash
+      run: |
+        set -x
+        echo "nproc=$(nproc)"
+        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
 
     - name: Run highlevel_tests
       if: always()
@@ -203,6 +223,15 @@ jobs:
         export RUBYLIB=/c/openstudio/Ruby
         ruby -v
         MT_CPU=$(nproc) ruby highlevel_tests.rb
+
+    - name: Run model_tests.rb (Ruby bindings)
+      if: always()
+      shell: bash
+      run: |
+        set -x
+        export RUBYLIB=/c/openstudio/Ruby
+        ruby -v
+        MT_CPU=$(nproc) ruby model_tests.rb
 
     - name: Generate HTML and heatmap
       if: ${{ always() }}
@@ -250,12 +279,12 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-   # - name: Run model_tests.rb
-   #   shell: bash
-   #   run: |
-   #     set -x
-   #     echo "nproc=$(nproc)"
-   #     N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
+    - name: Run model_tests.rb
+      shell: bash
+      run: |
+        set -x
+        echo "nproc=$(nproc)"
+        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
 
     - name: Run highlevel_tests
       if: always()
@@ -272,6 +301,15 @@ jobs:
         export RUBYLIB=$HOME/openstudio/Ruby
         ruby -v
         MT_CPU=$(nproc) ruby highlevel_tests.rb
+
+    - name: Run model_tests.rb (Ruby bindings)
+      if: always()
+      shell: bash
+      run: |
+        set -x
+        export RUBYLIB=$HOME/openstudio/Ruby
+        ruby -v
+        MT_CPU=$(nproc) ruby model_tests.rb
 
     - name: Generate HTML and heatmap
       if: ${{ always() }}
