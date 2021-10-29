@@ -128,7 +128,7 @@ jobs:
       shell: bash
       run: |
         set -x
-        echo "nproc=$(sysctl -n hw.logicalcpu)"
+        echo "nproc=$(nproc)"
         N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
 
     - name: Run highlevel_tests
@@ -136,7 +136,7 @@ jobs:
       shell: bash
       run: |
         set -x
-        MT_CPU=$(sysctl -n hw.logicalcpu) openstudio highlevel_tests.rb
+        MT_CPU=$(nproc) openstudio highlevel_tests.rb
 
     - name: Run highlevel_tests (Ruby bindings)
       if: always()
@@ -146,7 +146,7 @@ jobs:
         RUBYPATH=$(find /usr/local -type d -regex ".*openstudio.*/Ruby$")
         export RUBYLIB=$RUBYPATH
         ruby -v
-        MT_CPU=$(sysctl -n hw.logicalcpu) ruby highlevel_tests.rb
+        MT_CPU=$(nproc) ruby highlevel_tests.rb
 
     - name: Run model_tests.rb (Ruby bindings)
       if: always()
@@ -156,7 +156,7 @@ jobs:
         RUBYPATH=$(find /usr/local -type d -regex ".*openstudio.*/Ruby$")
         export RUBYLIB=$RUBYPATH
         ruby -v
-        MT_CPU=$(sysctl -n hw.logicalcpu) ruby model_tests.rb
+        MT_CPU=$(nproc) ruby model_tests.rb
 
     - name: Generate HTML and heatmap
       if: ${{ always() }}
@@ -283,15 +283,15 @@ jobs:
       shell: bash
       run: |
         set -x
-        echo "nproc=$(nproc)"
-        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb
+        echo "nproc=$(sysctl -n hw.logicalcpu)"
+        N=$(sysctl -n hw.logicalcpu) CUSTOMTAG=SHA openstudio model_tests.rb
 
     - name: Run highlevel_tests
       if: always()
       shell: bash
       run: |
         set -x
-        MT_CPU=$(nproc) openstudio highlevel_tests.rb
+        MT_CPU=$(sysctl -n hw.logicalcpu) openstudio highlevel_tests.rb
 
     - name: Run highlevel_tests (Ruby bindings)
       if: always()
@@ -300,7 +300,7 @@ jobs:
         set -x
         export RUBYLIB=$HOME/openstudio/Ruby
         ruby -v
-        MT_CPU=$(nproc) ruby highlevel_tests.rb
+        MT_CPU=$(sysctl -n hw.logicalcpu) ruby highlevel_tests.rb
 
     - name: Run model_tests.rb (Ruby bindings)
       if: always()
@@ -309,7 +309,7 @@ jobs:
         set -x
         export RUBYLIB=$HOME/openstudio/Ruby
         ruby -v
-        MT_CPU=$(nproc) ruby model_tests.rb
+        MT_CPU=$(sysctl -n hw.logicalcpu) ruby model_tests.rb
 
     - name: Generate HTML and heatmap
       if: ${{ always() }}
