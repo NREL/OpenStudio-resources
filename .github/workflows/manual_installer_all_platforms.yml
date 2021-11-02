@@ -193,7 +193,8 @@ jobs:
         curl -SLO '${{ github.event.inputs.os_installer_windows }}'
         OS_NAME=$(ls *.exe)
         # script installs to /c/openstudio
-        ./$OS_NAME --script ci/install-windows.qs
+        sed -i -e "s|REPLACEME|c:\\\\\\\\openstudio|" ci/install-openstudio.qs
+        ./$OS_NAME --script ci/install-openstudio.qs
         /c/openstudio/bin/openstudio.exe openstudio_version
 
     - name: Setup python deps
@@ -268,9 +269,9 @@ jobs:
         wget '${{ github.event.inputs.os_installer_osx }}'
         OS_NAME=$(ls *.dmg)
         OS_NAME_NO_EXT=$(basename $OS_NAME .dmg)
-        sed -i -e "s|REPLACEME|$HOME/openstudio|" ci/install-mac.qs
+        sed -i -e "s|REPLACEME|$HOME/openstudio|" ci/install-openstudio.qs
         hdiutil attach ${OS_NAME}
-        sudo /Volumes/${OS_NAME_NO_EXT}/${OS_NAME_NO_EXT}.app/Contents/MacOS/${OS_NAME_NO_EXT} --script ci/install-mac.qs
+        sudo /Volumes/${OS_NAME_NO_EXT}/${OS_NAME_NO_EXT}.app/Contents/MacOS/${OS_NAME_NO_EXT} --script ci/install-openstudio.qs
         hdiutil detach /Volumes/${OS_NAME_NO_EXT} -force
         openstudio openstudio_version
 
