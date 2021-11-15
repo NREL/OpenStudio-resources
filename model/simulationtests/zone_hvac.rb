@@ -298,17 +298,18 @@ terminal = OpenStudio::Model::AirTerminalSingleDuctInletSideMixer.new(model)
 air_loop.addBranchForZone(story_2_core_thermal_zone, terminal)
 fourPipeFanCoil2.addToNode(terminal.outletModelObject.get.to_Node.get)
 
-puts "#{Time.now - t}"
+puts "model_articulation: #{Time.now - t} seconds"
 t = Time.now
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
                             'osm_name' => 'in.osm' })
 
-puts "#{Time.now - t}"
+puts "model_save: #{Time.now - t} seconds"
 t = Time.now
 
 ft = OpenStudio::EnergyPlus::ForwardTranslator.new
 w = ft.translateModel(model)
 
 puts "#{Time.now - t}"
+puts "ForwardTranslator: #{Time.now - t} seconds"
