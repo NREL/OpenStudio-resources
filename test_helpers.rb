@@ -1190,7 +1190,7 @@ def sql_test(options = {})
   # Except that 3.3.0 does take it into account and Chicago EPW has a start day
   # of Sunday (and changes year to 2006). So to avoid problems, we force it to
   # Thursday explicitly
-  yd.setDayofWeekforStartDay("Thursday")
+  yd.setDayofWeekforStartDay('Thursday')
 
   r = m.getRunPeriod
 
