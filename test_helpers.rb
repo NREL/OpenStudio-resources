@@ -345,7 +345,8 @@ def run_command(command, dir, timeout)
       if result != 0
         # If you can find an out.osw, don't throw. It means E+ fataled out
         # https://github.com/NREL/OpenStudio/pull/4370 changed return code to 1
-        if !File.exist?('out.osw')
+        # puts "result=#{result}"
+        if !File.exist?(File.join(dir, 'out.osw'))
           raise "Exit code #{result}:\n#{out}"
         end
       end
