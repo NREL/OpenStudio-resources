@@ -317,6 +317,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('daylighting_shades.osm')
   end
 
+  def test_FT_design_day
+    sdd_ft_test('design_day.osm')
+  end
+
   def test_FT_dist_ht_cl
     sdd_ft_test('dist_ht_cl.osm')
   end

@@ -309,10 +309,9 @@ class ModelTests < Minitest::Test
     result = sim_test('design_day.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.2.1
-  # def test_design_day_osm
-  # result = sim_test('design_day.osm')
-  # end
+  def test_design_day_osm
+    result = sim_test('design_day.osm')
+  end
 
   def test_dist_ht_cl_osm
     result = sim_test('dist_ht_cl.osm')
