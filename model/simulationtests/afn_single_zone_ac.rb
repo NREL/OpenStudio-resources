@@ -6,9 +6,22 @@ require_relative 'lib/surface_visitor'
 
 class SurfaceNetworkBuilder < SurfaceVisitor
   def initialize(model)
-    refcond = OpenStudio::Model::AirflowNetworkReferenceCrackConditions.new(model, 20.0, 101325.0, 0.0)
-    @interiorCrack = OpenStudio::Model::AirflowNetworkCrack.new(model, 0.050, 0.65, refcond)
-    @exteriorCrack = OpenStudio::Model::AirflowNetworkCrack.new(model, 0.025, 0.65, refcond)
+    # refcond = OpenStudio::Model::AirflowNetworkReferenceCrackConditions.new(model, 20.0, 101325.0, 0.0)
+    # @interiorCrack = OpenStudio::Model::AirflowNetworkCrack.new(model, 0.050, 0.65, refcond)
+    # @exteriorCrack = OpenStudio::Model::AirflowNetworkCrack.new(model, 0.025, 0.65, refcond)
+
+    @simpleOpening = OpenStudio::Model::AirflowNetworkSimpleOpening.new(model, 1.0, 0.65, 0.5, 0.5)
+
+    # data = []
+    # data << OpenStudio::Model::DetailedOpeningFactorData.new(0.0, 0.01, 0.0, 0.0, 0.0)
+    # data << OpenStudio::Model::DetailedOpeningFactorData.new(1.0, 0.5, 1.0, 1.0, 1.0)
+    # @detailedOpening = OpenStudio::Model::AirflowNetworkDetailedOpening.new(model, 1.0, data)
+
+    @effectiveLeakageArea = OpenStudio::Model::AirflowNetworkEffectiveLeakageArea.new(model, 10.0, 1.0, 4.0, 0.65)
+
+    @horizontalOpening = OpenStudio::Model::AirflowNetworkHorizontalOpening.new(model, 0.5, 0.65, 90.0, 0.5)
+
+    @specifiedFlowRate = OpenStudio::Model::AirflowNetworkSpecifiedFlowRate.new(model, 10.0)
     super(model)
   end
 
@@ -16,169 +29,32 @@ class SurfaceNetworkBuilder < SurfaceVisitor
     return if surface.outsideBoundaryCondition.start_with?('Ground')
 
     # Create a surface linkage
-    link = surface.getAirflowNetworkSurface(@interiorCrack)
+    link = surface.getAirflowNetworkSurface(@simpleOpening)
   end
 
   def interiorRoofCeiling(model, surface, adjacentSurface)
     # Create a surface linkage
-    link = surface.getAirflowNetworkSurface.new(@interiorCrack)
+    link = surface.getAirflowNetworkSurface.new(@detailedOpening)
   end
 
   def interiorWall(model, surface, adjacentSurface)
     # Create a surface linkage
-    link = surface.getAirflowNetworkSurface(@interiorCrack)
+    link = surface.getAirflowNetworkSurface(@effectiveLeakageArea)
   end
 
   def exteriorSurface(model, surface)
-    # Create an external node?
     return if surface.outsideBoundaryCondition.start_with?('Ground')
 
     # Create a surface linkage
-    link = surface.getAirflowNetworkSurface(@exteriorCrack)
-  end
-end
-
-def addSystemType3(model)
-  alwaysOn = model.alwaysOnDiscreteSchedule
-
-  airLoopHVAC = OpenStudio::Model::AirLoopHVAC.new(model)
-  airLoopHVAC.setName('Packaged Rooftop Air Conditioner')
-  # when an airloophvac is contructed, its constructor automatically creates a sizing:system object
-  # the default sizing:system contstructor makes a system:sizing object appropriate for a multizone VAV system
-  # this systems is a constant volume system with no VAV terminals, and needs different default settings
-
-  # get the sizing:system object associated with the airloophvac
-  sizingSystem = airLoopHVAC.sizingSystem()
-
-  # set the default parameters correctly for a constant volume system with no VAV terminals
-  sizingSystem.setTypeofLoadtoSizeOn('Sensible')
-  sizingSystem.autosizeDesignOutdoorAirFlowRate
-  sizingSystem.setMinimumSystemAirFlowRatio(1.0)
-  sizingSystem.setPreheatDesignTemperature(7.0)
-  sizingSystem.setPreheatDesignHumidityRatio(0.008)
-  sizingSystem.setPrecoolDesignTemperature(12.8)
-  sizingSystem.setPrecoolDesignHumidityRatio(0.008)
-  sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8)
-  sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0)
-  sizingSystem.setSizingOption('NonCoincident')
-  sizingSystem.setAllOutdoorAirinCooling(false)
-  sizingSystem.setAllOutdoorAirinHeating(false)
-  sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085)
-  sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080)
-  sizingSystem.setCoolingDesignAirFlowMethod('DesignDay')
-  sizingSystem.setCoolingDesignAirFlowRate(0.0)
-  sizingSystem.setHeatingDesignAirFlowMethod('DesignDay')
-  sizingSystem.setHeatingDesignAirFlowRate(0.0)
-  sizingSystem.setSystemOutdoorAirMethod('ZoneSum')
-
-  fan = OpenStudio::Model::FanConstantVolume.new(model)
-  fan.setPressureRise(500)
-
-  coilHeatingGas = OpenStudio::Model::CoilHeatingGas.new(model, alwaysOn)
-
-  coilCooling = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
-
-  setpointMSZR = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(model)
-
-  controllerOutdoorAir = OpenStudio::Model::ControllerOutdoorAir.new(model)
-
-  outdoorAirSystem = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, controllerOutdoorAir)
-
-  supplyOutletNode = airLoopHVAC.supplyOutletNode()
-
-  outdoorAirSystem.addToNode(supplyOutletNode)
-  coilCooling.addToNode(supplyOutletNode)
-  coilHeatingGas.addToNode(supplyOutletNode)
-  fan.addToNode(supplyOutletNode)
-
-  # Node node1 = fan.outletModelObject()->cast<Node>();
-  # setpointMSZR.addToNode(node1);
-
-  node1 = fan.outletModelObject.get.to_Node.get
-  setpointMSZR.addToNode(node1)
-
-  # Starting with E 9.0.0, Uncontrolled is deprecated and replaced with
-  # ConstantVolume:NoReheat
-  if Gem::Version.new(OpenStudio.openStudioVersion) >= Gem::Version.new('2.7.0')
-    terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, alwaysOn)
-  else
-    terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, alwaysOn)
+    link = surface.getAirflowNetworkSurface(@specifiedFlowRate)
   end
 
-  airLoopHVAC.addBranchForHVACComponent(terminal)
+  def exteriorSubSurface(model, subSurface)
+    return if subSurface.subSurfaceType != 'FixedWindow'
 
-  return airLoopHVAC
-end
-
-def addSimpleSystem(model)
-  alwaysOn = model.alwaysOnDiscreteSchedule
-
-  airLoopHVAC = OpenStudio::Model::AirLoopHVAC.new(model)
-  airLoopHVAC.setName('Packaged Rooftop Air Conditioner')
-  # when an airloophvac is contructed, its constructor automatically creates a sizing:system object
-  # the default sizing:system contstructor makes a system:sizing object appropriate for a multizone VAV system
-  # this systems is a constant volume system with no VAV terminals, and needs different default settings
-
-  # get the sizing:system object associated with the airloophvac
-  sizingSystem = airLoopHVAC.sizingSystem()
-
-  # set the default parameters correctly for a constant volume system with no VAV terminals
-  sizingSystem.setTypeofLoadtoSizeOn('Sensible')
-  sizingSystem.autosizeDesignOutdoorAirFlowRate
-  sizingSystem.setMinimumSystemAirFlowRatio(1.0)
-  sizingSystem.setPreheatDesignTemperature(7.0)
-  sizingSystem.setPreheatDesignHumidityRatio(0.008)
-  sizingSystem.setPrecoolDesignTemperature(12.8)
-  sizingSystem.setPrecoolDesignHumidityRatio(0.008)
-  sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8)
-  sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0)
-  sizingSystem.setSizingOption('NonCoincident')
-  sizingSystem.setAllOutdoorAirinCooling(false)
-  sizingSystem.setAllOutdoorAirinHeating(false)
-  sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085)
-  sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080)
-  sizingSystem.setCoolingDesignAirFlowMethod('DesignDay')
-  sizingSystem.setCoolingDesignAirFlowRate(0.0)
-  sizingSystem.setHeatingDesignAirFlowMethod('DesignDay')
-  sizingSystem.setHeatingDesignAirFlowRate(0.0)
-  # sizingSystem.setSystemOutdoorAirMethod("ZoneSum")
-
-  fan = OpenStudio::Model::FanConstantVolume.new(model)
-  fan.setPressureRise(500)
-
-  coilHeatingGas = OpenStudio::Model::CoilHeatingGas.new(model, alwaysOn)
-
-  coilCooling = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
-
-  setpointMSZR = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(model)
-
-  # controllerOutdoorAir = OpenStudio::Model::ControllerOutdoorAir.new(model)
-
-  # outdoorAirSystem = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model,controllerOutdoorAir)
-
-  supplyOutletNode = airLoopHVAC.supplyOutletNode()
-
-  # outdoorAirSystem.addToNode(supplyOutletNode)
-  fan.addToNode(supplyOutletNode)
-  coilCooling.addToNode(supplyOutletNode)
-  coilHeatingGas.addToNode(supplyOutletNode)
-
-  # Node node1 = fan.outletModelObject()->cast<Node>();
-  # setpointMSZR.addToNode(node1);
-
-  # node1 = fan.outletModelObject().get.to_Node.get
-  node1 = coilHeatingGas.outletModelObject.get.to_Node.get
-  setpointMSZR.addToNode(node1)
-
-  if Gem::Version.new(OpenStudio.openStudioVersion) >= Gem::Version.new('2.7.0')
-    terminal = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, alwaysOn)
-  else
-    terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, alwaysOn)
+    # Create a surface linkage
+    link = subSurface.getAirflowNetworkSurface(@horizontalOpening)
   end
-
-  airLoopHVAC.addBranchForHVACComponent(terminal)
-
-  return airLoopHVAC
 end
 
 def addSimpleSystemAFN(model)
@@ -349,119 +225,125 @@ end
 model = BaselineModel.new
 
 # make a 1 story, 100m X 50m, 1 zone building
-model.add_geometry({ 'length' => 17.242,
-                     'width' => 10.778,
+model.add_geometry({ 'length' => 100,
+                     'width' => 50,
                      'num_floors' => 1,
                      'floor_to_floor_height' => 4,
                      'plenum_height' => 0,
                      'perimeter_zone_depth' => 0 })
 
 # add windows at a 40% window-to-wall ratio
-# model.add_windows({"wwr" => 0.4,
-#                  "offset" => 1,
-#                  "application_type" => "Above Floor"})
+model.add_windows({ 'wwr' => 0.4,
+                    'offset' => 1,
+                    'application_type' => 'Above Floor' })
 
 # add ASHRAE System type 03, PSZ-AC
 # model.add_hvac({"ashrae_sys_num" => '03'})
 
 zone = model.getThermalZones[0] # There should only be one...
 
-# hvac = addSystemType3(model)
-hvac = addSimpleSystemAFN(model)
-hvac = hvac.to_AirLoopHVAC.get
-hvac.addBranchForZone(zone)
-outlet_node = hvac.supplyOutletNode
-setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get
-setpoint_manager.setControlZone(zone)
+# hvac = addSimpleSystemAFN(model)
+# hvac = hvac.to_AirLoopHVAC.get
+# hvac.addBranchForZone(zone)
+# outlet_node = hvac.supplyOutletNode
+# setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get
+# setpoint_manager.setControlZone(zone)
 
 # add ASHRAE System type 08, VAV w/ PFP Boxes
 # DLM: this invokes weird mass conservation rules with VAV
 # model.add_hvac({"ashrae_sys_num" => '08'})
 
 # add thermostats
-model.add_thermostats({ 'heating_setpoint' => 22, 'cooling_setpoint' => 26.6 })
+# model.add_thermostats({ 'heating_setpoint' => 24, 'cooling_setpoint' => 28 })
 
 # assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions
 
 # set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type # OK, yeah, this is wrong
+model.set_space_type
 
 # remove all infiltration
-# model.getSpaceInfiltrationDesignFlowRates.each do |infil|
-#  infil.remove
-# end
+model.getSpaceInfiltrationDesignFlowRates.each(&:remove)
 
 # add design days to the model (Chicago)
 model.add_design_days
 
 # add simulation control
 afn_control = model.getAirflowNetworkSimulationControl
-afn_control.setAirflowNetworkControl('MultizoneWithDistribution')
+afn_control.setAirflowNetworkControl('MultizoneWithoutDistribution') # FIXME: change back to "With"
+
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+# It doesn't matter here since there's only ony, but just in case
+zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 
 # make an afn zone
+zone = zones[0] # There should only be one...
 afnzone = zone.getAirflowNetworkZone
 
 # This is kind of lame, regetting stuff we already have above. Need to rethink how this
 # is structured at some point.
-splitter = hvac.zoneSplitter
-mixer = hvac.zoneMixer
-splitterNode_AFN = splitter.getAirflowNetworkDistributionNode
-mixerNode_AFN = splitter.getAirflowNetworkDistributionNode
+# splitter = hvac.zoneSplitter
+# mixer = hvac.zoneMixer
+# splitterNode_AFN = splitter.getAirflowNetworkDistributionNode
+# mixerNode_AFN = splitter.getAirflowNetworkDistributionNode
 
-# This is not great either
-zoneOutletNode = mixer.inletModelObject(0).get.to_Node.get
+# # This is not great either
+# zoneOutletNode = mixer.inletModelObject(0).get.to_Node.get
 
-comps = hvac.demandComponents(hvac.demandInletNode, zone)
-zoneInletNode = comps[-2].to_Node.get
+# comps = hvac.demandComponents(hvac.demandInletNode, zone)
+# zoneInletNode = comps[-2].to_Node.get
 
-# zoneInletNode = zone.airLoopHVACTerminal.get.to_StraightComponent.get.outletModelObject.get.to_Node.get
+# # zoneInletNode = zone.airLoopHVACTerminal.get.to_StraightComponent.get.outletModelObject.get.to_Node.get
 
-zoneInletNode_AFN = zoneInletNode.getAirflowNetworkDistributionNode
-zoneOutletNode_AFN = zoneOutletNode.getAirflowNetworkDistributionNode
+# zoneInletNode_AFN = zoneInletNode.getAirflowNetworkDistributionNode
+# zoneOutletNode_AFN = zoneOutletNode.getAirflowNetworkDistributionNode
 
-# Make the duct elements
-zoneSupply = OpenStudio::Model::AirflowNetworkDuct.new(model)
-zoneSupply.setDuctLength(10)
-zoneSupply.setHydraulicDiameter(0.4064)
-zoneSupply.setCrossSectionArea(0.1297)
-zoneSupply.setSurfaceRoughness(0.0009)
-zoneSupply.setCoefficientforLocalDynamicLossDuetoFitting(0.91)
-zoneSupply.setDuctWallHeatTransmittanceCoefficient(0.946792)
-zoneSupply.setOverallMoistureTransmittanceCoefficientfromAirtoAir(0.0000001)
-zoneSupply.setOutsideConvectionCoefficient(5.018)
-zoneSupply.setInsideConvectionCoefficient(25.09)
+# # Make the duct elements
+# zoneSupply = OpenStudio::Model::AirflowNetworkDuct.new(model)
+# zoneSupply.setDuctLength(10)
+# zoneSupply.setHydraulicDiameter(0.4064)
+# zoneSupply.setCrossSectionArea(0.1297)
+# zoneSupply.setSurfaceRoughness(0.0009)
+# zoneSupply.setCoefficientforLocalDynamicLossDuetoFitting(0.91)
+# zoneSupply.setDuctWallHeatTransmittanceCoefficient(0.946792)
+# zoneSupply.setOverallMoistureTransmittanceCoefficientfromAirtoAir(0.0000001)
+# zoneSupply.setOutsideConvectionCoefficient(5.018)
+# zoneSupply.setInsideConvectionCoefficient(25.09)
 
-zoneReturn = OpenStudio::Model::AirflowNetworkDuct.new(model)
-zoneReturn.setDuctLength(3)
-zoneReturn.setHydraulicDiameter(0.5)
-zoneReturn.setCrossSectionArea(0.1963)
-zoneReturn.setSurfaceRoughness(0.0009)
-zoneReturn.setCoefficientforLocalDynamicLossDuetoFitting(0.01)
-zoneReturn.setDuctWallHeatTransmittanceCoefficient(0.001226)
-zoneReturn.setOverallMoistureTransmittanceCoefficientfromAirtoAir(0.0000001)
-zoneReturn.setOutsideConvectionCoefficient(0.0065)
-zoneReturn.setInsideConvectionCoefficient(0.0325)
+# zoneReturn = OpenStudio::Model::AirflowNetworkDuct.new(model)
+# zoneReturn.setDuctLength(3)
+# zoneReturn.setHydraulicDiameter(0.5)
+# zoneReturn.setCrossSectionArea(0.1963)
+# zoneReturn.setSurfaceRoughness(0.0009)
+# zoneReturn.setCoefficientforLocalDynamicLossDuetoFitting(0.01)
+# zoneReturn.setDuctWallHeatTransmittanceCoefficient(0.001226)
+# zoneReturn.setOverallMoistureTransmittanceCoefficientfromAirtoAir(0.0000001)
+# zoneReturn.setOutsideConvectionCoefficient(0.0065)
+# zoneReturn.setInsideConvectionCoefficient(0.0325)
 
-zoneConnectionDuct = OpenStudio::Model::AirflowNetworkDuct.new(model)
-zoneConnectionDuct.setDuctLength(0.1)
-zoneConnectionDuct.setHydraulicDiameter(1)
-zoneConnectionDuct.setCrossSectionArea(0.7854)
-zoneConnectionDuct.setSurfaceRoughness(0.0001)
-zoneConnectionDuct.setCoefficientforLocalDynamicLossDuetoFitting(0)
-zoneConnectionDuct.setDuctWallHeatTransmittanceCoefficient(0.001226)
-zoneConnectionDuct.setOverallMoistureTransmittanceCoefficientfromAirtoAir(0.0000001)
-zoneConnectionDuct.setOutsideConvectionCoefficient(0.0065)
-zoneConnectionDuct.setInsideConvectionCoefficient(0.0325)
+# zoneConnectionDuct = OpenStudio::Model::AirflowNetworkDuct.new(model)
+# zoneConnectionDuct.setDuctLength(0.1)
+# zoneConnectionDuct.setHydraulicDiameter(1)
+# zoneConnectionDuct.setCrossSectionArea(0.7854)
+# zoneConnectionDuct.setSurfaceRoughness(0.0001)
+# zoneConnectionDuct.setCoefficientforLocalDynamicLossDuetoFitting(0)
+# zoneConnectionDuct.setDuctWallHeatTransmittanceCoefficient(0.001226)
+# zoneConnectionDuct.setOverallMoistureTransmittanceCoefficientfromAirtoAir(0.0000001)
+# zoneConnectionDuct.setOutsideConvectionCoefficient(0.0065)
+# zoneConnectionDuct.setInsideConvectionCoefficient(0.0325)
 
-# And now the linkages
-zoneSupplyLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, splitterNode_AFN, zoneInletNode_AFN, zoneSupply)
-zoneSupplyConnectionLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, zoneInletNode_AFN, afnzone, zoneConnectionDuct)
-zoneReturnConnectionLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, afnzone, zoneOutletNode_AFN, zoneConnectionDuct)
-zoneSupplyLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, zoneOutletNode_AFN, mixerNode_AFN, zoneReturn)
+# # And now the linkages
+# zoneSupplyLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, splitterNode_AFN, zoneInletNode_AFN, zoneSupply)
+# zoneSupplyConnectionLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, zoneInletNode_AFN, afnzone, zoneConnectionDuct)
+# zoneReturnConnectionLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, afnzone, zoneOutletNode_AFN, zoneConnectionDuct)
+# zoneSupplyLink = OpenStudio::Model::AirflowNetworkDistributionLinkage.new(model, zoneOutletNode_AFN, mixerNode_AFN, zoneReturn)
 
 # Connect up envelope
 visitor = SurfaceNetworkBuilder.new(model)
+model.getSubSurfaces.each do |subSurface|
+  visitor.exteriorSubSurface(model, subSurface)
+end
 
 # add output reports
 add_out_vars = false
