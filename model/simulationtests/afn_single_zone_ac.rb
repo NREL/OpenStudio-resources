@@ -12,14 +12,15 @@ class SurfaceNetworkBuilder < SurfaceVisitor
 
     @simpleOpening = OpenStudio::Model::AirflowNetworkSimpleOpening.new(model, 1.0, 0.65, 0.5, 0.5)
 
-    # data = []
-    # data << OpenStudio::Model::DetailedOpeningFactorData.new(0.0, 0.01, 0.0, 0.0, 0.0)
-    # data << OpenStudio::Model::DetailedOpeningFactorData.new(1.0, 0.5, 1.0, 1.0, 1.0)
-    # @detailedOpening = OpenStudio::Model::AirflowNetworkDetailedOpening.new(model, 1.0, data)
-
-    @effectiveLeakageArea = OpenStudio::Model::AirflowNetworkEffectiveLeakageArea.new(model, 10.0, 1.0, 4.0, 0.65)
+    data = OpenStudio::Model::DetailedOpeningFactorDataVector.new
+    data << OpenStudio::Model::DetailedOpeningFactorData.new(0.0, 0.01, 0.0, 0.0, 0.0)
+    data << OpenStudio::Model::DetailedOpeningFactorData.new(0.5, 0.5, 1.0, 1.0, 1.0)
+    data << OpenStudio::Model::DetailedOpeningFactorData.new(1.0, 0.5, 1.0, 1.0, 1.0)
+    @detailedOpening = OpenStudio::Model::AirflowNetworkDetailedOpening.new(model, 1.0, data)
 
     @horizontalOpening = OpenStudio::Model::AirflowNetworkHorizontalOpening.new(model, 0.5, 0.65, 90.0, 0.5)
+
+    @effectiveLeakageArea = OpenStudio::Model::AirflowNetworkEffectiveLeakageArea.new(model, 10.0, 1.0, 4.0, 0.65)
 
     @specifiedFlowRate = OpenStudio::Model::AirflowNetworkSpecifiedFlowRate.new(model, 10.0)
     super(model)
