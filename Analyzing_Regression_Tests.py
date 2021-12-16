@@ -101,7 +101,7 @@ parser.add_argument("-u", "--urls",
                     help="List of OpenStudio SDK tar.gz urls",
                     action='store')
 parser.add_argument("-f", "--filenames",
-                    dest="filename",
+                    dest="filenames",
                     help="List of OpenStudio SDK tar.gz filenames",
                     action='store')
 parser.add_argument("--save-plots",
@@ -114,14 +114,15 @@ args = parser.parse_args()
 
 
 if args.urls:
-#    print(args.urls)
-    urls = args.urls.split(" ")
+    paths = args.urls.split(" ")
+elif args.filename:
+    paths = args.urls.split(" ")
 else:
-    print("Please input urls")
-    sys.exit()
-#print(urls)
+   print("Please include --urls or --filenames are arguments") 
+   sys.exit()
 
-base_path = "/Users/tcoleman/openstudio_test"
+base_path = os.environ.get('HOME')
+base_path += "/openstudio_test"
 
 if not os.path.exists(base_path):
     os.makedirs(base_path)
@@ -129,17 +130,18 @@ if not os.path.exists(base_path):
 openstudio_bins = {}
 
 
-for url in urls:
+for path in paths:
 
-    print(url)
-    base_filename = os.path.basename(url)
+    print(path)
+    base_filename = os.path.basename(path)
    
     dest_filename = base_path + "/" + base_filename
-    # Replace url safe chars with the real thing
-    dest_filename = dest_filename.replace("%2B", "+")
-
-    download_sdk(url, dest_filename)
-
+    
+    if args.urls:
+        # Replace url safe chars with the real thing
+        dest_filename = dest_filename.replace("%2B", "+")
+        download_sdk(path, dest_filename)
+    
     print("Extracting " + dest_filename)
     extract_sdk(dest_filename)
     base_extract_path = dest_filename.split(".tar.gz")[0]
@@ -147,24 +149,22 @@ for url in urls:
 
     result = subprocess.run([openstudio_bin_path,"--version"], universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
 
-
     if result.returncode == 0:
-        print(result.stdout)
         openstudio_bins[openstudio_bin_path] = result.stdout
     else:
-        print("Error running %s" %  openstudio_bin_path )
+        print("Error running command %s --version" %  openstudio_bin_path )
 
 df = {} 
 for key, value in openstudio_bins.items():
     all_results = []
-    for i in range(0, 2):
+    for i in range(0, 50):
         print(i)
         all_results.append(run_ruby_file([i, 'baseline_sys01.rb', key]))
     df[key] = pd.DataFrame(all_results)
     df[key] = df[key].set_index(['file', 'i']).sort_index()
 
 
-desc = f'<h3>Running baseline_sys01.rb only (50 times)</h3>'
+desc = f'<h3>Running baseline_sys01.rb only (2 times)</h3>'
 label = HTML(desc)
 display(label)
 
