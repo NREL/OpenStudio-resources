@@ -140,10 +140,10 @@ for path in paths:
     if args.urls:
         # Replace url safe chars with the real thing
         dest_filename = dest_filename.replace("%2B", "+")
-        download_sdk(path, dest_filename)
+       #download_sdk(path, dest_filename)
     
     print("Extracting " + dest_filename)
-    extract_sdk(dest_filename)
+    #extract_sdk(dest_filename)
     base_extract_path = dest_filename.split(".tar.gz")[0]
     openstudio_bin_path = base_extract_path + "/bin/openstudio" 
 
@@ -157,7 +157,7 @@ for path in paths:
 df = {} 
 for key, value in openstudio_bins.items():
     all_results = []
-    for i in range(0, 50):
+    for i in range(0, 5):
         print(i)
         all_results.append(run_ruby_file([i, 'baseline_sys01.rb', key]))
     df[key] = pd.DataFrame(all_results)
@@ -185,5 +185,19 @@ fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(16,9), sharey=False)
 
 for (key, ax) in zip(grouped.groups.keys(), axes.flatten()):
     grouped.get_group(key).boxplot(ax=ax)
+
+print("Shape")
+print(df_all.shape)
+means = df_all.mean().unstack(0)
+print(means)
+print(df_all.unstack(0))
+print(df_all.unstack(0))
+
+q_low = df_all.quantile(0.02)
+q_hi  = df_all.quantile(0.98)
+
+df_filtered = df_all[(df_all < q_hi) & (df_all > q_low)]
+
+print(df_filtered)
 
 plt.show()
