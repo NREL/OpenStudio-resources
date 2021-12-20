@@ -5,6 +5,7 @@ from __future__ import division, print_function
 
 #Import modules
 import pandas as pd
+import dataframe_image as dfi
 import numpy as np
 import os
 import json
@@ -16,7 +17,7 @@ import urllib
 import shutil
 import tarfile
 import argparse
-import sys 
+import sys
 
 #import csv
 import glob as gb
@@ -66,7 +67,7 @@ def extract_sdk(tar_gz_file):
     """
     Extract the openstudio.tar.gz sdk to same path
     """
-    tar_file = tarfile.open(dest_filename) 
+    tar_file = tarfile.open(dest_filename)
     tar_file.extractall(base_path)
     tar_file.close()
 
@@ -118,7 +119,7 @@ if args.urls:
 elif args.filename:
     paths = args.urls.split(" ")
 else:
-   print("Please include --urls or --filenames are arguments") 
+   print("Please include --urls or --filenames are arguments")
    sys.exit()
 
 base_path = os.environ.get('HOME')
@@ -134,30 +135,30 @@ for path in paths:
 
     print(path)
     base_filename = os.path.basename(path)
-   
+
     dest_filename = base_path + "/" + base_filename
-    
+
     if args.urls:
         # Replace url safe chars with the real thing
         dest_filename = dest_filename.replace("%2B", "+")
-       #download_sdk(path, dest_filename)
-    
+        #download_sdk(path, dest_filename)
+
     print("Extracting " + dest_filename)
     #extract_sdk(dest_filename)
     base_extract_path = dest_filename.split(".tar.gz")[0]
-    openstudio_bin_path = base_extract_path + "/bin/openstudio" 
+    openstudio_bin_path = base_extract_path + "/bin/openstudio"
 
     result = subprocess.run([openstudio_bin_path,"--version"], universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
 
     if result.returncode == 0:
-        openstudio_bins[openstudio_bin_path] = result.stdout
+        openstudio_bins[openstudio_bin_path] = result.stdout.strip("\n")
     else:
         print("Error running command %s --version" %  openstudio_bin_path )
 
-df = {} 
+df = {}
 for key, value in openstudio_bins.items():
     all_results = []
-    for i in range(0, 5):
+    for i in range(0, 50):
         print(i)
         all_results.append(run_ruby_file([i, 'baseline_sys01.rb', key]))
     df[key] = pd.DataFrame(all_results)
@@ -186,12 +187,15 @@ fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(16,9), sharey=False)
 for (key, ax) in zip(grouped.groups.keys(), axes.flatten()):
     grouped.get_group(key).boxplot(ax=ax)
 
-print("Shape")
-print(df_all.shape)
 means = df_all.mean().unstack(0)
+
+df_all.style
+
+dfi.export(means, 'means.png')
 print(means)
 print(df_all.unstack(0))
-print(df_all.unstack(0))
+
+dfi.export(df_all, 'all_runs.png')
 
 q_low = df_all.quantile(0.02)
 q_hi  = df_all.quantile(0.98)
