@@ -117,11 +117,11 @@ args = parser.parse_args()
 
 
 if args.urls:
-    paths = args.urls.split(" ")
-elif args.filename:
-    paths = args.urls.split(" ")
+    paths = args.urls
+elif args.filenames:
+    paths = args.filenams
 else:
-   print("Please include --urls or --filenames are arguments")
+   parser.print_help()
    sys.exit()
 
 base_path = os.environ.get('HOME')
