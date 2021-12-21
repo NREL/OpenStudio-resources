@@ -78,7 +78,7 @@ def run_ruby_file(args):
     """
     i, ruby_file, openstudio_path = args
     p = os.path.abspath(os.path.join('model', 'simulationtests', ruby_file))
-    process = subprocess.Popen(['openstudio', p],
+    process = subprocess.Popen([openstudio_path, p],
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE,
                                universal_newlines=True,
@@ -123,7 +123,7 @@ else:
    sys.exit()
 
 base_path = os.environ.get('HOME')
-base_path += "/openstudio_test"
+base_path += "/perf_test"
 
 if not os.path.exists(base_path):
     os.makedirs(base_path)
@@ -133,7 +133,6 @@ openstudio_bins = {}
 
 for path in paths:
 
-    print(path)
     base_filename = os.path.basename(path)
 
     dest_filename = base_path + "/" + base_filename
@@ -146,7 +145,16 @@ for path in paths:
     print("Extracting " + dest_filename)
     extract_sdk(dest_filename)
     base_extract_path = dest_filename.split(".tar.gz")[0]
-    openstudio_bin_path = base_extract_path + "/bin/openstudio"
+    
+
+    if base_extract_path.find("Ubuntu"):
+
+        openstudio_version = os.path.basename(dest_filename).split("+")
+        print(openstudio_version)
+
+        openstudio_bin_path = base_extract_path + "/usr/local/" + openstudio_version[0].lower() + "/bin/openstudio"
+    else:
+        openstudio_bin_path = base_extract_path + "/bin/openstudio"
 
     result = subprocess.run([openstudio_bin_path,"--version"], universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
 
@@ -158,7 +166,7 @@ for path in paths:
 df = {}
 for key, value in openstudio_bins.items():
     all_results = []
-    for i in range(0, 50):
+    for i in range(0, 5):
         print(i)
         all_results.append(run_ruby_file([i, 'baseline_sys01.rb', key]))
     df[key] = pd.DataFrame(all_results)
@@ -191,11 +199,11 @@ means = df_all.mean().unstack(0)
 
 df_all.style
 
-dfi.export(means, 'means.png')
+#dfi.export(means, 'means.png')
 print(means)
 print(df_all.unstack(0))
 
-dfi.export(df_all, 'all_runs.png')
+#dfi.export(df_all, 'all_runs.png')
 
 q_low = df_all.quantile(0.02)
 q_hi  = df_all.quantile(0.98)
