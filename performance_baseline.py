@@ -99,10 +99,12 @@ def run_ruby_file(args):
 parser = argparse.ArgumentParser()
 parser.add_argument("-u", "--urls",
                     dest="urls",
+                    nargs='+',
                     help="List of OpenStudio SDK tar.gz urls",
                     action='store')
 parser.add_argument("-f", "--filenames",
                     dest="filenames",
+                    nargs='+',
                     help="List of OpenStudio SDK tar.gz filenames",
                     action='store')
 parser.add_argument("--save-plots",
@@ -145,7 +147,7 @@ for path in paths:
     print("Extracting " + dest_filename)
     extract_sdk(dest_filename)
     base_extract_path = dest_filename.split(".tar.gz")[0]
-    
+
 
     if base_extract_path.find("Ubuntu"):
 
