@@ -107,23 +107,28 @@ parser.add_argument("-f", "--filenames",
                     nargs='+',
                     help="List of OpenStudio SDK tar.gz filenames",
                     action='store')
-parser.add_argument("--save-plots",
-                    dest="save_plots",
-                    help="Save the output plots",
+parser.add_argument("-n --number-runs",
+                    dest="number_runs",
+                    type=int, 
+                    default=50,
+                    help="The number of workflow runs to run on each openstudio binary. Default 50 runs",
                     action='store')
 
 
+# Parse the args
 args = parser.parse_args()
-
 
 if args.urls:
     paths = args.urls
 elif args.filenames:
-    paths = args.filenams
+    paths = args.filenames
 else:
    parser.print_help()
    sys.exit()
 
+number_runs = args.number_runs
+
+# Setup base path and 
 base_path = os.environ.get('HOME')
 base_path += "/perf_test"
 
@@ -142,19 +147,18 @@ for path in paths:
     if args.urls:
         # Replace url safe chars with the real thing
         dest_filename = dest_filename.replace("%2B", "+")
-        download_sdk(path, dest_filename)
+        #download_sdk(path, dest_filename)
 
     print("Extracting " + dest_filename)
-    extract_sdk(dest_filename)
+    #extract_sdk(dest_filename)
     base_extract_path = dest_filename.split(".tar.gz")[0]
 
-
-    if base_extract_path.find("Ubuntu"):
+    # Ubuntu has extract paths in the tar.gz. Check for that and append. 
+    if base_extract_path.lower().find("ubuntu") >= 0:
 
         openstudio_version = os.path.basename(dest_filename).split("+")
-        print(openstudio_version)
-
         openstudio_bin_path = base_extract_path + "/usr/local/" + openstudio_version[0].lower() + "/bin/openstudio"
+
     else:
         openstudio_bin_path = base_extract_path + "/bin/openstudio"
 
@@ -168,14 +172,14 @@ for path in paths:
 df = {}
 for key, value in openstudio_bins.items():
     all_results = []
-    for i in range(0, 5):
+    for i in range(0, number_runs):
         print(i)
         all_results.append(run_ruby_file([i, 'baseline_sys01.rb', key]))
     df[key] = pd.DataFrame(all_results)
     df[key] = df[key].set_index(['file', 'i']).sort_index()
 
 
-desc = f'<h3>Running baseline_sys01.rb only (2 times)</h3>'
+desc = f'<h3>Running baseline_sys01.rb</h3>'
 label = HTML(desc)
 display(label)
 
@@ -198,6 +202,8 @@ for (key, ax) in zip(grouped.groups.keys(), axes.flatten()):
     grouped.get_group(key).boxplot(ax=ax)
 
 means = df_all.mean().unstack(0)
+means.to_csv("perf_means.csv")
+df_all.to_csv("perf_all.csv")
 
 df_all.style
 
@@ -213,5 +219,4 @@ q_hi  = df_all.quantile(0.98)
 df_filtered = df_all[(df_all < q_hi) & (df_all > q_low)]
 
 print(df_filtered)
-
-plt.show()
+plt.savefig('perf_comparison.png')
