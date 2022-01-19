@@ -147,10 +147,10 @@ for path in paths:
     if args.urls:
         # Replace url safe chars with the real thing
         dest_filename = dest_filename.replace("%2B", "+")
-        #download_sdk(path, dest_filename)
+        download_sdk(path, dest_filename)
 
     print("Extracting " + dest_filename)
-    #extract_sdk(dest_filename)
+    extract_sdk(dest_filename)
     base_extract_path = dest_filename.split(".tar.gz")[0]
 
     # Ubuntu has extract paths in the tar.gz. Check for that and append. 
