@@ -311,5 +311,5 @@ t = Time.now
 ft = OpenStudio::EnergyPlus::ForwardTranslator.new
 w = ft.translateModel(model)
 
-puts "#{Time.now - t}"
+puts (Time.now - t).to_s
 puts "ForwardTranslator: #{Time.now - t} seconds"
