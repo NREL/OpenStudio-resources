@@ -90,16 +90,16 @@ end
 # remove airloop
 air_loop.remove
 
-puts (Time.now - t).to_s
+puts "model_articulation: #{Time.now - t} seconds"
 t = Time.now
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd, 'osm_name' => 'in.osm' })
 
-puts (Time.now - t).to_s
+puts "model_save: #{Time.now - t} seconds"
 t = Time.now
 
 ft = OpenStudio::EnergyPlus::ForwardTranslator.new
 w = ft.translateModel(model)
 
-puts (Time.now - t).to_s
+puts "ForwardTranslator: #{Time.now - t} seconds"
