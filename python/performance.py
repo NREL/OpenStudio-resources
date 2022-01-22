@@ -337,11 +337,11 @@ class PerformanceTester():
         html += self.df_means.to_html(classes=['table', 'table-striped', 'table-bordered'])
         html += "    </div>\n\n\n"
 
-        html += "    <h2>Box Plot of Total Time, file v CLI</h2>\n\n"
+        html += "    <h2>Grouped Boxplot Plot</h2>\n\n"
         html += self._fig_to_html(self._grouped_boxplot)
         html += "\n\n\n"
 
-        html += "    <h2>Grouped Boxplot Plot</h2>\n\n"
+        html += "    <h2>Box Plot of Total Time, file v CLI</h2>\n\n"
         html += self._fig_to_html(self._total_time_boxplot)
         html += "\n\n\n"
 
