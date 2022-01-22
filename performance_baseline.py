@@ -1,9 +1,11 @@
 import argparse
+import base64
 import logging
 import os
 import re
 import requests
 import subprocess
+import shlex
 import shutil
 import tarfile
 
@@ -14,6 +16,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from io import BytesIO
 from pathlib import Path
 from urllib.parse import unquote
 
@@ -34,12 +37,14 @@ RE_TIME = re.compile(r'(\w+): ([\d\.]+) seconds')
 class PerformanceTester():
 
     def __init__(self, path_or_urls: list[str], is_url: bool,
+                 test_files: list[Path],
                  number_runs: int = 50,  verbose: bool = False,
                  force_redownload_extract: bool = False,
                  base_dir_path: Path = PERF_DIR):
 
         self.path_or_urls = path_or_urls
         self.is_url = is_url
+        self.test_files = test_files
         self.number_runs = number_runs
         self.verbose = verbose
         self.force_redownload_extract = force_redownload_extract
@@ -143,12 +148,17 @@ class PerformanceTester():
                     logging.info(f'Removing tar.gz at: {dest_tar_gz_filepath}')
                     shutil.rmtree(base_extract_path)
 
-        if self.is_url and not dest_tar_gz_filepath.exists():
-            self.download_sdk(path_or_url,
-                              dest_tar_gz_filepath=dest_tar_gz_filepath)
+        if self.is_url:
+            if not dest_tar_gz_filepath.exists():
+                self.download_sdk(path_or_url,
+                                  dest_tar_gz_filepath=dest_tar_gz_filepath)
+            else:
+                self.logger.info(f'{dest_tar_gz_filepath} already exists')
 
         if not base_extract_path.exists():
             self.extract_sdk(tar_gz_file=dest_tar_gz_filepath)
+        else:
+            self.logger.info(f'{base_extract_path} already exists')
 
         # Ubuntu has extract paths in the tar.gz. Check for that and append.
         if base_filename.lower().find("ubuntu") >= 0:
@@ -177,7 +187,8 @@ class PerformanceTester():
             version = self._check_version(openstudio_exe=openstudio_exe)
             self.openstudio_bins[openstudio_exe] = version
 
-    def _run_ruby_file(self, run_number, ruby_file, openstudio_path):
+    def _run_ruby_file(self, ruby_file: Path,
+                       os_cli_path: Path) -> dict:
         """
         Runs the simulation with NEW_EPLUS_EXE and calls parse_sql
         """
@@ -185,47 +196,166 @@ class PerformanceTester():
         if not p.exists():
             raise ValueError(f"Test file at '{p}' does not exist")
 
-        # TODO: modernize, probably handle failure gracefully?
-        # subprocess.check_output([openstudio_exe, p]).strip().decode()
-
-        process = subprocess.Popen([openstudio_path, p],
-                                   stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE,
-                                   universal_newlines=True,
-                                   shell=False)
-
-        # wait for the process to terminate
-        out, err = process.communicate()
-        errcode = process.returncode
-        if errcode == 0:
-            timings = {'file': ruby_file, 'i': run_number}
+        cmd = f"{os_cli_path} {p}"
+        self.logger.debug(f'{cmd}')
+        res = subprocess.run(shlex.split(cmd), capture_output=True)
+        timings = {'file': ruby_file, 'cli_path': os_cli_path}
+        if res.returncode != 0:
+            print(f"Simulation failed for {cmd}")
+            print(res.stdout.decode())
+            print(res.stderr.decode())
+            print("\n\n")
+            # TODO: raise? in which case use check_output rather than run
+        else:
+            out = res.stdout.decode()
             for line in out.splitlines():
                 if (m := RE_TIME.match(line)):
                     timing, val = m.groups()
                     timings[timing] = float(val)
-            return timings
 
-    def run_ruby_file_n_times(self, ruby_file, openstudio_path):
+        return timings
 
+    def _run_ruby_file_n_times(self, ruby_file: Path,
+                               os_cli_path: Path,
+                               number_runs: int) -> list[dict]:
         all_results = []
-        for i in trange(self.number_runs):
-            all_results.append(
-                perf_tester._run_ruby_file(
-                    run_number=i, ruby_file=openstudio_path,
-                    openstudio_path=openstudio_path)
+        for i in trange(number_runs, desc='Run'):
+            timings = self._run_ruby_file(
+                ruby_file=ruby_file,
+                os_cli_path=os_cli_path
             )
+            timings['i'] = i
+            all_results.append(timings)
 
         return all_results
 
-    def run_ruby_file_n_times_with_all_installers(self, ruby_file):
-        df = {}
-        for key, value in perf_tester.openstudio_bins.items():
-            all_results = self.run_ruby_file_n_times(
-                ruby_file=ruby_file, openstudio_path=key)
-            df[key] = pd.DataFrame(all_results)
-            df[key] = df[key].set_index(['file', 'i']).sort_index()
-        return df
+    def _run_ruby_file_n_times_with_all_installers(
+        self, ruby_file: Path, number_runs: int
+    ) -> list[dict]:
+        all_results = []
+        for os_cli_path in tqdm(self.openstudio_bins, desc='Installer'):
+            cli_results = self._run_ruby_file_n_times(
+                ruby_file=ruby_file, os_cli_path=os_cli_path,
+                number_runs=number_runs)
+            all_results += cli_results
 
+        return all_results
+
+    def run_performance_tests(self):
+        all_results = []
+        for ruby_file in tqdm(self.test_files, desc='Test File'):
+            all_results += self._run_ruby_file_n_times_with_all_installers(
+                ruby_file=ruby_file, number_runs=self.number_runs)
+
+        # Cache for debugging for now
+        self._raw_results = all_results
+
+        df_all = pd.DataFrame(all_results)
+
+        # Replace full CLI path with version
+        df_all['cli'] = df_all['cli_path'].map(self.openstudio_bins)
+        df_all.columns.name = 'timing_type'
+        df_all.drop(columns='cli_path', inplace=True)
+        df_all.set_index(['cli', 'file', 'i'], inplace=True)
+
+        self.results = df_all
+
+        return self.results
+
+    def plot_total_time_boxplot_by_file_and_cli(self):
+        grouped = self.results.sum(axis=1).unstack('cli').groupby(level='file')
+        ncols = 1
+        nrows = int(np.ceil(grouped.ngroups/ncols))
+
+        fig, axes = plt.subplots(nrows=nrows, ncols=ncols,
+                                 figsize=(16, 9), sharey=False)
+
+        fig.suptitle('Total elapsed time, by CLI and Test file', fontsize=16)
+
+        for (key, ax) in zip(grouped.groups.keys(), axes.flatten()):
+            grouped.get_group(key).loc[key].boxplot(ax=ax)
+            ax.set_title(key)
+
+        fig.savefig(self.base_dir_path / 'total_time_by_file_and_cli.png')
+        self._total_time_boxplot = fig
+
+    def plot_grouped_boxplot(self):
+
+        toplot = self.results.stack()
+        toplot.name = 'timing'
+        toplot = toplot.reset_index()
+
+        g = sns.catplot(
+            x="file", y="timing", hue="cli", row="timing_type",
+            data=toplot, kind="box", height=4, aspect=2,
+            sharex=True, sharey=False,
+        )
+        g.fig.savefig(self.base_dir_path / 'catplot.png')
+        self._grouped_boxplot = g.fig
+
+    def get_tables(self):
+        df_means = self.results.groupby('cli').mean().T
+        df_export = (self.results.unstack(['cli', 'file'])
+                     .reorder_levels(['file', 'timing_type', 'cli'], axis=1)
+                     .sort_index(axis=1))
+        df_means.to_csv(self.base_dir_path / "perf_means.csv")
+        df_export.to_csv(self.base_dir_path / "perf_all.csv")
+        self.df_means = df_means
+        self.df_export = df_export
+
+    def _fig_to_html(self, fig):
+        tmpfile = BytesIO()
+        fig.savefig(tmpfile, format='png')
+        encoded = base64.b64encode(tmpfile.getvalue()).decode('utf-8')
+        return f'<img class="img-fluid" src=\'data:image/png;base64,{encoded}\'>'
+
+    def make_html_report(self):
+        self.plot_total_time_boxplot_by_file_and_cli()
+        self.plot_grouped_boxplot()
+        self.get_tables()
+        # TODO: create an HTML file, should use Jinja with a template...
+        html = '''<!doctype html>
+<html lang="en">
+  <head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Test_output</title>
+  </head>
+
+  <body>
+'''
+
+        html += "    <h1>Performance Results</h1>\n\n\n"
+
+        html += "    <h2>Mean Times</h2>\n\n"
+        html += '    <div class="container-fluid">\n      '
+        html += self.df_means.to_html(classes=['table', 'table-striped', 'table-bordered'])
+        html += "    </div>\n\n\n"
+
+        html += "    <h2>Box Plot of Total Time, file v CLI</h2>\n\n"
+        html += self._fig_to_html(self._grouped_boxplot)
+        html += "\n\n\n"
+
+        html += "    <h2>Grouped Boxplot Plot</h2>\n\n"
+        html += self._fig_to_html(self._total_time_boxplot)
+        html += "\n\n\n"
+
+        html += "    <h2>All Timings</h2>\n\n"
+        html += self.df_export.to_html(classes=['table', 'table-striped', 'table-bordered'])
+        html += "\n\n\n"
+
+        html += """
+      </body>
+    </html>
+        """
+        with open(self.base_dir_path / 'results.html', 'w') as f:
+            f.write(html)
 
 def setup_argparse():
     parser = argparse.ArgumentParser()
@@ -255,6 +385,14 @@ def setup_argparse():
                         default=False,
                         help="Enable verbose output",
                         action='store_true')
+
+    parser.add_argument('--test-files', '-t',
+                        nargs='+',
+                        help=("List of test files to run. "
+                              "Default ['baseline_sys01.rb']"),
+                        default=['baseline_sys01.rb'],
+                        action='store')
+
     # Parse the args
     args = parser.parse_args()
 
@@ -265,15 +403,16 @@ def setup_argparse():
     else:
         paths = args.filenames
 
-    return paths, is_url, args.number_runs, args.verbose
+    return paths, is_url, args.test_files, args.number_runs, args.verbose
 
 
 if __name__ == '__main__':
 
-    path_or_urls, is_url, number_runs, verbose = setup_argparse()
+    path_or_urls, is_url, test_files, number_runs, verbose = setup_argparse()
 
     perf_tester = PerformanceTester(
-        path_or_urls=path_or_urls, is_url=is_url, number_runs=number_runs,
+        path_or_urls=path_or_urls, is_url=is_url,
+        test_files=test_files, number_runs=number_runs,
         verbose=verbose, force_redownload_extract=False)
 
     perf_tester.logger.info(
@@ -282,57 +421,17 @@ if __name__ == '__main__':
     # Download (if need be), extract, locate openstudio.exe, and check version
     perf_tester.prepare_installers()
 
-    df = {}
-    for key, value in perf_tester.openstudio_bins.items():
-        all_results = []
-        for i in range(0, number_runs):
-            print(i)
-            all_results.append(
-                perf_tester.run_ruby_file(
-                    run_number=i, ruby_file='baseline_sys01.rb',
-                    openstudio_path=key)
-            )
-        df[key] = pd.DataFrame(all_results)
-        df[key] = df[key].set_index(['file', 'i']).sort_index()
-
-    desc = f'<h3>Running baseline_sys01.rb</h3>'
+    desc = '<h3>Running Performance Tests</h3>'
     label = HTML(desc)
     display(label)
 
-    df_combined = []
-    df_keys = []
-    for key, value in df.items():
-        df_combined.append((value.loc['baseline_sys01.rb'] ))
-        df_keys.append(perf_tester.openstudio_bins[key] )
-
-    df_all = pd.concat(df_combined, keys=df_keys, axis=1)
-
-    grouped = df_all.groupby(level=1, axis=1)
-
-    ncols = 1
-    nrows = int(np.ceil(grouped.ngroups/ncols))
-
-    fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(16,9), sharey=False)
-
-    for (key, ax) in zip(grouped.groups.keys(), axes.flatten()):
-        grouped.get_group(key).boxplot(ax=ax)
-
-    means = df_all.mean().unstack(0)
-    means.to_csv("perf_means.csv")
-    df_all.to_csv("perf_all.csv")
-
-    df_all.style
-
-    #dfi.export(means, 'means.png')
-    print(means)
-    print(df_all.unstack(0))
-
-    #dfi.export(df_all, 'all_runs.png')
+    df_all = perf_tester.run_performance_tests()
+    perf_tester.make_html_report()
 
     q_low = df_all.quantile(0.02)
-    q_hi  = df_all.quantile(0.98)
+    q_hi = df_all.quantile(0.98)
 
     df_filtered = df_all[(df_all < q_hi) & (df_all > q_low)]
 
     print(df_filtered)
-    plt.savefig('perf_comparison.png')
+
