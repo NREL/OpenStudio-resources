@@ -240,10 +240,13 @@ puts "ForwardTranslator: #{Time.now - t} seconds"'''.splitlines())
             raise ValueError(f"Test file at '{p}' does not exist")
 
         bench_p = self._prepare_ruby_bench_file(p)
+        run_dir = bench_p.parent / "run" / ruby_file
+        if not run_dir.exists():
+            os.makedirs(run_dir)
 
         cmd = f"{os_cli_path} {bench_p}"
         self.logger.debug(f'{cmd}')
-        res = subprocess.run(shlex.split(cmd), capture_output=True)
+        res = subprocess.run(shlex.split(cmd), cwd=run_dir, capture_output=True)
         timings = {'file': ruby_file, 'cli_path': os_cli_path}
         if res.returncode != 0:
             print(f"Simulation failed for {cmd}")
