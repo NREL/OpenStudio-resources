@@ -61,7 +61,9 @@ if __name__ == '__main__':
         verbose=verbose, force_redownload_extract=False)
 
     perf_tester.logger.info(
-        f'{path_or_urls=}, {is_url=}, {number_runs=}, {verbose=}')
+        f'{path_or_urls=}, {is_url=}, {number_runs=}, {verbose=}\n'
+        f'{test_files=}')
+
 
     # Download (if need be), extract, locate openstudio.exe, and check version
     perf_tester.prepare_installers()

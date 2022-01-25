@@ -15,6 +15,8 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from datetime import datetime
+from distutils.dir_util import copy_tree
 from io import BytesIO
 from pathlib import Path
 from urllib.parse import unquote
@@ -24,7 +26,7 @@ from IPython.display import display
 
 from tqdm.auto import tqdm, trange
 
-ROOT_DIR = Path(__file__).parent
+ROOT_DIR = Path(__file__).parent.parent
 PERF_DIR = ROOT_DIR / "perf_test"
 
 mpl.rcParams['figure.figsize'] = (16, 9)
@@ -83,7 +85,8 @@ class PerformanceTester():
         self.set_console_log_level(level=level)
 
         # Create a log handler, in DEBUG mode
-        self.logFilePath = self.base_dir_path / "run.log"
+        logfname = datetime.now().strftime('%Y-%m-%dT%H-%M-%S')
+        self.logFilePath = self.base_dir_path / f'{logfname}.log'
         print(f"File logging set to output to {self.logFilePath}")
         self._file_handler = logging.handlers.TimedRotatingFileHandler(
             filename=self.logFilePath, when='midnight', backupCount=30)
@@ -186,16 +189,59 @@ class PerformanceTester():
             version = self._check_version(openstudio_exe=openstudio_exe)
             self.openstudio_bins[openstudio_exe] = version
 
+    def _prepare_ruby_bench_file(self, test_file_abs_path: str) -> Path:
+        """
+        Open a ruby simulationtests file, insert the timing code, and save it
+        under base_path_dir / bench_files, returning that path
+        """
+        with open(test_file_abs_path, 'r') as f:
+            lines = f.read().splitlines()
+
+        bench_lines = []
+        for line in lines:
+            if 'BaselineModel.new' in line:
+                bench_lines.append(
+                    '# Start benchmarking of model_articulation')
+                bench_lines.append("t = Time.now")
+            if 'model.save_openstudio_osm' in line:
+                bench_lines.append(
+                    'puts "model_articulation: #{Time.now - t} seconds"')
+            bench_lines.append(line)
+
+        bench_lines += ('''
+puts "model_save: #{Time.now - t} seconds"
+t = Time.now
+
+ft = OpenStudio::EnergyPlus::ForwardTranslator.new
+w = ft.translateModel(model)
+
+puts "ForwardTranslator: #{Time.now - t} seconds"'''.splitlines())
+
+        out_file_dir = self.base_dir_path / 'bench_files'
+        if not out_file_dir.exists():
+            os.makedirs(out_file_dir)
+
+        out_file_path = out_file_dir / test_file_abs_path.name
+        with open(out_file_path, 'w') as f:
+            f.write("\n".join(bench_lines) + '\n')
+
+        self.logger.debug(f'Bench file saved to {out_file_path}')
+
+        return out_file_path
+
+
     def _run_ruby_file(self, ruby_file: Path,
                        os_cli_path: Path) -> dict:
         """
         Runs the simulation with NEW_EPLUS_EXE and calls parse_sql
         """
-        p = ROOT_DIR / 'model' / 'simulationtests' / ruby_file
+        p = (ROOT_DIR / 'model' / 'simulationtests' / ruby_file).absolute()
         if not p.exists():
             raise ValueError(f"Test file at '{p}' does not exist")
 
-        cmd = f"{os_cli_path} {p}"
+        bench_p = self._prepare_ruby_bench_file(p)
+
+        cmd = f"{os_cli_path} {bench_p}"
         self.logger.debug(f'{cmd}')
         res = subprocess.run(shlex.split(cmd), capture_output=True)
         timings = {'file': ruby_file, 'cli_path': os_cli_path}
@@ -213,6 +259,16 @@ class PerformanceTester():
                     timings[timing] = float(val)
 
         return timings
+
+    def _copy_lib_dir(self):
+        lib_dir = (ROOT_DIR / 'model' / 'simulationtests' / 'lib').absolute()
+        target_dir = self.base_dir_path / 'bench_files' / 'lib'
+        copy_tree(src=str(lib_dir), dst=str(target_dir))
+
+    def _cleanup_perf_test_folder(self):
+        p = self.base_dir_path / 'bench_files'
+        if p.exists():
+            shutil.rmtree(p)
 
     def _run_ruby_file_n_times(self, ruby_file: Path,
                                os_cli_path: Path,
@@ -241,6 +297,10 @@ class PerformanceTester():
         return all_results
 
     def run_performance_tests(self):
+        self._cleanup_perf_test_folder()
+        # Copy the 'lib' dir over
+        self._copy_lib_dir()
+
         all_results = []
         for ruby_file in tqdm(self.test_files, desc='Test File'):
             all_results += self._run_ruby_file_n_times_with_all_installers(

@@ -3,8 +3,6 @@
 require 'openstudio'
 require_relative 'lib/baseline_model'
 
-t = Time.now
-
 model = BaselineModel.new
 
 # make a 2 story, 100m X 50m, 10 zone core/perimeter building
@@ -36,16 +34,6 @@ model.set_space_type
 # add design days to the model (Chicago)
 model.add_design_days
 
-puts "model_articulation: #{Time.now - t} seconds"
-t = Time.now
-
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
                             'osm_name' => 'in.osm' })
-
-puts "model_save: #{Time.now - t} seconds"
-t = Time.now
-ft = OpenStudio::EnergyPlus::ForwardTranslator.new
-w = ft.translateModel(model)
-
-puts "ForwardTranslator: #{Time.now - t} seconds"
