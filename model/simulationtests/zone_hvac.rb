@@ -2,7 +2,6 @@
 
 require 'openstudio'
 require_relative 'lib/baseline_model'
-
 model = BaselineModel.new
 
 # make a 3 story, 100m X 50m, 10 zone core/perimeter building
