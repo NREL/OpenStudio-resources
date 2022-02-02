@@ -1207,9 +1207,9 @@ class ModelTests < Minitest::Test
     result = sim_test('zone_hvac.osm')
   end
 
-  def test_zone_hvac_rb
-    result = sim_test('zone_hvac.rb')
-  end
+  # def test_zone_hvac_rb
+    # result = sim_test('zone_hvac.rb')
+  # end
 
   def test_zone_hvac2_rb
     result = sim_test('zone_hvac2.rb')
