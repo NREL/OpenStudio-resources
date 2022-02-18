@@ -54,6 +54,12 @@ jobs:
       run: |
         pip install -r requirements.txt
 
+    # Note: We can't VT it in source, since we sometimes run with old installers.
+    - name: Speed up execution by VersionTranslating the construction library to the current OS SDK version
+      shell: bash
+      run: |
+        openstudio -e "translator = OpenStudio::OSVersion::VersionTranslator.new; p = 'model/simulationtests/lib/baseline_model_constructions.osm'; model = translator.loadModel(p).get; model.save(p, true);"
+
     - name: Run model_tests.rb - first pass
       continue-on-error: true
       shell: bash
