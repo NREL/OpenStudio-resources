@@ -14,8 +14,8 @@ source colors.sh
 
 # All versions you want to run
 # 2.0.4 is supported, but it's very broken, transition to 2.0.5 is likely going to just fail, so remove it
-declare -a all_versions=("2.0.5" "2.1.0" "2.1.1" "2.1.2" "2.2.0" "2.2.1" "2.2.2" "2.3.0" "2.3.1" "2.4.0" "2.4.1" "2.5.0" "2.5.1" "2.5.2" "2.6.0" "2.6.1" "2.7.0" "2.7.1" "2.8.0" "2.8.1" "2.9.0" "2.9.1" "3.0.0" "3.0.1")
-#declare -a  all_versions=("2.5.0" "2.5.1" "2.5.2" "2.6.0" "2.6.1" "2.7.0" "2.7.1" "2.8.0" "2.8.1" "2.9.0" "2.9.1" "3.0.0" "3.0.1")
+declare -a all_versions=("2.0.5" "2.1.0" "2.1.1" "2.1.2" "2.2.0" "2.2.1" "2.2.2" "2.3.0" "2.3.1" "2.4.0" "2.4.1" "2.5.0" "2.5.1" "2.5.2" "2.6.0" "2.6.1" "2.7.0" "2.7.1" "2.8.0" "2.8.1" "2.9.0" "2.9.1" "3.0.0" "3.0.1" "3.1.0" "3.2.0" "3.2.1" "3.3.0")
+# declare -a all_versions=("3.0.0" "3.0.1" "3.1.0")
 
 # Do you want to ask the user to set these arguments?
 # If false, will just use the hardcoded ones
@@ -29,7 +29,7 @@ test_file="model_tests.rb"
 
 # Test filter: passed as model_tests -n /$filter/
 filter=""
-# Run only osms tests: filter="/_osm/"
+# Run only osms tests: filter="_osm"
 
 # Delete custom/openstudio:$os_version image after having used it?
 delete_custom_image=false
