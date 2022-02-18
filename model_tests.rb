@@ -571,7 +571,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.3.0
   # def test_heatrecovery_chiller_osm
-    # result = sim_test('heatrecovery_chiller.osm')
+  # result = sim_test('heatrecovery_chiller.osm')
   # end
 
   def test_hightemprad_rb
