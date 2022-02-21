@@ -27,12 +27,14 @@ zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 
 # Water Heater Mixed
 water_heater_mixed = OpenStudio::Model::WaterHeaterMixed.new(model)
+water_heater_mixed.setName("Water Heater")
 
 # Plant Loop 1
 plant_loop_1 = OpenStudio::Model::PlantLoop.new(model)
 plant_loop_1.setName("First Plant Loop")
 
-water_heater_mixed.addToNode(plant_loop_1.supplyInletNode)
+# water_heater_mixed.addToNode(plant_loop_1.supplyInletNode)
+plant_loop_1.addSupplyBranchForComponent(water_heater_mixed)
 
 pump_1 = OpenStudio::Model::PumpConstantSpeed.new(model)
 pump_1.setName("First Pump")
@@ -46,18 +48,29 @@ pipe_1 = OpenStudio::Model::PipeAdiabatic.new(model)
 pipe_1.setName("First Pipe")
 plant_loop_1.addSupplyBranchForComponent(pipe_1)
 
+sch_1 = OpenStudio::Model::ScheduleRuleset.new(model)
+sch_1.setName("Hot_Water_Temperature")
+sch_1.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 55.0)
+
+hot_water_spm_1 = OpenStudio::Model::SetpointManagerScheduled.new(model, sch_1)
+hot_water_spm_1.addToNode(plant_loop_1.supplyOutletNode)
+
 # Plant Loop 2
 plant_loop_2 = OpenStudio::Model::PlantLoop.new(model)
 plant_loop_2.setName("Second Plant Loop")
 
-pipe = OpenStudio::Model::PipeAdiabatic.new(model)
-plant_loop_2.addSupplyBranchForComponent(pipe)
-water_heater_mixed.addToSecondaryNode(pipe.inletModelObject.get.to_Node.get)
-pipe.remove
+# pipe = OpenStudio::Model::PipeAdiabatic.new(model)
+# plant_loop_2.addSupplyBranchForComponent(pipe)
+# water_heater_mixed.addToSourceSideNode(pipe.inletModelObject.get.to_Node.get)
+# pipe.remove
+water_heater_mixed.addToSourceSideNode(plant_loop_2.supplyInletNode)
 
 pump_2 = OpenStudio::Model::PumpConstantSpeed.new(model)
 pump_2.setName("Second Pump")
 pump_2.addToNode(plant_loop_2.supplyInletNode)
+
+hot_water_spm_2 = OpenStudio::Model::SetpointManagerScheduled.new(model, sch_1)
+hot_water_spm_2.addToNode(plant_loop_2.supplyOutletNode)
 
 # add thermostats
 model.add_thermostats({ 'heating_setpoint' => 24,
