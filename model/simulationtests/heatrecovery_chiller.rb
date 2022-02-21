@@ -27,7 +27,7 @@ zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 
 # Water Heater Mixed
 water_heater_mixed = OpenStudio::Model::WaterHeaterMixed.new(model)
-water_heater_mixed.setName("Water Heater")
+water_heater_mixed.setName('Water Heater')
 
 # Plant Loop 1
 plant_loop_1 = OpenStudio::Model::PlantLoop.new(model)
@@ -49,7 +49,7 @@ pipe_1.setName('First Pipe')
 plant_loop_1.addSupplyBranchForComponent(pipe_1)
 
 sch_1 = OpenStudio::Model::ScheduleRuleset.new(model)
-sch_1.setName("Hot_Water_Temperature")
+sch_1.setName('Hot_Water_Temperature')
 sch_1.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 55.0)
 
 hot_water_spm_1 = OpenStudio::Model::SetpointManagerScheduled.new(model, sch_1)
