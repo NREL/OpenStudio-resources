@@ -31,21 +31,21 @@ water_heater_mixed.setName("Water Heater")
 
 # Plant Loop 1
 plant_loop_1 = OpenStudio::Model::PlantLoop.new(model)
-plant_loop_1.setName("First Plant Loop")
+plant_loop_1.setName('First Plant Loop')
 
 # water_heater_mixed.addToNode(plant_loop_1.supplyInletNode)
 plant_loop_1.addSupplyBranchForComponent(water_heater_mixed)
 
 pump_1 = OpenStudio::Model::PumpConstantSpeed.new(model)
-pump_1.setName("First Pump")
+pump_1.setName('First Pump')
 pump_1.addToNode(plant_loop_1.supplyInletNode)
 
 boiler_1 = OpenStudio::Model::BoilerHotWater.new(model)
-boiler_1.setName("First Boiler")
+boiler_1.setName('First Boiler')
 plant_loop_1.addSupplyBranchForComponent(boiler_1)
 
 pipe_1 = OpenStudio::Model::PipeAdiabatic.new(model)
-pipe_1.setName("First Pipe")
+pipe_1.setName('First Pipe')
 plant_loop_1.addSupplyBranchForComponent(pipe_1)
 
 sch_1 = OpenStudio::Model::ScheduleRuleset.new(model)
@@ -57,7 +57,7 @@ hot_water_spm_1.addToNode(plant_loop_1.supplyOutletNode)
 
 # Plant Loop 2
 plant_loop_2 = OpenStudio::Model::PlantLoop.new(model)
-plant_loop_2.setName("Second Plant Loop")
+plant_loop_2.setName('Second Plant Loop')
 
 # pipe = OpenStudio::Model::PipeAdiabatic.new(model)
 # plant_loop_2.addSupplyBranchForComponent(pipe)
@@ -66,7 +66,7 @@ plant_loop_2.setName("Second Plant Loop")
 water_heater_mixed.addToSourceSideNode(plant_loop_2.supplyInletNode)
 
 pump_2 = OpenStudio::Model::PumpConstantSpeed.new(model)
-pump_2.setName("Second Pump")
+pump_2.setName('Second Pump')
 pump_2.addToNode(plant_loop_2.supplyInletNode)
 
 hot_water_spm_2 = OpenStudio::Model::SetpointManagerScheduled.new(model, sch_1)
