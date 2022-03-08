@@ -14,7 +14,7 @@ if [ -z "$TEST_FILTER" ]
 then
   test_filter=""
 else
-  test_filter="-n /$TEST_FILTER/"
+  test_filter="-n '/$TEST_FILTER/'"
 fi
 
 # Making sure versions do match
@@ -47,7 +47,9 @@ else
     ~/.rbenv/shims/ruby -I /usr/Ruby/openstudio.so $test_file $test_filter
   else
     # Otherwise, we use system ruby, no need for the include, RUBYLIB env variable is set
-    ruby $test_file $test_filter
+    # ruby $test_file $test_filter
+    # Use the CLI
+    openstudio $test_file $test_filter
   fi
 fi
 # Test if directory exists
