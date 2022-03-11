@@ -66,7 +66,7 @@ end
 # assert adiabatic_surface.construction.get == adiabatic_c
 
 window_property = OpenStudio::Model::WindowPropertyFrameAndDivider.new(model)
-window_property.setNFRCProductTypeforAssemblyCalculations("ProjectingSingle")
+window_property.setNFRCProductTypeforAssemblyCalculations('ProjectingSingle')
 
 model.getSubSurfaces.each do |sub_surface|
   next if sub_surface.subSurfaceType != 'FixedWindow'
