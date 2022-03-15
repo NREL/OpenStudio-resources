@@ -70,26 +70,10 @@ window_property = OpenStudio::Model::WindowPropertyFrameAndDivider.new(model)
 window_property.setFrameWidth(0.1)
 window_property.setNFRCProductTypeforAssemblyCalculations('CurtainWall')
 
-# convert one of the windows to interior
-space = OpenStudio::Model::Space.new(model)
-space.setName('Adjacent Space')
-thermal_zone = OpenStudio::Model::ThermalZone.new(model)
-thermal_zone.setName('Adjacent Thermal Zone')
-space.setThermalZone(thermal_zone)
-non_adiabatic_surface = surfaces[1]
-adjacent_surface = non_adiabatic_surface.createAdjacentSurface(space).get
-adjacent_sub_surface = adjacent_surface.subSurfaces[0]
-adjacent_sub_surface.setName('Adjacent Sub Surface')
-
-# zone needs at least 2 surfaces
-model.getSurfaces.each do |surface|
-  next if surface.surfaceType != 'Floor'
-
-  surface.setSpace(space)
-end
-
 # set window property on all subsurfaces
 model.getSubSurfaces.each do |sub_surface|
+  next if sub_surface.subSurfaceType != 'FixedWindow'
+
   sub_surface.setWindowPropertyFrameAndDivider(window_property)
 end
 
