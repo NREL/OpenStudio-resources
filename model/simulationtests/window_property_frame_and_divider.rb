@@ -65,14 +65,24 @@ end
 # assert !adiabatic_surface.construction.empty?
 # assert adiabatic_surface.construction.get == adiabatic_c
 
+# create a window property frame and divider
 window_property = OpenStudio::Model::WindowPropertyFrameAndDivider.new(model)
 window_property.setNFRCProductTypeforAssemblyCalculations('ProjectingSingle')
 
-model.getSubSurfaces.each do |sub_surface|
-  next if sub_surface.subSurfaceType != 'FixedWindow'
+# convert one of the windows to interior
+space = OpenStudio::Model::Space.new(model)
+space.setName('Adjacent Space')
+non_adiabatic_surface = surfaces[1]
+adjacent_surface = non_adiabatic_surface.createAdjacentSurface(space).get
+adjacent_sub_surface = adjacent_surface.subSurfaces[0]
+adjacent_sub_surface.setName('Adjacent Sub Surface')
 
+# set window property on all subsurfaces
+model.getSubSurfaces.each do |sub_surface|
   sub_surface.setWindowPropertyFrameAndDivider(window_property)
 end
+
+# TODO: add an interior window
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
