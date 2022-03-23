@@ -42,29 +42,6 @@ zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 z = zones[0]
 z.setUseIdealAirLoads(true)
 
-# Get the first Outdoors surface, sorting by name to ensure consistency
-surfaces = model.getSurfaces.select { |s| s.outsideBoundaryCondition == 'Outdoors' }.sort_by { |s| s.name.to_s }
-
-adiabatic_surface = surfaces[0]
-# This will remove the subSurfaces (if any)
-adiabatic_surface.setOutsideBoundaryCondition('Adiabatic')
-# assert adiabatic_surface.construction.empty?
-
-# Only one here, but let's be safe
-construction_set = model.getDefaultConstructionSets.min_by { |d| d.name.to_s }
-# I know it's initialized, so I get it already
-ext_set = construction_set.defaultExteriorSurfaceConstructions.get
-# Same, I know it's initialized
-c = ext_set.wallConstruction.get
-adiabatic_c = c.clone(model).to_ConstructionBase.get
-adiabatic_c.setName('Adiabatic Construction')
-
-if Gem::Version.new(OpenStudio.openStudioVersion) > Gem::Version.new('2.7.1')
-  construction_set.setAdiabaticSurfaceConstruction(adiabatic_c)
-end
-# assert !adiabatic_surface.construction.empty?
-# assert adiabatic_surface.construction.get == adiabatic_c
-
 # create a window property frame and divider
 window_property = OpenStudio::Model::WindowPropertyFrameAndDivider.new(model)
 window_property.setFrameWidth(0.1)
