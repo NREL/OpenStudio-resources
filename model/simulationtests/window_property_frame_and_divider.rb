@@ -45,6 +45,38 @@ z.setUseIdealAirLoads(true)
 # create a window property frame and divider
 window_property = OpenStudio::Model::WindowPropertyFrameAndDivider.new(model)
 window_property.setFrameWidth(0.1)
+# Careful: no default, E+ defaults to 0.0 in source code
+window_property.setFrameConductance(2.33)
+
+# All these are just the IDD defaults
+window_property.setFrameOutsideProjection(0.0)
+window_property.setFrameInsideProjection(0.0)
+window_property.setRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance(1.0)
+window_property.setFrameSolarAbsorptance(0.7)
+window_property.setFrameVisibleAbsorptance(0.7)
+window_property.setFrameThermalHemisphericalEmissivity(0.9)
+window_property.setDividerType('DividedLite')
+window_property.setDividerWidth(0.0)
+window_property.setNumberOfHorizontalDividers(0.0)
+window_property.setNumberOfVerticalDividers(0.0)
+window_property.setDividerOutsideProjection(0.0)
+window_property.setDividerInsideProjection(0.0)
+window_property.setDividerConductance(0.0)
+window_property.setRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance(1.0)
+window_property.setDividerSolarAbsorptance(0.0)
+window_property.setDividerVisibleAbsorptance(0.0)
+window_property.setDividerThermalHemisphericalEmissivity(0.9)
+window_property.setOutsideRevealDepth(0.0)
+window_property.setOutsideRevealSolarAbsorptance(0.0)
+window_property.setInsideSillDepth(0.0)
+window_property.setInsideSillSolarAbsorptance(0.0)
+window_property.setInsideRevealDepth(0.0)
+window_property.setInsideRevealSolarAbsorptance(0.0)
+
+# This will be used to report the Assembly U-Factor, SGHC
+# and VisibleTransmittance in the SQL/HTML.
+# After a sucessful run, attach a sql file to your model and you can call
+# SubSurface::assemblyUFactor() for eg
 window_property.setNFRCProductTypeforAssemblyCalculations('CurtainWall')
 
 # set window property on all subsurfaces
