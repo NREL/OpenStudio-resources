@@ -37,7 +37,7 @@ jobs:
       shell: bash
       run: |
         set -x
-        installer_url="${{ github.event.inputs.base_url}}OpenStudio-${{ github.event.inputs.os_version}}${{ github.event.inputs.os_prerelease_tag}}%2B${{ github.event.inputs.os_build_sha}}-Ubuntu-18.04.deb"
+        installer_url="${{ github.event.inputs.base_url}}/OpenStudio-${{ github.event.inputs.os_version}}${{ github.event.inputs.os_prerelease_tag}}%2B${{ github.event.inputs.os_build_sha}}-Ubuntu-18.04.deb"
         echo "Installer link: $installer_url"
         sudo apt update
         wget $installer_url
@@ -114,7 +114,7 @@ jobs:
       shell: bash
       run: |
         set -x
-        installer_url="${{ github.event.inputs.base_url}}OpenStudio-${{ github.event.inputs.os_version}}${{ github.event.inputs.os_prerelease_tag}}%2B${{ github.event.inputs.os_build_sha}}-Ubuntu-20.04.deb"
+        installer_url="${{ github.event.inputs.base_url}}/OpenStudio-${{ github.event.inputs.os_version}}${{ github.event.inputs.os_prerelease_tag}}%2B${{ github.event.inputs.os_build_sha}}-Ubuntu-20.04.deb"
         echo "Installer link: $installer_url"
         sudo apt update
         wget $installer_url
@@ -268,7 +268,7 @@ jobs:
       shell: bash
       run: |
         set -x
-        installer_url="${{ github.event.inputs.base_url}}OpenStudio-${{ github.event.inputs.os_version}}${{ github.event.inputs.os_prerelease_tag}}%2B${{ github.event.inputs.os_build_sha}}-Ubuntu-20.04.deb"
+        installer_url="${{ github.event.inputs.base_url}}/OpenStudio-${{ github.event.inputs.os_version}}${{ github.event.inputs.os_prerelease_tag}}%2B${{ github.event.inputs.os_build_sha}}-Ubuntu-20.04.deb"
         echo "Installer link: $installer_url"
         echo "Installer link: ${{ github.event.inputs.os_installer_osx }}"
         wget $installer_url
