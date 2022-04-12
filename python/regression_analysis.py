@@ -1145,6 +1145,7 @@ def heatmap_sitekbtu_pct_change_on_ax(toplot, ax, display_threshold,
     green_cmap = mpl.colors.ListedColormap('#f0f7d9')
 
     # Plot with colors, for those that are above the display_threshold
+    # Note: cells not shown where mask is True
     sns.heatmap(toplot.abs(), mask=toplot.abs() <= display_threshold,
                 ax=ax, cmap='YlOrRd',  # cmap='Reds', 'RdYlGn_r'
                 vmin=0, vmax=0.5,

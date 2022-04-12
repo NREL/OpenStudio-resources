@@ -218,8 +218,10 @@ class BaselineModel < OpenStudio::Model::Model
           renamed_surfaces.add(s)
           renamed_surfaces.add(adjacent_s)
         end
-      end # End rename surfaces
-    end # End loop on spaces to add thermal zone and rename surfaces
+        # End rename surfaces
+      end
+      # End loop on spaces to add thermal zone and rename surfaces
+    end
   end
 
   def add_windows(params)
@@ -637,7 +639,7 @@ class BaselineModel < OpenStudio::Model::Model
     end
   end
 
-  # Historically, YearDescription had a default of 'Thursday' but that
+  # Historically, YearDescription had a default of 'UseWeatherFile' but that
   # option was not supported until 3.3.0. So it would instead default to
   # assumedBaseYear which is 2009, which starts on a Thursday.
   # Except that 3.3.0 does take it into account and Chicago EPW has a start day

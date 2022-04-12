@@ -57,10 +57,9 @@ class ModelTests < Minitest::Test
     result = sim_test('airterminal_inletsidemixer.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.2.1
-  # def test_airterminal_inletsidemixer_osm
-  #   result = sim_test('airterminal_inletsidemixer.osm')
-  # end
+  def test_airterminal_inletsidemixer_osm
+    result = sim_test('airterminal_inletsidemixer.osm')
+  end
 
   def test_air_chillers_osm
     result = sim_test('air_chillers.osm')
@@ -254,10 +253,9 @@ class ModelTests < Minitest::Test
     result = sim_test('coilsystem_dxhx_desiccant_balancedflow.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.2.1
-  # def test_coilsystem_dxhx_desiccant_balancedflow_osm
-  # result = sim_test('coilsystem_dxhx_desiccant_balancedflow.osm')
-  # end
+  def test_coilsystem_dxhx_desiccant_balancedflow_osm
+    result = sim_test('coilsystem_dxhx_desiccant_balancedflow.osm')
+  end
 
   def test_coilsystem_integrated_heatpump_rb
     result = sim_test('coilsystem_integrated_heatpump.rb')
@@ -287,10 +285,9 @@ class ModelTests < Minitest::Test
     result = sim_test('daylighting_devices.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.2.1
-  # def test_daylighting_devices_osm
-  # result = sim_test('daylighting_devices.osm')
-  # end
+  def test_daylighting_devices_osm
+    result = sim_test('daylighting_devices.osm')
+  end
 
   def test_daylighting_no_shades_rb
     result = sim_test('daylighting_no_shades.rb')
@@ -306,6 +303,14 @@ class ModelTests < Minitest::Test
 
   def test_daylighting_shades_osm
     result = sim_test('daylighting_shades.osm')
+  end
+
+  def test_design_day_rb
+    result = sim_test('design_day.rb')
+  end
+
+  def test_design_day_osm
+    result = sim_test('design_day.osm')
   end
 
   def test_dist_ht_cl_osm
@@ -532,10 +537,9 @@ class ModelTests < Minitest::Test
     result = sim_test('heatexchanger_desiccant_balancedflow.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.2.1
-  # def test_heatexchanger_desiccant_balancedflow_osm
-  # result = sim_test('heatexchanger_desiccant_balancedflow.osm')
-  # end
+  def test_heatexchanger_desiccant_balancedflow_osm
+    result = sim_test('heatexchanger_desiccant_balancedflow.osm')
+  end
 
   def test_heatpump_hot_water_rb
     result = sim_test('heatpump_hot_water.rb')
@@ -549,10 +553,9 @@ class ModelTests < Minitest::Test
     result = sim_test('heatpump_plantloop_eir.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.2.1
-  # def test_heatpump_plantloop_eir_osm
-  # result = sim_test('heatpump_plantloop_eir.osm')
-  # end
+  def test_heatpump_plantloop_eir_osm
+    result = sim_test('heatpump_plantloop_eir.osm')
+  end
 
   def test_heatpump_varspeed_rb
     result = sim_test('heatpump_varspeed.rb')
@@ -1025,6 +1028,15 @@ class ModelTests < Minitest::Test
     result = sim_test('surface_properties.rb')
   end
 
+  def test_surface_properties_lwr_rb
+    result = sim_test('surface_properties_lwr.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.3.0
+  # def test_surface_properties_lwr_osm
+  #   result = sim_test('surface_properties_lwr.osm')
+  # end
+
   def test_swimmingpool_indoor_rb
     result = sim_test('swimmingpool_indoor.rb')
   end
@@ -1101,10 +1113,9 @@ class ModelTests < Minitest::Test
     result = sim_test('unitary_vav_bypass_coiltypes.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.2.1
-  # def test_unitary_vav_bypass_coiltypes_osm
-  # result = sim_test('unitary_vav_bypass_coiltypes.osm')
-  # end
+  def test_unitary_vav_bypass_coiltypes_osm
+    result = sim_test('unitary_vav_bypass_coiltypes.osm')
+  end
 
   def test_unitary_systems_airloop_and_zonehvac_rb
     result = sim_test('unitary_systems_airloop_and_zonehvac.rb')
@@ -1169,6 +1180,15 @@ class ModelTests < Minitest::Test
   def test_water_heaters_osm
     result = sim_test('water_heaters.osm')
   end
+
+  def test_window_property_frame_and_divider_rb
+    result = sim_test('window_property_frame_and_divider.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.3.0
+  # def test_window_property_frame_and_divider_osm
+  # result = sim_test('window_property_frame_and_divider.osm')
+  # end
 
   def test_zone_air_movement_rb
     result = sim_test('zone_air_movement.rb')
