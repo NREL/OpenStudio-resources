@@ -3,22 +3,22 @@ name: Test OS SDK Installer - All Platforms
 on:
   workflow_dispatch:
     inputs:
-      os_installer_ubuntu_1804:
-        description: 'Ubuntu 1804 (.deb) URL'
+      base_url:
+        description: 'The base url to use to download each platform'
         required: true
-        default: 'https://github.com/NREL/OpenStudio/releases/download/v3.2.1/OpenStudio-3.2.1%2Bbdbdbc9da6-Ubuntu-18.04.deb'
-      os_installer_ubuntu_2004:
-        description: 'Ubuntu 2004 (.deb) URL'
+        default: 'https://github.com/NREL/OpenStudio/releases/download/v3.2.1/'
+      os_version:
+        description: 'OpenStudio Build sha (first 10 chars)'
         required: true
-        default: 'https://github.com/NREL/OpenStudio/releases/download/v3.2.1/OpenStudio-3.2.1%2Bbdbdbc9da6-Ubuntu-20.04.deb'
-      os_installer_windows:
-        description: 'Windows (.exe) URL'
+        default: 'bdbdbc9da6'
+      os_prerelease_tag:
+        description: 'Pre-release tag (e.g. -alpha, -rc1)'
         required: true
-        default: 'https://github.com/NREL/OpenStudio/releases/download/v3.2.1/OpenStudio-3.2.1%2Bbdbdbc9da6-Windows.exe'
-      os_installer_osx:
-        description: 'Mac OSX (.dmg) URL'
-        required: true
-        default: 'https://github.com/NREL/OpenStudio/releases/download/v3.2.1/OpenStudio-3.2.1%2Bbdbdbc9da6-Darwin.dmg'
+        default: ''
+      os_build_sha:
+         description: 'OpenStudio Build sha (first 10 chars)'
+         required: true
+         default: 'bdbdbc9da6'
 
 jobs:
   installer_ubuntu_1804:
@@ -37,9 +37,10 @@ jobs:
       shell: bash
       run: |
         set -x
-        echo "Installer link: ${{ github.event.inputs.os_installer_ubuntu_1804 }}"
+        installer_url="${{ github.event.inputs.base_url}}OpenStudio-${{ github.event.inputs.os_version}}${{ github.event.inputs.os_prerelease_tag}}%2B${{ github.event.inputs.os_build_sha}}-Ubuntu-18.04.deb"
+        echo "Installer link: $installer_url"
         sudo apt update
-        wget '${{ github.event.inputs.os_installer_ubuntu_1804 }}'
+        wget $installer_url
         sudo apt install -y ./OpenStudio*.deb
         openstudio openstudio_version
 
@@ -113,9 +114,10 @@ jobs:
       shell: bash
       run: |
         set -x
-        echo "Installer link: ${{ github.event.inputs.os_installer_ubuntu_2004 }}"
+        installer_url="${{ github.event.inputs.base_url}}OpenStudio-${{ github.event.inputs.os_version}}${{ github.event.inputs.os_prerelease_tag}}%2B${{ github.event.inputs.os_build_sha}}-Ubuntu-20.04.deb"
+        echo "Installer link: $installer_url"
         sudo apt update
-        wget '${{ github.event.inputs.os_installer_ubuntu_2004 }}'
+        wget $installer_url
         sudo apt install -y ./OpenStudio*.deb
         openstudio openstudio_version
 
@@ -189,8 +191,9 @@ jobs:
       shell: bash
       run: |
         set -x
-        echo "Installer link: ${{ github.event.inputs.os_installer_windows }}"
-        curl -SLO '${{ github.event.inputs.os_installer_windows }}'
+        installer_url="${{ github.event.inputs.base_url}}/OpenStudio-${{ github.event.inputs.os_version}}${{ github.event.inputs.os_prerelease_tag}}%2B${{ github.event.inputs.os_build_sha}}-Windows.exe"
+        echo "Installer link: $installer_url"
+        curl -SLO  $installer_url
         OS_NAME=$(ls *.exe)
         # script installs to /c/openstudio
         sed -i -e "s|REPLACEME|c:\\\\\\\\openstudio|" ci/install-openstudio.qs
@@ -265,8 +268,10 @@ jobs:
       shell: bash
       run: |
         set -x
+        installer_url="${{ github.event.inputs.base_url}}OpenStudio-${{ github.event.inputs.os_version}}${{ github.event.inputs.os_prerelease_tag}}%2B${{ github.event.inputs.os_build_sha}}-Ubuntu-20.04.deb"
+        echo "Installer link: $installer_url"
         echo "Installer link: ${{ github.event.inputs.os_installer_osx }}"
-        wget '${{ github.event.inputs.os_installer_osx }}'
+        wget $installer_url
         OS_NAME=$(ls *.dmg)
         OS_NAME_NO_EXT=$(basename $OS_NAME .dmg)
         sed -i -e "s|REPLACEME|$HOME/openstudio|" ci/install-openstudio.qs
