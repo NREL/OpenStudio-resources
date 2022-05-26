@@ -41,7 +41,7 @@ external_file = OpenStudio::Model::ExternalFile.getExternalFile(model, file_name
 external_file = external_file.get
 
 # create the python plugin instance object
-python_plugin_instance = OpenStudio::Model::PythonPluginInstance.new(external_file, "ZN_1_wall_south_Window_1_Control")
+python_plugin_instance = OpenStudio::Model::PythonPluginInstance.new(external_file, 'ZN_1_wall_south_Window_1_Control')
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd, 'osm_name' => 'in.osm' })
