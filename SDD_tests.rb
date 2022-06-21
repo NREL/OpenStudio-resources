@@ -661,6 +661,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('surface_properties.osm')
   end
 
+  def test_FT_surface_properties_lwr
+    sdd_ft_test('surface_properties_lwr.osm')
+  end
+
   def test_FT_surfacecontrol_moveableinsulation
     sdd_ft_test('surfacecontrol_moveableinsulation.osm')
   end
@@ -735,6 +739,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_water_heaters
     sdd_ft_test('water_heaters.osm')
+  end
+
+  def test_FT_window_property_frame_and_divider
+    sdd_ft_test('window_property_frame_and_divider.osm')
   end
 
   def test_FT_zone_air_movement
