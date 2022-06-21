@@ -1032,10 +1032,9 @@ class ModelTests < Minitest::Test
     result = sim_test('surface_properties_lwr.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.3.0
-  # def test_surface_properties_lwr_osm
-  #   result = sim_test('surface_properties_lwr.osm')
-  # end
+  def test_surface_properties_lwr_osm
+    result = sim_test('surface_properties_lwr.osm')
+  end
 
   def test_swimmingpool_indoor_rb
     result = sim_test('swimmingpool_indoor.rb')
