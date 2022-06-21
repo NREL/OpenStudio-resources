@@ -1032,10 +1032,9 @@ class ModelTests < Minitest::Test
     result = sim_test('surface_properties_lwr.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.3.0
-  # def test_surface_properties_lwr_osm
-  #   result = sim_test('surface_properties_lwr.osm')
-  # end
+  def test_surface_properties_lwr_osm
+    result = sim_test('surface_properties_lwr.osm')
+  end
 
   def test_swimmingpool_indoor_rb
     result = sim_test('swimmingpool_indoor.rb')
@@ -1185,10 +1184,9 @@ class ModelTests < Minitest::Test
     result = sim_test('window_property_frame_and_divider.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.3.0
-  # def test_window_property_frame_and_divider_osm
-  # result = sim_test('window_property_frame_and_divider.osm')
-  # end
+  def test_window_property_frame_and_divider_osm
+    result = sim_test('window_property_frame_and_divider.osm')
+  end
 
   def test_zone_air_movement_rb
     result = sim_test('zone_air_movement.rb')
