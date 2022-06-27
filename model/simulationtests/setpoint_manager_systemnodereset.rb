@@ -65,6 +65,8 @@ a_hum_spm.setLowReferenceHumidityRatio(0.00850)
 a_hum_spm.setHighReferenceHumidityRatio(0.01000)
 a_hum_spm.setReferenceNode(a.supplyInletNode)
 a_hum_spm.addToNode(cc.airOutletModelObject.get.to_Node.get)
+# Also need to switch the controller water coil to enable dehumidification
+cc.controllerWaterCoil.get.setControlVariable("TemperatureAndHumidityRatio")
 
 # You're better off using a SetpointManagerOutdoorAirReset for this specific
 # application FYI, but this is a demonstration
