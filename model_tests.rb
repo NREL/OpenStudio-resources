@@ -944,6 +944,15 @@ class ModelTests < Minitest::Test
     result = sim_test('setpoint_managers.osm')
   end
 
+  def test_setpoint_manager_systemnodereset_rb
+    result = sim_test('setpoint_manager_systemnodereset.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.4.0
+  # def test_setpoint_manager_systemnodereset_osm
+  #   result = sim_test('setpoint_manager_systemnodereset.osm')
+  # end
+
   def test_shadingcontrol_singlezone_rb
     result = sim_test('shadingcontrol_singlezone.rb')
   end
