@@ -847,6 +847,8 @@ def success_sheet(df_files, model_test_cases=None, add_missing=True):
         success.loc[(success['osm'] == 'N/A')
                     & (success['rb'] == ''), 'rb'] = 'N/A'
         success = success.unstack('Test').swaplevel(axis=1).T
+        # This messed up the order, 22.1.0 is now before 8.6.0
+        success = success.loc[:, df_files.columns]
 
     # Create n_fail and order by that
     n_fail = (success == 'Fail').sum(axis=1)
