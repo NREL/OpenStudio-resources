@@ -37,21 +37,66 @@ model.set_space_type
 # add design days to the model (Chicago)
 model.add_design_days
 
-# assign material property moisture penetration depth settings to walls
+# adjust material that throws because of heat_balance_algorithm.setAlgorithm('ConductionFiniteDifference')
+model.getMaterials.each do |material|
+  if material.name.to_s.include?('Metal Decking')
+    # ** Severe  ** InitialInitHeatBalFiniteDiff: Found Material that is too thin and/or too highly conductive, material name = METAL DECKING
+    # **   ~~~   ** High conductivity Material layers are not well supported by Conduction Finite Difference, material conductivity = 45.006 [W/m-K]
+    # **   ~~~   ** Material thermal diffusivity = 1.401E-005 [m2/s]
+    # **   ~~~   ** Material with this thermal diffusivity should have thickness > 8.69672E-002 [m]
+    # **   ~~~   ** Material may be too thin to be modeled well, thickness = 1.50000E-003 [m]
+    # **   ~~~   ** Material with this thermal diffusivity should have thickness > 3.00000E-003 [m]
+    material.setThickness(0.09)
+  end
+end
+
+# assign material property phase change properties
 model.getSurfaces.each do |surface|
-  next unless surface.surfaceType.downcase == 'wall'
+  if surface.surfaceType.downcase == 'wall'
 
-  surface.construction.get.to_Construction.get.layers.each do |layer|
-    next unless layer.to_StandardOpaqueMaterial.is_initialized
+    surface.construction.get.to_Construction.get.layers.each do |layer|
+      next unless layer.to_StandardOpaqueMaterial.is_initialized
 
-    phase_change = layer.createMaterialPropertyPhaseChange
-    if phase_change.is_initialized
-      phase_change.get.setTemperatureCoefficientforThermalConductivity(15)
-      phase_change.get.addTemperatureEnthalpy(-20, 0.01)
-      phase_change.get.addTemperatureEnthalpy(20, 33400)
-      phase_change.get.addTemperatureEnthalpy(20.5, 70000)
-      phase_change.get.addTemperatureEnthalpy(100, 137000)
+      opt_phase_change = layer.createMaterialPropertyPhaseChange
+      if opt_phase_change.is_initialized
+
+        # These from CondFD1ZonePurchAirAutoSizeWithPCM.idf for E1 - 3 / 4 IN PLASTER OR GYP BOARD.
+        phase_change = opt_phase_change.get
+        phase_change.setTemperatureCoefficientforThermalConductivity(0)
+        phase_change.removeAllTemperatureEnthalpys
+        phase_change.addTemperatureEnthalpy(-20, 0.01)
+        phase_change.addTemperatureEnthalpy(22, 18260)
+        phase_change.addTemperatureEnthalpy(22.1, 32000)
+        phase_change.addTemperatureEnthalpy(60, 71000)
+      end
     end
+
+  elsif surface.surfaceType.downcase == 'floor'
+
+    surface.construction.get.to_Construction.get.layers.each do |layer|
+      next unless layer.to_StandardOpaqueMaterial.is_initialized
+
+      opt_phase_change_hysteresis = layer.createMaterialPropertyPhaseChangeHysteresis
+      if opt_phase_change_hysteresis.is_initialized
+
+        # These from 1ZoneUncontrolledWithHysteresisPCM.idf for C5 - 4 IN HW CONCRETE.
+        phase_change_hysteresis = opt_phase_change_hysteresis.get
+        phase_change_hysteresis.setLatentHeatduringtheEntirePhaseChangeProcess(10000)
+        phase_change_hysteresis.setLiquidStateThermalConductivity(1.5)
+        phase_change_hysteresis.setLiquidStateDensity(2200)
+        phase_change_hysteresis.setLiquidStateSpecificHeat(2000)
+        phase_change_hysteresis.setHighTemperatureDifferenceofMeltingCurve(1)
+        phase_change_hysteresis.setPeakMeltingTemperature(23)
+        phase_change_hysteresis.setLowTemperatureDifferenceofMeltingCurve(1)
+        phase_change_hysteresis.setSolidStateThermalConductivity(1.8)
+        phase_change_hysteresis.setSolidStateDensity(2300)
+        phase_change_hysteresis.setSolidStateSpecificHeat(2000)
+        phase_change_hysteresis.setHighTemperatureDifferenceofFreezingCurve(1)
+        phase_change_hysteresis.setPeakFreezingTemperature(20)
+        phase_change_hysteresis.setLowTemperatureDifferenceofFreezingCurve(1)
+      end
+    end
+
   end
 end
 
