@@ -42,12 +42,12 @@ model.add_hvac({ 'ashrae_sys_num' => '07' })
 boilers = model.getBoilerHotWaters.sort_by { |c| c.name.to_s }
 heating_loop = boilers.first.plantLoop.get
 heating_loop.setName('HW Loop')
-cc = model.getCoilCoolingWaters.sort_by { |c| c.name.to_s }.first
+cc = model.getCoilCoolingWaters.min_by { |c| c.name.to_s }
 
 a = cc.airLoopHVAC.get
 a_temp_spm = OpenStudio::Model::SetpointManagerSystemNodeResetTemperature.new(model)
-a_temp_spm.setName("Supply Air Temp Setpoint Manager")
-a_temp_spm.setControlVariable("Temperature")
+a_temp_spm.setName('Supply Air Temp Setpoint Manager')
+a_temp_spm.setControlVariable('Temperature')
 a_temp_spm.setSetpointatLowReferenceTemperature(16.7)
 a_temp_spm.setSetpointatHighReferenceTemperature(12.8)
 a_temp_spm.setLowReferenceTemperature(20.0)
@@ -57,8 +57,8 @@ a_temp_spm.addToNode(a.supplyOutletNode)
 
 # This is only allowed on an AirLoopHVAC, not a PlantLoop
 a_hum_spm = OpenStudio::Model::SetpointManagerSystemNodeResetHumidity.new(model)
-a_hum_spm.setName("Dehumidification Setpoint Manager")
-a_hum_spm.setControlVariable("MaximumHumidityRatio")
+a_hum_spm.setName('Dehumidification Setpoint Manager')
+a_hum_spm.setControlVariable('MaximumHumidityRatio')
 a_hum_spm.setSetpointatLowReferenceHumidityRatio(0.00924)
 a_hum_spm.setSetpointatHighReferenceHumidityRatio(0.00600)
 a_hum_spm.setLowReferenceHumidityRatio(0.00850)
@@ -66,13 +66,13 @@ a_hum_spm.setHighReferenceHumidityRatio(0.01000)
 a_hum_spm.setReferenceNode(a.supplyInletNode)
 a_hum_spm.addToNode(cc.airOutletModelObject.get.to_Node.get)
 # Also need to switch the controller water coil to enable dehumidification
-cc.controllerWaterCoil.get.setControlVariable("TemperatureAndHumidityRatio")
+cc.controllerWaterCoil.get.setControlVariable('TemperatureAndHumidityRatio')
 
 # You're better off using a SetpointManagerOutdoorAirReset for this specific
 # application FYI, but this is a demonstration
 p_temp_spm = OpenStudio::Model::SetpointManagerSystemNodeResetTemperature.new(model)
-p_temp_spm.setName("Hot Water Loop Setpoint Manager")
-p_temp_spm.setControlVariable("Temperature")
+p_temp_spm.setName('Hot Water Loop Setpoint Manager')
+p_temp_spm.setControlVariable('Temperature')
 p_temp_spm.setSetpointatLowReferenceTemperature(80.0)
 p_temp_spm.setSetpointatHighReferenceTemperature(65.6)
 p_temp_spm.setLowReferenceTemperature(-6.7)
