@@ -22,16 +22,14 @@ model.set_space_type
 # add design days to the model (Chicago)
 model.add_design_days
 
-zone_names = model.getThermalZones.map{|z| z.nameString}.sort
+zone_names = model.getThermalZones.map(&:nameString).sort
 
 zone_names_str_list = '["' + zone_names.join('", "') + '"]'
-
 
 # Add a PythonPlugin:Variable (all OS SDK PythonPluginVariable objects are
 # translated to a single E+ PythonPlugin:Variables (extensible object))
 py_var = OpenStudio::Model::PythonPluginVariable.new(model)
 py_var.setName('AverageBuildingTemp')
-
 
 # Add a PythonPlugin:OutputVariable for that variable
 py_out_var = OpenStudio::Model::PythonPluginOutputVariable.new(py_var)
@@ -43,8 +41,7 @@ py_out_var.setUnits('C')
 outputVariable = OpenStudio::Model::OutputVariable.new('Zone Mean Air Temperature', model)
 outputVariable.setReportingFrequency('Timestep')
 
-
-python_plugin_file_content = """from pyenergyplus.plugin import EnergyPlusPlugin
+python_plugin_file_content = ''"from pyenergyplus.plugin import EnergyPlusPlugin
 
 class AverageZoneTemps(EnergyPlusPlugin):
 
@@ -77,7 +74,7 @@ class AverageZoneTemps(EnergyPlusPlugin):
         average_temp = numerator / denominator
         self.api.exchange.set_global_value(state, self.data['avg_temp_variable'], average_temp)
         return 0
-"""
+"''
 
 pluginPath = File.join(File.dirname(__FILE__), 'python_plugin_program.py')
 File.write(pluginPath, python_plugin_file_content)
