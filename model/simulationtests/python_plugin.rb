@@ -2,6 +2,7 @@
 
 require 'openstudio'
 require_relative 'lib/baseline_model'
+require 'tmpdir'
 
 model = BaselineModel.new
 
@@ -33,17 +34,25 @@ py_var.setName('AverageBuildingTemp')
 
 # Add a PythonPlugin:OutputVariable for that variable
 py_out_var = OpenStudio::Model::PythonPluginOutputVariable.new(py_var)
+py_out_var.setName('Averaged Building Temperature')
 py_out_var.setTypeofDatainVariable('Averaged')
 py_out_var.setUpdateFrequency('ZoneTimestep')
 py_out_var.setUnits('C')
 
-# Add output variables for Zone Mean Air Temperature
+# Add a regular Output:Variable that references it
+out_var = OpenStudio::Model::OutputVariable.new('PythonPlugin:OutputVariable', model)
+out_var.setKeyValue(py_out_var.nameString)
+out_var.setReportingFrequency('Timestep')
+
+# Add output variables for Zone Mean Air Temperature, so we can compare
 outputVariable = OpenStudio::Model::OutputVariable.new('Zone Mean Air Temperature', model)
 outputVariable.setReportingFrequency('Timestep')
 
+pluginClassName = 'AverageZoneTemps'
+
 python_plugin_file_content = ''"from pyenergyplus.plugin import EnergyPlusPlugin
 
-class AverageZoneTemps(EnergyPlusPlugin):
+class #{pluginClassName}(EnergyPlusPlugin):
 
     def __init__(self):
         super().__init__()
@@ -76,7 +85,9 @@ class AverageZoneTemps(EnergyPlusPlugin):
         return 0
 "''
 
-pluginPath = File.join(File.dirname(__FILE__), 'python_plugin_program.py')
+# Write it to a temporary directory so we don't pollute the current directory
+# ExternalFile will copy it
+pluginPath = File.join(Dir.tmpdir, 'python_plugin_program.py')
 File.write(pluginPath, python_plugin_file_content)
 
 # create the external file object
@@ -84,7 +95,7 @@ external_file = OpenStudio::Model::ExternalFile.getExternalFile(model, pluginPat
 external_file = external_file.get
 
 # create the python plugin instance object
-python_plugin_instance = OpenStudio::Model::PythonPluginInstance.new(external_file, 'AverageZoneTemps')
+python_plugin_instance = OpenStudio::Model::PythonPluginInstance.new(external_file, pluginClassName)
 python_plugin_instance.setRunDuringWarmupDays(false)
 
 # save the OpenStudio model (.osm)
