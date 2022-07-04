@@ -48,6 +48,25 @@ out_var.setReportingFrequency('Timestep')
 outputVariable = OpenStudio::Model::OutputVariable.new('Zone Mean Air Temperature', model)
 outputVariable.setReportingFrequency('Timestep')
 
+# Trend Variable: while this is a fully functioning object, you're probably
+# best just using a storage variable on the Python side (eg: a list)
+py_trend_var = OpenStudio::Model::PythonPluginTrendVariable.new(py_var)
+py_trend_var.setName('Running Averaged Building Temperature')
+n_timesteps = 24 * model.getTimestep.numberOfTimestepsPerHour
+py_trend_var.setNumberofTimestepstobeLogged(n_timesteps)
+
+py_var2 = OpenStudio::Model::PythonPluginVariable.new(model)
+py_var2.setName('RunningAverageBuildingTemp')
+
+py_out_trend_var = OpenStudio::Model::PythonPluginOutputVariable.new(py_var2)
+py_out_trend_var.setName('Running Averaged Building Temperature')
+py_out_trend_var.setTypeofDatainVariable('Averaged')
+py_out_trend_var.setUpdateFrequency('ZoneTimestep')
+py_out_trend_var.setUnits('C')
+
+out_trend_var = OpenStudio::Model::OutputVariable.new('PythonPlugin:OutputVariable', model)
+out_trend_var.setReportingFrequency('Timestep')
+
 pluginClassName = 'AverageZoneTemps'
 
 python_plugin_file_content = ''"from pyenergyplus.plugin import EnergyPlusPlugin
@@ -71,6 +90,8 @@ class #{pluginClassName}(EnergyPlusPlugin):
                     self.api.exchange.get_variable_handle(state, 'Zone Mean Air Temperature', zone_name)
                 )
             self.data['avg_temp_variable'] = self.api.exchange.get_global_handle(state, '#{py_var.nameString}')
+            self.data['trend'] = self.api.exchange.get_trend_handle(state, '#{py_trend_var.nameString}')
+            self.data['running_avg_temp_variable'] = self.api.exchange.get_global_handle(state, '#{py_var2.nameString}')
             self.do_setup = False
         zone_temps = list()
         for t_handle in self.data['zone_temps']:
@@ -82,6 +103,9 @@ class #{pluginClassName}(EnergyPlusPlugin):
             denominator += self.data['zone_volumes'][i]
         average_temp = numerator / denominator
         self.api.exchange.set_global_value(state, self.data['avg_temp_variable'], average_temp)
+
+        past_daily_avg_temp = self.api.exchange.get_trend_average(state, self.data['trend'], #{n_timesteps})
+        self.api.exchange.set_global_value(state, self.data['running_avg_temp_variable'], past_daily_avg_temp)
         return 0
 "''
 
