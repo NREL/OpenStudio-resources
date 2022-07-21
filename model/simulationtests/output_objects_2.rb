@@ -49,16 +49,16 @@ z.setUseIdealAirLoads(true)
 ###############################################################################
 
 outputcontrol_table_style = model.getOutputControlTableStyle
-outputcontrol_table_style.setColumnSeparator("HTML")
-outputcontrol_table_style.setUnitConversion("InchPound")
+outputcontrol_table_style.setColumnSeparator('HTML')
+outputcontrol_table_style.setUnitConversion('InchPound')
 
 ###############################################################################
 #                                 OUTPUT:SQLITE                               #
 ###############################################################################
 
 output_sqlite = model.getOutputSQLite
-output_sqlite.setOptionType("SimpleAndTabular")
-output_sqlite.setUnitConversionforTabularData("None")
+output_sqlite.setOptionType('SimpleAndTabular')
+output_sqlite.setUnitConversionforTabularData('None')
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
