@@ -2,8 +2,8 @@
 
 # This test aims to test the new **Unique** ModelObjects related to Output
 # added in 3.5.0:
-# * OutputControlTableStyle,
-# * OutputSQLite,
+# * OutputControlTableStyle
+# * OutputSQLite
 
 require 'openstudio'
 require_relative 'lib/baseline_model'
