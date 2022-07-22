@@ -8,21 +8,18 @@ model = BaselineModel.new
 heat_balance_algorithm = model.getHeatBalanceAlgorithm
 heat_balance_algorithm.setAlgorithm('ConductionFiniteDifference')
 
-# make a 1 story, 100m X 50m, 5 zone core/perimeter building
+# make a 1 story, 100m X 50m, 1 zone building
 model.add_geometry({ 'length' => 100,
                      'width' => 50,
                      'num_floors' => 1,
                      'floor_to_floor_height' => 4,
-                     'plenum_height' => 1,
-                     'perimeter_zone_depth' => 3 })
+                     'plenum_height' => 0,
+                     'perimeter_zone_depth' => 0 })
 
 # add windows at a 40% window-to-wall ratio
 model.add_windows({ 'wwr' => 0.4,
                     'offset' => 1,
                     'application_type' => 'Above Floor' })
-
-# add ASHRAE System type 01, PTAC, Residential
-model.add_hvac({ 'ashrae_sys_num' => '01' })
 
 # add thermostats
 model.add_thermostats({ 'heating_setpoint' => 24,
@@ -36,6 +33,14 @@ model.set_space_type
 
 # add design days to the model (Chicago)
 model.add_design_days
+
+# In order to produce more consistent results between different runs,
+# we sort the zones by names
+# (There's only one here, but just in case this would be copy pasted somewhere
+# else...)
+zones = model.getThermalZones.sort_by { |z| z.name.to_s }
+z = zones[0]
+z.setUseIdealAirLoads(true)
 
 # adjust material that throws because of heat_balance_algorithm.setAlgorithm('ConductionFiniteDifference')
 model.getMaterials.each do |material|
