@@ -62,7 +62,7 @@ model.getSurfaces.each do |surface|
     surface.construction.get.to_Construction.get.layers.each do |layer|
       next unless layer.to_StandardOpaqueMaterial.is_initialized
 
-      opt_phase_change = layer.createMaterialPropertyPhaseChange
+      opt_phase_change = layer.to_StandardOpaqueMaterial.get.createMaterialPropertyPhaseChange
       if opt_phase_change.is_initialized
 
         # These from CondFD1ZonePurchAirAutoSizeWithPCM.idf for E1 - 3 / 4 IN PLASTER OR GYP BOARD.
@@ -81,7 +81,7 @@ model.getSurfaces.each do |surface|
     surface.construction.get.to_Construction.get.layers.each do |layer|
       next unless layer.to_StandardOpaqueMaterial.is_initialized
 
-      opt_phase_change_hysteresis = layer.createMaterialPropertyPhaseChangeHysteresis
+      opt_phase_change_hysteresis = layer.to_StandardOpaqueMaterial.get.createMaterialPropertyPhaseChangeHysteresis
       if opt_phase_change_hysteresis.is_initialized
 
         # These from 1ZoneUncontrolledWithHysteresisPCM.idf for C5 - 4 IN HW CONCRETE.
