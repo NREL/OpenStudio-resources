@@ -33,6 +33,7 @@ def create_refrigeration_test(model, zone, defrost_sch)
   # create a refrigeration system with a case and compressor
   ref_sys1 = OpenStudio::Model::RefrigerationSystem.new(model)
   ref_sys1.addCase(add_case(model, zone, defrost_sch))
+  ref_sys1.addCase(add_case(model, zone, defrost_sch))
   ref_sys1.addCompressor(OpenStudio::Model::RefrigerationCompressor.new(model))
 
   # create aircooled refrigeration condenser
