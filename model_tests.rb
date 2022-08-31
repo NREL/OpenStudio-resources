@@ -768,6 +768,15 @@ class ModelTests < Minitest::Test
     result = sim_test('output_objects.osm')
   end
 
+  def test_output_objects_2_rb
+    result = sim_test('output_objects_2.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.4.0
+  # def test_output_objects_2_osm
+  # result = sim_test('output_objects_2.osm')
+  # end
+
   def test_performanceprecisiontradeoffs_rb
     result = sim_test('performanceprecisiontradeoffs.rb')
   end
@@ -886,7 +895,7 @@ class ModelTests < Minitest::Test
     result = sim_test('refrigeration_system_2.rb')
   end
 
-  def test_refrigeration_system__2_osm
+  def test_refrigeration_system_2_osm
     result = sim_test('refrigeration_system_2.osm')
   end
 
