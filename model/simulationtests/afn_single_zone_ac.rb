@@ -196,7 +196,11 @@ def addSimpleSystemAFN(model)
   # set the default parameters correctly for a constant volume system with no VAV terminals
   sizingSystem.setTypeofLoadtoSizeOn('Sensible')
   sizingSystem.autosizeDesignOutdoorAirFlowRate
-  sizingSystem.setCentralHeatingMaximumSystemAirFlowRatio(1.0)
+  if Gem::Version.new(OpenStudio.openStudioVersion) >= Gem::Version.new('3.3.0')
+    sizingSystem.setCentralHeatingMaximumSystemAirFlowRatio(1.0)
+  else
+    sizingSystem.setMinimumSystemAirFlowRatio(1.0)
+  end
   sizingSystem.setPreheatDesignTemperature(7.0)
   sizingSystem.setPreheatDesignHumidityRatio(0.008)
   sizingSystem.setPrecoolDesignTemperature(12.8)
