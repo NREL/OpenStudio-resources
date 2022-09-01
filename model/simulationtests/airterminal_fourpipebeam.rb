@@ -61,6 +61,7 @@ if Gem::Version.new(OpenStudio.openStudioVersion) > Gem::Version.new('3.4.0')
   coolCapModFuncOfWaterFlow.setOutputValues({0.0, 0.001, 0.71, 0.85, 0.92, 0.97, 1.0, 1.04})
 
   coolCapModFuncOfWaterFlowVar1 = OpenStudio::Model::TableIndependentVariable.new(m)
+  coolCapModFuncOfWaterFlow.addIndependentVariable(coolCapModFuncOfWaterFlowVar1)
   coolCapModFuncOfWaterFlowVar1.setName("CoolCapModFuncOfWaterFlow_IndependentVariable1")
   coolCapModFuncOfWaterFlowVar1.setInterpolationMethod("Cubic")
   coolCapModFuncOfWaterFlowVar1.setExtrapolationMethod("Constant")
