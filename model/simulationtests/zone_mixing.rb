@@ -74,7 +74,10 @@ end
 # conserve some mass
 zamfc = model.getZoneAirMassFlowConservation
 zamfc.setAdjustZoneMixingForZoneAirMassFlowBalance(true)
-zamfc.setSourceZoneInfiltrationTreatment('AdjustInfiltrationFlow')
+if Gem::Version.new(OpenStudio.openStudioVersion) <= Gem::Version.new('3.4.0')
+  # Does nothing as of 1.9.3, removed after 3.4.0
+  zamfc.setSourceZoneInfiltrationTreatment('AdjustInfiltrationFlow')
+end
 
 # add design days to the model (Chicago)
 model.add_design_days
