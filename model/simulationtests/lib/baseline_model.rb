@@ -453,10 +453,14 @@ class BaselineModel < OpenStudio::Model::Model
     building.setDefaultConstructionSet(default_construction_set)
 
     # get the air wall
-    construction_library.getConstructions.each do |c|
-      if c.name.to_s.strip == 'Air_Wall'
-        c.clone(self)
-        break
+    if Gem::Version.new(OpenStudio.openStudioVersion) > Gem::Version.new('3.4.0')
+      construction_library.getConstructionAirBoundarys.first.clone(self)
+    else
+      construction_library.getConstructions.each do |c|
+        if c.name.to_s.strip == 'Air_Wall'
+          c.clone(self)
+          break
+        end
       end
     end
   end
