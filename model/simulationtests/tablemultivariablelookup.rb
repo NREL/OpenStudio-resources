@@ -57,25 +57,25 @@ norm_ref = 2.4
 if Gem::Version.new(OpenStudio.openStudioVersion) > Gem::Version.new('3.4.0')
   coolCapModFuncOfWaterFlow = OpenStudio::Model::TableLookup.new(m)
 
-  coolCapModFuncOfWaterFlow.setName("CoolCapModFuncOfWaterFlow")
-  coolCapModFuncOfWaterFlow.setOutputUnitType("Dimensionless")
+  coolCapModFuncOfWaterFlow.setName('CoolCapModFuncOfWaterFlow')
+  coolCapModFuncOfWaterFlow.setOutputUnitType('Dimensionless')
 
   coolCapModFuncOfWaterFlow.setMinimumOutput(0.0 * norm_ref)
   coolCapModFuncOfWaterFlow.setMaximumOutput(1.04 * norm_ref)
 
-  coolCapModFuncOfWaterFlow.setNormalizationMethod("DivisorOnly")
+  coolCapModFuncOfWaterFlow.setNormalizationMethod('DivisorOnly')
   coolCapModFuncOfWaterFlow.setNormalizationDivisor(norm_ref)
-  values = [0.0, 0.001, 0.71, 0.85, 0.92, 0.97, 1.0, 1.04].map{|v| v * norm_ref}
+  values = [0.0, 0.001, 0.71, 0.85, 0.92, 0.97, 1.0, 1.04].map { |v| v * norm_ref }
   coolCapModFuncOfWaterFlow.setOutputValues(values)
 
   coolCapModFuncOfWaterFlowVar1 = OpenStudio::Model::TableIndependentVariable.new(m)
   coolCapModFuncOfWaterFlow.addIndependentVariable(coolCapModFuncOfWaterFlowVar1)
-  coolCapModFuncOfWaterFlowVar1.setName("CoolCapModFuncOfWaterFlow_IndependentVariable1")
-  coolCapModFuncOfWaterFlowVar1.setInterpolationMethod("Cubic")
-  coolCapModFuncOfWaterFlowVar1.setExtrapolationMethod("Constant")
+  coolCapModFuncOfWaterFlowVar1.setName('CoolCapModFuncOfWaterFlow_IndependentVariable1')
+  coolCapModFuncOfWaterFlowVar1.setInterpolationMethod('Cubic')
+  coolCapModFuncOfWaterFlowVar1.setExtrapolationMethod('Constant')
   coolCapModFuncOfWaterFlowVar1.setMinimumValue(0.0)
   coolCapModFuncOfWaterFlowVar1.setMaximumValue(1.33)
-  coolCapModFuncOfWaterFlowVar1.setUnitType("Dimensionless")
+  coolCapModFuncOfWaterFlowVar1.setUnitType('Dimensionless')
   coolCapModFuncOfWaterFlowVar1.setValues([0.0, 0.05, 0.33333, 0.5, 0.666667, 0.833333, 1.0, 1.333333])
 else
   coolCapModFuncOfWaterFlow = OpenStudio::Model::TableMultiVariableLookup.new(m, 1)
