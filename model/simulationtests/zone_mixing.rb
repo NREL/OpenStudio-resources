@@ -43,7 +43,7 @@ else
     end
   end
 end
-raise "Could not find an AirWall / ConstructionAirBoundary construction" if air_wall.nil?
+raise 'Could not find an AirWall / ConstructionAirBoundary construction' if air_wall.nil?
 
 model.getBuilding.defaultConstructionSet.get.defaultInteriorSurfaceConstructions.get.setWallConstruction(air_wall)
 
