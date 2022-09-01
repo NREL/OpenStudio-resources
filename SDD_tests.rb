@@ -213,6 +213,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('airterminal_fourpipebeam.osm')
   end
 
+  def test_FT_airterminal_inletsidemixer
+    sdd_ft_test('airterminal_inletsidemixer.osm')
+  end
+
   def test_FT_asymmetric_interior_constructions
     sdd_ft_test('asymmetric_interior_constructions.osm')
   end
@@ -281,6 +285,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('coilsystem_dxhx.osm')
   end
 
+  def test_FT_coilsystem_dxhx_desiccant_balancedflow
+    sdd_ft_test('coilsystem_dxhx_desiccant_balancedflow.osm')
+  end
+
   def test_FT_coilsystem_integrated_heatpump
     sdd_ft_test('coilsystem_integrated_heatpump.osm')
   end
@@ -309,6 +317,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('daylighting_shades.osm')
   end
 
+  def test_FT_design_day
+    sdd_ft_test('design_day.osm')
+  end
+
   def test_FT_dist_ht_cl
     sdd_ft_test('dist_ht_cl.osm')
   end
@@ -323,6 +335,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_doas_heatexchanger_airtoair_sensibleandlatent
     sdd_ft_test('doas_heatexchanger_airtoair_sensibleandlatent.osm')
+  end
+
+  def test_FT_daylighting_devices
+    sdd_ft_test('daylighting_devices.osm')
   end
 
   def test_FT_dsn_oa_w_ideal_loads
@@ -417,8 +433,16 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('heatexchanger_airtoair_sensibleandlatent.osm')
   end
 
+  def test_FT_heatexchanger_desiccant_balancedflow
+    sdd_ft_test('heatexchanger_desiccant_balancedflow.osm')
+  end
+
   def test_FT_heatpump_hot_water
     sdd_ft_test('heatpump_hot_water.osm')
+  end
+
+  def test_FT_heatpump_plantloop_eir
+    sdd_ft_test('heatpump_plantloop_eir.osm')
   end
 
   def test_FT_heatpump_varspeed
@@ -637,6 +661,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('surface_properties.osm')
   end
 
+  def test_FT_surface_properties_lwr
+    sdd_ft_test('surface_properties_lwr.osm')
+  end
+
   def test_FT_surfacecontrol_moveableinsulation
     sdd_ft_test('surfacecontrol_moveableinsulation.osm')
   end
@@ -655,6 +683,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_transformer
     sdd_ft_test('transformer.osm')
+  end
+
+  def test_FT_unitary_vav_bypass_coiltypes
+    sdd_ft_test('unitary_vav_bypass_coiltypes.osm')
   end
 
   def test_FT_unitary_system
@@ -707,6 +739,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_water_heaters
     sdd_ft_test('water_heaters.osm')
+  end
+
+  def test_FT_window_property_frame_and_divider
+    sdd_ft_test('window_property_frame_and_divider.osm')
   end
 
   def test_FT_zone_air_movement

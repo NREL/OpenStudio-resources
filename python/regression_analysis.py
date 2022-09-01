@@ -847,6 +847,8 @@ def success_sheet(df_files, model_test_cases=None, add_missing=True):
         success.loc[(success['osm'] == 'N/A')
                     & (success['rb'] == ''), 'rb'] = 'N/A'
         success = success.unstack('Test').swaplevel(axis=1).T
+        # This messed up the order, 22.1.0 is now before 8.6.0
+        success = success.loc[:, df_files.columns]
 
     # Create n_fail and order by that
     n_fail = (success == 'Fail').sum(axis=1)
@@ -1145,6 +1147,7 @@ def heatmap_sitekbtu_pct_change_on_ax(toplot, ax, display_threshold,
     green_cmap = mpl.colors.ListedColormap('#f0f7d9')
 
     # Plot with colors, for those that are above the display_threshold
+    # Note: cells not shown where mask is True
     sns.heatmap(toplot.abs(), mask=toplot.abs() <= display_threshold,
                 ax=ax, cmap='YlOrRd',  # cmap='Reds', 'RdYlGn_r'
                 vmin=0, vmax=0.5,
