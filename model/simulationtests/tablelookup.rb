@@ -39,7 +39,7 @@ m.add_design_days
 ###############################################################################
 
 # There is only one, but to be safe, sort by name
-cc = m.getCoilCoolingDXSingleSpeeds.sort_by { |z| z.name.to_s }.first
+cc = m.getCoilCoolingDXSingleSpeeds.min_by { |z| z.name.to_s }
 
 # wet-bulb temperature of air entering coil
 tiwb = OpenStudio::Model::TableIndependentVariable.new(m)
