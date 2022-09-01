@@ -361,7 +361,7 @@ class BaselineModel < OpenStudio::Model::Model
           hvac = hvac.to_AirLoopHVAC.get
           hvac.addBranchForZone(zone)
           outlet_node = hvac.supplyOutletNode
-          setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get
+          setpoint_manager = outlet_node.setpointManagers.select { |spm| spm.to_SetpointManagerSingleZoneReheat.is_initialized }.first.to_SetpointManagerSingleZoneReheat.get
           # Set appropriate min/max temperatures (matches Zone Heat/Cool
           # sizing parameters)
           setpoint_manager.setMinimumSupplyAirTemperature(14)
@@ -375,7 +375,7 @@ class BaselineModel < OpenStudio::Model::Model
           hvac = hvac.to_AirLoopHVAC.get
           hvac.addBranchForZone(zone)
           outlet_node = hvac.supplyOutletNode
-          setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get
+          setpoint_manager = outlet_node.setpointManagers.select { |spm| spm.to_SetpointManagerSingleZoneReheat.is_initialized }.first.to_SetpointManagerSingleZoneReheat.get
           setpoint_manager.setControlZone(zone)
         end
       # 5: Packaged VAV w/ Reheat
@@ -413,7 +413,7 @@ class BaselineModel < OpenStudio::Model::Model
           hvac = hvac.to_AirLoopHVAC.get
           hvac.addBranchForZone(zone)
           outlet_node = hvac.supplyOutletNode
-          setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get
+          setpoint_manager = outlet_node.setpointManagers.select { |spm| spm.to_SetpointManagerSingleZoneReheat.is_initialized }.first.to_SetpointManagerSingleZoneReheat.get
           setpoint_manager.setControlZone(zone)
         end
       # 10: Warm air furnace, electric
@@ -423,7 +423,7 @@ class BaselineModel < OpenStudio::Model::Model
           hvac = hvac.to_AirLoopHVAC.get
           hvac.addBranchForZone(zone)
           outlet_node = hvac.supplyOutletNode
-          setpoint_manager = outlet_node.getSetpointManagerSingleZoneReheat.get
+          setpoint_manager = outlet_node.setpointManagers.select { |spm| spm.to_SetpointManagerSingleZoneReheat.is_initialized }.first.to_SetpointManagerSingleZoneReheat.get
           setpoint_manager.setControlZone(zone)
         end
       # if system number is not recognized
