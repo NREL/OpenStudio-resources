@@ -34,10 +34,6 @@ m.set_space_type
 # add design days to the model (Chicago)
 m.add_design_days
 
-###############################################################################
-#         R E P L A C E    A T Us    W/    F O U R    P I P E    B E A Ms
-###############################################################################
-
 # There is only one, but to be safe, sort by name
 cc = m.getCoilCoolingDXSingleSpeeds.min_by { |z| z.name.to_s }
 
