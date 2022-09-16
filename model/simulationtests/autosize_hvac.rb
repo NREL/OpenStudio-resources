@@ -828,7 +828,9 @@ zones.each_with_index do |zn, zone_index|
     fan = OpenStudio::Model::FanConstantVolume.new(model, s1)
     htg_coil = OpenStudio::Model::CoilHeatingGas.new(model, s1)
     clg_coil = new_evap_cooling_coil_dx_singlespeed(model)
-    OpenStudio::Model::ZoneHVACPackagedTerminalAirConditioner.new(model, s1, fan, htg_coil, clg_coil).addToThermalZone(zn)
+    ptac = OpenStudio::Model::ZoneHVACPackagedTerminalAirConditioner.new(model, s1, fan, htg_coil, clg_coil)
+    ptac.setSupplyAirFanOperatingModeSchedule(s1)
+    ptac.addToThermalZone(zn)
   when 7
     vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlow.new(model)
     # E+ now throws when the CoolingEIRLowPLR has a curve minimum value of x which
