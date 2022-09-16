@@ -1,0 +1,57 @@
+{
+  "completed_status": "Fail",
+  "current_step": 0,
+  "eplusout_err": [
+    "Program Version,EnergyPlus, Version 22.2.0-56f3a890b4, ",
+    "   ************* Beginning Zone Sizing Calculations",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 2\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 3\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 4\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 5\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 6\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Day:Interval=\"SCHEDULE DAY 7\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS OFF DISCRETE\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** ProcessScheduleInput: Schedule:Constant=\"ALWAYS ON CONTINUOUS\", Blank Schedule Type Limits Name input -- will not be validated.",
+    "   ** Warning ** CheckUsedConstructions: There are 6 nominally unused constructions in input.",
+    "   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;",
+    "   ** Warning ** GetSimpleAirModelInputs: ZoneInfiltration:DesignFlowRate=\"STORY 1 CORE SPACE BASELINE MODEL INFILTRATION\", Design Flow Rate Calculation Method specifies Flow Rate per Exterior Surface Area, but Exterior Surface Area = 0.  0 Infiltration will result.",
+    "   ** Warning ** Calculated design cooling load for zone=STORY 1 CORE THERMAL ZONE is zero.",
+    "   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.",
+    "   ** Severe  ** ZoneHVAC:PackagedTerminalAirConditioner = ZONE HVAC PACKAGED TERMINAL AIR CONDITIONER 8",
+    "   **   ~~~   ** Fan type must be Fan:OnOff or Fan:SystemModel when Supply Air Fan Operating Mode Schedule Name is blank.",
+    "   **  Fatal  ** getUnitarySystemInputData: previous errors cause termination. Check inputs",
+    "   ...Summary of Errors that led to program termination:",
+    "   ..... Reference severe error count=1",
+    "   ..... Last severe error=ZoneHVAC:PackagedTerminalAirConditioner = ZONE HVAC PACKAGED TERMINAL AIR CONDITIONER 8",
+    "   ************* Warning:  Node connection errors not checked - most system input has not been read (see previous warning).",
+    "   ************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages.",
+    "   *************",
+    "   ************* ===== Final Error Summary =====",
+    "   ************* The following error categories occurred.  Consider correcting or noting.",
+    "   ************* Nominally Unused Constructions",
+    "   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause",
+    "   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm",
+    "   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).",
+    "   *************",
+    "   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.",
+    "   ************* EnergyPlus Sizing Error Summary. During Sizing: 11 Warning; 1 Severe Errors.",
+    "   ************* EnergyPlus Terminated--Fatal Error Detected. 11 Warning; 1 Severe Errors; "
+  ],
+  "file_paths": [
+    "/home/runner/work/OpenStudio-resources/OpenStudio-resources/testruns/surface_properties.osm/generated_files",
+    "./files",
+    "./weather",
+    "../../files",
+    "../../weather",
+    "./"
+  ],
+  "seed_file": "in.osm",
+  "steps": [
+    {
+      "arguments": {
+      },
+      "measure_dir_name": "openstudio_results"
+    }
+  ],
+  "weather_file": "../../weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"
+}
