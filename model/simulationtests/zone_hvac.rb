@@ -3,8 +3,6 @@
 require 'openstudio'
 require_relative 'lib/baseline_model'
 
-t = Time.now
-
 model = BaselineModel.new
 
 # make a 3 story, 100m X 50m, 10 zone core/perimeter building
@@ -298,18 +296,6 @@ terminal = OpenStudio::Model::AirTerminalSingleDuctInletSideMixer.new(model)
 air_loop.addBranchForZone(story_2_core_thermal_zone, terminal)
 fourPipeFanCoil2.addToNode(terminal.outletModelObject.get.to_Node.get)
 
-puts "model_articulation: #{Time.now - t} seconds"
-t = Time.now
-
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
                             'osm_name' => 'in.osm' })
-
-puts "model_save: #{Time.now - t} seconds"
-t = Time.now
-
-ft = OpenStudio::EnergyPlus::ForwardTranslator.new
-w = ft.translateModel(model)
-
-puts (Time.now - t).to_s
-puts "ForwardTranslator: #{Time.now - t} seconds"
