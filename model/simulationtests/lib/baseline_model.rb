@@ -218,8 +218,10 @@ class BaselineModel < OpenStudio::Model::Model
           renamed_surfaces.add(s)
           renamed_surfaces.add(adjacent_s)
         end
-      end # End rename surfaces
-    end # End loop on spaces to add thermal zone and rename surfaces
+        # End rename surfaces
+      end
+      # End loop on spaces to add thermal zone and rename surfaces
+    end
   end
 
   def add_windows(params)
