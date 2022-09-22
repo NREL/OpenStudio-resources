@@ -161,7 +161,6 @@ fan.setPressureRise(476.748000740096)
 fan.setMotorEfficiency(1.0)
 fan.setMotorInAirstreamFraction(1.0)
 
-
 # AirLoopHVAC
 air_loop = OpenStudio::Model::AirLoopHVAC.new(m)
 fan.addToNode(air_loop.supplyInletNode)
