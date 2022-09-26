@@ -5,12 +5,12 @@ require_relative 'lib/baseline_model'
 
 model = BaselineModel.new
 
-# make a 2 story, 100m X 50m, 10 zone core/perimeter building
+# make a 1 story, 100m X 50m, 5 zones core/perimeter building
 model.add_geometry({ 'length' => 100,
                      'width' => 50,
                      'num_floors' => 1,
                      'floor_to_floor_height' => 4,
-                     'plenum_height' => 1,
+                     'plenum_height' => 0,
                      'perimeter_zone_depth' => 3 })
 
 # add windows at a 40% window-to-wall ratio
@@ -18,30 +18,42 @@ model.add_windows({ 'wwr' => 0.4,
                     'offset' => 1,
                     'application_type' => 'Above Floor' })
 
-always_on = model.alwaysOnDiscreteSchedule
+# add thermostats
+model.add_thermostats({ 'heating_setpoint' => 19,
+                        'cooling_setpoint' => 26 })
+
+# assign constructions from a local library to the walls/windows/etc. in the model
+model.set_constructions
+
+# set whole building space type; simplified 90.1-2004 Large Office Whole Building
+model.set_space_type
+
+# add design days to the model (Chicago)
+model.add_design_days
 
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
 zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 
-# add thermostats
-model.add_thermostats({ 'heating_setpoint' => 20,
-                        'cooling_setpoint' => 30 })
+always_on = model.alwaysOnDiscreteSchedule
 
 # get the heating and cooling setpoint schedule to use later
-thermostat = model.getThermostatSetpointDualSetpoints[0]
+thermostat = model.getThermostatSetpointDualSetpoints.first
 heating_schedule = thermostat.heatingSetpointTemperatureSchedule.get
 cooling_schedule = thermostat.coolingSetpointTemperatureSchedule.get
 
+###############################################################################
+#             CoilHeatingElectricMultiStage as a supplemental HC              #
+###############################################################################
+
 # Unitary System with CoilHeatingDXMultiSpeed, CoilCoolingDXMultiSpeed, and CoilHeatingElectricMultiStage test
-zone = zones[0]
 
 staged_thermostat = OpenStudio::Model::ZoneControlThermostatStagedDualSetpoint.new(model)
 staged_thermostat.setHeatingTemperatureSetpointSchedule(heating_schedule)
 staged_thermostat.setNumberofHeatingStages(2)
 staged_thermostat.setCoolingTemperatureSetpointBaseSchedule(cooling_schedule)
 staged_thermostat.setNumberofCoolingStages(2)
-zone.setThermostat(staged_thermostat)
+zones[0].setThermostat(staged_thermostat)
 
 air_system = OpenStudio::Model::AirLoopHVAC.new(model)
 supply_outlet_node = air_system.supplyOutletNode
@@ -71,9 +83,9 @@ supp_heat_stage_2.setNominalCapacity(43000)
 supp_heat_stage_3 = OpenStudio::Model::CoilHeatingElectricMultiStageStageData.new(model)
 supp_heat_stage_3.setEfficiency(0.85)
 supp_heat_stage_3.setNominalCapacity(44000)
-supp_heat.addStage(supp_heat_stage_1)
-supp_heat.addStage(supp_heat_stage_2)
-supp_heat.addStage(supp_heat_stage_3)
+# setStages(list) or addStage(stage)
+supp_heat.setStages([supp_heat_stage_1, supp_heat_stage_2, supp_heat_stage_3])
+
 unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
 unitary.setSupplyAirFanOperatingModeSchedule(always_on)
 unitary.setSupplyFan(fan)
@@ -81,20 +93,22 @@ unitary.setHeatingCoil(heat)
 unitary.setCoolingCoil(cool)
 unitary.setSupplementalHeatingCoil(supp_heat)
 unitary.addToNode(supply_outlet_node)
-unitary.setControllingZoneorThermostatLocation(zone)
+unitary.setControllingZoneorThermostatLocation(zones[0])
 
 terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, always_on)
-air_system.addBranchForZone(zone, terminal)
+air_system.addBranchForZone(zones[0], terminal)
+
+###############################################################################
+#            CoilHeatingElectricMultiStage as Primary Heating Coil            #
+###############################################################################
 
 # Unitary System with CoilHeatingElectricMultiStage, CoilCoolingDXMultiSpeed, and CoilHeatingElectric test
-zone = zones[1]
-
 staged_thermostat = OpenStudio::Model::ZoneControlThermostatStagedDualSetpoint.new(model)
 staged_thermostat.setHeatingTemperatureSetpointSchedule(heating_schedule)
 staged_thermostat.setNumberofHeatingStages(2)
 staged_thermostat.setCoolingTemperatureSetpointBaseSchedule(cooling_schedule)
 staged_thermostat.setNumberofCoolingStages(2)
-zone.setThermostat(staged_thermostat)
+zones[1].setThermostat(staged_thermostat)
 
 air_system = OpenStudio::Model::AirLoopHVAC.new(model)
 supply_outlet_node = air_system.supplyOutletNode
@@ -129,25 +143,16 @@ supp_heat = OpenStudio::Model::CoilHeatingElectric.new(model, always_on)
 supp_heat.setName('Sup Elec Htg Coil')
 unitary = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.new(model, fan, heat, cool, supp_heat)
 unitary.addToNode(supply_outlet_node)
-unitary.setControllingZoneorThermostatLocation(zone)
+unitary.setControllingZoneorThermostatLocation(zones[1])
 
 terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, always_on)
-air_system.addBranchForZone(zone, terminal)
+air_system.addBranchForZone(zones[1], terminal)
 
 # Put all of the other zones on a system type 3
 zones[2..-1].each do |z|
   air_system = OpenStudio::Model.addSystemType3(model).to_AirLoopHVAC.get
   air_system.addBranchForZone(z)
 end
-
-# assign constructions from a local library to the walls/windows/etc. in the model
-model.set_constructions
-
-# set whole building space type; simplified 90.1-2004 Large Office Whole Building
-model.set_space_type
-
-# add design days to the model (Chicago)
-model.add_design_days
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
