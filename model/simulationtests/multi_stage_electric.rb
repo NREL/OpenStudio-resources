@@ -46,7 +46,7 @@ cooling_schedule = thermostat.coolingSetpointTemperatureSchedule.get
 #             CoilHeatingElectricMultiStage as a supplemental HC              #
 ###############################################################################
 
-# Unitary System with CoilHeatingDXMultiSpeed, CoilCoolingDXMultiSpeed, and CoilHeatingElectricMultiStage test
+# AirLoopHVACUnitarySystem with CoilHeatingDXMultiSpeed, CoilCoolingDXMultiSpeed, and CoilHeatingElectricMultiStage test
 
 staged_thermostat = OpenStudio::Model::ZoneControlThermostatStagedDualSetpoint.new(model)
 staged_thermostat.setHeatingTemperatureSetpointSchedule(heating_schedule)
@@ -94,6 +94,9 @@ unitary.setCoolingCoil(cool)
 unitary.setSupplementalHeatingCoil(supp_heat)
 unitary.addToNode(supply_outlet_node)
 unitary.setControllingZoneorThermostatLocation(zones[0])
+unitary.setSupplyAirFlowRateMethodDuringCoolingOperation('SupplyAirFlowRate')
+unitary.setSupplyAirFlowRateMethodDuringHeatingOperation('SupplyAirFlowRate')
+unitary.setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired('SupplyAirFlowRate')
 
 terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, always_on)
 air_system.addBranchForZone(zones[0], terminal)
@@ -102,7 +105,7 @@ air_system.addBranchForZone(zones[0], terminal)
 #            CoilHeatingElectricMultiStage as Primary Heating Coil            #
 ###############################################################################
 
-# Unitary System with CoilHeatingElectricMultiStage, CoilCoolingDXMultiSpeed, and CoilHeatingElectric test
+# AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed with CoilHeatingElectricMultiStage, CoilCoolingDXMultiSpeed, and CoilHeatingElectric test
 staged_thermostat = OpenStudio::Model::ZoneControlThermostatStagedDualSetpoint.new(model)
 staged_thermostat.setHeatingTemperatureSetpointSchedule(heating_schedule)
 staged_thermostat.setNumberofHeatingStages(2)
