@@ -695,6 +695,15 @@ class ModelTests < Minitest::Test
     result = sim_test('multi_stage.osm')
   end
 
+  def test_multi_stage_electric_rb
+    result = sim_test('multi_stage_electric.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.4.0
+  # def test_multi_stage_electric_osm
+  # result = sim_test('multi_stage_electric.osm')
+  # end
+
   def test_multiple_airloops_rb
     result = sim_test('multiple_airloops.rb')
   end
