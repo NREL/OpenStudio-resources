@@ -300,6 +300,14 @@ chw_loop.addSupplyBranchForComponent(chiller)
 cw_loop.addDemandBranchForComponent(chiller)
 swh_loop.addDemandBranchForComponent(chiller) # Heat Recovery
 
+file_name = File.join(File.dirname(__FILE__), 'CoolSys1-Chiller-Detailed.RS0001.a205.cbor')
+file_name = File.realpath(file_name)
+representation_file = OpenStudio::Model::ExternalFile.getExternalFile(model, file_name)
+chiller = OpenStudio::Model::ChillerElectricASHRAE205.new(representation_file.get)
+chw_loop.addSupplyBranchForComponent(chiller)
+cw_loop.addDemandBranchForComponent(chiller)
+swh_loop.addDemandBranchForComponent(chiller) # Heat Recovery (not enabled in 22.2.0)
+
 chw_loop.addSupplyBranchForComponent(OpenStudio::Model::DistrictCooling.new(model))
 wwhp = OpenStudio::Model::HeatPumpWaterToWaterEquationFitCooling.new(model)
 chw_loop.addSupplyBranchForComponent(wwhp)
