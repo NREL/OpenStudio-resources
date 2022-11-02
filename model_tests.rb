@@ -209,6 +209,15 @@ class ModelTests < Minitest::Test
     result = sim_test('coil_cooling_dx.osm')
   end
 
+  def test_coil_cooling_dx_airloop_rb
+    result = sim_test('coil_cooling_dx_airloop.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.4.0
+  # def test_coil_cooling_dx_airloop_osm
+  #  result = sim_test('coil_cooling_dx_airloop.osm')
+  # end
+
   def test_centralheatpumpsystem_osm
     result = sim_test('centralheatpumpsystem.osm')
   end
