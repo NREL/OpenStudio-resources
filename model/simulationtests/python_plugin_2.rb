@@ -73,7 +73,7 @@ File.open(pluginTemplatePath, 'r') do |file|
   in_py = file.read
 end
 
-# configure template with variable values
+# configure plugin template with variable values
 renderer = ERB.new(in_py)
 out_py = renderer.result(binding)
 
