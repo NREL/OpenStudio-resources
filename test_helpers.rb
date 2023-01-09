@@ -1090,7 +1090,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
 
     # Ensure that all fields are set to "Autosize" or "Autocalculate"
     fields_autosized = []
-    autosize_aliases = ['AutoSize', 'Autocalculate', 'Autosize', 'autocalculate']
+    autosize_aliases = ['autosize', 'autocalculate']
     idf.objects.sort.each do |obj|
       os_type = "OS:#{obj.iddObject.type.valueDescription}"
 
@@ -1113,7 +1113,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
         next if fields_to_skip.include?(getter_name)
 
         # Check the value of the field
-        val = obj.getString(field_num).to_s
+        val = obj.getString(field_num).to_s.downcase
         if autosize_aliases.include?(val)
           fields_still_autosized << "field #{field_name} in #{obj.iddObject.type.valueDescription}"
         end
