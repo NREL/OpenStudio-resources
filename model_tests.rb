@@ -1110,10 +1110,9 @@ class ModelTests < Minitest::Test
     result = sim_test('surface_properties_lwr.osm')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_surface_properties_ground_and_solarmult_osm
-  # result = sim_test('surface_properties_ground_and_solarmult.osm')
-  # end
+  def test_surface_properties_ground_and_solarmult_osm
+    result = sim_test('surface_properties_ground_and_solarmult.osm')
+  end
 
   def test_surface_properties_ground_and_solarmult_rb
     result = sim_test('surface_properties_ground_and_solarmult.rb')
