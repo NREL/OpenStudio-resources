@@ -594,7 +594,7 @@ class ModelTests < Minitest::Test
   end
 
   def test_heatrecovery_chiller_osm
-   result = sim_test('heatrecovery_chiller.osm')
+    result = sim_test('heatrecovery_chiller.osm')
   end
 
   def test_hightemprad_rb
@@ -1128,10 +1128,9 @@ class ModelTests < Minitest::Test
     result = sim_test('tablelookup.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_tablelookup_osm
-  #   result = sim_test('tablelookup.osm')
-  # end
+  def test_tablelookup_osm
+    result = sim_test('tablelookup.osm')
+  end
 
   def test_tablemultivariablelookup_rb
     result = sim_test('tablemultivariablelookup.rb')

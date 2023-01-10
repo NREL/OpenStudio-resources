@@ -713,6 +713,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('swimmingpool_indoor.osm')
   end
 
+  def test_FT_tablelookup
+    sdd_ft_test('tablelookup.osm')
+  end
+
   def test_FT_tablemultivariablelookup
     sdd_ft_test('tablemultivariablelookup.osm')
   end
