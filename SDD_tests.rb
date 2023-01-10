@@ -517,6 +517,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('multi_stage.osm')
   end
 
+  def test_FT_multi_stage_electric
+    sdd_ft_test('multi_stage_electric.osm')
+  end
+
   def test_FT_multiple_airloops
     sdd_ft_test('multiple_airloops.osm')
   end
