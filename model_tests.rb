@@ -833,10 +833,9 @@ class ModelTests < Minitest::Test
     result = sim_test('phase_change.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_phase_change_osm
-  # result = sim_test('phase_change.osm')
-  # end
+  def test_phase_change_osm
+    result = sim_test('phase_change.osm')
+  end
 
   def test_photovoltaics_rb
     result = sim_test('photovoltaics.rb')

@@ -525,6 +525,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('performanceprecisiontradeoffs.osm')
   end
 
+  def test_FT_phase_change
+    sdd_ft_test('phase_change.osm')
+  end
+
   def test_FT_photovoltaics_sandia
     sdd_ft_test('photovoltaics_sandia.osm')
   end
