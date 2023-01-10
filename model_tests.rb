@@ -535,10 +535,9 @@ class ModelTests < Minitest::Test
     result = sim_test('coil_waterheating_desuperheater.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_coil_waterheating_desuperheater_2_osm
-  # result = sim_test('coil_waterheating_desuperheater_2.osm')
-  # end
+  def test_coil_waterheating_desuperheater_2_osm
+    result = sim_test('coil_waterheating_desuperheater_2.osm')
+  end
 
   def test_coil_waterheating_desuperheater_2_rb
     result = sim_test('coil_waterheating_desuperheater_2.rb')

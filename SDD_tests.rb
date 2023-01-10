@@ -301,6 +301,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('coil_waterheating_desuperheater.osm')
   end
 
+  def test_FT_coil_waterheating_desuperheater_2
+    sdd_ft_test('coil_waterheating_desuperheater_2.osm')
+  end
+
   def test_FT_cooling_coils
     sdd_ft_test('cooling_coils.osm')
   end
