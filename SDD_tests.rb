@@ -641,6 +641,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('setpoint_managers.osm')
   end
 
+  def test_FT_setpoint_manager_systemnodereset
+    sdd_ft_test('setpoint_manager_systemnodereset.osm')
+  end
+
   def test_FT_shadingcontrol_singlezone
     sdd_ft_test('shadingcontrol_singlezone.osm')
   end
