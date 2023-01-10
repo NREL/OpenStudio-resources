@@ -922,10 +922,9 @@ class ModelTests < Minitest::Test
     result = sim_test('python_plugin.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_python_plugin_osm
-  # result = sim_test('python_plugin.osm')
-  # end
+  def test_python_plugin_osm
+    result = sim_test('python_plugin.osm')
+  end
 
   def test_refrigeration_system_rb
     result = sim_test('refrigeration_system.rb')

@@ -585,6 +585,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('pvwatts.osm')
   end
 
+  def test_FT_python_plugin
+    sdd_ft_test('python_plugin.osm')
+  end
+
   def test_FT_refrigeration_system
     sdd_ft_test('refrigeration_system.osm')
   end
