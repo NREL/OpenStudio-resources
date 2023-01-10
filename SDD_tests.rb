@@ -449,6 +449,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('heatpump_varspeed.osm')
   end
 
+  def test_FT_heatrecovery_chiller
+    sdd_ft_test('heatrecovery_chiller.osm')
+  end
+
   def test_FT_hightemprad
     sdd_ft_test('hightemprad.osm')
   end
