@@ -557,7 +557,7 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('output_objects.osm')
   end
 
-  def output_objects_2
+  def test_FT_output_objects_2
     sdd_ft_test('output_objects_2.osm')
   end
 
