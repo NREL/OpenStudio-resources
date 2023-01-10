@@ -230,10 +230,9 @@ class ModelTests < Minitest::Test
     result = sim_test('chiller_electric_ashrae205.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_chiller_electric_ashrae205_osm
-  #   result = sim_test('chiller_electric_ashrae205.osm')
-  # end
+  def test_chiller_electric_ashrae205_osm
+    result = sim_test('chiller_electric_ashrae205.osm')
+  end
 
   def test_chiller_reformulated_rb
     result = sim_test('chiller_reformulated.rb')

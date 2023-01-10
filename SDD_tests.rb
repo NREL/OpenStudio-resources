@@ -269,6 +269,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('centralheatpumpsystem.osm')
   end
 
+  def test_FT_chiller_electric_ashrae205
+    sdd_ft_test('chiller_electric_ashrae205.osm')
+  end
+
   def test_FT_chiller_reformulated
     sdd_ft_test('chiller_reformulated.osm')
   end
