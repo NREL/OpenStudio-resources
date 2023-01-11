@@ -652,6 +652,19 @@ def sim_test(filename, options = {})
       end
 
       FileUtils.cp(sch_ori_path, sch_target_path)
+    elsif filename == 'chiller_electric_ashrae205.osm'
+      # We need to manually copy the supporting schedule into
+      # the testruns folder for the simulation to be able to find it
+      cbor_ori_path = File.join(File.dirname(__FILE__),
+                                'model/simulationtests/CoolSys1-Chiller-Detailed.RS0001.a205.cbor')
+      cbor_ori_path = File.realpath(cbor_ori_path)
+
+      # Have to make the directory first
+      files_dir = File.join(dir, 'files/')
+      FileUtils.mkdir_p(files_dir)
+      cbor_target_path = File.join(files_dir, File.basename(cbor_ori_path))
+
+      FileUtils.cp(cbor_ori_path, cbor_target_path)
     end
 
   when '.rb'

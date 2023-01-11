@@ -229,6 +229,10 @@ class ModelTests < Minitest::Test
     result = sim_test('chiller_electric_ashrae205.rb')
   end
 
+  # Note JM: there is a special case in sim_test for this test to copy the
+  # necessary cbor perf file to testruns/chiller_electric_ashrae205.osm/
+  # We cannot do it here since sim_test starts by deleting and recreating
+  # this folder
   def test_chiller_electric_ashrae205_osm
     result = sim_test('chiller_electric_ashrae205.osm')
   end
