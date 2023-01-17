@@ -1258,7 +1258,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.5.1
   # def test_vrf_fluid_temperature_control_osm
-    # result = sim_test('vrf_fluid_temperature_control.osm')
+  # result = sim_test('vrf_fluid_temperature_control.osm')
   # end
 
   def test_vrf_fluid_temperature_control_rb
