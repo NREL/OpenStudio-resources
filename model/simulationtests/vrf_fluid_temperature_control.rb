@@ -28,7 +28,7 @@ vrf_fluid_temperature_control_hr = OpenStudio::Model::AirConditionerVariableRefr
 zones.each_with_index do |z, i|
   vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model)
   vrf_terminal.addToThermalZone(z)
-  if i < 5
+  if i <= 4
     vrf_fluid_temperature_control.addTerminal(vrf_terminal)
   else
     vrf_fluid_temperature_control_hr.addTerminal(vrf_terminal)
