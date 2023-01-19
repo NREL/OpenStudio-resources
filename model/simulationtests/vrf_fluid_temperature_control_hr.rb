@@ -23,7 +23,7 @@ model.add_windows({ 'wwr' => 0.4,
 zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 
 vrf_fluid_temperature_control_hr = OpenStudio::Model::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.new(model)
-vrf_fluid_temperature_control_hr.setRefrigerantType("R410a")
+vrf_fluid_temperature_control_hr.setRefrigerantType('R410a')
 # TODO
 
 zones.each_with_index do |z, i|
@@ -32,7 +32,7 @@ zones.each_with_index do |z, i|
   # fan = OpenStudio::Model::FanVariableVolume.new(model)
   # vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model, coolingCoil, heatingCoil, fan)
   vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model)
-  
+
   vrf_terminal.addToThermalZone(z)
   vrf_fluid_temperature_control_hr.addTerminal(vrf_terminal)
 end
