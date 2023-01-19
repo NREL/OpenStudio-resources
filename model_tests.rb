@@ -1265,6 +1265,15 @@ class ModelTests < Minitest::Test
     result = sim_test('vrf_fluid_temperature_control.rb')
   end
 
+  # TODO: To be added in the next official release after: 3.5.1
+  # def test_vrf_fluid_temperature_control_hr_osm
+  # result = sim_test('vrf_fluid_temperature_control_hr.osm')
+  # end
+
+  def test_vrf_fluid_temperature_control_hr_rb
+    result = sim_test('vrf_fluid_temperature_control_hr.rb')
+  end
+
   def test_water_economizer_osm
     result = sim_test('water_economizer.osm')
   end
