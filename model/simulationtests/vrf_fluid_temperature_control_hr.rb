@@ -35,7 +35,7 @@ vrf_fluid_temperature_control_hr.setMinimumOutdoorAirTemperatureinHeatingOnlyMod
 vrf_fluid_temperature_control_hr.setMaximumOutdoorAirTemperatureinHeatingOnlyMode(16.0)
 vrf_fluid_temperature_control_hr.setMinimumOutdoorTemperatureinHeatRecoveryMode(-20.0)
 vrf_fluid_temperature_control_hr.setMaximumOutdoorTemperatureinHeatRecoveryMode(43.0)
-vrf_fluid_temperature_control_hr.setRefrigerantTemperatureControlAlgorithmforIndoorUnit("VariableTemp")
+vrf_fluid_temperature_control_hr.setRefrigerantTemperatureControlAlgorithmforIndoorUnit('VariableTemp')
 vrf_fluid_temperature_control_hr.setReferenceEvaporatingTemperatureforIndoorUnit(6.0)
 vrf_fluid_temperature_control_hr.setReferenceCondensingTemperatureforIndoorUnit(44.0)
 vrf_fluid_temperature_control_hr.setVariableEvaporatingTemperatureMinimumforIndoorUnit(4.0)
@@ -61,8 +61,8 @@ vrf_fluid_temperature_control_hr.setCrankcaseHeaterPowerperCompressor(33.0)
 vrf_fluid_temperature_control_hr.setNumberofCompressors(2)
 vrf_fluid_temperature_control_hr.setRatioofCompressorSizetoTotalCompressorCapacity(0.5)
 vrf_fluid_temperature_control_hr.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeater(5.0)
-vrf_fluid_temperature_control_hr.setDefrostStrategy("Resistive")
-vrf_fluid_temperature_control_hr.setDefrostControl("Timed")
+vrf_fluid_temperature_control_hr.setDefrostStrategy('Resistive')
+vrf_fluid_temperature_control_hr.setDefrostControl('Timed')
 vrf_fluid_temperature_control_hr.setDefrostTimePeriodFraction(0.058333)
 vrf_fluid_temperature_control_hr.setResistiveDefrostHeaterCapacity(0.0)
 vrf_fluid_temperature_control_hr.setMaximumOutdoorDrybulbTemperatureforDefrostOperation(5.0)
@@ -95,7 +95,7 @@ outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMinimumValueofx(0)
 outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMaximumValueofx(5)
 vrf_fluid_temperature_control_hr.setOutdoorUnitCondensingTemperatureFunctionofSubcoolingCurve(outdoorUnitCondensingTemperatureFunctionofSubcoolingCurve)
 
-evaporativeCapacityMultiplierFunctionofTemperatureCurve1 = OpenStudio::Model::CurveBiquadratic.new(model);
+evaporativeCapacityMultiplierFunctionofTemperatureCurve1 = OpenStudio::Model::CurveBiquadratic.new(model)
 evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setCoefficient1Constant(3.19E-01)
 evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setCoefficient2x(-1.26E-03)
 evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setCoefficient3xPOW2(-2.15E-05)
@@ -107,7 +107,7 @@ evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setMaximumValueofx(65)
 evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setMinimumValueofy(-30)
 evaporativeCapacityMultiplierFunctionofTemperatureCurve1.setMaximumValueofy(15)
 
-compressorPowerMultiplierFunctionofTemperatureCurve1 = OpenStudio::Model::CurveBiquadratic.new(model);
+compressorPowerMultiplierFunctionofTemperatureCurve1 = OpenStudio::Model::CurveBiquadratic.new(model)
 compressorPowerMultiplierFunctionofTemperatureCurve1.setCoefficient1Constant(8.79E-02)
 compressorPowerMultiplierFunctionofTemperatureCurve1.setCoefficient2x(-1.72E-04)
 compressorPowerMultiplierFunctionofTemperatureCurve1.setCoefficient3xPOW2(6.93E-05)
@@ -121,7 +121,7 @@ compressorPowerMultiplierFunctionofTemperatureCurve1.setMaximumValueofy(15)
 loadingIndex1 = OpenStudio::Model::LoadingIndex.new(1500, evaporativeCapacityMultiplierFunctionofTemperatureCurve1, compressorPowerMultiplierFunctionofTemperatureCurve1)
 vrf_fluid_temperature_control_hr.addLoadingIndex(loadingIndex1)
 
-evaporativeCapacityMultiplierFunctionofTemperatureCurve2 = OpenStudio::Model::CurveBiquadratic.new(model);
+evaporativeCapacityMultiplierFunctionofTemperatureCurve2 = OpenStudio::Model::CurveBiquadratic.new(model)
 evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setCoefficient1Constant(8.12E-01)
 evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setCoefficient2x(-4.23E-03)
 evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setCoefficient3xPOW2(-4.11E-05)
@@ -133,7 +133,7 @@ evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setMaximumValueofx(65)
 evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setMinimumValueofy(-30)
 evaporativeCapacityMultiplierFunctionofTemperatureCurve2.setMaximumValueofy(15)
 
-compressorPowerMultiplierFunctionofTemperatureCurve2 = OpenStudio::Model::CurveBiquadratic.new(model);
+compressorPowerMultiplierFunctionofTemperatureCurve2 = OpenStudio::Model::CurveBiquadratic.new(model)
 compressorPowerMultiplierFunctionofTemperatureCurve2.setCoefficient1Constant(3.26E-01)
 compressorPowerMultiplierFunctionofTemperatureCurve2.setCoefficient2x(-2.20E-03)
 compressorPowerMultiplierFunctionofTemperatureCurve2.setCoefficient3xPOW2(1.42E-04)
@@ -147,7 +147,7 @@ compressorPowerMultiplierFunctionofTemperatureCurve2.setMaximumValueofy(15)
 loadingIndex2 = OpenStudio::Model::LoadingIndex.new(3600, evaporativeCapacityMultiplierFunctionofTemperatureCurve2, compressorPowerMultiplierFunctionofTemperatureCurve2)
 vrf_fluid_temperature_control_hr.addLoadingIndex(loadingIndex2)
 
-evaporativeCapacityMultiplierFunctionofTemperatureCurve3 = OpenStudio::Model::CurveBiquadratic.new(model);
+evaporativeCapacityMultiplierFunctionofTemperatureCurve3 = OpenStudio::Model::CurveBiquadratic.new(model)
 evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setCoefficient1Constant(1.32E+00)
 evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setCoefficient2x(-6.20E-03)
 evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setCoefficient3xPOW2(-7.10E-05)
@@ -159,7 +159,7 @@ evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setMaximumValueofx(65)
 evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setMinimumValueofy(-30)
 evaporativeCapacityMultiplierFunctionofTemperatureCurve3.setMaximumValueofy(15)
 
-compressorPowerMultiplierFunctionofTemperatureCurve3 = OpenStudio::Model::CurveBiquadratic.new(model);
+compressorPowerMultiplierFunctionofTemperatureCurve3 = OpenStudio::Model::CurveBiquadratic.new(model)
 compressorPowerMultiplierFunctionofTemperatureCurve3.setCoefficient1Constant(6.56E-01)
 compressorPowerMultiplierFunctionofTemperatureCurve3.setCoefficient2x(-3.71E-03)
 compressorPowerMultiplierFunctionofTemperatureCurve3.setCoefficient3xPOW2(2.07E-04)
@@ -179,33 +179,33 @@ zones.each_with_index do |z, i|
   coolingCoil.autosizeRatedTotalCoolingCapacity
   coolingCoil.autosizeRatedSensibleHeatRatio
   coolingCoil.setIndoorUnitReferenceSuperheating(5.0)
-  
-  indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve = OpenStudio::Model::CurveQuadratic.new(model);
+
+  indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve = OpenStudio::Model::CurveQuadratic.new(model)
   indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient1Constant(0)
   indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient2x(0.843)
   indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setCoefficient3xPOW2(0)
   indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setMinimumValueofx(0)
   indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve.setMaximumValueofx(15)
   coolingCoil.setIndoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve(indoorUnitEvaporatingTemperatureFunctionofSuperheatingCurve)
-  
+
   heatingCoil = OpenStudio::Model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
   heatingCoil.setAvailabilitySchedule(alwaysOn)
   heatingCoil.autosizeRatedTotalHeatingCapacity
   heatingCoil.setIndoorUnitReferenceSubcooling(5.0)
-  indoorUnitCondensingTemperatureFunctionofSubcoolingCurve = OpenStudio::Model::CurveQuadratic.new(model);
+  indoorUnitCondensingTemperatureFunctionofSubcoolingCurve = OpenStudio::Model::CurveQuadratic.new(model)
   indoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient1Constant(-1.85)
   indoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient2x(0.411)
   indoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setCoefficient3xPOW2(0.0196)
   indoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMinimumValueofx(0)
   indoorUnitCondensingTemperatureFunctionofSubcoolingCurve.setMaximumValueofx(20)
-  heatingCoil.setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(indoorUnitCondensingTemperatureFunctionofSubcoolingCurve)  
-  
+  heatingCoil.setIndoorUnitCondensingTemperatureFunctionofSubcoolingCurve(indoorUnitCondensingTemperatureFunctionofSubcoolingCurve)
+
   fan = OpenStudio::Model::FanVariableVolume.new(model)
   fan.setAvailabilitySchedule(alwaysOn)
   fan.setFanTotalEfficiency(0.6045)
   fan.setPressureRise(1017.592)
   fan.autosizeMaximumFlowRate
-  fan.setFanPowerMinimumFlowRateInputMethod("FixedFlowRate")
+  fan.setFanPowerMinimumFlowRateInputMethod('FixedFlowRate')
   fan.setFanPowerMinimumFlowFraction(0.0)
   fan.setFanPowerMinimumAirFlowRate(0.0)
   fan.setMotorEfficiency(0.93)
