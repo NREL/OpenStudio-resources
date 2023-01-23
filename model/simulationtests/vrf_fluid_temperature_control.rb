@@ -27,11 +27,10 @@ vrf_fluid_temperature_control.setRefrigerantType('R410a')
 # TODO
 
 zones.each_with_index do |z, i|
-  # coolingCoil = OpenStudio::Model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
-  # heatingCoil = OpenStudio::Model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
-  # fan = OpenStudio::Model::FanVariableVolume.new(model)
-  # vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model, coolingCoil, heatingCoil, fan)
-  vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model)
+  coolingCoil = OpenStudio::Model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
+  heatingCoil = OpenStudio::Model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
+  fan = OpenStudio::Model::FanVariableVolume.new(model)
+  vrf_terminal = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model, coolingCoil, heatingCoil, fan)
 
   vrf_terminal.addToThermalZone(z)
   vrf_fluid_temperature_control.addTerminal(vrf_terminal)
