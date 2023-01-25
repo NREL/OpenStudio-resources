@@ -1,10 +1,16 @@
 from pyenergyplus.plugin import EnergyPlusPlugin
 
+import os, sys
+sys.path.append('C:/Python38/Lib/site-packages') # this should (needs to?) be same version as E+'s version
+import pandas as pd
+
 class <%= pluginClassName %>(EnergyPlusPlugin):
 
     def __init__(self):
         super().__init__()
         self.do_setup = True
+
+        self.df = pd.read_csv('C:/OpenStudio/OpenStudio-resources/model/simulationtests/lib/python_plugin_program.csv')
 
     def on_end_of_zone_timestep_before_zone_reporting(self, state) -> int:
         if self.do_setup:
@@ -25,8 +31,8 @@ class <%= pluginClassName %>(EnergyPlusPlugin):
         zone_temps = list()
         for t_handle in self.data['zone_temps']:
             zone_temps.append(self.api.exchange.get_variable_value(state, t_handle))
-        numerator = 0.0
-        denominator = 0.0
+        numerator = float(self.df.iloc[0]['numerator'])
+        denominator = float(self.df.iloc[0]['denominator'])
         for i in range(len(self.data['zone_volumes'])):
             numerator += self.data['zone_volumes'][i] * zone_temps[i]
             denominator += self.data['zone_volumes'][i]
