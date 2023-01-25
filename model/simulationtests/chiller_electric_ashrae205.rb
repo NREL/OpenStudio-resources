@@ -48,7 +48,7 @@ cooling_loop.setName('ChW Loop')
 
 chillers.each(&:remove)
 
-z = model.getThermalZones.min_by { |z| z.name.to_s }
+z = model.getThermalZones.min_by { |zone| zone.name.to_s }
 
 file_name = File.join(File.dirname(__FILE__), 'CoolSys1-Chiller-Detailed.RS0001.a205.cbor')
 file_name = File.realpath(file_name)

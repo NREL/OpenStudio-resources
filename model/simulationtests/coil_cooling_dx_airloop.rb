@@ -166,6 +166,15 @@ air_loop = OpenStudio::Model::AirLoopHVAC.new(m)
 fan.addToNode(air_loop.supplyInletNode)
 coil.addToNode(air_loop.supplyInletNode)
 
+# deck temperature schedule
+# Schedule Ruleset
+deck_temp_sch = OpenStudio::Model::ScheduleRuleset.new(m)
+deck_temp_sch.setName('Deck_Temperature')
+deck_temp_sch.defaultDaySchedule.setName('Deck_Temperature_Default')
+deck_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 12.8)
+deckTempSPM = OpenStudio::Model::SetpointManagerScheduled.new(m, deck_temp_sch)
+deckTempSPM.addToNode(air_loop.supplyOutletNode)
+
 # Add to zone
 # In order to produce more consistent results between different runs,
 # we sort the zones by names

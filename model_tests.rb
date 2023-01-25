@@ -213,10 +213,9 @@ class ModelTests < Minitest::Test
     result = sim_test('coil_cooling_dx_airloop.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_coil_cooling_dx_airloop_osm
-  #  result = sim_test('coil_cooling_dx_airloop.osm')
-  # end
+  def test_coil_cooling_dx_airloop_osm
+    result = sim_test('coil_cooling_dx_airloop.osm')
+  end
 
   def test_centralheatpumpsystem_osm
     result = sim_test('centralheatpumpsystem.osm')
@@ -230,10 +229,13 @@ class ModelTests < Minitest::Test
     result = sim_test('chiller_electric_ashrae205.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_chiller_electric_ashrae205_osm
-  #   result = sim_test('chiller_electric_ashrae205.osm')
-  # end
+  # Note JM: there is a special case in sim_test for this test to copy the
+  # necessary cbor perf file to testruns/chiller_electric_ashrae205.osm/
+  # We cannot do it here since sim_test starts by deleting and recreating
+  # this folder
+  def test_chiller_electric_ashrae205_osm
+    result = sim_test('chiller_electric_ashrae205.osm')
+  end
 
   def test_chiller_reformulated_rb
     result = sim_test('chiller_reformulated.rb')
@@ -544,10 +546,9 @@ class ModelTests < Minitest::Test
     result = sim_test('coil_waterheating_desuperheater.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_coil_waterheating_desuperheater_2_osm
-  # result = sim_test('coil_waterheating_desuperheater_2.osm')
-  # end
+  def test_coil_waterheating_desuperheater_2_osm
+    result = sim_test('coil_waterheating_desuperheater_2.osm')
+  end
 
   def test_coil_waterheating_desuperheater_2_rb
     result = sim_test('coil_waterheating_desuperheater_2.rb')
@@ -605,10 +606,9 @@ class ModelTests < Minitest::Test
     result = sim_test('heatrecovery_chiller.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.3.0
-  # def test_heatrecovery_chiller_osm
-  # result = sim_test('heatrecovery_chiller.osm')
-  # end
+  def test_heatrecovery_chiller_osm
+    result = sim_test('heatrecovery_chiller.osm')
+  end
 
   def test_hightemprad_rb
     result = sim_test('hightemprad.rb')
@@ -726,10 +726,9 @@ class ModelTests < Minitest::Test
     result = sim_test('multi_stage_electric.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_multi_stage_electric_osm
-  # result = sim_test('multi_stage_electric.osm')
-  # end
+  def test_multi_stage_electric_osm
+    result = sim_test('multi_stage_electric.osm')
+  end
 
   def test_multiple_airloops_rb
     result = sim_test('multiple_airloops.rb')
@@ -826,10 +825,9 @@ class ModelTests < Minitest::Test
     result = sim_test('output_objects_2.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_output_objects_2_osm
-  # result = sim_test('output_objects_2.osm')
-  # end
+  def test_output_objects_2_osm
+    result = sim_test('output_objects_2.osm')
+  end
 
   def test_performanceprecisiontradeoffs_rb
     result = sim_test('performanceprecisiontradeoffs.rb')
@@ -843,10 +841,9 @@ class ModelTests < Minitest::Test
     result = sim_test('phase_change.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_phase_change_osm
-  # result = sim_test('phase_change.osm')
-  # end
+  def test_phase_change_osm
+    result = sim_test('phase_change.osm')
+  end
 
   def test_photovoltaics_rb
     result = sim_test('photovoltaics.rb')
@@ -932,10 +929,9 @@ class ModelTests < Minitest::Test
     result = sim_test('python_plugin.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_python_plugin_osm
-  # result = sim_test('python_plugin.osm')
-  # end
+  def test_python_plugin_osm
+    result = sim_test('python_plugin.osm')
+  end
 
   def test_refrigeration_system_rb
     result = sim_test('refrigeration_system.rb')
@@ -1029,10 +1025,9 @@ class ModelTests < Minitest::Test
     result = sim_test('setpoint_manager_systemnodereset.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_setpoint_manager_systemnodereset_osm
-  #   result = sim_test('setpoint_manager_systemnodereset.osm')
-  # end
+  def test_setpoint_manager_systemnodereset_osm
+    result = sim_test('setpoint_manager_systemnodereset.osm')
+  end
 
   def test_shadingcontrol_singlezone_rb
     result = sim_test('shadingcontrol_singlezone.rb')
@@ -1126,10 +1121,9 @@ class ModelTests < Minitest::Test
     result = sim_test('surface_properties_lwr.osm')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_surface_properties_ground_and_solarmult_osm
-  # result = sim_test('surface_properties_ground_and_solarmult.osm')
-  # end
+  def test_surface_properties_ground_and_solarmult_osm
+    result = sim_test('surface_properties_ground_and_solarmult.osm')
+  end
 
   def test_surface_properties_ground_and_solarmult_rb
     result = sim_test('surface_properties_ground_and_solarmult.rb')
@@ -1147,10 +1141,9 @@ class ModelTests < Minitest::Test
     result = sim_test('tablelookup.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.4.0
-  # def test_tablelookup_osm
-  #   result = sim_test('tablelookup.osm')
-  # end
+  def test_tablelookup_osm
+    result = sim_test('tablelookup.osm')
+  end
 
   def test_tablemultivariablelookup_rb
     result = sim_test('tablemultivariablelookup.rb')
