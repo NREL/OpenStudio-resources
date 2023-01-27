@@ -19,8 +19,8 @@ model.add_windows({ 'wwr' => 0.4,
                     'application_type' => 'Above Floor' })
 
 # add thermostats
-model.add_thermostats({ 'heating_setpoint' => 19,
-                        'cooling_setpoint' => 26 })
+model.add_thermostats({ 'heating_setpoint' => 24,
+                        'cooling_setpoint' => 28 })
 
 # assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions
@@ -53,7 +53,22 @@ pump = OpenStudio::Model::PumpVariableSpeed.new(model)
 pump.addToNode(condenserWaterInletNode)
 
 kusudaAchenbach = OpenStudio::Model::SiteGroundTemperatureUndisturbedKusudaAchenbach.new(model)
+kusudaAchenbach.setSoilThermalConductivity(1.08)
+kusudaAchenbach.setSoilDensity(962)
+kusudaAchenbach.setSoilSpecificHeat(2576)
+kusudaAchenbach.setAverageSoilSurfaceTemperature(15.5)
+kusudaAchenbach.setAverageAmplitudeofSurfaceTemperature(12.8)
+kusudaAchenbach.setPhaseShiftofMinimumSurfaceTemperature(17.3)
+
 xing = OpenStudio::Model::SiteGroundTemperatureUndisturbedXing.new(model)
+xing.setSoilThermalConductivity(1.08)
+xing.setSoilDensity(962)
+xing.setSoilSpecificHeat(2576)
+xing.setAverageSoilSurfaceTemperature(11.1)
+xing.setSoilSurfaceTemperatureAmplitude1(13.4)
+xing.setSoilSurfaceTemperatureAmplitude2(0.7)
+xing.setPhaseShiftofTemperatureAmplitude1(25)
+xing.setPhaseShiftofTemperatureAmplitude2(30)
 
 hGroundHX1 = OpenStudio::Model::GroundHeatExchangerHorizontalTrench.new(model, kusudaAchenbach)
 hGroundHX2 = OpenStudio::Model::GroundHeatExchangerHorizontalTrench.new(model, xing)
