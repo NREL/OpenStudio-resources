@@ -533,7 +533,7 @@ class ModelTests < Minitest::Test
     result = sim_test('ghx_horizontal_trench.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.5.0
+  # TODO: To be added in the next official release after: 3.5.1
   # def test_ghx_horizontal_trench_osm
   #  result = sim_test('ghx_horizontal_trench.osm')
   # end
