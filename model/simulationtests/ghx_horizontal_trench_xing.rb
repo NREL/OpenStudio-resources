@@ -14,11 +14,9 @@ model = BaselineModel.new
 # add design days to the model (Chicago)
 model.add_design_days
 
-USE_KUSUDA = true
-USE_XING = false
 USE_PIPE_INDOOR = false
 
-raise 'Cannot use XING on 3.5.1 and below' if USE_XING && (Gem::Version.new(OpenStudio.openStudioVersion) <= Gem::Version.new('3.5.1'))
+raise 'Cannot use XING on 3.5.1 and below' if (Gem::Version.new(OpenStudio.openStudioVersion) <= Gem::Version.new('3.5.1'))
 
 # Add a hot water plant to supply the water to air heat pump
 # This could be baked into HVAC templates in the future
@@ -36,42 +34,17 @@ condenserWaterInletNode = condenserWaterPlant.supplyInletNode
 pump = OpenStudio::Model::PumpVariableSpeed.new(model)
 pump.addToNode(condenserWaterInletNode)
 
-if USE_KUSUDA
-  hGroundHX1 = nil
-  if Gem::Version.new(OpenStudio.openStudioVersion) > Gem::Version.new('3.5.1')
-    kusudaAchenbach = OpenStudio::Model::SiteGroundTemperatureUndisturbedKusudaAchenbach.new(model)
-    kusudaAchenbach.setSoilThermalConductivity(1.08)
-    kusudaAchenbach.setSoilDensity(962)
-    kusudaAchenbach.setSoilSpecificHeat(2576)
-    kusudaAchenbach.setAverageSoilSurfaceTemperature(15.5)
-    kusudaAchenbach.setAverageAmplitudeofSurfaceTemperature(12.8)
-    kusudaAchenbach.setPhaseShiftofMinimumSurfaceTemperature(17.3)
-    hGroundHX1 = OpenStudio::Model::GroundHeatExchangerHorizontalTrench.new(model, kusudaAchenbach)
-  else
-    hGroundHX1 = OpenStudio::Model::GroundHeatExchangerHorizontalTrench.new(model)
-    hGroundHX1.setSoilThermalConductivity(1.08)
-    hGroundHX1.setSoilDensity(962)
-    hGroundHX1.setSoilSpecificHeat(2576)
-    hGroundHX1.setKusudaAchenbachAverageSurfaceTemperature(15.5)
-    hGroundHX1.setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(12.8)
-    hGroundHX1.setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(17.3)
-  end
-  condenserWaterPlant.addSupplyBranchForComponent(hGroundHX1)
-end
-
-if USE_XING
-  xing = OpenStudio::Model::SiteGroundTemperatureUndisturbedXing.new(model)
-  xing.setSoilThermalConductivity(1.08)
-  xing.setSoilDensity(962)
-  xing.setSoilSpecificHeat(2576)
-  xing.setAverageSoilSurfaceTemperature(11.1)
-  xing.setSoilSurfaceTemperatureAmplitude1(13.4)
-  xing.setSoilSurfaceTemperatureAmplitude2(0.7)
-  xing.setPhaseShiftofTemperatureAmplitude1(25)
-  xing.setPhaseShiftofTemperatureAmplitude2(30)
-  hGroundHX2 = OpenStudio::Model::GroundHeatExchangerHorizontalTrench.new(model, xing)
-  condenserWaterPlant.addSupplyBranchForComponent(hGroundHX2)
-end
+xing = OpenStudio::Model::SiteGroundTemperatureUndisturbedXing.new(model)
+xing.setSoilThermalConductivity(1.08)
+xing.setSoilDensity(962)
+xing.setSoilSpecificHeat(2576)
+xing.setAverageSoilSurfaceTemperature(11.1)
+xing.setSoilSurfaceTemperatureAmplitude1(13.4)
+xing.setSoilSurfaceTemperatureAmplitude2(0.7)
+xing.setPhaseShiftofTemperatureAmplitude1(25)
+xing.setPhaseShiftofTemperatureAmplitude2(30)
+hGroundHX2 = OpenStudio::Model::GroundHeatExchangerHorizontalTrench.new(model, xing)
+condenserWaterPlant.addSupplyBranchForComponent(hGroundHX2)
 
 if USE_PIPE_INDOOR
   pipe_mat = OpenStudio::Model::StandardOpaqueMaterial.new(model, 'Smooth', 3.00E-03, 45.31, 7833.0, 500.0)
