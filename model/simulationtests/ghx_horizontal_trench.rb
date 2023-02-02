@@ -18,7 +18,7 @@ USE_KUSUDA = true
 USE_XING = false
 USE_PIPE_INDOOR = false
 
-raise "Cannot use XING on 3.5.1 and below" if USE_XING and Gem::Version.new(OpenStudio.openStudioVersion) <= Gem::Version.new('3.5.1')
+raise 'Cannot use XING on 3.5.1 and below' if USE_XING && (Gem::Version.new(OpenStudio.openStudioVersion) <= Gem::Version.new('3.5.1'))
 
 # Add a hot water plant to supply the water to air heat pump
 # This could be baked into HVAC templates in the future
@@ -135,7 +135,7 @@ condenserWaterSPM.addToNode(condenserWaterOutletNode)
 
 condenserWaterPlant.setMaximumLoopTemperature(80.0)
 condenserWaterPlant.setMaximumLoopFlowRate(0.004)
-condenserWaterPlant.setFluidType("PropyleneGlycol")
+condenserWaterPlant.setFluidType('PropyleneGlycol')
 condenserWaterPlant.setGlycolConcentration(70)
 
 pump.setRatedFlowRate(0.004)
@@ -143,7 +143,6 @@ pump.setRatedPumpHead(5000.0)
 pump.setRatedPowerConsumption(25.0)
 pump.setFractionofMotorInefficienciestoFluidStream(0.0)
 pump.setPumpControlType('Intermittent')
-
 
 # Load Profile
 loadProfile = OpenStudio::Model::LoadProfilePlant.new(model)
