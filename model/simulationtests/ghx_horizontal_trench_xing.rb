@@ -16,7 +16,7 @@ model.add_design_days
 
 USE_PIPE_INDOOR = false
 
-raise 'Cannot use XING on 3.5.1 and below' if (Gem::Version.new(OpenStudio.openStudioVersion) <= Gem::Version.new('3.5.1'))
+raise 'Cannot use XING on 3.5.1 and below' if Gem::Version.new(OpenStudio.openStudioVersion) <= Gem::Version.new('3.5.1')
 
 # Add a hot water plant to supply the water to air heat pump
 # This could be baked into HVAC templates in the future
