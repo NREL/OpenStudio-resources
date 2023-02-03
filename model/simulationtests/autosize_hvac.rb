@@ -1047,21 +1047,21 @@ zones.each_with_index do |zn, zone_index|
     chw_loop.addDemandBranchForComponent(panel_coil)
     zoneHVACCoolingPanelRadiantConvectiveWater.addToThermalZone(zn)
 
-	when 41
+  when 41
     vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlowFluidTemperatureControl.new(model)
-		coolingCoil = OpenStudio::Model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
-		heatingCoil = OpenStudio::Model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
-		fan = OpenStudio::Model::FanVariableVolume.new(model)
-		term = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model, coolingCoil, heatingCoil, fan)
+    coolingCoil = OpenStudio::Model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
+    heatingCoil = OpenStudio::Model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
+    fan = OpenStudio::Model::FanVariableVolume.new(model)
+    term = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model, coolingCoil, heatingCoil, fan)
     term.addToThermalZone(zn)
     vrf.addTerminal(term)
 
-	when 42
+  when 42
     vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.new(model)
-		coolingCoil = OpenStudio::Model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
-		heatingCoil = OpenStudio::Model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
-		fan = OpenStudio::Model::FanVariableVolume.new(model)
-		term = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model, coolingCoil, heatingCoil, fan)
+    coolingCoil = OpenStudio::Model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
+    heatingCoil = OpenStudio::Model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
+    fan = OpenStudio::Model::FanVariableVolume.new(model)
+    term = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model, coolingCoil, heatingCoil, fan)
     term.addToThermalZone(zn)
     vrf.addTerminal(term)
 
