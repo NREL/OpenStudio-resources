@@ -533,10 +533,9 @@ class ModelTests < Minitest::Test
     result = sim_test('ghx_horizontal_trench_kusuda.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.5.1
-  # def test_ghx_horizontal_trench_kusuda_osm
-  #  result = sim_test('ghx_horizontal_trench_kusuda.osm')
-  # end
+  def test_ghx_horizontal_trench_kusuda_osm
+    result = sim_test('ghx_horizontal_trench_kusuda.osm')
+  end
 
   def test_ghx_horizontal_trench_xing_rb
     result = sim_test('ghx_horizontal_trench_xing.rb')
