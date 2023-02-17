@@ -959,6 +959,25 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     }
   }
 
+  extra_methods = {
+    'OS:AirLoopHVAC' => [
+      'autosizedSumMinimumHeatingAirFlowRates',
+      'autosizedSumAirTerminalMaxAirFlowRate'
+    ],
+    'OS:Coil:Cooling:Water' => [
+      'autosizedDesignCoilLoad'
+    ],
+    'OS:ThermalZone' => [
+      # 'autosizedMaximumOutdoorAirFlowRate',
+      'autosizedMinimumOutdoorAirFlowRate',
+      'autosizedCoolingDesignAirFlowRate',
+      'autosizedHeatingDesignAirFlowRate',
+      'coolingDesignLoad',
+      'designAirFlowRate',
+      'heatingDesignLoad'
+    ]
+  }
+
   # Search the IDD associated with this model
   # and assert that there is at least one of every object
   # that has autosized fields in the test model.
@@ -981,11 +1000,13 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     # Check if this object type has a different name in OS
     os_type = os_type_aliases[os_type] if os_type_aliases[os_type]
 
+    has_extra_methods = extra_methods.include?(os_type)
+
     # Convert to IDD type
     type = os_type.gsub('OS:', '').gsub(':', '')
 
     # Skip objects with no autosizable fields
-    next if autosizable_field_names.empty?
+    next if autosizable_field_names.empty? and !has_extra_methods
 
     # Skip certain object types entirely
     methods_to_skip = obj_types_to_skip[os_type]
@@ -1021,9 +1042,17 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       objs.sort.each do |o|
         obj = o if o.thermalZone.name.get == 'Story 5 North Perimeter Thermal Zone'
       end
+    when 'ThermalZone' # Get one that has an entry in the ZoneSizes
+      objs.sort.each do |o|
+        obj = o if o.nameString == 'Story 5 North Perimeter Thermal Zone'
+      end
     when 'AirLoopHVACUnitarySystem' # Need to check a unitary where no load flow is autosized
       objs.sort.each do |o|
         obj = o if o.name.get == 'Air Loop HVAC Unitary System 3'
+      end
+    when 'CoilCoolingWater' # Need to check a coil that is on an AirLoopHVAC directly or `autosizedDesignCoilLoad` won't work
+      objs.sort.each do |o|
+        obj = o if o.airLoopHVAC.is_initialized
       end
     end
 
@@ -1047,20 +1076,39 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
 
       # Check if the autosizedFoo method has been implemented for this object
       unless obj.respond_to? getter_name
-        missing_autosizedFoo << "#{getter_name} not a valid method for object of type #{type}"
+        missing_autosizedFoo << "'#{getter_name}' not a valid method for object of type #{type}"
         next
       end
 
       # Try the method on the object to ensure that the SQL query in C++ is correct
       val = obj.public_send(getter_name)
       if val.is_initialized
-        succeeded_autosizedFoo << "#{getter_name} succeeded for #{obj.name} of type #{type}"
+        succeeded_autosizedFoo << "'#{getter_name}' succeeded for '#{obj.name}' of type '#{type}'"
       else
-        failed_autosizedFoo << "#{getter_name} failed for #{obj.name} of type #{type}"
+        # require 'pry-byebug'; binding.pry
+        failed_autosizedFoo << "'#{getter_name}' failed for '#{obj.name}' of type '#{type}'"
+      end
+    end
+
+    if has_extra_methods
+      extra_methods[os_type].each do |getter_name|
+        # Check if the autosizedFoo method has been implemented for this object
+        unless obj.respond_to? getter_name
+          missing_autosizedFoo << "Extra getter '#{getter_name}' not a valid method for object of type '#{type}'"
+          next
+        end
+
+        # Try the method on the object to ensure that the SQL query in C++ is correct
+        val = obj.public_send(getter_name)
+        if val.is_initialized
+          succeeded_autosizedFoo << "Extra getter '#{getter_name}' succeeded for '#{obj.name}' of type '#{type}'"
+        else
+          # require 'pry-byebug'; binding.pry
+          failed_autosizedFoo << "Extra getter '#{getter_name}' failed for '#{obj.name}' of type '#{type}'"
+        end
       end
     end
   end
-
   puts "\n*** Autosizable Objects not Wrapped by OpenStudio ***"
   not_wrapped.each { |f| puts f }
 
