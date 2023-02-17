@@ -1006,7 +1006,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     type = os_type.gsub('OS:', '').gsub(':', '')
 
     # Skip objects with no autosizable fields
-    next if autosizable_field_names.empty? and !has_extra_methods
+    next if autosizable_field_names.empty? && !has_extra_methods
 
     # Skip certain object types entirely
     methods_to_skip = obj_types_to_skip[os_type]
