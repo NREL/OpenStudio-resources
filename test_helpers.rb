@@ -876,7 +876,13 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     'OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow' => [
       'autosizedHeatingDesignCapacity', # No OS methods for this field
       'autosizedCoolingDesignCapacity' # No OS methods for this field
-    ]
+    ],
+    # TODO: Temporary pending a new E+ release where we can add several VRF Types
+    # cf https://github.com/NREL/EnergyPlus/pull/9804
+    'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl' => 'all',
+    'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR' => 'all',
+    'OS:Coil:Cooling:DX:VariableRefrigerantFlow:FluidTemperatureControl' => 'all',
+    'OS:Coil:Heating:DX:VariableRefrigerantFlow:FluidTemperatureControl' => 'all'
   }
 
   # Aliases for some OS onjects
@@ -893,7 +899,6 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
   # not exist in the E+ output, even under a different name.
   # These are things the E+ team should fix.
   missing_getters = {
-
     'OS:Coil:Heating:Water:Baseboard:Radiant' => [
       'autosizedHeatingDesignCapacity'
     ],
@@ -935,7 +940,6 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     'OS:Fan:ComponentModel' => [
       'autosizedMinimumFlowRate' # Not in E+ SQL
     ]
-
   }
 
   # List of objects and methods where the getter name does not
