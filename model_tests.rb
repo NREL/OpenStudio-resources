@@ -595,6 +595,15 @@ class ModelTests < Minitest::Test
     result = sim_test('heatexchanger_desiccant_balancedflow.osm')
   end
 
+  def test_heatpump_airtowater_fuelfired_rb
+    result = sim_test('heatpump_airtowater_fuelfired.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.5.1
+  # def test_heatpump_airtowater_fuelfired_osm
+    # result = sim_test('heatpump_airtowater_fuelfired.osm')
+  # end
+
   def test_heatpump_hot_water_rb
     result = sim_test('heatpump_hot_water.rb')
   end
