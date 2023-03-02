@@ -827,7 +827,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.5.1
   # def test_outputcontrol_timestamp_osm
-    # result = sim_test('outputcontrol_timestamp.osm')
+  # result = sim_test('outputcontrol_timestamp.osm')
   # end
 
   def test_output_objects_rb
