@@ -44,7 +44,7 @@ z.setUseIdealAirLoads(true)
 ###############################################################################
 
 outputcontrol_timestamp = model.getOutputControlTimestamp
- 
+
 outputcontrol_timestamp.setISO8601Format(true)
 outputcontrol_timestamp.setTimestampatBeginningofInterval(true)
 
