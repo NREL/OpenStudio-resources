@@ -562,6 +562,14 @@ class ModelTests < Minitest::Test
     result = sim_test('coil_waterheating_desuperheater_2.rb')
   end
 
+  def test_coil_userdefined_rb
+    result = sim_test('coil_userdefined.rb')
+  end
+  
+  #def test_coil_userdefined_osm
+  #  result = sim_test('coil_userdefined.osm')
+  #end
+  
   def test_headered_pumps_osm
     result = sim_test('headered_pumps.osm')
   end
