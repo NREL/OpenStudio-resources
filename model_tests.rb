@@ -566,6 +566,7 @@ class ModelTests < Minitest::Test
     result = sim_test('coil_userdefined.rb')
   end
 
+  #TODO add after 3.6.0
   # def test_coil_userdefined_osm
   #  result = sim_test('coil_userdefined.osm')
   # end
