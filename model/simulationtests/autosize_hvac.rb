@@ -1049,6 +1049,8 @@ zones.each_with_index do |zn, zone_index|
 
   when 41
     vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlowFluidTemperatureControl.new(model)
+    vrf.autosizeRatedEvaporativeCapacity
+    vrf.autosizeResistiveDefrostHeaterCapacity
     coolingCoil = OpenStudio::Model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
     heatingCoil = OpenStudio::Model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
     fan = OpenStudio::Model::FanVariableVolume.new(model)
@@ -1058,6 +1060,8 @@ zones.each_with_index do |zn, zone_index|
 
   when 42
     vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.new(model)
+    vrf.autosizeRatedEvaporativeCapacity
+    vrf.autosizeResistiveDefrostHeaterCapacity
     coolingCoil = OpenStudio::Model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
     heatingCoil = OpenStudio::Model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
     fan = OpenStudio::Model::FanVariableVolume.new(model)
