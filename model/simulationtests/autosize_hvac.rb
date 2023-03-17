@@ -329,6 +329,13 @@ chw_loop.addSupplyBranchForComponent(plhp_clg)
 # The Source Side Volume Flow Rate is reported only for WaterSource apparently
 cw_loop.addDemandBranchForComponent(plhp_clg)
 
+ffhp_airsource_clg = OpenStudio::Model::HeatPumpAirToWaterFuelFiredCooling.new(model)
+ffhp_airsource_clg.autosizeNominalCoolingCapacity
+ffhp_airsource_clg.autosizeDesignFlowRate
+ffhp_airsource_clg.autosizeDesignTemperatureLift
+ffhp_airsource_clg.setNominalAuxiliaryElectricPower(500)
+chw_loop.addSupplyBranchForComponent(ffhp_airsource_clg)
+
 # chw_loop.addSupplyBranchForComponent(OpenStudio::Model::ChillerHeaterPerformanceElectricEIR.new(model))
 
 ### Hot water loop ###
@@ -383,6 +390,16 @@ cw_loop.addDemandBranchForComponent(plhp_htg)
 
 plhp_clg.setCompanionHeatingHeatPump(plhp_htg)
 plhp_htg.setCompanionCoolingHeatPump(plhp_clg)
+
+ffhp_airsource_htg = OpenStudio::Model::HeatPumpAirToWaterFuelFiredHeating.new(model)
+ffhp_airsource_htg.autosizeNominalHeatingCapacity
+ffhp_airsource_htg.autosizeDesignFlowRate
+ffhp_airsource_htg.autosizeDesignTemperatureLift
+ffhp_airsource_htg.setNominalAuxiliaryElectricPower(500)
+hw_loop.addSupplyBranchForComponent(ffhp_airsource_htg)
+
+ffhp_airsource_clg.setCompanionHeatingHeatPump(ffhp_airsource_htg)
+ffhp_airsource_htg.setCompanionCoolingHeatPump(ffhp_airsource_clg)
 
 # This is an Uncontrolled component, should be last
 hw_loop.addSupplyBranchForComponent(OpenStudio::Model::PlantComponentTemperatureSource.new(model))
