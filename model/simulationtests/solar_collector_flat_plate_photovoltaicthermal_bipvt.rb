@@ -50,13 +50,13 @@ model.add_standards(JSON.parse('{
     ]
   }'))
 
-# make a 2 story, 100m X 50m, 10 zone core/perimeter building
+# make a 1 story, 100m X 50m, 1 zone core/perimeter building
 model.add_geometry({ 'length' => 100,
                      'width' => 50,
-                     'num_floors' => 2,
+                     'num_floors' => 1,
                      'floor_to_floor_height' => 4,
-                     'plenum_height' => 1,
-                     'perimeter_zone_depth' => 3 })
+                     'plenum_height' => 0,
+                     'perimeter_zone_depth' => 0 })
 
 # add windows at a 40% window-to-wall ratio
 model.add_windows({ 'wwr' => 0.4,
@@ -147,37 +147,39 @@ storage_water_heater.setHeaterMaximumCapacity(0.0)
 # storage_water_heater.setTankVolume(OpenStudio.convert(water_heater_vol_gal,'gal','m^3').get)
 storage_water_loop.addDemandBranchForComponent(storage_water_heater)
 
-# make a solar collector and add it to the storage loop
-vertices = OpenStudio::Point3dVector.new
-vertices << OpenStudio::Point3d.new(0, 0, 0)
-vertices << OpenStudio::Point3d.new(10, 0, 0)
-vertices << OpenStudio::Point3d.new(10, 4, 0)
-vertices << OpenStudio::Point3d.new(0, 4, 0)
-rotation = OpenStudio.createRotation(OpenStudio::Vector3d.new(1, 0, 0), OpenStudio.degToRad(30))
-vertices = rotation * vertices
+# Get the roof
+roofs = model.getSurfaces.sort_by(&:nameString).select { |s| s.surfaceType == 'RoofCeiling' }
+raise 'Unexpected number of Roofs in model' if roofs.size != 1
 
-group = OpenStudio::Model::ShadingSurfaceGroup.new(model)
-group.setXOrigin(20)
-group.setYOrigin(10)
-group.setZOrigin(8)
+roof = roofs.first
 
-shade = OpenStudio::Model::ShadingSurface.new(vertices, model)
-shade.setShadingSurfaceGroup(group)
-
-collector = OpenStudio::Model::SolarCollectorFlatPlatePhotovoltaicThermal.new(model)
+# Use the explicit ctor for SolarCollectorFlatPlatePhotovoltaicThermal so it
+# uses our BIPVT performance instead of creating a Simple performance object
+performance = OpenStudio::Model::SolarCollectorPerformancePhotovoltaicThermalBIPVT.new(model)
+collector = OpenStudio::Model::SolarCollectorFlatPlatePhotovoltaicThermal.new(performance)
 storage_water_loop.addSupplyBranchForComponent(collector)
-collector.setSurface(shade)
+
+# Set the collector surface, and ensure the same SurfacePropertyOtherSideConditionsModel is used
+collector.setSurface(roof)
+# Setting the Outside Boundary to OtherSideConditionsModel means that the
+# construction is no longer retrived from the default construction set, so
+# explicit set it
+roof_construction = roof.construction.get
+roof.setSurfacePropertyOtherSideConditionsModel(performance.boundaryConditionsModel)
+roof.setConstruction(roof_construction)
 
 # We need a PV object as well, and and ELCD, and an inverted
 # create the panel
 panel = OpenStudio::Model::GeneratorPhotovoltaic.simple(model)
-panel.setSurface(shade)
+panel.setSurface(roof)
 # create the inverter
 inverter = OpenStudio::Model::ElectricLoadCenterInverterSimple.new(model)
 # create the distribution system
 elcd = OpenStudio::Model::ElectricLoadCenterDistribution.new(model)
 elcd.addGenerator(panel)
 elcd.setInverter(inverter)
+elcd.setElectricalBussType('DirectCurrentWithInverter')
+elcd.setGeneratorOperationSchemeType('TrackElectrical')
 
 # Assign the PV Generator to the collector
 collector.setGeneratorPhotovoltaic(panel)
@@ -186,12 +188,27 @@ collector.autosizeDesignFlowRate
 
 # Modify the Performance object
 # (Here I hardset them exactly like the constructor does)
-# Note: Before 3.6.0, the cast is not needed, but it is mandatory starting in 3.6.0
-perf = collector.solarCollectorPerformance.to_SolarCollectorPerformancePhotovoltaicThermalSimple.get
-perf.setName('Solar Collector Performance Photovoltaic Thermal Simple')
-perf.setFractionOfSurfaceAreaWithActiveThermalCollector(1.0)
-perf.setThermalConversionEfficiency(0.3)
-perf.setFrontSurfaceEmittance(0.84)
+oscm = performance.boundaryConditionsModel
+oscm.setTypeOfModeling('GapConvectionRadiation')
+
+alwaysOn = model.alwaysOnDiscreteSchedule
+performance.setAvailabilitySchedule(alwaysOn)
+
+performance.setEffectivePlenumGapThicknessBehindPVModules(0.1) # 10cm. Taken from ShopWithBIPVT.idf
+
+# IDD Defaults
+performance.setPVCellNormalTransmittanceAbsorptanceProduct(0.957)
+performance.setBackingMaterialNormalTransmittanceAbsorptanceProduct(0.87)
+performance.setCladdingNormalTransmittanceAbsorptanceProduct(0.85)
+performance.setFractionofCollectorGrossAreaCoveredbyPVModule(0.85)
+performance.setFractionofPVCellAreatoPVModuleArea(0.9)
+performance.setPVModuleTopThermalResistance(0.0044)
+performance.setPVModuleBottomThermalResistance(0.0039)
+performance.setPVModuleFrontLongwaveEmissivity(0.85)
+performance.setPVModuleBackLongwaveEmissivity(0.9)
+performance.setGlassThickness(0.002)
+performance.setGlassRefractionIndex(1.526)
+performance.setGlassExtinctionCoefficient(4.0)
 
 add_out_vars = false
 if add_out_vars
