@@ -887,10 +887,10 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       'autosizedRatedEvaporativeCapacity' # As of 23.1.0-IOFreeze, this is never autosized nor reported
     ],
     'OS:HeatPump:AirToWater:FuelFired:Cooling' => [
-      'autosizedDesignTemperatureLift', # E+ is missing it
+      'autosizedDesignTemperatureLift' # E+ is missing it
     ],
     'OS:HeatPump:AirToWater:FuelFired:Heating' => [
-      'autosizedDesignTemperatureLift', # E+ is missing it
+      'autosizedDesignTemperatureLift' # E+ is missing it
     ]
   }
 
