@@ -329,6 +329,13 @@ chw_loop.addSupplyBranchForComponent(plhp_clg)
 # The Source Side Volume Flow Rate is reported only for WaterSource apparently
 cw_loop.addDemandBranchForComponent(plhp_clg)
 
+ffhp_airsource_clg = OpenStudio::Model::HeatPumpAirToWaterFuelFiredCooling.new(model)
+ffhp_airsource_clg.autosizeNominalCoolingCapacity
+ffhp_airsource_clg.autosizeDesignFlowRate
+ffhp_airsource_clg.autosizeDesignTemperatureLift
+ffhp_airsource_clg.setNominalAuxiliaryElectricPower(500)
+chw_loop.addSupplyBranchForComponent(ffhp_airsource_clg)
+
 # chw_loop.addSupplyBranchForComponent(OpenStudio::Model::ChillerHeaterPerformanceElectricEIR.new(model))
 
 ### Hot water loop ###
@@ -383,6 +390,16 @@ cw_loop.addDemandBranchForComponent(plhp_htg)
 
 plhp_clg.setCompanionHeatingHeatPump(plhp_htg)
 plhp_htg.setCompanionCoolingHeatPump(plhp_clg)
+
+ffhp_airsource_htg = OpenStudio::Model::HeatPumpAirToWaterFuelFiredHeating.new(model)
+ffhp_airsource_htg.autosizeNominalHeatingCapacity
+ffhp_airsource_htg.autosizeDesignFlowRate
+ffhp_airsource_htg.autosizeDesignTemperatureLift
+ffhp_airsource_htg.setNominalAuxiliaryElectricPower(500)
+hw_loop.addSupplyBranchForComponent(ffhp_airsource_htg)
+
+ffhp_airsource_clg.setCompanionHeatingHeatPump(ffhp_airsource_htg)
+ffhp_airsource_htg.setCompanionCoolingHeatPump(ffhp_airsource_clg)
 
 # This is an Uncontrolled component, should be last
 hw_loop.addSupplyBranchForComponent(OpenStudio::Model::PlantComponentTemperatureSource.new(model))
@@ -814,7 +831,7 @@ zones[40].setZoneControlHumidistat(humidistat)
 ### Zone HVAC and Terminals ###
 # Add one of every single kind of Zone HVAC equipment supported by OS
 zones.each_with_index do |zn, zone_index|
-  puts "Adding stuff to #{zn.name}, index #{zone_index}"
+  # puts "Adding stuff to #{zn.name}, index #{zone_index}"
   case zone_index
   when 1
     OpenStudio::Model::ZoneHVACBaseboardConvectiveElectric.new(model).addToThermalZone(zn)
@@ -828,7 +845,7 @@ zones.each_with_index do |zn, zone_index|
     ideal.setCoolingLimit('NoLimit')
     ideal.addToThermalZone(zn)
   when 3
-    # unused
+
   when 4
     OpenStudio::Model::ZoneHVACHighTemperatureRadiant.new(model).addToThermalZone(zn)
   when 5
@@ -1046,6 +1063,28 @@ zones.each_with_index do |zn, zone_index|
 
     chw_loop.addDemandBranchForComponent(panel_coil)
     zoneHVACCoolingPanelRadiantConvectiveWater.addToThermalZone(zn)
+
+  when 41
+    vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlowFluidTemperatureControl.new(model)
+    vrf.autosizeRatedEvaporativeCapacity
+    vrf.autosizeResistiveDefrostHeaterCapacity
+    coolingCoil = OpenStudio::Model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
+    heatingCoil = OpenStudio::Model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
+    fan = OpenStudio::Model::FanVariableVolume.new(model)
+    term = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model, coolingCoil, heatingCoil, fan)
+    term.addToThermalZone(zn)
+    vrf.addTerminal(term)
+
+  when 42
+    vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.new(model)
+    vrf.autosizeRatedEvaporativeCapacity
+    vrf.autosizeResistiveDefrostHeaterCapacity
+    coolingCoil = OpenStudio::Model::CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
+    heatingCoil = OpenStudio::Model::CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl.new(model)
+    fan = OpenStudio::Model::FanVariableVolume.new(model)
+    term = OpenStudio::Model::ZoneHVACTerminalUnitVariableRefrigerantFlow.new(model, coolingCoil, heatingCoil, fan)
+    term.addToThermalZone(zn)
+    vrf.addTerminal(term)
 
   when 26, 27, 28, 29, 30, 31, 32, 33, 38, 40
     # Previously used for the unitary systems, dehum, etc
