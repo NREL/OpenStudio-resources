@@ -6,11 +6,11 @@ on:
       base_url:
         description: 'The base url to use to download each platform'
         required: true
-        default: 'https://github.com/NREL/OpenStudio/releases/download/v3.2.1'
+        default: 'https://github.com/NREL/OpenStudio/releases/download/v3.5.1'
       os_version:
-        description: 'OpenStudio Version (e.g. 3.2.1)'
+        description: 'OpenStudio Version (e.g. 3.5.1)'
         required: true
-        default: '3.2.1'
+        default: '3.5.1'
       os_prerelease_tag:
         description: 'Pre-release tag (e.g. -alpha, -rc1). Leave empty if none' 
         required: false
@@ -18,11 +18,11 @@ on:
       os_build_sha:
          description: 'OpenStudio Build sha (first 10 chars)'
          required: true
-         default: 'bdbdbc9da6'
+         default: '22e1db7be5'
 
 jobs:
-  installer_ubuntu_1804:
-    runs-on: ubuntu-18.04
+  installer_ubuntu_2204:
+    runs-on: ubuntu-22.04
 
     steps:
     - uses: actions/checkout@v2
@@ -37,7 +37,7 @@ jobs:
       shell: bash
       run: |
         set -x
-        installer_url="${{ github.event.inputs.base_url}}/OpenStudio-${{ github.event.inputs.os_version}}${{ github.event.inputs.os_prerelease_tag}}%2B${{ github.event.inputs.os_build_sha}}-Ubuntu-18.04.deb"
+        installer_url="${{ github.event.inputs.base_url}}/OpenStudio-${{ github.event.inputs.os_version}}${{ github.event.inputs.os_prerelease_tag}}%2B${{ github.event.inputs.os_build_sha}}-Ubuntu-22.04.deb"
         echo "Installer link: $installer_url"
         sudo apt update
         wget $installer_url
