@@ -876,6 +876,21 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     'OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow' => [
       'autosizedHeatingDesignCapacity', # No OS methods for this field
       'autosizedCoolingDesignCapacity' # No OS methods for this field
+    ],
+    # TODO: for this, see https://github.com/NREL/EnergyPlus/pull/9898
+    'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl' => [
+      'autosizedResistiveDefrostHeaterCapacity', # Missing units in 23.1.0-IOFreeze. TODO: hopefully remove in 23.1.0 official
+      'autosizedRatedEvaporativeCapacity' # As of 23.1.0-IOFreeze, this is never autosized nor reported
+    ],
+    'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR' => [
+      'autosizedResistiveDefrostHeaterCapacity', # Missing units in 23.1.0-IOFreeze. TODO: hopefully remove in 23.1.0 official
+      'autosizedRatedEvaporativeCapacity' # As of 23.1.0-IOFreeze, this is never autosized nor reported
+    ],
+    'OS:HeatPump:AirToWater:FuelFired:Cooling' => [
+      'autosizedDesignTemperatureLift' # E+ is missing it
+    ],
+    'OS:HeatPump:AirToWater:FuelFired:Heating' => [
+      'autosizedDesignTemperatureLift' # E+ is missing it
     ]
   }
 

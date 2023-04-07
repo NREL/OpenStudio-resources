@@ -437,6 +437,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('generator_windturbine.osm')
   end
 
+  def test_FT_ghx_horizontal_trench_kusuda
+    sdd_ft_test('ghx_horizontal_trench_kusuda.osm')
+  end
+
   def test_FT_headered_pumps
     sdd_ft_test('headered_pumps.osm')
   end
