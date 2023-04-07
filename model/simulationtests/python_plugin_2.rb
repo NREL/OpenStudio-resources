@@ -73,6 +73,9 @@ File.open(pluginTemplatePath, 'r') do |file|
   in_py = file.read
 end
 
+dataPath = File.join(File.dirname(__FILE__), 'lib/python_plugin_program.csv')
+OpenStudio::Model::ExternalFile.getExternalFile(model, dataPath)
+
 # configure plugin template with variable values
 renderer = ERB.new(in_py)
 out_py = renderer.result(binding)

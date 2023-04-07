@@ -10,7 +10,7 @@ class <%= pluginClassName %>(EnergyPlusPlugin):
         super().__init__()
         self.do_setup = True
 
-        self.df = pd.read_csv('C:/OpenStudio/OpenStudio-resources/model/simulationtests/lib/python_plugin_program.csv')
+        self.df = pd.read_csv(os.path.join(os.path.dirname(__file__), 'python_plugin_program.csv'))
 
     def on_end_of_zone_timestep_before_zone_reporting(self, state) -> int:
         if self.do_setup:
