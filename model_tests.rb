@@ -1038,7 +1038,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.5.1
   # def test_schedule_file_2_osm
-    # result = sim_test('schedule_file_2.osm')
+  # result = sim_test('schedule_file_2.osm')
   # end
 
   def test_schedule_fixed_interval_rb
