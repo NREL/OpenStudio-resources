@@ -541,10 +541,9 @@ class ModelTests < Minitest::Test
     result = sim_test('ghx_horizontal_trench_xing.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.5.1
-  # def test_ghx_horizontal_trench_xing_osm
-  #  result = sim_test('ghx_horizontal_trench_xing.osm')
-  # end
+  def test_ghx_horizontal_trench_xing_osm
+    result = sim_test('ghx_horizontal_trench_xing.osm')
+  end
 
   def test_coil_waterheating_desuperheater_osm
     result = sim_test('coil_waterheating_desuperheater.osm')
