@@ -797,6 +797,14 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('vrf_airloophvac.osm')
   end
 
+  def test_FT_vrf_fluid_temperature_control
+    sdd_ft_test('vrf_fluid_temperature_control.osm')
+  end
+
+  def test_FT_vrf_fluid_temperature_control_hr
+    sdd_ft_test('vrf_fluid_temperature_control_hr.osm')
+  end
+
   def test_FT_vrf_watercooled
     sdd_ft_test('vrf_watercooled.osm')
   end
