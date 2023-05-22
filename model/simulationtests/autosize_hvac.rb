@@ -864,6 +864,7 @@ zones.each_with_index do |zn, zone_index|
     ptac.addToThermalZone(zn)
   when 7
     vrf = OpenStudio::Model::AirConditionerVariableRefrigerantFlow.new(model)
+    vrf.autosizeResistiveDefrostHeaterCapacity
     # E+ now throws when the CoolingEIRLowPLR has a curve minimum value of x which
     # is higher than the Minimum Heat Pump Part-Load Ratio.
     # The curve has a min of 0.5 here, so set the MinimumHeatPumpPartLoadRatio to

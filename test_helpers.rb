@@ -867,7 +867,8 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       'autosizedDesignGeneratorFluidFlowRate' # Generator loop not supported by OS
     ],
     'OS:AirConditioner:VariableRefrigerantFlow' => [
-      'autosizedWaterCondenserVolumeFlowRate' # Water-cooled VRF not supported by OS
+      'autosizedResistiveDefrostHeaterCapacity', # OS is missing newly added E+ units in 3.6.0: TODO remove in 3.6.1 https://github.com/NREL/EnergyPlus/pull/9898
+      'autosizedWaterCondenserVolumeFlowRate' # Water-cooled VRF not supported by OS (It is nowadays, but can't do both evaporatively cooled and water cooled)
     ],
     'OS:CoolingTower:TwoSpeed' => [
       'autosizedLowSpeedNominalCapacity', # Method only works on cooling towers sized a certain way, which test model isn't using
@@ -877,14 +878,13 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       'autosizedHeatingDesignCapacity', # No OS methods for this field
       'autosizedCoolingDesignCapacity' # No OS methods for this field
     ],
-    # TODO: for this, see https://github.com/NREL/EnergyPlus/pull/9898
     'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl' => [
       'autosizedResistiveDefrostHeaterCapacity', # Missing units in 23.1.0-IOFreeze. TODO: hopefully remove in 23.1.0 official
-      'autosizedRatedEvaporativeCapacity' # As of 23.1.0-IOFreeze, this is never autosized nor reported
+      'autosizedRatedEvaporativeCapacity' # As of 23.1.0, this is never autosized nor reported
     ],
     'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR' => [
       'autosizedResistiveDefrostHeaterCapacity', # Missing units in 23.1.0-IOFreeze. TODO: hopefully remove in 23.1.0 official
-      'autosizedRatedEvaporativeCapacity' # As of 23.1.0-IOFreeze, this is never autosized nor reported
+      'autosizedRatedEvaporativeCapacity' # As of 23.1.0, this is never autosized nor reported
     ],
     'OS:HeatPump:AirToWater:FuelFired:Cooling' => [
       'autosizedDesignTemperatureLift' # E+ is missing it
@@ -981,9 +981,9 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       'autosizedMinimumOutdoorAirFlowRate',
       'autosizedCoolingDesignAirFlowRate',
       'autosizedHeatingDesignAirFlowRate',
-      'coolingDesignLoad',
-      'designAirFlowRate',
-      'heatingDesignLoad'
+      'autosizedCoolingDesignLoad',
+      'autosizedDesignAirFlowRate',
+      'autosizedHeatingDesignLoad'
     ]
   }
 
