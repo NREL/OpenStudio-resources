@@ -1106,10 +1106,9 @@ class ModelTests < Minitest::Test
     result = sim_test('solar_collector_flat_plate_photovoltaicthermal_bipvt.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.5.1
-  # def test_solar_collector_flat_plate_photovoltaicthermal_bipvt_osm
-  #   result = sim_test('solar_collector_flat_plate_photovoltaicthermal_bipvt.osm')
-  # end
+  def test_solar_collector_flat_plate_photovoltaicthermal_bipvt_osm
+    result = sim_test('solar_collector_flat_plate_photovoltaicthermal_bipvt.osm')
+  end
 
   def test_solar_collector_integralcollectorstorage_rb
     result = sim_test('solar_collector_integralcollectorstorage.rb')

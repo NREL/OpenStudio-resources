@@ -697,6 +697,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('solar_collector_flat_plate_photovoltaicthermal.osm')
   end
 
+  def test_FT_solar_collector_flat_plate_photovoltaicthermal_bipvt
+    sdd_ft_test('solar_collector_flat_plate_photovoltaicthermal_bipvt.osm')
+  end
+
   def test_FT_solar_collector_flat_plate_water
     sdd_ft_test('solar_collector_flat_plate_water.osm')
   end
