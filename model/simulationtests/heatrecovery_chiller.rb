@@ -58,7 +58,7 @@ cooling_loop.setName('ChW Loop')
 heat_recovery_loop = OpenStudio::Model::PlantLoop.new(model)
 heat_recovery_loop.setName('HeatRecovery Loop')
 hr_pump = OpenStudio::Model::PumpVariableSpeed.new(model)
-hr_pump.setName("#{heat_recovery_loop} VSD Pump")
+hr_pump.setName("#{heat_recovery_loop.nameString} VSD Pump")
 hr_pump.addToNode(heat_recovery_loop.supplyInletNode)
 
 hr_spm_sch = OpenStudio::Model::ScheduleRuleset.new(model)

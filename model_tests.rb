@@ -562,6 +562,15 @@ class ModelTests < Minitest::Test
     result = sim_test('coil_waterheating_desuperheater_2.rb')
   end
 
+  def test_coil_userdefined_rb
+    result = sim_test('coil_userdefined.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.5.1
+  # def test_coil_userdefined_osm
+  #  result = sim_test('coil_userdefined.osm')
+  # end
+
   def test_headered_pumps_osm
     result = sim_test('headered_pumps.osm')
   end
@@ -585,6 +594,15 @@ class ModelTests < Minitest::Test
   def test_heatexchanger_desiccant_balancedflow_osm
     result = sim_test('heatexchanger_desiccant_balancedflow.osm')
   end
+
+  def test_heatpump_airtowater_fuelfired_rb
+    result = sim_test('heatpump_airtowater_fuelfired.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.5.1
+  # def test_heatpump_airtowater_fuelfired_osm
+  # result = sim_test('heatpump_airtowater_fuelfired.osm')
+  # end
 
   def test_heatpump_hot_water_rb
     result = sim_test('heatpump_hot_water.rb')
@@ -820,6 +838,15 @@ class ModelTests < Minitest::Test
   def test_outputcontrol_files_osm
     result = sim_test('outputcontrol_files.osm')
   end
+
+  def test_outputcontrol_timestamp_rb
+    result = sim_test('outputcontrol_timestamp.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.5.1
+  # def test_outputcontrol_timestamp_osm
+  # result = sim_test('outputcontrol_timestamp.osm')
+  # end
 
   def test_output_objects_rb
     result = sim_test('output_objects.rb')
@@ -1079,6 +1106,15 @@ class ModelTests < Minitest::Test
     result = sim_test('solar_collector_flat_plate_photovoltaicthermal.osm')
   end
 
+  def test_solar_collector_flat_plate_photovoltaicthermal_bipvt_rb
+    result = sim_test('solar_collector_flat_plate_photovoltaicthermal_bipvt.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.5.1
+  # def test_solar_collector_flat_plate_photovoltaicthermal_bipvt_osm
+  #   result = sim_test('solar_collector_flat_plate_photovoltaicthermal_bipvt.osm')
+  # end
+
   def test_solar_collector_integralcollectorstorage_rb
     result = sim_test('solar_collector_integralcollectorstorage.rb')
   end
@@ -1271,6 +1307,24 @@ class ModelTests < Minitest::Test
 
   def test_vrf_airloophvac_rb
     result = sim_test('vrf_airloophvac.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.5.1
+  # def test_vrf_fluid_temperature_control_osm
+  # result = sim_test('vrf_fluid_temperature_control.osm')
+  # end
+
+  def test_vrf_fluid_temperature_control_rb
+    result = sim_test('vrf_fluid_temperature_control.rb')
+  end
+
+  # TODO: To be added in the next official release after: 3.5.1
+  # def test_vrf_fluid_temperature_control_hr_osm
+  # result = sim_test('vrf_fluid_temperature_control_hr.osm')
+  # end
+
+  def test_vrf_fluid_temperature_control_hr_rb
+    result = sim_test('vrf_fluid_temperature_control_hr.rb')
   end
 
   def test_water_economizer_osm

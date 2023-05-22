@@ -877,12 +877,21 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       'autosizedHeatingDesignCapacity', # No OS methods for this field
       'autosizedCoolingDesignCapacity' # No OS methods for this field
     ],
-    # TODO: Temporary pending a new E+ release where we can add several VRF Types
-    # cf https://github.com/NREL/EnergyPlus/pull/9804
-    'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl' => 'all',
-    'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR' => 'all',
-    'OS:Coil:Cooling:DX:VariableRefrigerantFlow:FluidTemperatureControl' => 'all',
-    'OS:Coil:Heating:DX:VariableRefrigerantFlow:FluidTemperatureControl' => 'all'
+    # TODO: for this, see https://github.com/NREL/EnergyPlus/pull/9898
+    'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl' => [
+      'autosizedResistiveDefrostHeaterCapacity', # Missing units in 23.1.0-IOFreeze. TODO: hopefully remove in 23.1.0 official
+      'autosizedRatedEvaporativeCapacity' # As of 23.1.0-IOFreeze, this is never autosized nor reported
+    ],
+    'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR' => [
+      'autosizedResistiveDefrostHeaterCapacity', # Missing units in 23.1.0-IOFreeze. TODO: hopefully remove in 23.1.0 official
+      'autosizedRatedEvaporativeCapacity' # As of 23.1.0-IOFreeze, this is never autosized nor reported
+    ],
+    'OS:HeatPump:AirToWater:FuelFired:Cooling' => [
+      'autosizedDesignTemperatureLift' # E+ is missing it
+    ],
+    'OS:HeatPump:AirToWater:FuelFired:Heating' => [
+      'autosizedDesignTemperatureLift' # E+ is missing it
+    ]
   }
 
   # Aliases for some OS onjects
