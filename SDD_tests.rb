@@ -461,6 +461,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('heatexchanger_desiccant_balancedflow.osm')
   end
 
+  def test_FT_heatpump_airtowater_fuelfired
+    sdd_ft_test('heatpump_airtowater_fuelfired.osm')
+  end
+
   def test_FT_heatpump_hot_water
     sdd_ft_test('heatpump_hot_water.osm')
   end
