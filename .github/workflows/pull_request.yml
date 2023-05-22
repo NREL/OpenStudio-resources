@@ -80,12 +80,14 @@ jobs:
                 raise ValueError("Something went wrong when querying {}, status={}".format(url, r.status_code))
                 exit(0)
             data = r.json()
-            matched_installers = [x['browser_download_url'] for x in data['assets'] if 'Ubuntu-20.04.deb' in x['name']]
+            matched_installers = [x['browser_download_url'] for x in data['assets'] if 'Ubuntu-20.04-x86_64.deb' in x['name']]
 
             if len(matched_installers) == 0:
-                matched_installers = [x['browser_download_url'] for x in data['assets'] if 'Linux.deb' in x['name']]
-                if len(matched_installers) ==0:
-                    raise ValueError("Cannot locate latest openstudio installer")
+                matched_installers = [x['browser_download_url'] for x in data['assets'] if 'Ubuntu-20.04.deb' in x['name']]
+                if len(matched_installers) == 0:
+                    matched_installers = [x['browser_download_url'] for x in data['assets'] if 'Linux.deb' in x['name']]
+                    if len(matched_installers) ==0:
+                        raise ValueError("Cannot locate latest openstudio installer")
 
             if len(matched_installers) > 1:
                 print(f"Found more than one potential installer... {matched_installers}. Using the first found")

@@ -867,7 +867,8 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       'autosizedDesignGeneratorFluidFlowRate' # Generator loop not supported by OS
     ],
     'OS:AirConditioner:VariableRefrigerantFlow' => [
-      'autosizedWaterCondenserVolumeFlowRate' # Water-cooled VRF not supported by OS
+      'autosizedResistiveDefrostHeaterCapacity', # OS is missing newly added E+ units in 3.6.0: TODO remove in 3.6.1 https://github.com/NREL/EnergyPlus/pull/9898
+      'autosizedWaterCondenserVolumeFlowRate' # Water-cooled VRF not supported by OS (It is nowadays, but can't do both evaporatively cooled and water cooled)
     ],
     'OS:CoolingTower:TwoSpeed' => [
       'autosizedLowSpeedNominalCapacity', # Method only works on cooling towers sized a certain way, which test model isn't using
@@ -877,14 +878,13 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       'autosizedHeatingDesignCapacity', # No OS methods for this field
       'autosizedCoolingDesignCapacity' # No OS methods for this field
     ],
-    # TODO: for this, see https://github.com/NREL/EnergyPlus/pull/9898
     'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl' => [
       'autosizedResistiveDefrostHeaterCapacity', # Missing units in 23.1.0-IOFreeze. TODO: hopefully remove in 23.1.0 official
-      'autosizedRatedEvaporativeCapacity' # As of 23.1.0-IOFreeze, this is never autosized nor reported
+      'autosizedRatedEvaporativeCapacity' # As of 23.1.0, this is never autosized nor reported
     ],
     'OS:AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR' => [
       'autosizedResistiveDefrostHeaterCapacity', # Missing units in 23.1.0-IOFreeze. TODO: hopefully remove in 23.1.0 official
-      'autosizedRatedEvaporativeCapacity' # As of 23.1.0-IOFreeze, this is never autosized nor reported
+      'autosizedRatedEvaporativeCapacity' # As of 23.1.0, this is never autosized nor reported
     ],
     'OS:HeatPump:AirToWater:FuelFired:Cooling' => [
       'autosizedDesignTemperatureLift' # E+ is missing it
@@ -908,7 +908,6 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
   # not exist in the E+ output, even under a different name.
   # These are things the E+ team should fix.
   missing_getters = {
-
     'OS:Coil:Heating:Water:Baseboard:Radiant' => [
       'autosizedHeatingDesignCapacity'
     ],
@@ -950,7 +949,6 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     'OS:Fan:ComponentModel' => [
       'autosizedMinimumFlowRate' # Not in E+ SQL
     ]
-
   }
 
   # List of objects and methods where the getter name does not
@@ -968,6 +966,25 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       'autosizedReferenceCoolingCapacity' => 'autosizedRatedCoolingCapacity',
       'autosizedReferenceCoolingPowerConsumption' => 'autosizedRatedCoolingPowerConsumption'
     }
+  }
+
+  extra_methods = {
+    'OS:AirLoopHVAC' => [
+      'autosizedSumMinimumHeatingAirFlowRates',
+      'autosizedSumAirTerminalMaxAirFlowRate'
+    ],
+    'OS:Coil:Cooling:Water' => [
+      'autosizedDesignCoilLoad'
+    ],
+    'OS:ThermalZone' => [
+      # 'autosizedMaximumOutdoorAirFlowRate',
+      'autosizedMinimumOutdoorAirFlowRate',
+      'autosizedCoolingDesignAirFlowRate',
+      'autosizedHeatingDesignAirFlowRate',
+      'autosizedCoolingDesignLoad',
+      'autosizedDesignAirFlowRate',
+      'autosizedHeatingDesignLoad'
+    ]
   }
 
   # Search the IDD associated with this model
@@ -992,11 +1009,13 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     # Check if this object type has a different name in OS
     os_type = os_type_aliases[os_type] if os_type_aliases[os_type]
 
+    has_extra_methods = extra_methods.include?(os_type)
+
     # Convert to IDD type
     type = os_type.gsub('OS:', '').gsub(':', '')
 
     # Skip objects with no autosizable fields
-    next if autosizable_field_names.empty?
+    next if autosizable_field_names.empty? && !has_extra_methods
 
     # Skip certain object types entirely
     methods_to_skip = obj_types_to_skip[os_type]
@@ -1032,9 +1051,17 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       objs.sort.each do |o|
         obj = o if o.thermalZone.name.get == 'Story 5 North Perimeter Thermal Zone'
       end
+    when 'ThermalZone' # Get one that has an entry in the ZoneSizes
+      objs.sort.each do |o|
+        obj = o if o.nameString == 'Story 5 North Perimeter Thermal Zone'
+      end
     when 'AirLoopHVACUnitarySystem' # Need to check a unitary where no load flow is autosized
       objs.sort.each do |o|
         obj = o if o.name.get == 'Air Loop HVAC Unitary System 3'
+      end
+    when 'CoilCoolingWater' # Need to check a coil that is on an AirLoopHVAC directly or `autosizedDesignCoilLoad` won't work
+      objs.sort.each do |o|
+        obj = o if o.airLoopHVAC.is_initialized
       end
     end
 
@@ -1058,20 +1085,39 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
 
       # Check if the autosizedFoo method has been implemented for this object
       unless obj.respond_to? getter_name
-        missing_autosizedFoo << "#{getter_name} not a valid method for object of type #{type}"
+        missing_autosizedFoo << "'#{getter_name}' not a valid method for object of type #{type}"
         next
       end
 
       # Try the method on the object to ensure that the SQL query in C++ is correct
       val = obj.public_send(getter_name)
       if val.is_initialized
-        succeeded_autosizedFoo << "#{getter_name} succeeded for #{obj.name} of type #{type}"
+        succeeded_autosizedFoo << "'#{getter_name}' succeeded for '#{obj.name}' of type '#{type}'"
       else
-        failed_autosizedFoo << "#{getter_name} failed for #{obj.name} of type #{type}"
+        # require 'pry-byebug'; binding.pry
+        failed_autosizedFoo << "'#{getter_name}' failed for '#{obj.name}' of type '#{type}'"
+      end
+    end
+
+    if has_extra_methods
+      extra_methods[os_type].each do |getter_name|
+        # Check if the autosizedFoo method has been implemented for this object
+        unless obj.respond_to? getter_name
+          missing_autosizedFoo << "Extra getter '#{getter_name}' not a valid method for object of type '#{type}'"
+          next
+        end
+
+        # Try the method on the object to ensure that the SQL query in C++ is correct
+        val = obj.public_send(getter_name)
+        if val.is_initialized
+          succeeded_autosizedFoo << "Extra getter '#{getter_name}' succeeded for '#{obj.name}' of type '#{type}'"
+        else
+          # require 'pry-byebug'; binding.pry
+          failed_autosizedFoo << "Extra getter '#{getter_name}' failed for '#{obj.name}' of type '#{type}'"
+        end
       end
     end
   end
-
   puts "\n*** Autosizable Objects not Wrapped by OpenStudio ***"
   not_wrapped.each { |f| puts f }
 
