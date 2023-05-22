@@ -960,6 +960,10 @@ class ModelTests < Minitest::Test
     result = sim_test('python_plugin.rb')
   end
 
+  # Note JM: there is a special case in sim_test for this test to copy the
+  # necessary python file to the testruns/python_plugin.osm/ folder
+  # We cannot do it here since sim_test starts by deleting and recreating
+  # this folder
   def test_python_plugin_osm
     result = sim_test('python_plugin.osm')
   end
