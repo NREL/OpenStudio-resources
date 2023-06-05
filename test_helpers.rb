@@ -665,6 +665,19 @@ def sim_test(filename, options = {})
       cbor_target_path = File.join(files_dir, File.basename(cbor_ori_path))
 
       FileUtils.cp(cbor_ori_path, cbor_target_path)
+    elsif filename == 'python_plugin.osm'
+      # We need to manually copy the supporting schedule into
+      # the testruns folder for the simulation to be able to find it
+      plugin_ori_path = File.join(File.dirname(__FILE__),
+                                  'model/simulationtests/python_plugin_program.py')
+      plugin_ori_path = File.realpath(plugin_ori_path)
+
+      # Have to make the directory first
+      files_dir = File.join(dir, 'files/')
+      FileUtils.mkdir_p(files_dir)
+      python_target_path = File.join(files_dir, File.basename(plugin_ori_path))
+
+      FileUtils.cp(plugin_ori_path, python_target_path)
     end
 
   when '.rb'

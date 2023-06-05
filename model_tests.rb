@@ -541,10 +541,9 @@ class ModelTests < Minitest::Test
     result = sim_test('ghx_horizontal_trench_xing.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.5.1
-  # def test_ghx_horizontal_trench_xing_osm
-  #  result = sim_test('ghx_horizontal_trench_xing.osm')
-  # end
+  def test_ghx_horizontal_trench_xing_osm
+    result = sim_test('ghx_horizontal_trench_xing.osm')
+  end
 
   def test_coil_waterheating_desuperheater_osm
     result = sim_test('coil_waterheating_desuperheater.osm')
@@ -566,10 +565,9 @@ class ModelTests < Minitest::Test
     result = sim_test('coil_userdefined.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.5.1
-  # def test_coil_userdefined_osm
-  #  result = sim_test('coil_userdefined.osm')
-  # end
+  def test_coil_userdefined_osm
+    result = sim_test('coil_userdefined.osm')
+  end
 
   def test_headered_pumps_osm
     result = sim_test('headered_pumps.osm')
@@ -599,10 +597,9 @@ class ModelTests < Minitest::Test
     result = sim_test('heatpump_airtowater_fuelfired.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.5.1
-  # def test_heatpump_airtowater_fuelfired_osm
-  # result = sim_test('heatpump_airtowater_fuelfired.osm')
-  # end
+  def test_heatpump_airtowater_fuelfired_osm
+    result = sim_test('heatpump_airtowater_fuelfired.osm')
+  end
 
   def test_heatpump_hot_water_rb
     result = sim_test('heatpump_hot_water.rb')
@@ -843,10 +840,9 @@ class ModelTests < Minitest::Test
     result = sim_test('outputcontrol_timestamp.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.5.1
-  # def test_outputcontrol_timestamp_osm
-  # result = sim_test('outputcontrol_timestamp.osm')
-  # end
+  def test_outputcontrol_timestamp_osm
+    result = sim_test('outputcontrol_timestamp.osm')
+  end
 
   def test_output_objects_rb
     result = sim_test('output_objects.rb')
@@ -964,6 +960,10 @@ class ModelTests < Minitest::Test
     result = sim_test('python_plugin.rb')
   end
 
+  # Note JM: there is a special case in sim_test for this test to copy the
+  # necessary python file to the testruns/python_plugin.osm/ folder
+  # We cannot do it here since sim_test starts by deleting and recreating
+  # this folder
   def test_python_plugin_osm
     result = sim_test('python_plugin.osm')
   end
@@ -1110,10 +1110,9 @@ class ModelTests < Minitest::Test
     result = sim_test('solar_collector_flat_plate_photovoltaicthermal_bipvt.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.5.1
-  # def test_solar_collector_flat_plate_photovoltaicthermal_bipvt_osm
-  #   result = sim_test('solar_collector_flat_plate_photovoltaicthermal_bipvt.osm')
-  # end
+  def test_solar_collector_flat_plate_photovoltaicthermal_bipvt_osm
+    result = sim_test('solar_collector_flat_plate_photovoltaicthermal_bipvt.osm')
+  end
 
   def test_solar_collector_integralcollectorstorage_rb
     result = sim_test('solar_collector_integralcollectorstorage.rb')
@@ -1309,22 +1308,20 @@ class ModelTests < Minitest::Test
     result = sim_test('vrf_airloophvac.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.5.1
-  # def test_vrf_fluid_temperature_control_osm
-  # result = sim_test('vrf_fluid_temperature_control.osm')
-  # end
-
   def test_vrf_fluid_temperature_control_rb
     result = sim_test('vrf_fluid_temperature_control.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.5.1
-  # def test_vrf_fluid_temperature_control_hr_osm
-  # result = sim_test('vrf_fluid_temperature_control_hr.osm')
-  # end
+  def test_vrf_fluid_temperature_control_osm
+    result = sim_test('vrf_fluid_temperature_control.osm')
+  end
 
   def test_vrf_fluid_temperature_control_hr_rb
     result = sim_test('vrf_fluid_temperature_control_hr.rb')
+  end
+
+  def test_vrf_fluid_temperature_control_hr_osm
+    result = sim_test('vrf_fluid_temperature_control_hr.osm')
   end
 
   def test_water_economizer_osm

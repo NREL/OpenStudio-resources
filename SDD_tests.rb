@@ -313,6 +313,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('coil_waterheating_desuperheater_2.osm')
   end
 
+  def test_FT_coil_userdefined
+    sdd_ft_test('coil_userdefined.osm')
+  end
+
   def test_FT_cooling_coils
     sdd_ft_test('cooling_coils.osm')
   end
@@ -441,6 +445,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('ghx_horizontal_trench_kusuda.osm')
   end
 
+  def test_FT_ghx_horizontal_trench_xing
+    sdd_ft_test('ghx_horizontal_trench_xing.osm')
+  end
+
   def test_FT_headered_pumps
     sdd_ft_test('headered_pumps.osm')
   end
@@ -451,6 +459,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_heatexchanger_desiccant_balancedflow
     sdd_ft_test('heatexchanger_desiccant_balancedflow.osm')
+  end
+
+  def test_FT_heatpump_airtowater_fuelfired
+    sdd_ft_test('heatpump_airtowater_fuelfired.osm')
   end
 
   def test_FT_heatpump_hot_water
@@ -555,6 +567,10 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_outputcontrol_files
     sdd_ft_test('outputcontrol_files.osm')
+  end
+
+  def test_FT_outputcontrol_timestamp
+    sdd_ft_test('outputcontrol_timestamp.osm')
   end
 
   def test_FT_output_objects
@@ -681,6 +697,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('solar_collector_flat_plate_photovoltaicthermal.osm')
   end
 
+  def test_FT_solar_collector_flat_plate_photovoltaicthermal_bipvt
+    sdd_ft_test('solar_collector_flat_plate_photovoltaicthermal_bipvt.osm')
+  end
+
   def test_FT_solar_collector_flat_plate_water
     sdd_ft_test('solar_collector_flat_plate_water.osm')
   end
@@ -775,6 +795,14 @@ class SddForwardTranslatorTests < Minitest::Test
 
   def test_FT_vrf_airloophvac
     sdd_ft_test('vrf_airloophvac.osm')
+  end
+
+  def test_FT_vrf_fluid_temperature_control
+    sdd_ft_test('vrf_fluid_temperature_control.osm')
+  end
+
+  def test_FT_vrf_fluid_temperature_control_hr
+    sdd_ft_test('vrf_fluid_temperature_control_hr.osm')
   end
 
   def test_FT_vrf_watercooled
