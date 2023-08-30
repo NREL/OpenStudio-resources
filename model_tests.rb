@@ -341,6 +341,15 @@ class ModelTests < Minitest::Test
     result = sim_test('dist_ht_cl.rb')
   end
 
+  # TODO: To be added in the next official release after: 3.6.1
+  # def test_dist_ht_steam_cl_osm
+    # result = sim_test('dist_ht_steam_cl.osm')
+  # end
+
+  def test_dist_ht_steam_cl_rb
+    result = sim_test('dist_ht_steam_cl.rb')
+  end
+
   def test_doas_osm
     result = sim_test('doas.osm')
   end
