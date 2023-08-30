@@ -343,7 +343,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.6.1
   # def test_dist_ht_steam_cl_osm
-    # result = sim_test('dist_ht_steam_cl.osm')
+  # result = sim_test('dist_ht_steam_cl.osm')
   # end
 
   def test_dist_ht_steam_cl_rb
