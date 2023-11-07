@@ -30,6 +30,7 @@ class BaselineModel < OpenStudio::Model::Model
       return false
     end
 
+    # TODO: plenum_height does not create a Plenum!
     if plenum_height < 0
       return false
     end
@@ -1246,18 +1247,18 @@ class BaselineModel < OpenStudio::Model::Model
   end
 
   # NOTE: Not in the least complete, but I don't need it right now
-  def renames_air_nodes
+  def rename_air_nodes
     # Rename some nodes and such, for ease of debugging
     getAirLoopHVACs.each do |a|
       a.supplyInletNode.setName("#{a.name} Supply Inlet Node")
       a.supplyOutletNode.setName("#{a.name} Supply Outlet Node")
       a.mixedAirNode.get.setName("#{a.name} Mixed Air Node")
-
-      # Rename Zone Air Nodes
-      getThermalZones.each { |z| z.zoneAirNode.setName("#{z.name} Zone Air Node") }
-
-      # Rename thermostats
-      getThermostatSetpointDualSetpoints.each { |t| t.setName("#{t.thermalZone.get.name} ThermostatSetpointDualSetpoint") }
     end
+
+    # Rename Zone Air Nodes
+    getThermalZones.each { |z| z.zoneAirNode.setName("#{z.name} Zone Air Node") }
+
+    # Rename thermostats
+    getThermostatSetpointDualSetpoints.each { |t| t.setName("#{t.thermalZone.get.name} ThermostatSetpointDualSetpoint") }
   end
 end
