@@ -129,6 +129,10 @@ class ModelTests < Minitest::Test
     result = sim_test('baseline_sys01.rb')
   end
 
+  def test_baseline_sys01_py
+    result = sim_test('baseline_sys01.py')
+  end
+
   def test_baseline_sys02_osm
     result = sim_test('baseline_sys02.osm')
   end

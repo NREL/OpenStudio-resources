@@ -445,7 +445,7 @@ class BaselineModel(openstudio.model.Model):
         # if system number is not recognized
         raise ValueError(f"Cannot find system number {ashrae_sys_num}")
 
-    def set_space_types(self):
+    def set_space_type(self):
         # baseline space type taken from 90.1-2004 Large Office, Whole Building on-demand space type generator
         space_type = openstudio.model.SpaceType(self)
         space_type.setName("Baseline Model Space Type")
@@ -616,8 +616,9 @@ class BaselineModel(openstudio.model.Model):
         if workflow.is_initialized():
             weather = workflow.get().weatherFile()
             if weather.is_initialized():
-                weather_path = workflow.get().findFile(weather.get())
+                weather_path = workflow.get().findFile(str(weather.get()))
                 if weather_path.is_initialized():
+                    weather_path = weather_path.get()
                     ddy_path = weather_path.replace_extension("ddy")
         # make sure the file exists on the filesystem; if it does, open it
         if not ddy_path:
@@ -625,7 +626,8 @@ class BaselineModel(openstudio.model.Model):
         if not openstudio.exists(ddy_path):
             raise ValueError(f"Couldn't find DDY path at {ddy_path}")
 
-        ddy_idf = openstudio.IdfFile.load(ddy_path, openstudio.IddFileType("EnergyPlus")).get()
+        # TODO: I messed up the SWIG typemap for Path
+        ddy_idf = openstudio.IdfFile.load(Path(str(ddy_path)), openstudio.IddFileType("EnergyPlus")).get()
         ddy_workspace = openstudio.Workspace(ddy_idf)
         reverse_translator = openstudio.energyplus.ReverseTranslator()
         ddy_model = reverse_translator.translateWorkspace(ddy_workspace)
@@ -636,6 +638,8 @@ class BaselineModel(openstudio.model.Model):
             for d in ddy_model.getDesignDays()
             if any([x in d.nameString() for x in [".4% Condns DB", "99.6% Condns DB"]])
         ]
+        if not ddy_objects:
+            raise ValueError("Couldn't load any Design Days")
         # Otherwise, get all .4% and 99.6%
         if len(ddy_objects) < 2:
             ddy_objects = [d for d in ddy_model.getDesignDays() if any([x in d.nameString() for x in [".4%", "99.6%"]])]
@@ -662,7 +666,13 @@ class BaselineModel(openstudio.model.Model):
         yd = self.getYearDescription()
         yd.setDayofWeekforStartDay("Thursday")
 
-    def save_openstudio_osm(self, osm_save_directory: Path, osm_name: str):
+    def save_openstudio_osm(self, osm_name: str, osm_save_directory: Optional[Path] = None):
+        """Save an openstudio model.
+
+        If osm_save_directory is None, Path.cwd() is used.
+        """
+        if osm_save_directory is None:
+            osm_save_directory = Path.cwd()
         self.force_year_description()
         save_path = osm_save_directory / osm_name
         print(f"Saving to {save_path}")

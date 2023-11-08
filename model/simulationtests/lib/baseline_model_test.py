@@ -140,7 +140,7 @@ def test_add_hvac(ashrae_sys_num: str):
     "model",
     [pytest.param(_one_zone_model(), id="one_zone"), pytest.param(_two_zone_model(), id="two_zones")],
 )
-def test_set_space_types(model: BaselineModel):
+def test_set_space_type(model: BaselineModel):
     assert not model.getSpaceTypes()
     assert not model.getPeopleDefinitions()
     assert not model.getLightsDefinitions()
@@ -162,7 +162,7 @@ def test_set_space_types(model: BaselineModel):
         assert space.electricEquipmentPower() == 0
         assert not space.designSpecificationOutdoorAir().is_initialized()
 
-    model.set_space_types()
+    model.set_space_type()
     assert len(model.getSpaceTypes()) == 1
     assert len(model.getPeopleDefinitions()) == 1
     assert len(model.getLightsDefinitions()) == 1
