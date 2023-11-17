@@ -125,15 +125,14 @@ elsif ENV['USE_EPLUS_SPACES'].to_s.downcase == 'false'
 end
 
 def get_cli_subcommand_from_env(sdk_version_str, debug: false)
-
   cur_sdk_version = Gem::Version.new(sdk_version_str)
   if debug
     puts "sdk_version_str=#{sdk_version_str}, cur_sdk_version=#{cur_sdk_version}"
   end
-  labs_default = cur_sdk_version >= Gem::Version.new("3.7.0-rc2")
+  labs_default = cur_sdk_version >= Gem::Version.new('3.7.0-rc2')
 
   if ENV['CLI_SUBCOMMAND'].nil?
-    default_cli_impl = labs_default ? "labs (C++)" : "classic (Ruby)"
+    default_cli_impl = labs_default ? 'labs (C++)' : 'classic (Ruby)'
     puts "Using the default CLI Implementation: #{default_cli_impl}"
     return ''
   end
@@ -145,20 +144,19 @@ def get_cli_subcommand_from_env(sdk_version_str, debug: false)
   end
 
   cli_sub = ENV['CLI_SUBCOMMAND'].to_s.downcase
-  if !["classic", "labs"].include?(cli_sub.downcase)
-    raise "ERROR: CLI_SUBCOMMAND must be one of [labs, classic]"
+  if !['classic', 'labs'].include?(cli_sub.downcase)
+    raise 'ERROR: CLI_SUBCOMMAND must be one of [labs, classic]'
   end
 
-  is_labs = (cli_sub == "labs")
-
+  is_labs = (cli_sub == 'labs')
 
   if is_labs && labs_default
-    puts "The C++ CLI is already the default, resetting the subcommand to empty"
+    puts 'The C++ CLI is already the default, resetting the subcommand to empty'
     return ''
   end
 
   if !is_labs && !labs_default
-    puts "The Ruby CLI is already the default, resetting the subcommand to empty"
+    puts 'The Ruby CLI is already the default, resetting the subcommand to empty'
     return ''
   end
 
