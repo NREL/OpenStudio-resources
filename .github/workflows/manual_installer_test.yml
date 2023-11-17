@@ -10,6 +10,14 @@ on:
       branch_name:
         description: 'The branch name to use and where to commit the test results. If ommited, it will default to the installer SHA'
         required: false
+      cli_subcommand:
+        type: choice
+        description: Force using the labs (C++) or classic (Ruby) CLI
+        default: default
+        options:
+        - default
+        - labs
+        - classic
 
 jobs:
   test_installer:
@@ -31,6 +39,9 @@ jobs:
         set -x
         echo "Installer link: ${{ github.event.inputs.os_installer_link }}"
         echo "Branch Name: ${{ github.event.inputs.branch_name }}"
+        CLI_SUBCOMMAND=${{ github.event.inputs.cli_subcommand }}
+        echo "CLI_SUBCOMMAND=$CLI_SUBCOMMAND"
+        echo CLI_SUBCOMMAND=$CLI_SUBCOMMAND >> $GITHUB_ENV
         sudo apt update
         wget '${{ github.event.inputs.os_installer_link }}'
         sudo apt install -y ./OpenStudio*.deb
@@ -66,7 +77,7 @@ jobs:
       run: |
         set -x
         echo "nproc=$(nproc)"
-        N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb || true
+        N=$(nproc) CUSTOMTAG=SHA CLI_SUBCOMMAND=$CLI_SUBCOMMAND openstudio model_tests.rb || true
 
     - name: Run model_tests - second pass for failed tests
       continue-on-error: true
@@ -74,7 +85,7 @@ jobs:
       run: |
         set -x
         echo "nproc=$(nproc)"
-        DONOTRERUNIFSUCCESS=true N=$(nproc) CUSTOMTAG=SHA openstudio model_tests.rb || true
+        DONOTRERUNIFSUCCESS=true N=$(nproc) CUSTOMTAG=SHA CLI_SUBCOMMAND=$CLI_SUBCOMMAND openstudio model_tests.rb || true
 
     # This is a failing step!
     - name: Run highlevel_tests

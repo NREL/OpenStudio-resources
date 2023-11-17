@@ -131,7 +131,8 @@ def get_cli_subcommand_from_env(sdk_version_str, debug: false)
   end
   labs_default = cur_sdk_version >= Gem::Version.new('3.7.0-rc2')
 
-  if ENV['CLI_SUBCOMMAND'].nil?
+  cli_sub = ENV.fetch('CLI_SUBCOMMAND', 'default').to_s.downcase
+  if cli_sub == "default"
     default_cli_impl = labs_default ? 'labs (C++)' : 'classic (Ruby)'
     puts "Using the default CLI Implementation: #{default_cli_impl}"
     return ''
@@ -143,7 +144,6 @@ def get_cli_subcommand_from_env(sdk_version_str, debug: false)
     return ''
   end
 
-  cli_sub = ENV['CLI_SUBCOMMAND'].to_s.downcase
   if !['classic', 'labs'].include?(cli_sub.downcase)
     raise 'ERROR: CLI_SUBCOMMAND must be one of [labs, classic]'
   end
