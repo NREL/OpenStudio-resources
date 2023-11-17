@@ -124,6 +124,51 @@ elsif ENV['USE_EPLUS_SPACES'].to_s.downcase == 'false'
   $UseEplusSpaces = false
 end
 
+def get_cli_subcommand_from_env(sdk_version_str, debug: false)
+
+  cur_sdk_version = Gem::Version.new(sdk_version_str)
+  if debug
+    puts "sdk_version_str=#{sdk_version_str}, cur_sdk_version=#{cur_sdk_version}"
+  end
+  labs_default = cur_sdk_version >= Gem::Version.new("3.7.0-rc2")
+
+  if ENV['CLI_SUBCOMMAND'].nil?
+    default_cli_impl = labs_default ? "labs (C++)" : "classic (Ruby)"
+    puts "Using the default CLI Implementation: #{default_cli_impl}"
+    return ''
+  end
+
+  cpp_cli_exists = cur_sdk_version >= Gem::Version.new('3.5.0')
+  if !cpp_cli_exists
+    puts "Version #{cur_sdk_version} does not have the C++ CLI, ignoring CLI_SUBCOMMAND"
+    return ''
+  end
+
+  cli_sub = ENV['CLI_SUBCOMMAND'].to_s.downcase
+  if !["classic", "labs"].include?(cli_sub.downcase)
+    raise "ERROR: CLI_SUBCOMMAND must be one of [labs, classic]"
+  end
+
+  is_labs = (cli_sub == "labs")
+
+
+  if is_labs && labs_default
+    puts "The C++ CLI is already the default, resetting the subcommand to empty"
+    return ''
+  end
+
+  if !is_labs && !labs_default
+    puts "The Ruby CLI is already the default, resetting the subcommand to empty"
+    return ''
+  end
+
+  puts "Setting CLI Subcommand to '#{cli_sub}'"
+
+  return cli_sub
+end
+
+$Cli_Subcommand = get_cli_subcommand_from_env($SdkVersion, debug: false)
+
 # config stuff
 $OpenstudioCli = OpenStudio.getOpenStudioCLI
 $RootDir = File.absolute_path(File.dirname(__FILE__))
@@ -687,7 +732,7 @@ def sim_test(filename, options = {})
     FileUtils.cp($OswFile, in_osw)
 
     # command to generate the initial osm
-    command = "\"#{$OpenstudioCli}\" \"#{File.join(base_dir, filename)}\""
+    command = "\"#{$OpenstudioCli}\" #{$Cli_Subcommand} \"#{File.join(base_dir, filename)}\""
     run_command(command, dir, 3600)
 
     # tests used to write out.osm
@@ -730,7 +775,7 @@ def sim_test(filename, options = {})
   end
 
   # command to run the in_osw
-  command = "\"#{$OpenstudioCli}\" #{extra_options} run #{extra_run_options} -w \"#{in_osw}\""
+  command = "\"#{$OpenstudioCli}\" #{$Cli_Subcommand} #{extra_options} run #{extra_run_options} -w \"#{in_osw}\""
   if options[:debug]
     puts 'COMMAND:'
     puts command
@@ -775,7 +820,7 @@ def intersect_test(filename)
     file.puts erb_out
   end
 
-  command = "\"#{$OpenstudioCli}\" intersect.rb"
+  command = "\"#{$OpenstudioCli}\" #{$Cli_Subcommand} intersect.rb"
   run_command(command, dir, 360)
 end
 
@@ -806,7 +851,7 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     when '.osm'
       FileUtils.cp(File.join($ModelDir, filename), in_osm)
     when '.rb'
-      command = "\"#{$OpenstudioCli}\" \"#{File.join($ModelDir, filename)}\""
+      command = "\"#{$OpenstudioCli}\" #{$Cli_Subcommand} \"#{File.join($ModelDir, filename)}\""
       run_command(command, dir, 3600)
 
       # tests used to write out.osm
@@ -819,8 +864,8 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       raise "Cannot find file #{in_osm}" if !File.exist?(in_osm)
     end
 
-    command = "\"#{$OpenstudioCli}\" run -w \"#{in_osw}\""
-    # command = "\"#{$OpenstudioCli}\" run --debug -w \"#{in_osw}\""
+    command = "\"#{$OpenstudioCli}\" #{$Cli_Subcommand} run -w \"#{in_osw}\""
+    # command = "\"#{$OpenstudioCli}\" #{$Cli_Subcommand} run --debug -w \"#{in_osw}\""
 
     run_command(command, dir, 3600)
   end
@@ -1374,8 +1419,8 @@ def sql_test(options = {})
     m.save(in_osm, true)
 
     # Run it
-    command = "\"#{$OpenstudioCli}\" run -w \"#{osw}\""
-    # command = "\"#{$OpenstudioCli}\" run --debug -w \"#{osw}\""
+    command = "\"#{$OpenstudioCli}\" #{$Cli_Subcommand} run -w \"#{osw}\""
+    # command = "\"#{$OpenstudioCli}\" #{$Cli_Subcommand} run --debug -w \"#{osw}\""
 
     run_command(command, dir, 3600)
   end
