@@ -141,12 +141,20 @@ class ModelTests < Minitest::Test
     result = sim_test('baseline_sys02.rb')
   end
 
+  def test_baseline_sys02_py
+    result = sim_test('baseline_sys02.py')
+  end
+
   def test_baseline_sys03_osm
     result = sim_test('baseline_sys03.osm')
   end
 
   def test_baseline_sys03_rb
     result = sim_test('baseline_sys03.rb')
+  end
+
+  def test_baseline_sys03_py
+    result = sim_test('baseline_sys03.py')
   end
 
   def test_baseline_sys04_osm
@@ -157,12 +165,20 @@ class ModelTests < Minitest::Test
     result = sim_test('baseline_sys04.rb')
   end
 
+  def test_baseline_sys04_py
+    result = sim_test('baseline_sys04.py')
+  end
+
   def test_baseline_sys05_osm
     result = sim_test('baseline_sys05.osm')
   end
 
   def test_baseline_sys05_rb
     result = sim_test('baseline_sys05.rb')
+  end
+
+  def test_baseline_sys05_py
+    result = sim_test('baseline_sys05.py')
   end
 
   def test_baseline_sys06_osm
@@ -173,12 +189,20 @@ class ModelTests < Minitest::Test
     result = sim_test('baseline_sys06.rb')
   end
 
+  def test_baseline_sys06_py
+    result = sim_test('baseline_sys06.py')
+  end
+
   def test_baseline_sys07_osm
     result = sim_test('baseline_sys07.osm')
   end
 
   def test_baseline_sys07_rb
     result = sim_test('baseline_sys07.rb')
+  end
+
+  def test_baseline_sys07_py
+    result = sim_test('baseline_sys07.py')
   end
 
   def test_baseline_sys08_osm
@@ -189,6 +213,10 @@ class ModelTests < Minitest::Test
     result = sim_test('baseline_sys08.rb')
   end
 
+  def test_baseline_sys08_py
+    result = sim_test('baseline_sys08.py')
+  end
+
   def test_baseline_sys09_osm
     result = sim_test('baseline_sys09.osm')
   end
@@ -197,12 +225,20 @@ class ModelTests < Minitest::Test
     result = sim_test('baseline_sys09.rb')
   end
 
+  def test_baseline_sys09_py
+    result = sim_test('baseline_sys09.py')
+  end
+
   def test_baseline_sys10_osm
     result = sim_test('baseline_sys10.osm')
   end
 
   def test_baseline_sys10_rb
     result = sim_test('baseline_sys10.rb')
+  end
+
+  def test_baseline_sys10_py
+    result = sim_test('baseline_sys10.py')
   end
 
   def test_coil_cooling_dx_rb
