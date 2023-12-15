@@ -55,7 +55,7 @@ for i, zone in enumerate(zones):
 
     storage.setThermalZone(zone)
     storage.setRadiativeFraction(0)
-    storage.setLifetimemodel("KandlerSmith")
+    storage.setLifetimeModel("KandlerSmith")
     storage.setInitialFractionalStateofCharge(0.7)
     storage.setDCtoDCChargingEfficiency(0.95)
     storage.setBatterySpecificHeatCapacity(1500)
