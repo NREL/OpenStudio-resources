@@ -43,9 +43,9 @@ hx.setControlType("HeatingSetpointModulated")
 plant.addDemandBranchForComponent(hx)
 
 chiller = model.getChillerElectricEIRs()[0]
-hx.addToNode(chiller.supplyInletmodelObject().get().to_Node().get())
+hx.addToNode(chiller.supplyInletModelObject().get().to_Node().get())
 
-hx_outlet_node = hx.supplyOutletmodelObject().get().to_Node().get()
+hx_outlet_node = hx.supplyOutletModelObject().get().to_Node().get()
 # hotWaterOutletNode = plant.supplyOutletNode()
 osTime = openstudio.Time(0, 24, 0, 0)
 hotWaterTempSchedule = openstudio.model.ScheduleRuleset(model)

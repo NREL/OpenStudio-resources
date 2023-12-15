@@ -155,13 +155,13 @@ for i, s in enumerate(air_systems):
     spm_oa_pretreat.setMaximumSetpointTemperature(99.0)
     spm_oa_pretreat.setMinimumSetpointHumidityRatio(0.00001)
     spm_oa_pretreat.setMaximumSetpointHumidityRatio(1.0)
-    mixed_air_node = oa_system.mixedAirmodelObject().get().to_Node().get()
+    mixed_air_node = oa_system.mixedAirModelObject().get().to_Node().get()
     spm_oa_pretreat.setReferenceSetpointNode(mixed_air_node)
     spm_oa_pretreat.setMixedAirStreamNode(mixed_air_node)
     spm_oa_pretreat.setOutdoorAirStreamNode(oa_system.outboardOANode().get())
-    return_air_node = oa_system.returnAirmodelObject().get().to_Node().get()
+    return_air_node = oa_system.returnAirModelObject().get().to_Node().get()
     spm_oa_pretreat.setReturnAirStreamNode(return_air_node)
-    hx_outlet = hx.primaryAirOutletmodelObject().get().to_Node().get()
+    hx_outlet = hx.primaryAirOutletModelObject().get().to_Node().get()
     spm_oa_pretreat.addToNode(hx_outlet)
 
 

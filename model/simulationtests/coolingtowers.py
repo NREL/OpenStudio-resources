@@ -38,8 +38,8 @@ condenser_loop.addSupplyBranchForComponent(newTower2)
 
 modelCoefficient = openstudio.model.CoolingTowerPerformanceCoolTools(model)
 
-newTower2.setmodelType("CoolToolsUserDefined")
-newTower2.setmodelCoefficient(modelCoefficient)
+newTower2.setModelType("CoolToolsUserDefined")
+newTower2.setModelCoefficient(modelCoefficient)
 newTower2.setMinimumAirFlowRateRatio(0.2)
 newTower2.setFractionofTowerCapacityinFreeConvectionRegime(0.125)
 newTower2.setBasinHeaterCapacity(450.0)
@@ -56,8 +56,8 @@ condenser_loop.addSupplyBranchForComponent(newTower3)
 
 modelCoefficient = openstudio.model.CoolingTowerPerformanceYorkCalc(model)
 
-newTower3.setmodelType("YorkCalcUserDefined")
-newTower3.setmodelCoefficient(modelCoefficient)
+newTower3.setModelType("YorkCalcUserDefined")
+newTower3.setModelCoefficient(modelCoefficient)
 newTower3.setDesignApproachTemperature(8.9)
 newTower3.setDesignRangeTemperature(2.6)
 newTower3.setMinimumAirFlowRateRatio(0.2)

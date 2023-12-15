@@ -1160,5 +1160,5 @@ class BaselineModel(openstudio.model.Model):
         # Rename thermostats
         [
             t.setName("{t.thermalZone().get().nameString()} ThermostatSetpointDualSetpoint")
-            for z in self.getThermostatSetpointDualSetpoints()
+            for t in self.getThermostatSetpointDualSetpoints()
         ]

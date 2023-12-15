@@ -38,7 +38,7 @@ airloop.addBranchForZone(zone)
 coil = (
     airloop.supplyComponents(openstudio.model.CoilCoolingDXSingleSpeed.iddObjectType())[0].to_StraightComponent().get()
 )
-node = coil.outletmodelObject().get().to_Node().get()
+node = coil.outletModelObject().get().to_Node().get()
 new_coil = openstudio.model.CoilCoolingDXTwoStageWithHumidityControlMode(m)
 new_coil.addToNode(node)
 coil.remove()
@@ -78,10 +78,10 @@ coil = airloop.supplyComponents(openstudio.model.CoilCoolingWater.iddObjectType(
 newcoil = openstudio.model.CoilCoolingDXVariableSpeed(m)
 coildata = openstudio.model.CoilCoolingDXVariableSpeedSpeedData(m)
 newcoil.addSpeed(coildata)
-newcoil.addToNode(coil.airOutletmodelObject().get().to_Node().get())
+newcoil.addToNode(coil.airOutletModelObject().get().to_Node().get())
 coil.remove()
 
-node = newcoil.outletmodelObject().get().to_Node().get()
+node = newcoil.outletModelObject().get().to_Node().get()
 
 # CoilHeatingDXVariableSpeed
 newcoil = openstudio.model.CoilHeatingDXVariableSpeed(m)

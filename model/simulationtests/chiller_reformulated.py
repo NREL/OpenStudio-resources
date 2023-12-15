@@ -32,7 +32,7 @@ pump2.addToNode(chilledWaterInletNode)
 
 chiller = openstudio.model.ChillerElectricReformulatedEIR(model)
 
-node = chilledWaterPlant.supplySplitter().lastOutletmodelObject().get().to_Node().get()
+node = chilledWaterPlant.supplySplitter().lastOutletModelObject().get().to_Node().get()
 chiller.addToNode(node)
 
 pipe3 = openstudio.model.PipeAdiabatic(model)

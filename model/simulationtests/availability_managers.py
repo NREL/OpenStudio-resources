@@ -57,7 +57,7 @@ for i, system in enumerate(systems):
 # Swap the coils so that the heating coil is before the DX to avoid frost
 # conditions on the DX cooling coil
 #      nmodel.getAirLoopHVACs.each do |a|
-#      n  hc = a.supplyComponents("OS_Coil_Heating_Gas".to_IddObjectType)[0].to_CoilHeatingGas.get
+#      n  hc = a.supplyComponents(openstudio.IddObjectType("OS_Coil_Heating_Gas")[0].to_CoilHeatingGas.get
 #      n  m_node = a.mixedAirNode.get
 #      n  hc.addToNode(m_node)
 #      nend

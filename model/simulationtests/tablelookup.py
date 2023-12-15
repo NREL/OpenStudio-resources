@@ -26,7 +26,7 @@ m.set_space_type()
 m.add_design_days()
 
 # There is only one, but to be safe, sort by name
-cc = sorted(model.getCoilCoolingDXSingleSpeeds(), key=lambda c: c.nameString())[0]
+cc = sorted(m.getCoilCoolingDXSingleSpeeds(), key=lambda c: c.nameString())[0]
 
 # wet-bulb temperature of air entering coil
 tiwb = openstudio.model.TableIndependentVariable(m)

@@ -81,4 +81,4 @@ init_pgrm_body = """
 init_pgrm.setBody(init_pgrm_body)
 
 # save the OpenStudio model (.osm)
-model.save(openstudio.Path("in.osm"), True)
+model.save("in.osm", True)

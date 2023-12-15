@@ -1,3 +1,5 @@
+import math
+
 import openstudio
 
 from lib.baseline_model import BaselineModel
@@ -11,7 +13,7 @@ model.add_geometry(length=50, width=50, num_floors=2, floor_to_floor_height=4, p
 spaces = sorted(model.getSpaces(), key=lambda s: s.nameString())
 
 # collapse all spaces into one thermal zone
-thermalZone = nil
+thermalZone = None
 for space in spaces:
     if thermalZone:
         temp = space.thermalZone().get()
@@ -30,7 +32,7 @@ model.set_constructions()
 materialName = "MAT-CC05 4 HW CONCRETE"
 # materialName = "Metal Decking"
 
-interiorMaterial = nil
+interiorMaterial = None
 for material in model.getStandardOpaqueMaterials():
     if material.nameString() == materialName:
         interiorMaterial = material
@@ -79,7 +81,7 @@ for space in spaces:
         surfaceArea += surface.grossArea()
 
     multiplier = fractionOfExteriorSurfaceArea * surfaceArea / interiorArea
-    interiorGroup.setMultiplier(multiplier.ceil())
+    interiorGroup.setMultiplier(math.ceil(multiplier))
 
 
 # turn this off

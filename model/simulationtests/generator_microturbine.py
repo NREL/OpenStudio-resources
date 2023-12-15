@@ -333,7 +333,7 @@ model.add_swh_end_uses(mixed_swh_loop, "Medium Office Bldg Swh")
 # The Capstone Reference Heat Recovery Water Flow Rate = 40 GPM
 gpm = 150.0
 water_use_connection = (
-    mixed_swh_loop.demandComponents("OS:WaterUse:Connections".to_IddObjectType())[0].to_WaterUseConnections().get()
+    mixed_swh_loop.demandComponents(openstudio.IddObjectType("OS:WaterUse:Connections"))[0].to_WaterUseConnections().get()
 )
 water_use_equipment = water_use_connection.waterUseEquipment()[0]
 water_equip_def = water_use_equipment.waterUseEquipmentDefinition()
@@ -345,7 +345,7 @@ water_equip_def.setName("Service Water Use Def #{gpm.round(1)} gal/min")
 # switch this as true
 base_case = False
 
-if not base_case():
+if not base_case:
 
     # Create a capstone c65 object using the method added above
     mchp, mchpHR = add_generator_mt_capstone65(model)
@@ -359,11 +359,11 @@ if not base_case():
     # We will connect the mchpHR on the same branch as the WaterHeater:Mixed right
     # before it.
     generator_operation_scheme_type = "FollowThermalLimitElectrical"
-    supply_components = mixed_swh_loop.supplyComponents("OS:WaterHeater:Mixed".to_IddObjectType())
+    supply_components = mixed_swh_loop.supplyComponents(openstudio.IddObjectType("OS:WaterHeater:Mixed"))
     waterheater = supply_components[0].to_WaterHeaterMixed().get()
 
     # Get the Use Side (demand) Inlet Node
-    inlet_node = waterheater.supplyInletmodelObject().get().to_Node().get()
+    inlet_node = waterheater.supplyInletModelObject().get().to_Node().get()
     mchpHR.addToNode(inlet_node)
 
     # Create a PlantEquipmentOperationHeatingLoad, and place the cogen first in

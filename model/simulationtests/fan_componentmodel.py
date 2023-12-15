@@ -44,9 +44,9 @@ alwaysOn = model.alwaysOnDiscreteSchedule()
 #                       D E M O N S T R A T E    A P I                        #
 ###############################################################################
 
-fan = openstudio.model.FanComponentmodel(model)
+fan = openstudio.model.FanComponentModel(model)
 # Demonstrate API
-fan.setName("My FanComponentmodel")
+fan.setName("My FanComponentModel")
 
 # Availability Schedule Name: Required Object
 sch = openstudio.model.ScheduleConstant(model)
@@ -226,7 +226,7 @@ fan.setFanWheelDiameter(0.3048)
 fan.setFanOutletArea(0.0873288576)
 fan.setMaximumFanStaticEfficiency(0.514)
 fan.setEulerNumberatMaximumFanStaticEfficiency(9.76)
-fan.setMaximumDimensionlessFanairflow(0.160331811647483)
+fan.setMaximumDimensionlessFanAirflow(0.160331811647483)
 fan.autosizeMotorFanPulleyRatio()
 fan.autosizeBeltMaximumTorque()
 fan.setBeltSizingFactor(1.0)
@@ -242,8 +242,8 @@ fan.setFanPressureRiseCurve(vSDExample)
 fan.setDuctStaticPressureResetCurve(diagnosticSPR)
 fan.setNormalizedFanStaticEfficiencyCurveNonStallRegion(fanEff120CPLANormal)
 fan.setNormalizedFanStaticEfficiencyCurveStallRegion(fanEff120CPLAStall)
-fan.setNormalizedDimensionlessairflowCurveNonStallRegion(fanDimFlowNormal)
-fan.setNormalizedDimensionlessairflowCurveStallRegion(fanDimFlowStall)
+fan.setNormalizedDimensionlessAirflowCurveNonStallRegion(fanDimFlowNormal)
+fan.setNormalizedDimensionlessAirflowCurveStallRegion(fanDimFlowStall)
 fan.setMaximumBeltEfficiencyCurve(beltMaxEffMedium)
 fan.setNormalizedBeltEfficiencyCurveRegion1(beltPartLoadRegion1)
 fan.setNormalizedBeltEfficiencyCurveRegion2(beltPartLoadRegion2)
@@ -259,7 +259,7 @@ fan.addToNode(regularAirLoopHVAC.supplyOutletNode())
 
 # AirLoopHVACUnitarySystem
 unitary_system = openstudio.model.AirLoopHVACUnitarySystem(model)
-unitary_system_fan = openstudio.model.FanComponentmodel(model)
+unitary_system_fan = openstudio.model.FanComponentModel(model)
 unitary_system_cc = openstudio.model.CoilCoolingDXSingleSpeed(model)
 unitary_system_hc = openstudio.model.CoilHeatingDXSingleSpeed(model)
 supp_unitary_system_hc = openstudio.model.CoilHeatingElectric(model)
@@ -287,7 +287,7 @@ for i, z in enumerate(zones):
 
     # ZoneHVACEvaporativeCoolerUnit: not wrapped yet as of 3.1.0
     # elif i == 1
-    #   supplyFan = openstudio.model.FanSystemmodel(model)
+    #   supplyFan = openstudio.model.FanSystemModel(model)
     #   zoneHVACEvaporativeCoolerUnit = openstudio.model.ZoneHVACEvaporativeCoolerUnit(model, supplyFan)
     #   zoneHVACEvaporativeCoolerUnit.addToThermalZone(z)
 

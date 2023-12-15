@@ -30,7 +30,7 @@ pump = openstudio.model.PumpVariableSpeed(model)
 pump.addToNode(hotWaterInletNode)
 
 boiler = openstudio.model.BoilerHotWater(model)
-node = hotWaterPlant.supplySplitter().lastOutletmodelObject().get().to_Node().get()
+node = hotWaterPlant.supplySplitter().lastOutletModelObject().get().to_Node().get()
 boiler.addToNode(node)
 
 pipe = openstudio.model.PipeAdiabatic(model)

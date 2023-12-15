@@ -55,7 +55,7 @@ a_hum_spm.setSetpointatHighReferenceHumidityRatio(0.00600)
 a_hum_spm.setLowReferenceHumidityRatio(0.00850)
 a_hum_spm.setHighReferenceHumidityRatio(0.01000)
 a_hum_spm.setReferenceNode(a.supplyInletNode())
-a_hum_spm.addToNode(cc.airOutletmodelObject().get().to_Node().get())
+a_hum_spm.addToNode(cc.airOutletModelObject().get().to_Node().get())
 # Also need to switch the controller water coil to enable dehumidification
 cc.controllerWaterCoil().get().setControlVariable("TemperatureAndHumidityRatio")
 

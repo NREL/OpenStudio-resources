@@ -36,7 +36,7 @@ for s in air_systems:
 
     spm = openstudio.model.SetpointManagerMixedAir(model)
 
-    outlet_node = hx.primaryAirOutletmodelObject().get().to_Node().get()
+    outlet_node = hx.primaryAirOutletModelObject().get().to_Node().get()
 
     spm.addToNode(outlet_node)
 

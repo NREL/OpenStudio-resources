@@ -1,6 +1,6 @@
 import openstudio
 
-model = openstudio.model.examplemodel()
+model = openstudio.model.exampleModel()
 
 lifeCycleCostParameters = model.getLifeCycleCostParameters()
 lifeCycleCostParameters.setAnalysisType("FEMP")
@@ -29,4 +29,4 @@ for construction in model.getConstructions():
 
 
 # save the OpenStudio model (.osm)
-model.save(openstudio.Path("in.osm"), True)
+model.save("in.osm", True)

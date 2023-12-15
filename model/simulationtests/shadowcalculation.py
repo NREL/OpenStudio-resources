@@ -47,7 +47,7 @@ else:
 sc.setMaximumFiguresInShadowOverlapCalculations(15000)
 
 sc.setPolygonClippingAlgorithm("SutherlandHodgman")
-sc.setSkyDiffusemodelingAlgorithm("SimpleSkyDiffusemodeling")
+sc.setSkyDiffuseModelingAlgorithm("SimpleSkyDiffuseModeling")
 
 if openstudio.VersionString(openstudio.openStudioVersion()) > openstudio.VersionString("2.9.1"):
     sc.setPixelCountingResolution(512)

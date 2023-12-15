@@ -63,7 +63,7 @@ def create_unitary_on_airloophvac(model, zone):
         .to_CoilCoolingDXSingleSpeed()
         .get()
     )
-    unitary.addToNode(coil.outletmodelObject().get().to_Node().get())
+    unitary.addToNode(coil.outletModelObject().get().to_Node().get())
     coil.remove()
 
     return unitary
@@ -88,7 +88,7 @@ def create_gshp_test(model, zone):
     # create a SWH Loop with a stratified water heater
     stratified_swh_loop = model.add_swh_loop("Stratified")
     water_heater_stratified = (
-        stratified_swh_loop.supplyComponents("OS:WaterHeater:Stratified".to_IddObjectType())[0]
+        stratified_swh_loop.supplyComponents(openstudio.IddObjectType("OS:WaterHeater:Stratified"))[0]
         .to_WaterHeaterStratified()
         .get()
     )
@@ -131,7 +131,7 @@ def create_multispeedac_test(model, zone):
     # Create a SHW Loop with a Mixed Water Heater
     mixed_swh_loop = model.add_swh_loop("Mixed")
     water_heater_mixed = (
-        mixed_swh_loop.supplyComponents("OS:WaterHeater:Mixed".to_IddObjectType())[0].to_WaterHeaterMixed().get()
+        mixed_swh_loop.supplyComponents(openstudio.IddObjectType("OS:WaterHeater:Mixed"))[0].to_WaterHeaterMixed().get()
     )
     # Add it as a heat rejection target
     coil_water_heating_desuperheater_multi.addToHeatRejectionTarget(water_heater_mixed)

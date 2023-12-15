@@ -64,12 +64,12 @@ doas.addAirLoop(airloop2)
 
 # Equipment
 heatexchanger_airtoair_sensibleandlatent = openstudio.model.HeatExchangerAirToAirSensibleAndLatent(model)
-fan = openstudio.model.FanSystemmodel(model)
+fan = openstudio.model.FanSystemModel(model)
 heatexchanger_airtoair_sensibleandlatent.addToNode(oas.outboardOANode().get())
 fan.addToNode(oas.outboardOANode().get())
 oas.outboardOANode().get().setName("#{oas.nameString()} OA Inlet Node")
-fan.outletmodelObject().get().setName("#{oas.nameString()} Fan Outlet Node")
-heatexchanger_airtoair_sensibleandlatent.primaryAirOutletmodelObject().get().setName(
+fan.outletModelObject().get().setName("#{oas.nameString()} Fan Outlet Node")
+heatexchanger_airtoair_sensibleandlatent.primaryAirOutletModelObject().get().setName(
     "#{oas.nameString()} CC Outlet Node"
 )
 
@@ -79,7 +79,7 @@ lat_temp_sch = openstudio.model.ScheduleRuleset(model)
 lat_temp_sch.defaultDaySchedule().addValue(openstudio.Time(0, 24, 0, 0), lat_temp_c)
 lat_stpt_manager1 = openstudio.model.SetpointManagerScheduled(model, lat_temp_sch)
 lat_stpt_manager1.addToNode(
-    heatexchanger_airtoair_sensibleandlatent.primaryAirOutletmodelObject().get().to_Node().get()
+    heatexchanger_airtoair_sensibleandlatent.primaryAirOutletModelObject().get().to_Node().get()
 )
 
 lat_stpt_manager3 = lat_stpt_manager1.clone(model).to_SetpointManagerScheduled().get()

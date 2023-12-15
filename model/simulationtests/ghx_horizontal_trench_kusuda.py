@@ -31,7 +31,7 @@ condenserWaterInletNode = condenserWaterPlant.supplyInletNode()
 pump = openstudio.model.PumpVariableSpeed(model)
 pump.addToNode(condenserWaterInletNode)
 
-hGroundHX1 = nil
+hGroundHX1 = None
 if openstudio.VersionString(openstudio.openStudioVersion()) > openstudio.VersionString("3.5.1"):
     kusudaAchenbach = openstudio.model.SiteGroundTemperatureUndisturbedKusudaAchenbach(model)
     kusudaAchenbach.setSoilThermalConductivity(1.08)
@@ -136,8 +136,8 @@ loadSchedule = openstudio.model.ScheduleRuleset(model)
 loadSchedule.setName("LoadSchedule")
 loadSchedule.defaultDaySchedule().addValue(osTime, 2000.0)
 loadSchedule_may_to_sept_rule = openstudio.model.ScheduleRule(loadSchedule)
-loadSchedule_may_to_sept_rule.setStartDate(openstudio.Date("May".to_MonthOfYear(), 1))
-loadSchedule_may_to_sept_rule.setEndDate(openstudio.Date("September".to_MonthOfYear(), 30))
+loadSchedule_may_to_sept_rule.setStartDate(openstudio.Date(openstudio.MonthOfYear("May"), 1))
+loadSchedule_may_to_sept_rule.setEndDate(openstudio.Date(openstudio.MonthOfYear("September"), 30))
 loadSchedule_may_to_sept_rule.daySchedule().addValue(osTime, -3000.0)
 loadProfile.setLoadSchedule(loadSchedule)
 

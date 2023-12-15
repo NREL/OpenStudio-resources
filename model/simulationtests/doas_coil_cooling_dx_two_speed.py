@@ -64,19 +64,19 @@ doas.addAirLoop(airloop2)
 
 # Equipment
 coil_cooling_dx_two_speed = openstudio.model.CoilCoolingDXTwoSpeed(model)
-fan = openstudio.model.FanSystemmodel(model)
+fan = openstudio.model.FanSystemModel(model)
 coil_cooling_dx_two_speed.addToNode(oas.outboardOANode().get())
 fan.addToNode(oas.outboardOANode().get())
 oas.outboardOANode().get().setName("#{oas.nameString()} OA Inlet Node")
-fan.outletmodelObject().get().setName("#{oas.nameString()} Fan Outlet Node")
-coil_cooling_dx_two_speed.outletmodelObject().get().setName("#{oas.nameString()} CC Outlet Node")
+fan.outletModelObject().get().setName("#{oas.nameString()} Fan Outlet Node")
+coil_cooling_dx_two_speed.outletModelObject().get().setName("#{oas.nameString()} CC Outlet Node")
 
 lat_temp_f = 70.0
 lat_temp_c = openstudio.convert(lat_temp_f, "F", "C").get()
 lat_temp_sch = openstudio.model.ScheduleRuleset(model)
 lat_temp_sch.defaultDaySchedule().addValue(openstudio.Time(0, 24, 0, 0), lat_temp_c)
 lat_stpt_manager1 = openstudio.model.SetpointManagerScheduled(model, lat_temp_sch)
-lat_stpt_manager1.addToNode(coil_cooling_dx_two_speed.outletmodelObject().get().to_Node().get())
+lat_stpt_manager1.addToNode(coil_cooling_dx_two_speed.outletModelObject().get().to_Node().get())
 
 lat_stpt_manager3 = lat_stpt_manager1.clone(model).to_SetpointManagerScheduled().get()
 lat_stpt_manager3.addToNode(supplyOutletNode1)

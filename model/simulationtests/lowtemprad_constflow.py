@@ -174,16 +174,20 @@ model.set_constructions()
 intSourceConst = openstudio.model.ConstructionWithInternalSource(model)
 intSourceConst.setSourcePresentAfterLayerNumber(3)
 intSourceConst.setTemperatureCalculationRequestedAfterLayerNumber(3)
-layers = []  # openstudio.model.MaterialVector(model)
-layers.append(
-    concrete_sand_gravel=openstudio.model.StandardOpaqueMaterial(
-        model, "MediumRough", 0.1014984, 1.729577, 2242.585, 836.8
-    )
+concrete_sand_gravel = openstudio.model.StandardOpaqueMaterial(
+    model, "MediumRough", 0.1014984, 1.729577, 2242.585, 836.8
 )
-layers.append(rigid_insulation_2inch=openstudio.model.StandardOpaqueMaterial(model, "Rough", 0.05, 0.02, 56.06, 1210))
-layers.append(gyp1=openstudio.model.StandardOpaqueMaterial(model, "MediumRough", 0.0127, 0.7845, 1842.1221, 988))
-layers.append(gyp2=openstudio.model.StandardOpaqueMaterial(model, "MediumRough", 0.01905, 0.7845, 1842.1221, 988))
-layers.append(finished_floor=openstudio.model.StandardOpaqueMaterial(model, "Smooth", 0.0016, 0.17, 1922.21, 1250))
+rigid_insulation_2inch = openstudio.model.StandardOpaqueMaterial(model, "Rough", 0.05, 0.02, 56.06, 1210)
+gyp1 = openstudio.model.StandardOpaqueMaterial(model, "MediumRough", 0.0127, 0.7845, 1842.1221, 988)
+gyp2 = openstudio.model.StandardOpaqueMaterial(model, "MediumRough", 0.01905, 0.7845, 1842.1221, 988)
+finished_floor = openstudio.model.StandardOpaqueMaterial(model, "Smooth", 0.0016, 0.17, 1922.21, 1250)
+layers = [
+    concrete_sand_gravel,
+    rigid_insulation_2inch,
+    gyp1,
+    gyp2,
+    finished_floor,
+]  # openstudio.model.MaterialVector(model)
 
 intSourceConst.setLayers(layers)
 

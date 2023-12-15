@@ -46,7 +46,7 @@ mixer = a.zoneMixer()
 return_plenum = [
     c
     for c in a.demandComponents(controlled_zone, mixer)
-    if c.iddObjectType() == "OS:AirLoopHVAC:ReturnPlenum".to_IddObjectType()
+    if c.iddObjectType() == openstudio.IddObjectType("OS:AirLoopHVAC:ReturnPlenum")
 ][0]
 return_plenum = return_plenum.to_AirLoopHVACReturnPlenum().get()
 

@@ -47,7 +47,7 @@ water_coil.setName("CoilSystemWaterHX CoolingCoil")
 
 coil = airloop.supplyComponents(openstudio.model.CoilCoolingWater.iddObjectType())[0].to_CoilCoolingWater().get()
 # Note that we connect the CoilSystem, NOT the underlying CoilCoolingWater
-coil_system.addToNode(coil.airOutletmodelObject().get().to_Node().get())
+coil_system.addToNode(coil.airOutletModelObject().get().to_Node().get())
 plant = coil.plantLoop().get()
 # But we have to connect the water_coil itself...
 plant.addDemandBranchForComponent(water_coil)
@@ -60,19 +60,19 @@ hx.setName("CoilSystemWaterHX HX")
 airloop.supplyInletNode().setName("#{airloop.name()} Supply Inlet Node")
 airloop.supplyOutletNode().setName("#{airloop.name()} Supply Outlet Node")
 airloop.mixedAirNode().get().setName("#{airloop.name()} Mixed Air Node")
-coil_system.outletmodelObject().get().to_Node().get().setName("#{airloop.name()} HX Outlet to Heating Coil Inlet Node")
+coil_system.outletModelObject().get().to_Node().get().setName("#{airloop.name()} HX Outlet to Heating Coil Inlet Node")
 
-water_coil.waterInletmodelObject().get().setName("#{water_coil.name()} Water Inlet Node")
-water_coil.waterOutletmodelObject().get().setName("#{water_coil.name()} Water Outlet Node")
+water_coil.waterInletModelObject().get().setName("#{water_coil.name()} Water Inlet Node")
+water_coil.waterOutletModelObject().get().setName("#{water_coil.name()} Water Outlet Node")
 water_coil.controllerWaterCoil().get().setName("#{water_coil.name()} Controller")
 
 heating_coil = (
     airloop.supplyComponents(openstudio.model.CoilHeatingWater.iddObjectType())[0].to_CoilHeatingWater().get()
 )
-heating_coil.waterInletmodelObject().get().setName("#{airloop.name()} Heating Coil Water Inlet Node")
-heating_coil.waterOutletmodelObject().get().setName("#{airloop.name()} Heating Coil Water Outlet Node")
+heating_coil.waterInletModelObject().get().setName("#{airloop.name()} Heating Coil Water Inlet Node")
+heating_coil.waterOutletModelObject().get().setName("#{airloop.name()} Heating Coil Water Outlet Node")
 heating_coil.controllerWaterCoil().get().setName("#{airloop.name()} Heating Coil Controller")
-heating_coil.airOutletmodelObject().get().setName("#{airloop.name()} Heating Coil Air Outlet to Fan Inlet Node")
+heating_coil.airOutletModelObject().get().setName("#{airloop.name()} Heating Coil Air Outlet to Fan Inlet Node")
 
 # save the OpenStudio model (.osm)
 m.save_openstudio_osm(osm_save_directory=None, osm_name="in.osm")

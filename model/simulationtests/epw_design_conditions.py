@@ -42,13 +42,13 @@ if check_all:
 
 else:
 
-    for weather_file in ["../../weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"]:
+    for weather_file in [Path("../../weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")]:
         epw_file = openstudio.EpwFile(weather_file)
         epw_design_conditions = epw_file.designConditions()
         epw_design_condition = epw_design_conditions[0]
 
         unit = openstudio.model.BuildingUnit(model)
-        unit.setName(weather_file.name.to_s())
+        unit.setName(weather_file.name)
         unit.setFeature("Title of Design Condition", epw_design_condition.titleOfDesignCondition())
         for field in [
             "Heating Coldest Month",
@@ -56,7 +56,7 @@ else:
             "Cooling Dry Bulb 0.4%",
             "Cooling Enthalpy Mean Coincident Dry Bulb 1%",
         ]:
-            unit.setFeature(field.to_s(), epw_design_condition.getFieldByName(field.to_s()).get())
+            unit.setFeature(field, epw_design_condition.getFieldByName(field).get())
 
 
 # save the OpenStudio model (.osm)

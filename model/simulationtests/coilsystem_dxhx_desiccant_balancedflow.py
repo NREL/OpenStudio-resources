@@ -57,18 +57,18 @@ coil = (
     .get()
 )
 # Note that we connect the CoilSystem, NOT the underlying CoilCoolingDXSingleSpeed
-unitary.addToNode(coil.outletmodelObject().get().to_Node().get())
+unitary.addToNode(coil.outletModelObject().get().to_Node().get())
 coil.remove()
 
 # Rename some nodes and such, for ease of debugging
 airloop.supplyInletNode().setName("#{airloop.name()} Supply Inlet Node")
 airloop.supplyOutletNode().setName("#{airloop.name()} Supply Outlet Node")
 airloop.mixedAirNode().get().setName("#{airloop.name()} Mixed Air Node")
-# coil_system.outletmodelObject.get.to_Node.get.setName("#{airloop.nameString} HX Outlet to Heating Coil Inlet Node")
+# coil_system.outletModelObject.get.to_Node.get.setName("#{airloop.nameString} HX Outlet to Heating Coil Inlet Node")
 unitary.outletNode().get().setName("#{airloop.name()} Unitary Outlet to Heating Coil Node")
 
 heating_coil = airloop.supplyComponents(openstudio.model.CoilHeatingGas.iddObjectType())[0].to_CoilHeatingGas().get()
-heating_coil.outletmodelObject().get().setName("#{airloop.name()} Heating Coil Outlet to Fan Inlet Node")
+heating_coil.outletModelObject().get().setName("#{airloop.name()} Heating Coil Outlet to Fan Inlet Node")
 
 # save the OpenStudio model (.osm)
 m.save_openstudio_osm(osm_save_directory=None, osm_name="in.osm")

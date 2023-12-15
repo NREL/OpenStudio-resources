@@ -56,9 +56,9 @@ foundation_kiva.addCustomBlocks(custom_blocks)
 
 # attach foundation kiva object to floor surfaces
 for i, surface in enumerate(model.getSurfaces()):
-    if surface.surfaceType().downcase() != "floor":
+    if surface.surfaceType().lower() != "floor":
         continue
-    if surface.outsideBoundaryCondition().downcase() != "ground":
+    if surface.outsideBoundaryCondition().lower() != "ground":
         continue
 
     surface.setAdjacentFoundation(foundation_kiva)

@@ -141,10 +141,10 @@ transformation = openstudio.Transformation.alignFace(vertices)
 faceVertices = transformation.inverse() * vertices
 
 # new coordinate system has z' in direction of outward normal, y' is up
-xmin = [x.x() for x in faceVertices].min()
-xmax = [x.x() for x in faceVertices].max()
-ymin = [x.y() for x in faceVertices].min()
-ymax = [x.y() for x in faceVertices].max()
+xmin = min([x.x() for x in faceVertices])
+xmax = max([x.x() for x in faceVertices])
+ymin = min([x.y() for x in faceVertices])
+ymax = max([x.y() for x in faceVertices])
 
 if (xmin > xmax) or (ymin > ymax):
     raise ValueError("Not expected")
@@ -155,10 +155,10 @@ depth = projectionFactor * (offset + (ymax - ymin))
 interiorVertices = openstudio.Point3dVector()
 # Make them counterclockwise order
 interiorVertices.append(
-    openstudio.Point3d(xmax + offset, ymax + offset, -depth())
+    openstudio.Point3d(xmax + offset, ymax + offset, -depth)
 )  # Inverse of the shading surface (+depth)
 interiorVertices.append(
-    openstudio.Point3d(xmin - offset, ymax + offset, -depth())
+    openstudio.Point3d(xmin - offset, ymax + offset, -depth)
 )  # Inverse of the shading surface (+depth)
 interiorVertices.append(openstudio.Point3d(xmin - offset, ymax + offset, 0))
 interiorVertices.append(openstudio.Point3d(xmax + offset, ymax + offset, 0))
