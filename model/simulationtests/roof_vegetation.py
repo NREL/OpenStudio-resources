@@ -60,7 +60,7 @@ roof_c = model.getConstructionByName("ASHRAE_189.1-2009_ExtRoof_IEAD_ClimateZone
 
 # Insert the green roof on the outside
 success = roof_c.insertLayer(0, mat_roof)
-if not success():
+if not success:
     raise "Cannot insert the RoofVegetation material in the Roof Construction"
 
 

@@ -7,7 +7,7 @@ from lib.baseline_model import BaselineModel
 model = BaselineModel()
 
 model.add_standards(
-    json.laods(
+    json.loads(
         """{
   "schedules": [
     {
@@ -80,15 +80,15 @@ mixed_swh_loop = model.add_swh_loop("Mixed")
 model.add_swh_end_uses(mixed_swh_loop, "Medium Office Bldg Swh")
 
 # remove the existing water heater
-supply_components = mixed_swh_loop.supplyComponents("OS:WaterHeater:Mixed".to_IddObjectType())
+supply_components = mixed_swh_loop.supplyComponents(openstudio.IddObjectType("OS:WaterHeater:Mixed"))
 swh_water_heater = supply_components[0].to_WaterHeaterMixed().get()
 mixed_swh_loop.removeSupplyBranchWithComponent(swh_water_heater)
 
-supply_components = mixed_swh_loop.supplyComponents("OS:Pipe:Adiabatic".to_IddObjectType())
+supply_components = mixed_swh_loop.supplyComponents(openstudio.IddObjectType("OS:Pipe:Adiabatic"))
 swh_pipe = supply_components[0].to_PipeAdiabatic().get()
 mixed_swh_loop.removeSupplyBranchWithComponent(swh_pipe)
 
-supply_components = mixed_swh_loop.supplyComponents("OS:Pump:ConstantSpeed".to_IddObjectType())
+supply_components = mixed_swh_loop.supplyComponents(openstudio.IddObjectType("OS:Pump:ConstantSpeed"))
 swh_pump = supply_components[0].to_PumpConstantSpeed().get()
 
 # storage water heating loop
@@ -129,7 +129,7 @@ storage_pump_motor_efficiency = 1
 
 storage_pump = openstudio.model.PumpConstantSpeed(model)
 storage_pump.setName("Storage Water Loop Pump")
-storage_pump.setRatedPumpHead(storage_pump_head_press_pa.to_f())
+storage_pump.setRatedPumpHead(storage_pump_head_press_pa)
 storage_pump.setMotorEfficiency(storage_pump_motor_efficiency)
 storage_pump.setPumpControlType("Intermittent")
 storage_pump.addToNode(storage_water_loop.supplyInletNode())
@@ -205,9 +205,9 @@ swh_water_heater.addToNode(mixed_swh_loop.supplyOutletNode())
 # add a tempering valve
 tempering_valve = openstudio.model.TemperingValve(model)
 mixed_swh_loop.addSupplyBranchForComponent(tempering_valve)
-tempering_valve.setStream2SourceNode(storage_water_heater.supplyOutletmodelObject().get().to_Node().get())
-tempering_valve.setTemperatureSetpointNode(swh_water_heater.supplyOutletmodelObject().get().to_Node().get())
-tempering_valve.setPumpOutletNode(swh_pump.outletmodelObject().get().to_Node().get())
+tempering_valve.setStream2SourceNode(storage_water_heater.supplyOutletModelObject().get().to_Node().get())
+tempering_valve.setTemperatureSetpointNode(swh_water_heater.supplyOutletModelObject().get().to_Node().get())
+tempering_valve.setPumpOutletNode(swh_pump.outletModelObject().get().to_Node().get())
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm(osm_save_directory=None, osm_name="in.osm")

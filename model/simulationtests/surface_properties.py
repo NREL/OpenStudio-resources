@@ -44,11 +44,11 @@ groundConditions.setWindSpeedCoefficient(0.0)
 groundConditions.setZoneAirTemperatureCoefficient(0.0)
 groundConditions.setSinusoidalVariationofConstantTemperatureCoefficient(False)
 
-# set SurfacePropertyOtherSideConditionsmodel
-roofConditions = openstudio.model.SurfacePropertyOtherSideConditionsmodel(model)
-print(f"initial type of modeling is {roofConditions.typeOfmodeling()}.")
-roofConditions.setTypeOfmodeling("UndergroundPipingSystemSurface")
-print(f"final type of modeling is {roofConditions.typeOfmodeling()}.")
+# set SurfacePropertyOtherSideConditionsModel
+roofConditions = openstudio.model.SurfacePropertyOtherSideConditionsModel(model)
+print(f"initial type of modeling is {roofConditions.typeOfModeling()}.")
+roofConditions.setTypeOfModeling("UndergroundPipingSystemSurface")
+print(f"final type of modeling is {roofConditions.typeOfModeling()}.")
 
 # Get spaces, ordered by name to ensure consistency
 spaces = sorted(model.getSpaces(), key=lambda s: s.nameString())
@@ -61,7 +61,7 @@ for surface in model.getSurfaces():
     if surface.outsideBoundaryCondition() == "Ground":
         surface.setSurfacePropertyOtherSideCoefficients(groundConditions)  # this change the boundary condition
     elif (surface.outsideBoundaryCondition() == "Outdoors") and (surface.surfaceType() == "RoofCeiling"):
-        surface.setSurfacePropertyOtherSideConditionsmodel(roofConditions)  # this change the boundary condition
+        surface.setSurfacePropertyOtherSideConditionsModel(roofConditions)  # this change the boundary condition
 
 
 # add output reports

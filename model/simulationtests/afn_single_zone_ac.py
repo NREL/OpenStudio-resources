@@ -12,27 +12,27 @@ class SurfaceNetworkBuilder(SurfaceVisitor):
         super().__init__(model)
 
     def interiorFloor(self, model, surface, adjacentSurface):
-        if surface.outsideBoundaryCondition().starts_with("Ground"):
+        if surface.outsideBoundaryCondition().startswith("Ground"):
             return
 
         # Create a surface linkage
-        link = surface.getairflowNetworkSurface(self.interiorCrack)
+        link = surface.getAirflowNetworkSurface(self.interiorCrack)
 
     def interiorRoofCeiling(self, model, surface, adjacentSurface):
         # Create a surface linkage
-        link = surface.getairflowNetworkSurface(self.interiorCrack)
+        link = surface.getAirflowNetworkSurface(self.interiorCrack)
 
     def interiorWall(self, model, surface, adjacentSurface):
         # Create a surface linkage
-        link = surface.getairflowNetworkSurface(self.interiorCrack)
+        link = surface.getAirflowNetworkSurface(self.interiorCrack)
 
     def exteriorSurface(self, model, surface):
         # Create an external node?
-        if surface.outsideBoundaryCondition().starts_with("Ground"):
+        if surface.outsideBoundaryCondition().startswith("Ground"):
             return
 
         # Create a surface linkage
-        link = surface.getairflowNetworkSurface(self.exteriorCrack)
+        link = surface.getAirflowNetworkSurface(self.exteriorCrack)
 
 
 def addSystemType3(model):
@@ -88,10 +88,10 @@ def addSystemType3(model):
     coilHeatingGas.addToNode(supplyOutletNode)
     fan.addToNode(supplyOutletNode)
 
-    # Node node1 = fan.outletmodelObject()->cast<Node>();
+    # Node node1 = fan.outletModelObject()->cast<Node>();
     # setpointMSZR.addToNode(node1);
 
-    node1 = fan.outletmodelObject().get().to_Node().get()
+    node1 = fan.outletModelObject().get().to_Node().get()
     setpointMSZR.addToNode(node1)
 
     # Starting with E 9.0.0, Uncontrolled is deprecated and replaced with
@@ -159,11 +159,11 @@ def addSimpleSystem(model):
     coilCooling.addToNode(supplyOutletNode)
     coilHeatingGas.addToNode(supplyOutletNode)
 
-    # Node node1 = fan.outletmodelObject()->cast<Node>();
+    # Node node1 = fan.outletModelObject()->cast<Node>();
     # setpointMSZR.addToNode(node1);
 
-    # node1 = fan.outletmodelObject().get.to_Node.get
-    node1 = coilHeatingGas.outletmodelObject().get().to_Node().get()
+    # node1 = fan.outletModelObject().get.to_Node.get
+    node1 = coilHeatingGas.outletModelObject().get().to_Node().get()
     setpointMSZR.addToNode(node1)
 
     if openstudio.VersionString(openstudio.openStudioVersion()) >= openstudio.VersionString("2.7.0"):
@@ -233,11 +233,11 @@ def addSimpleSystemAFN(model):
     coilCooling.addToNode(supplyOutletNode)
     coilHeatingGas.addToNode(supplyOutletNode)
 
-    # Node node1 = fan.outletmodelObject()->cast<Node>();
+    # Node node1 = fan.outletModelObject()->cast<Node>();
     # setpointMSZR.addToNode(node1);
 
-    # node1 = fan.outletmodelObject().get.to_Node.get
-    node1 = coilHeatingGas.outletmodelObject().get().to_Node().get()
+    # node1 = fan.outletModelObject().get.to_Node.get
+    node1 = coilHeatingGas.outletModelObject().get().to_Node().get()
     setpointMSZR.addToNode(node1)
 
     if openstudio.VersionString(openstudio.openStudioVersion()) >= openstudio.VersionString("2.7.0"):
@@ -248,9 +248,9 @@ def addSimpleSystemAFN(model):
     airLoopHVAC.addBranchForHVACComponent(terminal)
 
     # Create AFN components
-    fanComponent = fan.getairflowNetworkFan()
-    heatingComponent = coilHeatingGas.getairflowNetworkEquivalentDuct(0.1, 1.0)
-    coolingComponent = coilCooling.getairflowNetworkEquivalentDuct(0.1, 1.0)
+    fanComponent = fan.getAirflowNetworkFan()
+    heatingComponent = coilHeatingGas.getAirflowNetworkEquivalentDuct(0.1, 1.0)
+    coolingComponent = coilCooling.getAirflowNetworkEquivalentDuct(0.1, 1.0)
     # And all the ducts
     mainTruck = openstudio.model.airflowNetworkDuct(model)
     mainTruck.setDuctLength(2)
@@ -301,34 +301,34 @@ def addSimpleSystemAFN(model):
     splitter = airLoopHVAC.zoneSplitter()
     mixer = airLoopHVAC.zoneMixer()
 
-    equipmentInletNode = splitter.inletmodelObject().get().to_Node().get()
+    equipmentInletNode = splitter.inletModelObject().get().to_Node().get()
 
-    zoneSupplyRegisterNode = nil
-    zoneOutletNode = mixer.inletmodelObject(0).get().to_Node().get()
+    zoneSupplyRegisterNode = None
+    zoneOutletNode = mixer.inletModelObject(0).get().to_Node().get()
 
-    mainReturnNode = mixer.outletmodelObject().get().to_Node().get()
+    mainReturnNode = mixer.outletModelObject().get().to_Node().get()
 
-    mixerOutletNode = mixer.outletmodelObject().get().to_Node().get()
-    fanInletNode = fan.inletmodelObject().get().to_Node().get()
-    fanOutletNode = fan.outletmodelObject().get().to_Node().get()
-    heatingInletNode = coilHeatingGas.inletmodelObject().get().to_Node().get()
-    heatingOutletNode = coilHeatingGas.outletmodelObject().get().to_Node().get()
+    mixerOutletNode = mixer.outletModelObject().get().to_Node().get()
+    fanInletNode = fan.inletModelObject().get().to_Node().get()
+    fanOutletNode = fan.outletModelObject().get().to_Node().get()
+    heatingInletNode = coilHeatingGas.inletModelObject().get().to_Node().get()
+    heatingOutletNode = coilHeatingGas.outletModelObject().get().to_Node().get()
 
     # Now walk around the loop and make the AFN nodes
-    equipmentInletNode_AFN = equipmentInletNode.getairflowNetworkDistributionNode()
-    splitterNode_AFN = splitter.getairflowNetworkDistributionNode()
+    equipmentInletNode_AFN = equipmentInletNode.getAirflowNetworkDistributionNode()
+    splitterNode_AFN = splitter.getAirflowNetworkDistributionNode()
     zoneSupplyNode_AFN = openstudio.model.airflowNetworkDistributionNode(model)
 
-    zoneSupplyRegisterNode_AFN = nil
-    # zoneOutletNode_AFN = zoneOutletNode.getairflowNetworkDistributionNode
+    zoneSupplyRegisterNode_AFN = None
+    # zoneOutletNode_AFN = zoneOutletNode.getAirflowNetworkDistributionNode
 
     zoneReturnNode_AFN = openstudio.model.airflowNetworkDistributionNode(model)
-    mixerNode_AFN = mixer.getairflowNetworkDistributionNode()
-    mainReturnNode_AFN = mainReturnNode.getairflowNetworkDistributionNode()
-    fanInletNode_AFN = fanInletNode.getairflowNetworkDistributionNode()
-    fanOutletNode_AFN = fanOutletNode.getairflowNetworkDistributionNode()
-    heatingInletNode_AFN = heatingInletNode.getairflowNetworkDistributionNode()
-    heatingOutletNode_AFN = heatingOutletNode.getairflowNetworkDistributionNode()
+    mixerNode_AFN = mixer.getAirflowNetworkDistributionNode()
+    mainReturnNode_AFN = mainReturnNode.getAirflowNetworkDistributionNode()
+    fanInletNode_AFN = fanInletNode.getAirflowNetworkDistributionNode()
+    fanOutletNode_AFN = fanOutletNode.getAirflowNetworkDistributionNode()
+    heatingInletNode_AFN = heatingInletNode.getAirflowNetworkDistributionNode()
+    heatingOutletNode_AFN = heatingOutletNode.getAirflowNetworkDistributionNode()
 
     # Now the links
 
@@ -409,29 +409,29 @@ model.set_space_type()  # OK, yeah, this is wrong
 model.add_design_days()
 
 # add simulation control
-afn_control = model.getairflowNetworkSimulationControl()
-afn_control.setairflowNetworkControl("MultizoneWithDistribution")
+afn_control = model.getAirflowNetworkSimulationControl()
+afn_control.setAirflowNetworkControl("MultizoneWithDistribution")
 
 # make an afn zone
-afnzone = zone.getairflowNetworkZone()
+afnzone = zone.getAirflowNetworkZone()
 
 # This is kind of lame, regetting stuff we already have above. Need to rethink how this
 # is structured at some point.
 splitter = hvac.zoneSplitter()
 mixer = hvac.zoneMixer()
-splitterNode_AFN = splitter.getairflowNetworkDistributionNode()
-mixerNode_AFN = splitter.getairflowNetworkDistributionNode()
+splitterNode_AFN = splitter.getAirflowNetworkDistributionNode()
+mixerNode_AFN = splitter.getAirflowNetworkDistributionNode()
 
 # This is not great either
-zoneOutletNode = mixer.inletmodelObject(0).get().to_Node().get()
+zoneOutletNode = mixer.inletModelObject(0).get().to_Node().get()
 
 comps = hvac.demandComponents(hvac.demandInletNode(), zone)
 zoneInletNode = comps[-2].to_Node().get()
 
-# zoneInletNode = zone.airLoopHVACTerminal.get.to_StraightComponent.get.outletmodelObject.get.to_Node.get
+# zoneInletNode = zone.airLoopHVACTerminal.get.to_StraightComponent.get.outletModelObject.get.to_Node.get
 
-zoneInletNode_AFN = zoneInletNode.getairflowNetworkDistributionNode()
-zoneOutletNode_AFN = zoneOutletNode.getairflowNetworkDistributionNode()
+zoneInletNode_AFN = zoneInletNode.getAirflowNetworkDistributionNode()
+zoneOutletNode_AFN = zoneOutletNode.getAirflowNetworkDistributionNode()
 
 # Make the duct elements
 zoneSupply = openstudio.model.airflowNetworkDuct(model)

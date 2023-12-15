@@ -46,10 +46,10 @@ air_chiller2 = openstudio.model.RefrigerationAirChiller(model, defrost_sch)
 # we sort the zones by names
 zones = sorted(model.getThermalZones(), key=lambda z: z.nameString())
 
-heating_coil1 = nil
-heating_coil3 = nil
-cooling_coil1 = nil
-cooling_coil3 = nil
+heating_coil1 = None
+heating_coil3 = None
+cooling_coil1 = None
+cooling_coil3 = None
 for i, z in enumerate(zones):
     if i == 0:
         schedule = model.alwaysOnDiscreteSchedule()

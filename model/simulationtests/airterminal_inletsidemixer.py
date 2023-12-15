@@ -53,7 +53,7 @@ p_hw.addDemandBranchForComponent(heatingCoil)
 coolingCoil = openstudio.model.CoilCoolingWater(m)
 p_chw.addDemandBranchForComponent(coolingCoil)
 fc = openstudio.model.ZoneHVACFourPipeFanCoil(m, m.alwaysOnDiscreteSchedule(), fan, coolingCoil, heatingCoil)
-fc.addToNode(atu.outletmodelObject().get().to_Node().get())
+fc.addToNode(atu.outletModelObject().get().to_Node().get())
 
 # This replaces the E+ field 'Design Specification Outdoor Air'
 # This will find the Thermal Zone associated, find the space, which has a space
@@ -65,9 +65,9 @@ atu.setPerPersonVentilationRateMode("CurrentOccupancy")
 
 # Rename some nodes to facilitate looking at the resulting IDF
 z.zoneAirNode().setName("Zone Air Node")
-z.returnAirmodelObjects()[0].setName("Zone Return Air Node")
-atu.inletmodelObject().get().setName("ATU InletSideMixer Inlet Node")
-atu.outletmodelObject().get().setName("ATU InletSideMixer Outlet to FC Inlet Node")
+z.returnAirModelObjects()[0].setName("Zone Return Air Node")
+atu.inletModelObject().get().setName("ATU InletSideMixer Inlet Node")
+atu.outletModelObject().get().setName("ATU InletSideMixer Outlet to FC Inlet Node")
 fc.outletNode().get().setName("FC Outlet Node")
 z.exhaustPortList().modelObjects()[0].setName("Zone Exhaust Air Node")
 

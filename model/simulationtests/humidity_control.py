@@ -35,22 +35,22 @@ for i in range(3):
     zone.setZoneControlHumidistat(humidistat)
 
     air_system = zone.airLoopHVAC().get()
-    humidifier_outlet_node = nil
+    humidifier_outlet_node = None
 
     if i == 0:
         # Add a humidifier after the gas heating coil and before the fan
         htg_coil = (
             air_system.supplyComponents(openstudio.model.CoilHeatingGas.iddObjectType())[0].to_CoilHeatingGas().get()
         )
-        htg_coil_outlet_node = htg_coil.outletmodelObject().get().to_Node().get()
+        htg_coil_outlet_node = htg_coil.outletModelObject().get().to_Node().get()
         humidifier = openstudio.model.HumidifierSteamElectric(model)
         humidifier.addToNode(htg_coil_outlet_node)
-        humidifier_outlet_node = humidifier.outletmodelObject().get().to_Node().get()
+        humidifier_outlet_node = humidifier.outletModelObject().get().to_Node().get()
     else:
         # Add a humidifier after all other components
         humidifier = openstudio.model.HumidifierSteamElectric(model)
         humidifier.addToNode(air_system.supplyOutletNode())
-        humidifier_outlet_node = humidifier.outletmodelObject().get().to_Node().get()
+        humidifier_outlet_node = humidifier.outletModelObject().get().to_Node().get()
 
     # Try out all 3 different types of humidity setpoint managers
     # by adding them to the humidifier outlet node.

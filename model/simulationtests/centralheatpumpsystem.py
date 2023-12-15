@@ -57,7 +57,7 @@ cooling_loop.addSupplyBranchForComponent(central_hp)
 # Supply side to HW loop: tertiary. Remove boiler
 # Since we need to use addToTertiaryNode,
 # The trick is to add it to the boiler inlet node first, then remove boiler
-# n = b.inletmodelObject.get.to_Node.get
+# n = b.inletModelObject.get.to_Node.get
 # central_hp.addToTertiaryNode(n)
 # b.remove
 #
@@ -102,26 +102,26 @@ model.rename_loop_nodes()
 # central hp has a tertiary loop, so need to do it manually
 
 # Supply = cooling
-central_hp.supplyInletmodelObject().get().setName(
+central_hp.supplyInletModelObject().get().setName(
     "#{central_hp.coolingPlantLoop().get().name()} Supply Side #{central_hp.name()} Inlet Node"
 )
-central_hp.supplyOutletmodelObject().get().setName(
+central_hp.supplyOutletModelObject().get().setName(
     "#{central_hp.coolingPlantLoop().get().name()} Supply Side #{central_hp.name()} Outlet Node"
 )
 
 # Demand = Source (Condenser)
-central_hp.demandInletmodelObject().get().setName(
+central_hp.demandInletModelObject().get().setName(
     "#{central_hp.sourcePlantLoop().get().name()} Demand Side #{central_hp.name()} Inlet Node"
 )
-central_hp.demandOutletmodelObject().get().setName(
+central_hp.demandOutletModelObject().get().setName(
     "#{central_hp.sourcePlantLoop().get().name()} Demand Side #{central_hp.name()} Outlet Node"
 )
 
 # tertiary = heating
-central_hp.tertiaryInletmodelObject().get().setName(
+central_hp.tertiaryInletModelObject().get().setName(
     "#{central_hp.heatingPlantLoop().get().name()} Supply Side #{central_hp.name()} Inlet Node"
 )
-central_hp.tertiaryOutletmodelObject().get().setName(
+central_hp.tertiaryOutletModelObject().get().setName(
     "#{central_hp.heatingPlantLoop().get().name()} Supply Side #{central_hp.name()} Outlet Node"
 )
 
@@ -134,33 +134,33 @@ for t in model.getThermostatSetpointDualSetpoints():
     t.setName("#{t.thermalZone().get().name()} ThermostatSetpointDualSetpoint")
 
 # Rename ATU "Air Outlet Node Name", not sure how
-nodes = [n for n in model.getNodes() if n.nameString().starts_with("Node ")]
+nodes = [n for n in model.getNodes() if n.nameString().startswith("Node ")]
 for n in nodes:
-    if n.inletmodelObject().empty():
+    if n.inletModelObject().empty():
         continue
 
-    atu = n.inletmodelObject().get().to_AirTerminalSingleDuctVAVReheat()
+    atu = n.inletModelObject().get().to_AirTerminalSingleDuctVAVReheat()
     if atu.is_initialized():
         atu = atu.get()
         n.setName("#{atu.name()} Air Outlet Node")
 
-    zone = n.inletmodelObject().get().to_ThermalZone()
+    zone = n.inletModelObject().get().to_ThermalZone()
     if zone.is_initialized():
         zone = zone.get()
         n.setName("#{zone.name()} Return Air Node")
 
-    if n.outletmodelObject().empty():
+    if n.outletModelObject().empty():
         continue
 
-    atu = n.outletmodelObject().get().to_AirTerminalSingleDuctVAVReheat()
+    atu = n.outletModelObject().get().to_AirTerminalSingleDuctVAVReheat()
     if atu.is_initialized():
         atu = atu.get()
         n.setName("#{atu.name()} Air Inlet Node")
 
 
 for fan in model.getFanVariableVolumes():
-    fan.inletmodelObject().get().to_Node().get().setName("#{fan.name()} Inlet Node")
-    fan.outletmodelObject().get().to_Node().get().setName("#{fan.name()} Outlet Node")
+    fan.inletModelObject().get().to_Node().get().setName("#{fan.name()} Inlet Node")
+    fan.outletModelObject().get().to_Node().get().setName("#{fan.name()} Outlet Node")
 
 
 ########################### Request output variables ##########################

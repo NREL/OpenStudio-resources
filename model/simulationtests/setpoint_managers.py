@@ -25,13 +25,13 @@ if oa_airloops:
     coil = openstudio.model.CoilHeatingElectric(model, schedule)
     coil.addToNode(oa_airloop.outboardOANode().get())
     spm = openstudio.model.SetpointManagerOutdoorAirPretreat(model)
-    oa_node = oa_airloop.outdoorAirmodelObject().get().to_Node().get()
+    oa_node = oa_airloop.outdoorAirModelObject().get().to_Node().get()
     spm.addToNode(oa_node)
-    mixed_node = oa_airloop.mixedAirmodelObject().get().to_Node().get()
+    mixed_node = oa_airloop.mixedAirModelObject().get().to_Node().get()
     spm.setMixedAirStreamNode(mixed_node)
     spm.setReferenceSetpointNode(mixed_node)
-    spm.setOutdoorAirStreamNode(oa_airloop.outdoorAirmodelObject().get().to_Node().get())
-    spm.setReturnAirStreamNode(oa_airloop.returnAirmodelObject().get().to_Node().get())
+    spm.setOutdoorAirStreamNode(oa_airloop.outdoorAirModelObject().get().to_Node().get())
+    spm.setReturnAirStreamNode(oa_airloop.returnAirModelObject().get().to_Node().get())
 
 
 if airloops:
@@ -49,7 +49,7 @@ if airloops:
     spm_2 = openstudio.model.SetpointManagerScheduledDualSetpoint(model)
     spm_2.setHighSetpointSchedule(high_temperature_sch)
     spm_2.setLowSetpointSchedule(low_temperature_sch)
-    spm_2.addToNode(heating_coil.airOutletmodelObject().get().to_Node().get())
+    spm_2.addToNode(heating_coil.airOutletModelObject().get().to_Node().get())
 
 # test adding Return Air Bypass to AirLoopHVAC
 # Not possible currently in OS, uncomment in future

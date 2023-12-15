@@ -47,12 +47,12 @@ except Exception:
 # new_coil = openstudio.model.CoilCoolingWaterToAirHeatPumpEquationFit(model)
 new_coil = openstudio.model.CoilCoolingDXSingleSpeed(model)
 unitary.setCoolingCoil(new_coil)
-unitary.addToNode(coil.outletmodelObject().get().to_Node().get())
+unitary.addToNode(coil.outletModelObject().get().to_Node().get())
 coil.remove()
 
 # fan = air_system.supplyComponents(openstudio.model.FanVariableVolume.iddObjectType).first.to_FanVariableVolume.get
 # new_fan = openstudio.model.FanConstantVolume(model)
-# new_fan.addToNode(fan.outletmodelObject().get.to_Node.get)
+# new_fan.addToNode(fan.outletModelObject().get.to_Node.get)
 # fan.remove
 
 hotWaterPlant = openstudio.model.PlantLoop(model)
@@ -70,7 +70,7 @@ pump = openstudio.model.PumpVariableSpeed(model)
 boiler = openstudio.model.BoilerHotWater(model)
 
 pump.addToNode(hotWaterInletNode)
-node = hotWaterPlant.supplySplitter().lastOutletmodelObject().get().to_Node().get()
+node = hotWaterPlant.supplySplitter().lastOutletModelObject().get().to_Node().get()
 boiler.addToNode(node)
 
 pipe = openstudio.model.PipeAdiabatic(model)

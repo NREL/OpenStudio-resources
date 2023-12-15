@@ -72,7 +72,7 @@ assert water_heater_mixed.plantLoop().is_initialized()
 
 # pipe = openstudio.model.PipeAdiabatic(model)
 # heat_recovery_loop.addSupplyBranchForComponent(pipe)
-# water_heater_mixed.addToSourceSideNode(pipe.inletmodelObject.get.to_Node.get)
+# water_heater_mixed.addToSourceSideNode(pipe.inletModelObject.get.to_Node.get)
 # pipe.remove
 heat_recovery_loop.addSupplyBranchForComponent(water_heater_mixed)
 

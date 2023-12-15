@@ -101,7 +101,7 @@ boiler_spm = openstudio.model.SetpointManagerScheduledDualSetpoint(model)
 boiler_spm.setControlVariable("Temperature")
 boiler_spm.setLowSetpointSchedule(lowWaterSchedule)
 boiler_spm.setHighSetpointSchedule(boilerWaterSchedule)
-boiler_spm.addToNode(boiler.outletmodelObject().get().to_Node().get())
+boiler_spm.addToNode(boiler.outletModelObject().get().to_Node().get())
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm(osm_save_directory=None, osm_name="in.osm")

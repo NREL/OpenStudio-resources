@@ -30,7 +30,7 @@ pump = openstudio.model.PumpVariableSpeed(model)
 pump.addToNode(hotWaterInletNode)
 
 boiler = openstudio.model.BoilerHotWater(model)
-node = hotWaterPlant.supplySplitter().lastOutletmodelObject().get().to_Node().get()
+node = hotWaterPlant.supplySplitter().lastOutletModelObject().get().to_Node().get()
 boiler.addToNode(node)
 
 pipe = openstudio.model.PipeAdiabatic(model)
@@ -293,7 +293,7 @@ deck_spm.addToNode(air_loop_supply_node)
 
 terminal = openstudio.model.AirTerminalSingleDuctInletSideMixer(model)
 air_loop.addBranchForZone(story_2_core_thermal_zone, terminal)
-fourPipeFanCoil2.addToNode(terminal.outletmodelObject().get().to_Node().get())
+fourPipeFanCoil2.addToNode(terminal.outletModelObject().get().to_Node().get())
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm(osm_save_directory=None, osm_name="in.osm")

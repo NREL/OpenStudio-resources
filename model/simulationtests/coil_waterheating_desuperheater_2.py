@@ -27,7 +27,7 @@ def create_refrigeration_test(model, zone, defrost_sch):
     # Create a SHW Loop with a Mixed Water Heater
     mixed_swh_loop = model.add_swh_loop("Mixed")
     water_heater_mixed = (
-        mixed_swh_loop.supplyComponents("OS:WaterHeater:Mixed".to_IddObjectType())[0].to_WaterHeaterMixed().get()
+        mixed_swh_loop.supplyComponents(openstudio.IddObjectType("OS:WaterHeater:Mixed"))[0].to_WaterHeaterMixed().get()
     )
     # Add it as a heat rejection target
     coil_water_heating_desuperheater_multi.addToHeatRejectionTarget(water_heater_mixed)

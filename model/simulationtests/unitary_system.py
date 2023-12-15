@@ -34,7 +34,7 @@ pump = openstudio.model.PumpVariableSpeed(model)
 boiler = openstudio.model.BoilerHotWater(model)
 
 pump.addToNode(hotWaterInletNode)
-node = hotWaterPlant.supplySplitter().lastOutletmodelObject().get().to_Node().get()
+node = hotWaterPlant.supplySplitter().lastOutletModelObject().get().to_Node().get()
 boiler.addToNode(node)
 
 pipe = openstudio.model.PipeAdiabatic(model)
@@ -101,7 +101,7 @@ eirToCorfOfPlr.setMaximumValueofx(1.0)
 
 chiller = openstudio.model.ChillerElectricEIR(model, ccFofT, eirToCorfOfT, eirToCorfOfPlr)
 
-node = chilledWaterPlant.supplySplitter().lastOutletmodelObject().get().to_Node().get()
+node = chilledWaterPlant.supplySplitter().lastOutletModelObject().get().to_Node().get()
 chiller.addToNode(node)
 
 pipe3 = openstudio.model.PipeAdiabatic(model)
@@ -307,7 +307,7 @@ unitary_1.setHeatingCoil(heating_coil_1)
 unitary_1.setSupplementalHeatingCoil(supp_heating_coil_1)
 
 unitary_1.addToNode(airLoop_1_supplyNode)
-node_1 = unitary_1.airOutletmodelObject().get().to_Node().get()
+node_1 = unitary_1.airOutletModelObject().get().to_Node().get()
 setpointMMA_1 = openstudio.model.SetpointManagerSingleZoneReheat(model)
 setpointMMA_1.addToNode(node_1)
 

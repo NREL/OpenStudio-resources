@@ -57,8 +57,8 @@ shade.setShadingSurfaceGroup(group)
 # /// Factory method to creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceSandia by looking up characteristics in the embedded
 # // Sandia database by its name. Please use the PhotovoltaicPerformanceSandia.sandiaModulePerformanceNames() static method
 # / to look up the valid names as it will throw if it cannot find it
-sandiaModulePerformanceName = (
-    openstudio.model.PhotovoltaicPerformanceSandia.sandiaModulePerformanceNames().sort().reverse()[0]
+sandiaModulePerformanceName = next(
+    reversed(sorted(openstudio.model.PhotovoltaicPerformanceSandia.sandiaModulePerformanceNames()))
 )
 panel = openstudio.model.GeneratorPhotovoltaic.fromSandiaDatabase(model, sandiaModulePerformanceName)
 

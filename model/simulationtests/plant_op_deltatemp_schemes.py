@@ -44,8 +44,8 @@ cond = tower.plantLoop().get()
 tower2 = openstudio.model.CoolingTowerSingleSpeed(model)
 cond.addSupplyBranchForComponent(tower2)
 
-cond_pump = cond.supplyComponents("OS_Pump_VariableSpeed".to_IddObjectType())[0].to_PumpVariableSpeed().get()
-cond_pump_outlet_node = cond_pump.outletmodelObject().get().to_Node().get()
+cond_pump = cond.supplyComponents(openstudio.IddObjectType("OS_Pump_VariableSpeed"))[0].to_PumpVariableSpeed().get()
+cond_pump_outlet_node = cond_pump.outletModelObject().get().to_Node().get()
 
 # NOTE: Prior to E+ 23.1.0 (OS 3.6.0), the PlantEq based on outdoor temperature
 # were not working correctly in E+ and the equipment would not turn on

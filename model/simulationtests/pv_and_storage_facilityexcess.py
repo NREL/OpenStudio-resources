@@ -7,7 +7,7 @@ from lib.baseline_model import BaselineModel
 model = BaselineModel()
 
 model.add_standards(
-    json.laods(
+    json.loads(
         """{
   "schedules": [
     {

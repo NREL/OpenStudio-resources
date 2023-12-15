@@ -34,7 +34,7 @@ pump = openstudio.model.PumpVariableSpeed(model)
 boiler = openstudio.model.BoilerHotWater(model)
 
 pump.addToNode(hotWaterInletNode)
-node = hotWaterPlant.supplySplitter().lastOutletmodelObject().get().to_Node().get()
+node = hotWaterPlant.supplySplitter().lastOutletModelObject().get().to_Node().get()
 boiler.addToNode(node)
 
 pipe = openstudio.model.PipeAdiabatic(model)
@@ -101,7 +101,7 @@ eirToCorfOfPlr.setMaximumValueofx(1.0)
 
 chiller = openstudio.model.ChillerElectricEIR(model, ccFofT, eirToCorfOfT, eirToCorfOfPlr)
 
-node = chilledWaterPlant.supplySplitter().lastOutletmodelObject().get().to_Node().get()
+node = chilledWaterPlant.supplySplitter().lastOutletModelObject().get().to_Node().get()
 chiller.addToNode(node)
 
 pipe3 = openstudio.model.PipeAdiabatic(model)
@@ -304,8 +304,8 @@ unitary_5.setHeatingCoil(heating_coil_5)
 
 system_performance = openstudio.model.UnitarySystemPerformanceMultispeed(model)
 system_performance.setSingleModeOperation(True)
-system_performance.addSupplyairflowRatioField(openstudio.model.SupplyairflowRatioField())
-system_performance.addSupplyairflowRatioField(openstudio.model.SupplyairflowRatioField(1.0, 1.0))
+system_performance.addSupplyAirflowRatioField(openstudio.model.SupplyAirflowRatioField())
+system_performance.addSupplyAirflowRatioField(openstudio.model.SupplyAirflowRatioField(1.0, 1.0))
 unitary_5.setDesignSpecificationMultispeedObject(system_performance)
 
 unitary_5.addToNode(airLoop_5_supplyNode)

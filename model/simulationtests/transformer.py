@@ -42,8 +42,8 @@ schedules = model.getObjectsByName("Transformer Output Electric Energy Schedule"
 #  return true
 # end
 
-# if schedules[0].iddObject.type != "OS:Schedule:Year".to_IddObjectType and
-#  schedules[0].iddObject.type != "OS:Schedule:Compact".to_IddObjectType
+# if schedules[0].iddObject.type != openstudio.IddObjectType("OS:Schedule:Year") and
+#  schedules[0].iddObject.type != openstudio.IddObjectType("OS:Schedule:Compact")
 #  runner.registerError("Transformer Output Electric Energy Schedule is not a Schedule:Year or a Schedule:Compact")
 #  return false
 # end
@@ -57,13 +57,13 @@ REGEX_GROUP = re.compile(r"\A[+-]?\d+?(_?\d+)*(\.\d+e?\d*)?\Z")
 if name_plate_rating == 0:
     max_energy = 0
 
-    if schedules[0].iddObject().type() == "Schedule:Year".to_IddObjectType():
+    if schedules[0].iddObject().type() == openstudio.IddObjectType("Schedule:Year"):
         for week_target in schedules[0].targets():
-            if week_target.iddObject().type() != "Schedule:Week:Daily".to_IddObjectType():
+            if week_target.iddObject().type() != openstudio.IddObjectType("Schedule:Week:Daily"):
                 continue
 
             for day_target in week_target.targets():
-                if day_target.iddObject().type() != "Schedule:Day:Interval".to_IddObjectType():
+                if day_target.iddObject().type() != openstudio.IddObjectType("Schedule:Day:Interval"):
                     continue
 
                 for eg in day_target.extensibleGroups():
@@ -75,7 +75,7 @@ if name_plate_rating == 0:
 
                     max_energy = value.get()
 
-    elif schedules[0].iddObject().type() == "Schedule:Compact".to_IddObjectType():
+    elif schedules[0].iddObject().type() == openstudio.IddObjectType("Schedule:Compact"):
         for eg in schedules[0].extensibleGroups():
             if REGEX_GROUP.match(eg.getString(0).to_s().strip()):
                 value = eg.getDouble(0)
@@ -85,7 +85,7 @@ if name_plate_rating == 0:
     # runner.registerInfo("Max energy is #{max_energy} J")
 
     minutes_per_timestep = None
-    for timestep in model.getObjectsByType("Timestep".to_IddObjectType()):
+    for timestep in model.getObjectsByType(openstudio.IddObjectType("Timestep")):
         timestep_per_hour = timestep.getDouble(0)
         if not timestep_per_hour.is_initialized():
             # runner.registerError("Cannot determine timesteps per hour")
@@ -143,14 +143,14 @@ meter.setReportingFrequency("Timestep")
 
 transformer = openstudio.model.ElectricLoadCenterTransformer(model)
 transformer.setTransformerUsage("PowerInFromGrid")
-transformer.setRatedCapacity(name_plate_rating.to_s().to_f())
+transformer.setRatedCapacity(name_plate_rating)
 transformer.setPhase("3")
 transformer.setConductorMaterial("Aluminum")
 transformer.setFullLoadTemperatureRise(150)
 transformer.setFractionofEddyCurrentLosses(0.1)
 transformer.setPerformanceInputMethod("NominalEfficiency")
-transformer.setNameplateEfficiency(name_plate_efficiency.to_s().to_f())
-transformer.setPerUnitLoadforNameplateEfficiency(unit_load_at_name_plate_efficiency.to_s().to_f())
+transformer.setNameplateEfficiency(name_plate_efficiency)
+transformer.setPerUnitLoadforNameplateEfficiency(unit_load_at_name_plate_efficiency)
 transformer.setReferenceTemperatureforNameplateEfficiency(75)
 transformer.setConsiderTransformerLossforUtilityCost(True)
 transformer.addMeter("Transformer:ExteriorEquipment:Electricity")

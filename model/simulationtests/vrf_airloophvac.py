@@ -83,7 +83,7 @@ for i, z in enumerate(zones):
         atu = openstudio.model.AirTerminalSingleDuctConstantVolumeNoReheat(model, model.alwaysOnDiscreteSchedule())
         airLoopWithOwnFan.addBranchForZone(z, atu)
 
-        fan = openstudio.model.FanSystemmodel(model)
+        fan = openstudio.model.FanSystemModel(model)
         fan.addToNode(airLoopWithOwnFan.supplyOutletNode())
 
     else:

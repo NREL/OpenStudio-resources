@@ -40,9 +40,9 @@ heating_loop = boilers[0].plantLoop().get()
 
 alwaysOn = model.alwaysOnDiscreteSchedule()
 
-fan = openstudio.model.FanSystemmodel(model)
+fan = openstudio.model.FanSystemModel(model)
 # Demonstrate API
-fan.setName("My FanSystemmodel")
+fan.setName("My FanSystemModel")
 
 # Availability Schedule Name: Required Object
 sch = openstudio.model.ScheduleConstant(model)
@@ -55,7 +55,7 @@ fan.setAvailabilitySchedule(sch)
 fan.autosizeDesignMaximumAirFlowRate()
 
 # Speed Control Method: Required String
-# openstudio.model.FanSystemmodel.speedControlMethodValues()
+# openstudio.model.FanSystemModel.speedControlMethodValues()
 fan.setSpeedControlMethod("Discrete")
 
 # Electric Power Minimum Flow Rate Fraction: Required Double
@@ -75,7 +75,7 @@ fan.setMotorInAirStreamFraction(0.87)
 fan.autosizeDesignElectricPowerConsumption()
 
 # Design Power Sizing Method: Required String (choice)
-# openstudio.model.FanSystemmodel.designPowerSizingMethodValues()
+# openstudio.model.FanSystemModel.designPowerSizingMethodValues()
 fan.setDesignPowerSizingMethod("TotalEfficiencyAndPressure")
 
 # These two may not be used depending on the Design Power Sizing Method
@@ -123,12 +123,12 @@ fan.addSpeed(0.25, 0.1)
 # Or you can call setSpeeds, which will clear any existing ones via
 # `fan.removeAllSpeeds`
 # You can use a vector, or just a ruby array
-# speeds = openstudio.model.FanSystemmodelSpeedVector.new
+# speeds = openstudio.model.FanSystemModelSpeedVector.new
 speeds = [
-    openstudio.model.FanSystemmodelSpeed(0.25, 0.1),
-    openstudio.model.FanSystemmodelSpeed(0.5, 0.3),
-    openstudio.model.FanSystemmodelSpeed(0.75, 0.7),
-    openstudio.model.FanSystemmodelSpeed(1.0, 1.0),
+    openstudio.model.FanSystemModelSpeed(0.25, 0.1),
+    openstudio.model.FanSystemModelSpeed(0.5, 0.3),
+    openstudio.model.FanSystemModelSpeed(0.75, 0.7),
+    openstudio.model.FanSystemModelSpeed(1.0, 1.0),
 ]
 fan.setSpeeds(speeds)
 
@@ -160,7 +160,7 @@ if is_working_AirLoopHVACUnitaryHeatPumpAirToAir:
 
 # Unitary: MultiSpeed
 if is_working_AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed:
-    unitary_fan = openstudio.model.FanSystemmodel(model)
+    unitary_fan = openstudio.model.FanSystemModel(model)
     unitary_htg_coil = openstudio.model.CoilHeatingDXMultiSpeed(model)
     htg_stage_1 = openstudio.model.CoilHeatingDXMultiSpeedStageData(model)
     htg_stage_2 = openstudio.model.CoilHeatingDXMultiSpeedStageData(model)
@@ -191,7 +191,7 @@ if is_working_AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed:
 
 
 # AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
-unitary_vav_fan = openstudio.model.FanSystemmodel(model)
+unitary_vav_fan = openstudio.model.FanSystemModel(model)
 unitary_vav_cc = openstudio.model.CoilCoolingDXSingleSpeed(model)
 unitary_vav_hc = openstudio.model.CoilHeatingGas(model)
 unitary_vav_changeover = openstudio.model.AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(
@@ -203,7 +203,7 @@ unitary_vav_changeover.addToNode(unitary_vav_changeoverAirLoopHVAC.supplyOutletN
 
 # AirLoopHVACUnitarySystem
 unitary_system = openstudio.model.AirLoopHVACUnitarySystem(model)
-unitary_system_fan = openstudio.model.FanSystemmodel(model)
+unitary_system_fan = openstudio.model.FanSystemModel(model)
 unitary_system_cc = openstudio.model.CoilCoolingDXSingleSpeed(model)
 unitary_system_hc = openstudio.model.CoilHeatingDXSingleSpeed(model)
 supp_unitary_system_hc = openstudio.model.CoilHeatingElectric(model)
@@ -220,7 +220,7 @@ unitary_system.addToNode(unitary_systemAirLoopHVAC.supplyOutletNode())
 dhw_loop = openstudio.model.addSHWLoop(model).to_PlantLoop().get()
 
 hpwh_pumped = openstudio.model.WaterHeaterHeatPump(model)
-hpwh_pumped_fan = openstudio.model.FanSystemmodel(model)
+hpwh_pumped_fan = openstudio.model.FanSystemModel(model)
 old_hpwh_pumped_fan = hpwh_pumped.fan()
 hpwh_pumped.setFan(hpwh_pumped_fan)
 old_hpwh_pumped_fan.remove()
@@ -233,7 +233,7 @@ dhw_loop.addSupplyBranchForComponent(hpwh_pumped.tank())
 is_working_WaterThermalTanks = False
 if is_working_WaterThermalTanks:
     hpwh_wrapped = openstudio.model.WaterHeaterHeatPumpWrappedCondenser(model)
-    hpwh_wrapped_fan = openstudio.model.FanSystemmodel(model)
+    hpwh_wrapped_fan = openstudio.model.FanSystemModel(model)
     old_hpwh_wrapped_fan = hpwh_wrapped.fan()
     hpwh_wrapped.setFan(hpwh_wrapped_fan)
     old_hpwh_wrapped_fan.remove()
@@ -244,8 +244,8 @@ for i, z in enumerate(zones):
     # ZoneHVACEnergyRecoveryVentilator
     if i == 0:
 
-        supplyFan = openstudio.model.FanSystemmodel(model)
-        exhaustFan = openstudio.model.FanSystemmodel(model)
+        supplyFan = openstudio.model.FanSystemModel(model)
+        exhaustFan = openstudio.model.FanSystemModel(model)
 
         heatExchanger = openstudio.model.HeatExchangerAirToAirSensibleAndLatent(model)
         heatExchanger.setSupplyAirOutletTemperatureControl(False)
@@ -260,7 +260,7 @@ for i, z in enumerate(zones):
 
     # ZoneHVACFourPipeFanCoil
     elif i == 1:
-        fan = openstudio.model.FanSystemmodel(model)
+        fan = openstudio.model.FanSystemModel(model)
 
         # ** Severe  ** GetFanCoilUnits: ZoneHVAC:FourPipeFanCoil: ZONE HVAC FOUR PIPE FAN COIL 1
         # **   ~~~   ** ...the fan type of the object : FAN SYSTEM MODEL 1 does not match with the capacity control method selected : VARIABLEFANVARIABLEFLOW please see I/O reference
@@ -284,7 +284,7 @@ for i, z in enumerate(zones):
         thermal_zone_vector = openstudio.model.ThermalZoneVector()
         thermal_zone_vector.append(z)
         openstudio.model.addSystemType1(model, thermal_zone_vector)
-        fan = openstudio.model.FanSystemmodel(model)
+        fan = openstudio.model.FanSystemModel(model)
         ptacs = model.getZoneHVACPackagedTerminalAirConditioners()
         fan_cv = ptacs[0].supplyAirFan()
         ptacs[0].setSupplyAirFan(fan)
@@ -295,7 +295,7 @@ for i, z in enumerate(zones):
         thermal_zone_vector = openstudio.model.ThermalZoneVector()
         thermal_zone_vector.append(z)
         openstudio.model.addSystemType2(model, thermal_zone_vector)
-        fan = openstudio.model.FanSystemmodel(model)
+        fan = openstudio.model.FanSystemModel(model)
         pthps = model.getZoneHVACPackagedTerminalHeatPumps()
         fan_cv = pthps[0].supplyAirFan()
         pthps[0].setSupplyAirFan(fan)
@@ -303,7 +303,7 @@ for i, z in enumerate(zones):
 
     # ZoneHVAC:TerminalUnit:VariableRefrigerantFlow
     elif i == 4:
-        fan = openstudio.model.FanSystemmodel(model)
+        fan = openstudio.model.FanSystemModel(model)
         cc = openstudio.model.CoilCoolingDXVariableRefrigerantFlow(model)
         hc = openstudio.model.CoilHeatingDXVariableRefrigerantFlow(model)
         vrf = openstudio.model.AirConditionerVariableRefrigerantFlow(model)
@@ -319,14 +319,14 @@ for i, z in enumerate(zones):
 
     # ZoneHVACUnitHeater
     elif i == 5:
-        fan = openstudio.model.FanSystemmodel(model)
+        fan = openstudio.model.FanSystemModel(model)
         heating_coil = openstudio.model.CoilHeatingElectric(model)
         unit_heater = openstudio.model.ZoneHVACUnitHeater(model, alwaysOn, fan, heating_coil)
         unit_heater.addToThermalZone(z)
 
     # ZoneHVACUnitVentilator
     elif i == 6:
-        fan = openstudio.model.FanSystemmodel(model)
+        fan = openstudio.model.FanSystemModel(model)
         zoneHVACUnitVentilator = openstudio.model.ZoneHVACUnitVentilator(model, fan)
         heating_coil = openstudio.model.CoilHeatingElectric(model)
         cooling_coil = openstudio.model.CoilCoolingWater(model)
@@ -337,7 +337,7 @@ for i, z in enumerate(zones):
 
     # ZoneHVACWaterToAirHeatPump
     elif i == 7:
-        fan = openstudio.model.FanSystemmodel(model)
+        fan = openstudio.model.FanSystemModel(model)
         heating_coil = openstudio.model.CoilHeatingWaterToAirHeatPumpEquationFit(model)
         cooling_coil = openstudio.model.CoilCoolingWaterToAirHeatPumpEquationFit(model)
         supp_heating_coil = openstudio.model.CoilHeatingElectric(model)
@@ -353,7 +353,7 @@ for i, z in enumerate(zones):
         air_loop = z.airLoopHVAC().get()
         air_loop.removeBranchForZone(z)
 
-        piu_fan = openstudio.model.FanSystemmodel(model)
+        piu_fan = openstudio.model.FanSystemModel(model)
         piu_supp_hc = openstudio.model.CoilHeatingElectric(model)
         new_terminal = openstudio.model.AirTerminalSingleDuctSeriesPIUReheat(model, piu_fan, piu_supp_hc)
 
@@ -364,7 +364,7 @@ for i, z in enumerate(zones):
         air_loop = z.airLoopHVAC().get()
         air_loop.removeBranchForZone(z)
 
-        piu_fan = openstudio.model.FanSystemmodel(model)
+        piu_fan = openstudio.model.FanSystemModel(model)
         piu_supp_hc = openstudio.model.CoilHeatingElectric(model)
         new_terminal = openstudio.model.AirTerminalSingleDuctParallelPIUReheat(model, alwaysOn, piu_fan, piu_supp_hc)
 

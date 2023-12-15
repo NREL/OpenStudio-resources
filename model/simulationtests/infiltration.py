@@ -34,7 +34,7 @@ infilSch.setName("Infiltration Schedule")
 # In order to produce more consistent results between different runs,
 # we sort the spaces by names
 spaces = sorted(model.getSpaces(), key=lambda s: s.nameString())
-spaces = [s for x in spaces if "core" not in s.nameString().lower()]
+spaces = [s for s in spaces if "core" not in s.nameString().lower()]
 
 for i, space in enumerate(spaces):
     if i == 0:

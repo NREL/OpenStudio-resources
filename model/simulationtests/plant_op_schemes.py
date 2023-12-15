@@ -29,8 +29,7 @@ cooling_op_scheme.addEquipment(chiller)
 cooling_op_scheme.addEquipment(chiller2)
 # This cuts the load range into two pieces with only chiller2 operating on the lower end of the range
 # See PlantEquipmentOperationRangeBasedScheme for details about this api
-lower_range_equipment = []
-lower_range_equipment.push(chiller2)
+lower_range_equipment = [chiller2]
 cooling_op_scheme.addLoadRange(25000.0, lower_range_equipment)
 chilled_plant.setPlantEquipmentOperationCoolingLoad(cooling_op_scheme)
 
@@ -44,8 +43,7 @@ heating_op_scheme.addEquipment(boiler)
 heating_op_scheme.addEquipment(boiler2)
 heating_plant.setPlantEquipmentOperationHeatingLoad(heating_op_scheme)
 
-lower_heating_range_equipment = []
-lower_heating_range_equipment.push(boiler2)
+lower_heating_range_equipment = [boiler2]
 heating_op_scheme.addLoadRange(25000.0, lower_heating_range_equipment)
 heating_plant.setPlantEquipmentOperationHeatingLoad(heating_op_scheme)
 
@@ -60,7 +58,7 @@ cond.setPrimaryPlantEquipmentOperationScheme(tower_scheme)
 # tower_scheme.addEquipment(tower)
 tower_equipment = []
 tower_scheme.addLoadRange(-50.0, tower_equipment)
-tower_equipment.push(tower)
+tower_equipment.append(tower)
 tower_scheme.addLoadRange(23.0, tower_equipment)
 
 # assign constructions from a local library to the walls/windows/etc. in the model

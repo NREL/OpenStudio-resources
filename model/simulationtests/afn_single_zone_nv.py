@@ -12,27 +12,27 @@ class SurfaceNetworkBuilder(SurfaceVisitor):
         super().__init__(model)
 
     def interiorFloor(self, model, surface, adjacentSurface):
-        if surface.outsideBoundaryCondition().starts_with("Ground"):
+        if surface.outsideBoundaryCondition().startswith("Ground"):
             return
 
         # Create a surface linkage
-        link = surface.getairflowNetworkSurface(self.interiorCrack)
+        link = surface.getAirflowNetworkSurface(self.interiorCrack)
 
     def interiorRoofCeiling(self, model, surface, adjacentSurface):
         # Create a surface linkage
-        link = surface.getairflowNetworkSurface(self.interiorCrack)
+        link = surface.getAirflowNetworkSurface(self.interiorCrack)
 
     def interiorWall(self, model, surface, adjacentSurface):
         # Create a surface linkage
-        link = surface.getairflowNetworkSurface(self.interiorCrack)
+        link = surface.getAirflowNetworkSurface(self.interiorCrack)
 
     def exteriorSurface(self, model, surface):
         # Create an external node?
-        if surface.outsideBoundaryCondition().starts_with("Ground"):
+        if surface.outsideBoundaryCondition().startswith("Ground"):
             return
 
         # Create a surface linkage
-        link = surface.getairflowNetworkSurface(self.exteriorCrack)
+        link = surface.getAirflowNetworkSurface(self.exteriorCrack)
 
 
 model = BaselineModel()
@@ -68,8 +68,8 @@ model.set_space_type()
 model.add_design_days()
 
 # add simulation control
-afn_control = model.getairflowNetworkSimulationControl()
-afn_control.setairflowNetworkControl("MultizoneWithoutDistribution")
+afn_control = model.getAirflowNetworkSimulationControl()
+afn_control.setAirflowNetworkControl("MultizoneWithoutDistribution")
 
 # In order to produce more consistent results between different runs,
 # we sort the zones by names
@@ -78,7 +78,7 @@ zones = sorted(model.getThermalZones(), key=lambda z: z.nameString())
 
 # make an afn zone
 zone = zones[0]  # There should only be one...
-afnzone = zone.getairflowNetworkZone()
+afnzone = zone.getAirflowNetworkZone()
 
 # Connect up envelope
 visitor = SurfaceNetworkBuilder(model)

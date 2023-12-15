@@ -34,7 +34,7 @@ yd.setCalendarYear(1999)
 
 # add utility bills
 average_electric = 760808.333 / 12.0
-electric_bill = openstudio.model.UtilityBill("Electricity".to_FuelType(), model)
+electric_bill = openstudio.model.UtilityBill(openstudio.FuelType("Electricity"), model)
 electric_bill.setConsumptionUnit("kWh")
 billing_period = electric_bill.addBillingPeriod()
 billing_period.setConsumption(average_electric)
@@ -50,7 +50,7 @@ billing_period = electric_bill.addBillingPeriod()
 billing_period.setConsumption(average_electric)
 
 average_gas = 3079002.87 / 12.0
-gas_bill = openstudio.model.UtilityBill("Gas".to_FuelType(), model)
+gas_bill = openstudio.model.UtilityBill(openstudio.FuelType("Gas"), model)
 gas_bill.setConsumptionUnit("kBtu")
 billing_period = gas_bill.addBillingPeriod()
 billing_period.setConsumption(average_gas)

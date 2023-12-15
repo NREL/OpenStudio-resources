@@ -1200,6 +1200,69 @@ class ModelTests < Minitest::Test
     end
   end
 
+  def test_outputcontrol_files_py
+    result = sim_test('outputcontrol_files.py', { compare_eui: false })
+
+    # We enabled only a few files, so check that
+    run_dir = File.join($TestDir, 'outputcontrol_files.py', 'run')
+    assert(File.exist?(run_dir))
+
+    all_files = [
+      'eplusout.audit',
+      'eplusout.bnd',
+      'eplusout.dbg',
+      'eplusout.dxf',
+      'eplusout.edd',
+      'eplusout.eio',
+      'eplusout.end',
+      'eplusout.epmidf',
+      'eplusout.epmdet',
+      'eplusout.err',
+      'eplusout.eso',
+      'eplusout.mdd',
+      'eplusout.mtd',
+      'eplusout.mtr',
+      'eplusout_perflog.csv',
+      'eplusout.rdd',
+      'eplusout.shd',
+      'eplusout.sln',
+      'eplusout.sql',
+      'eplustbl.htm',
+      'eplusssz.csv',
+      'epluszsz.csv',
+      'eplusout.json',
+      'eplusout.csv',
+      'eplusmtr.csv',
+      'eplustbl.htm',
+      'eplusscreen.csv',
+      'eplusout.svg',
+      'eplusout.sci',
+      'eplusout.wrm',
+      'eplusout.delightin',
+      'eplusout.delightout'
+    ]
+
+    expected_files = [
+      'eplusout.end',
+      'eplusout.sql',
+      'eplusout.csv',
+      'eplusmtr.csv',
+      'eplusout.err',
+      'eplusout.audit',
+      'eplustbl.htm'
+    ]
+
+    assert((expected_files - all_files).empty?)
+
+    expected_files.each do |fname|
+      assert(File.exist?(File.join(run_dir, fname)), "Expected #{fname}")
+    end
+
+    (all_files - expected_files).each do |fname|
+      assert(!File.exist?(File.join(run_dir, fname)), "Did not expect #{fname}")
+    end
+  end
+
   def test_outputcontrol_files_osm
     result = sim_test('outputcontrol_files.osm')
   end

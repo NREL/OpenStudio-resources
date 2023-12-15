@@ -67,8 +67,8 @@ cooling_loop.addAvailabilityManager(avm_HTOn)
 # here. The classical application of this one is for solar collectors on the
 # demand side of a plant loop (temp diffs are reversed, 2 for Off, 10 for On),
 # which OpenStudio doesn't allow right now
-chw_pump = cooling_loop.supplyComponents("OS_Pump_VariableSpeed".to_IddObjectType())[0].to_PumpVariableSpeed().get()
-chw_pump_outlet_node = chw_pump.outletmodelObject().get().to_Node().get()
+chw_pump = cooling_loop.supplyComponents(openstudio.IddObjectType("OS_Pump_VariableSpeed"))[0].to_PumpVariableSpeed().get()
+chw_pump_outlet_node = chw_pump.outletModelObject().get().to_Node().get()
 
 avm_Diff = openstudio.model.AvailabilityManagerDifferentialThermostat(model)
 avm_Diff.setHotNode(chw_pump_outlet_node)

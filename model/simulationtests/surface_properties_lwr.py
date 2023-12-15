@@ -96,8 +96,8 @@ tempSch1 = openstudio.model.ScheduleRuleset(model)
 tempSch1.setName("Surface Temperature")
 tempSch1.defaultDaySchedule().addValue(openstudio.Time(0, 24, 0, 0), 10.0)
 tempSch1_july_to_dec_rule = openstudio.model.ScheduleRule(tempSch1)
-tempSch1_july_to_dec_rule.setStartDate(openstudio.Date("July".to_MonthOfYear(), 1))
-tempSch1_july_to_dec_rule.setEndDate(openstudio.Date("December".to_MonthOfYear(), 31))
+tempSch1_july_to_dec_rule.setStartDate(openstudio.Date(openstudio.MonthOfYear("July"), 1))
+tempSch1_july_to_dec_rule.setEndDate(openstudio.Date(openstudio.MonthOfYear("December"), 31))
 tempSch1_july_to_dec_rule.daySchedule().addValue(openstudio.Time(0, 24, 0, 0), -10)
 
 # Add two groups

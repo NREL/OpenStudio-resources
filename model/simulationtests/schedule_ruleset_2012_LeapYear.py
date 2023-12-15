@@ -69,8 +69,8 @@ summerRule.setApplyWednesday(True)
 summerRule.setApplyThursday(True)
 summerRule.setApplyFriday(True)
 summerRule.setApplySaturday(True)
-summerRule.setStartDate(openstudio.Date("May".to_MonthOfYear(), 28))
-summerRule.setEndDate(openstudio.Date("August".to_MonthOfYear(), 28))
+summerRule.setStartDate(openstudio.Date(openstudio.MonthOfYear("May"), 28))
+summerRule.setEndDate(openstudio.Date(openstudio.MonthOfYear("August"), 28))
 summerRule.daySchedule().addValue(openstudio.Time(0, 24, 0, 0), 0.1)
 
 # apply schedule to all lights

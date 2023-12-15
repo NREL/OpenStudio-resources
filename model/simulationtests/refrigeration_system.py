@@ -64,9 +64,9 @@ boilers = sorted(model.getBoilerHotWaters(), key=lambda c: c.nameString())
 heating_loop = boilers[0].plantLoop().get()
 
 i = 0
-therm_zone = nil
-ref_sys1 = nil
-cascade_condenser = nil
+therm_zone = None
+ref_sys1 = None
+cascade_condenser = None
 
 for z in zones:
     if i == 0:
@@ -83,9 +83,9 @@ for z in zones:
         air_loop = z.airLoopHVAC().get()
         coilCoolingWaters = air_loop.supplyComponents(openstudio.IddObjectType("OS:Coil:Cooling:Water"))
         setpointMMA1 = openstudio.model.SetpointManagerMixedAir(model)
-        node = coilCoolingWaters[0].to_CoilCoolingWater().get().airOutletmodelObject().get().to_Node().get()
+        node = coilCoolingWaters[0].to_CoilCoolingWater().get().airOutletModelObject().get().to_Node().get()
         desuperheater.addToNode(node)
-        node = desuperheater.outletmodelObject().get().to_Node().get()
+        node = desuperheater.outletModelObject().get().to_Node().get()
         setpointMMA1.addToNode(node)
 
     elif i == 1:

@@ -47,7 +47,7 @@ for material in model.getMaterials():
 
 # assign material property phase change properties
 for surface in model.getSurfaces():
-    if surface.surfaceType().downcase() == "wall":
+    if surface.surfaceType().lower() == "wall":
 
         for layer in surface.construction().get().to_Construction().get().layers():
             if not layer.to_StandardOpaqueMaterial().is_initialized():
@@ -65,7 +65,7 @@ for surface in model.getSurfaces():
                 phase_change.addTemperatureEnthalpy(22.1, 32000)
                 phase_change.addTemperatureEnthalpy(60, 71000)
 
-    elif surface.surfaceType().downcase() == "floor":
+    elif surface.surfaceType().lower() == "floor":
 
         for layer in surface.construction().get().to_Construction().get().layers():
             if not layer.to_StandardOpaqueMaterial().is_initialized():
