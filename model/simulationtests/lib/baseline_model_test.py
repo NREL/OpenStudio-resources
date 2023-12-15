@@ -2,7 +2,6 @@ import json
 
 import openstudio
 import pytest
-
 from baseline_model import VALID_ASHRAE_SYS_NUM_ARRAY, BaselineModel
 
 
