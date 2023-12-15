@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'parser/current'
 require 'rubocop-ast'
 require 'rubocop'
@@ -25,17 +27,17 @@ class IndentationRule < Rule
   # Your additional methods or modifications can go here
 end
 code = <<~RUBY
-10.times do |i|
-if i == 0
-           puts "zero"
-    elsif i == 4
-puts "4"
-else
-  if i < 5 or i > 10
-    puts "wrong"
-end
+  10.times do |i|
+  if i == 0
+             puts "zero"
+      elsif i == 4
+  puts "4"
+  else
+    if i < 5 or i > 10
+      puts "wrong"
   end
-end
+    end
+  end
 RUBY
 
 source = RuboCop::AST::ProcessedSource.new(code, 2.7)
