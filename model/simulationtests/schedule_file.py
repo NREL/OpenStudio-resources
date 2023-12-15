@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import openstudio
 
 from lib.baseline_model import BaselineModel
@@ -37,9 +39,8 @@ yd = model.getYearDescription()
 yd.setCalendarYear(2013)
 
 # add schedule file
-file_name = File.join(File.dirname(__FILE__), "lib/schedulefile.csv")
-file_name = File.realpath(file_name)
-external_file = openstudio.model.ExternalFile.getExternalFile(model, file_name)
+file_path = Path(__file__).parent.absolute() / "lib/schedulefile.csv"
+external_file = openstudio.model.ExternalFile.getExternalFile(model, str(file_path))
 external_file = external_file.get()
 schedule_file = openstudio.model.ScheduleFile(external_file, 3, 1)
 

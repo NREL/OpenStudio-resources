@@ -61,7 +61,7 @@ fan = ptac.supplyAirFan().to_FanConstantVolume().get()
 # Create an actuator to set the fan pressure rise
 fan_press = "Fan Pressure Rise"
 fan_actuator = openstudio.model.EnergyManagementSystemActuator(fan, "fan", fan_press)
-fan_actuator.setName("#{fan.name()} Press Actuator")
+fan_actuator.setName(f"{fan.nameString()} Press Actuator")
 # fan_actuator.setActuatedComponentControlType(fan_press)
 # fan_actuator.setActuatedComponentType("fan")
 # fan_actuator.setActuatedComponent(fan)
@@ -94,7 +94,7 @@ fan_program_1.setBody(fan_program_1_body)
 
 # Create a third program from a vector of lines
 fan_program_2 = openstudio.model.EnergyManagementSystemProgram(model)
-fan_program_2.setName(f"{fan.name()} Pressure Rise Program by Line")
+fan_program_2.setName(f"{fan.nameString()} Pressure Rise Program by Line")
 fan_program_2.addLine(f"SET mult = {oat_sensor.handle()} / 15.0 !- This is nonsense")
 fan_program_2.addLine(f"SET {fan_actuator.handle()} = 250 * mult !- More nonsense")
 

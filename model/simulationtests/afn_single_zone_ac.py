@@ -6,9 +6,9 @@ from lib.surface_visitor import SurfaceVisitor
 
 class SurfaceNetworkBuilder(SurfaceVisitor):
     def __init__(self, model):
-        refcond = openstudio.model.airflowNetworkReferenceCrackConditions(model, 20.0, 101325.0, 0.0)
-        self.interiorCrack = openstudio.model.airflowNetworkCrack(model, 0.050, 0.65, refcond)
-        self.exteriorCrack = openstudio.model.airflowNetworkCrack(model, 0.025, 0.65, refcond)
+        refcond = openstudio.model.AirflowNetworkReferenceCrackConditions(model, 20.0, 101325.0, 0.0)
+        self.interiorCrack = openstudio.model.AirflowNetworkCrack(model, 0.050, 0.65, refcond)
+        self.exteriorCrack = openstudio.model.AirflowNetworkCrack(model, 0.025, 0.65, refcond)
         super().__init__(model)
 
     def interiorFloor(self, model, surface, adjacentSurface):
@@ -252,7 +252,7 @@ def addSimpleSystemAFN(model):
     heatingComponent = coilHeatingGas.getAirflowNetworkEquivalentDuct(0.1, 1.0)
     coolingComponent = coilCooling.getAirflowNetworkEquivalentDuct(0.1, 1.0)
     # And all the ducts
-    mainTruck = openstudio.model.airflowNetworkDuct(model)
+    mainTruck = openstudio.model.AirflowNetworkDuct(model)
     mainTruck.setDuctLength(2)
     mainTruck.setHydraulicDiameter(0.4064)
     mainTruck.setCrossSectionArea(0.1297)
@@ -263,7 +263,7 @@ def addSimpleSystemAFN(model):
     mainTruck.setOutsideConvectionCoefficient(5.018)
     mainTruck.setInsideConvectionCoefficient(25.09)
 
-    mainReturn = openstudio.model.airflowNetworkDuct(model)
+    mainReturn = openstudio.model.AirflowNetworkDuct(model)
     mainReturn.setDuctLength(1)
     mainReturn.setHydraulicDiameter(0.5)
     mainReturn.setCrossSectionArea(0.1963)
@@ -274,7 +274,7 @@ def addSimpleSystemAFN(model):
     mainReturn.setOutsideConvectionCoefficient(0.0065)
     mainReturn.setInsideConvectionCoefficient(0.0325)
 
-    airLoopReturn = openstudio.model.airflowNetworkDuct(model)
+    airLoopReturn = openstudio.model.AirflowNetworkDuct(model)
     airLoopReturn.setDuctLength(0.1)
     airLoopReturn.setHydraulicDiameter(1)
     airLoopReturn.setCrossSectionArea(0.7854)
@@ -285,7 +285,7 @@ def addSimpleSystemAFN(model):
     airLoopReturn.setOutsideConvectionCoefficient(0.0065)
     airLoopReturn.setInsideConvectionCoefficient(0.0325)
 
-    airLoopSupply = openstudio.model.airflowNetworkDuct(model)
+    airLoopSupply = openstudio.model.AirflowNetworkDuct(model)
     airLoopSupply.setDuctLength(0.1)
     airLoopSupply.setHydraulicDiameter(1)
     airLoopSupply.setCrossSectionArea(0.7854)
@@ -317,12 +317,12 @@ def addSimpleSystemAFN(model):
     # Now walk around the loop and make the AFN nodes
     equipmentInletNode_AFN = equipmentInletNode.getAirflowNetworkDistributionNode()
     splitterNode_AFN = splitter.getAirflowNetworkDistributionNode()
-    zoneSupplyNode_AFN = openstudio.model.airflowNetworkDistributionNode(model)
+    zoneSupplyNode_AFN = openstudio.model.AirflowNetworkDistributionNode(model)
 
     zoneSupplyRegisterNode_AFN = None
     # zoneOutletNode_AFN = zoneOutletNode.getAirflowNetworkDistributionNode
 
-    zoneReturnNode_AFN = openstudio.model.airflowNetworkDistributionNode(model)
+    zoneReturnNode_AFN = openstudio.model.AirflowNetworkDistributionNode(model)
     mixerNode_AFN = mixer.getAirflowNetworkDistributionNode()
     mainReturnNode_AFN = mainReturnNode.getAirflowNetworkDistributionNode()
     fanInletNode_AFN = fanInletNode.getAirflowNetworkDistributionNode()
@@ -332,26 +332,26 @@ def addSimpleSystemAFN(model):
 
     # Now the links
 
-    mainLink = openstudio.model.airflowNetworkDistributionLinkage(
+    mainLink = openstudio.model.AirflowNetworkDistributionLinkage(
         model, equipmentInletNode_AFN, splitterNode_AFN, mainTruck
     )
     # Zone stuff goes in here
-    returnMixerLink = openstudio.model.airflowNetworkDistributionLinkage(
+    returnMixerLink = openstudio.model.AirflowNetworkDistributionLinkage(
         model, mixerNode_AFN, mainReturnNode_AFN, mainReturn
     )
-    systemReturnLink = openstudio.model.airflowNetworkDistributionLinkage(
+    systemReturnLink = openstudio.model.AirflowNetworkDistributionLinkage(
         model, mainReturnNode_AFN, fanInletNode_AFN, airLoopReturn
     )
-    fanLink = openstudio.model.airflowNetworkDistributionLinkage(
+    fanLink = openstudio.model.AirflowNetworkDistributionLinkage(
         model, fanInletNode_AFN, fanOutletNode_AFN, fanComponent
     )
-    coolingCoilLink = openstudio.model.airflowNetworkDistributionLinkage(
+    coolingCoilLink = openstudio.model.AirflowNetworkDistributionLinkage(
         model, fanOutletNode_AFN, heatingInletNode_AFN, coolingComponent
     )
-    heatingCoilLink = openstudio.model.airflowNetworkDistributionLinkage(
+    heatingCoilLink = openstudio.model.AirflowNetworkDistributionLinkage(
         model, heatingInletNode_AFN, heatingOutletNode_AFN, heatingComponent
     )
-    equipmentAirLoopLink = openstudio.model.airflowNetworkDistributionLinkage(
+    equipmentAirLoopLink = openstudio.model.AirflowNetworkDistributionLinkage(
         model, heatingOutletNode_AFN, equipmentInletNode_AFN, airLoopSupply
     )
 
@@ -434,7 +434,7 @@ zoneInletNode_AFN = zoneInletNode.getAirflowNetworkDistributionNode()
 zoneOutletNode_AFN = zoneOutletNode.getAirflowNetworkDistributionNode()
 
 # Make the duct elements
-zoneSupply = openstudio.model.airflowNetworkDuct(model)
+zoneSupply = openstudio.model.AirflowNetworkDuct(model)
 zoneSupply.setDuctLength(10)
 zoneSupply.setHydraulicDiameter(0.4064)
 zoneSupply.setCrossSectionArea(0.1297)
@@ -445,7 +445,7 @@ zoneSupply.setOverallMoistureTransmittanceCoefficientfromAirtoAir(0.0000001)
 zoneSupply.setOutsideConvectionCoefficient(5.018)
 zoneSupply.setInsideConvectionCoefficient(25.09)
 
-zoneReturn = openstudio.model.airflowNetworkDuct(model)
+zoneReturn = openstudio.model.AirflowNetworkDuct(model)
 zoneReturn.setDuctLength(3)
 zoneReturn.setHydraulicDiameter(0.5)
 zoneReturn.setCrossSectionArea(0.1963)
@@ -456,7 +456,7 @@ zoneReturn.setOverallMoistureTransmittanceCoefficientfromAirtoAir(0.0000001)
 zoneReturn.setOutsideConvectionCoefficient(0.0065)
 zoneReturn.setInsideConvectionCoefficient(0.0325)
 
-zoneConnectionDuct = openstudio.model.airflowNetworkDuct(model)
+zoneConnectionDuct = openstudio.model.AirflowNetworkDuct(model)
 zoneConnectionDuct.setDuctLength(0.1)
 zoneConnectionDuct.setHydraulicDiameter(1)
 zoneConnectionDuct.setCrossSectionArea(0.7854)
@@ -468,16 +468,16 @@ zoneConnectionDuct.setOutsideConvectionCoefficient(0.0065)
 zoneConnectionDuct.setInsideConvectionCoefficient(0.0325)
 
 # And now the linkages
-zoneSupplyLink = openstudio.model.airflowNetworkDistributionLinkage(
+zoneSupplyLink = openstudio.model.AirflowNetworkDistributionLinkage(
     model, splitterNode_AFN, zoneInletNode_AFN, zoneSupply
 )
-zoneSupplyConnectionLink = openstudio.model.airflowNetworkDistributionLinkage(
+zoneSupplyConnectionLink = openstudio.model.AirflowNetworkDistributionLinkage(
     model, zoneInletNode_AFN, afnzone, zoneConnectionDuct
 )
-zoneReturnConnectionLink = openstudio.model.airflowNetworkDistributionLinkage(
+zoneReturnConnectionLink = openstudio.model.AirflowNetworkDistributionLinkage(
     model, afnzone, zoneOutletNode_AFN, zoneConnectionDuct
 )
-zoneSupplyLink = openstudio.model.airflowNetworkDistributionLinkage(
+zoneSupplyLink = openstudio.model.AirflowNetworkDistributionLinkage(
     model, zoneOutletNode_AFN, mixerNode_AFN, zoneReturn
 )
 
