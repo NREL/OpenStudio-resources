@@ -19,9 +19,9 @@ model.set_space_type()
 # add design days to the model (Chicago)
 model.add_design_days()
 
-zone_names = [x.nameString() for x in model.getThermalZones()].sort()
+zone_names = sorted([x.nameString() for x in model.getThermalZones()])
 
-zone_names_str_list = '["' + ", ".join(zone_names) + '"]'
+zone_names_str_list = '["' + '", "'.join(zone_names) + '"]'
 
 # Add a PythonPlugin:Variable (all OS SDK PythonPluginVariable objects are
 # translated to a single E+ PythonPlugin:Variables (extensible object))
@@ -65,9 +65,9 @@ out_trend_var.setReportingFrequency("Timestep")
 
 pluginClassName = "AverageZoneTemps"
 
-python_plugin_file_content = f"""from pyenergyplus.plugin import energyplusPlugin
+python_plugin_file_content = f"""from pyenergyplus.plugin import EnergyPlusPlugin
 
-class {pluginClassName}(energyplusPlugin):
+class {pluginClassName}(EnergyPlusPlugin):
 
     def __init__(self):
         super().__init__()

@@ -43,13 +43,16 @@ surfaces = []
 sub_surfaces = []
 for space in spaces:
     for surface in space.surfaces():
-        surfaces.append(surface)
+        if surface not in surfaces:
+            surfaces.append(surface)
+
         for sub_surface in surface.subSurfaces():
-            sub_surfaces.append(sub_surface)
+            if sub_surface not in sub_surfaces:
+                sub_surfaces.append(sub_surface)
 
 
 # view factors for surfaces to surfaces
-surfaces = sorted(surfaces.uniq(), key=lambda s: s.nameString())
+surfaces = sorted(surfaces, key=lambda s: s.nameString())
 for surface1 in surfaces:
     for surface2 in surfaces:
         view_factor = 0.0
@@ -60,7 +63,7 @@ for surface1 in surfaces:
 
 
 # view factors for subsurfaces to subsurfaces
-sub_surfaces = sorted(sub_surfaces.uniq(), key=lambda s: s.nameString())
+sub_surfaces = sorted(sub_surfaces, key=lambda s: s.nameString())
 for sub_surface1 in sub_surfaces:
     for sub_surface2 in sub_surfaces:
         view_factor = 0.0

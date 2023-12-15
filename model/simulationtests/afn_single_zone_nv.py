@@ -6,9 +6,9 @@ from lib.surface_visitor import SurfaceVisitor
 
 class SurfaceNetworkBuilder(SurfaceVisitor):
     def __init__(self, model):
-        refcond = openstudio.model.airflowNetworkReferenceCrackConditions(model, 20.0, 101325.0, 0.0)
-        self.interiorCrack = openstudio.model.airflowNetworkCrack(model, 0.050, 0.65, refcond)
-        self.exteriorCrack = openstudio.model.airflowNetworkCrack(model, 0.025, 0.65, refcond)
+        refcond = openstudio.model.AirflowNetworkReferenceCrackConditions(model, 20.0, 101325.0, 0.0)
+        self.interiorCrack = openstudio.model.AirflowNetworkCrack(model, 0.050, 0.65, refcond)
+        self.exteriorCrack = openstudio.model.AirflowNetworkCrack(model, 0.025, 0.65, refcond)
         super().__init__(model)
 
     def interiorFloor(self, model, surface, adjacentSurface):
