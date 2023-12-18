@@ -362,7 +362,7 @@ class BaselineModel(openstudio.model.Model):
         if ashrae_sys_num == "04":
             # 4: PSZ-HP
             for zone in zones:
-                hvac = openstudio.model.addSystemType3(self)
+                hvac = openstudio.model.addSystemType4(self)
                 hvac = hvac.to_AirLoopHVAC().get()
                 hvac.addBranchForZone(zone)
                 outlet_node = hvac.supplyOutletNode()
