@@ -402,7 +402,7 @@ def find_info_osws(compat_matrix=None, test_dir=None, testtype='model',
             files = [f for f in files if not re_xml.search(f)]
 
     # With this pattern, we exclude the custom-tagged out.osw files
-    filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw|xml|sql)_'
+    filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|py|osw|xml|sql)_'
                    r'(?P<version>\d+\.\d+\.\d+.*?)_out\.{}'.format(ext))
 
     index = ['Test', 'Type', 'version']
@@ -544,11 +544,11 @@ def find_info_osws_with_tags(compat_matrix=None,
             files = [f for f in files if not re_xml.search(f)]
 
     if tags_only:
-        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw|xml)_'
+        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|py|osw|xml|sql)_'
                        r'(?P<version>\d+\.\d+\.\d+.*?)_out'
                        r'_(?P<Tag>.*?)\.{}'.format(ext))
     else:
-        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|osw|xml)_'
+        filepattern = (r'(?P<Test>.*?)\.(?P<Type>osm|rb|py|osw|xml|sql)_'
                        r'(?P<version>\d+\.\d+\.\d+.*?)_out'
                        r'_?(?P<Tag>.*?)?\.{}'.format(ext))
 

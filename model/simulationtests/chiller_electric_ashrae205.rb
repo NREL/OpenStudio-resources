@@ -126,7 +126,7 @@ raise if ch.auxiliaryOutletNode.empty?
 # and ch.removeFromOilCoolerLoop
 
 model.rename_loop_nodes
-model.renames_air_nodes
+model.rename_air_nodes
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
