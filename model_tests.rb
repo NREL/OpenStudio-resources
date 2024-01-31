@@ -223,7 +223,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.7.0
   # def test_coil_cooling_dx_singlespeed_thermalstorage_osm
-    # result = sim_test('coil_cooling_dx_singlespeed_thermalstorage.osm')
+  # result = sim_test('coil_cooling_dx_singlespeed_thermalstorage.osm')
   # end
 
   def test_centralheatpumpsystem_osm
