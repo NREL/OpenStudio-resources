@@ -1202,6 +1202,40 @@ coil.setDischargeOnlyModePartLoadFractionCorrelationCurve(constant_cubic)
 coil.setDischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve(discharge_shr_ft)
 coil.setDischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(discharge_shr_fff)
 
+# EMSControlled
+sensor = OpenStudio::Model::EnergyManagementSystemSensor.new(m, 'Cooling Coil Ice Thermal Storage End Fraction')
+sensor.setName("#{coil.name} s")
+sensor.setKeyName(coil.name.to_s)
+
+schedule = OpenStudio::Model::ScheduleConstant.new(m)
+schedule.setValue(5)
+
+sensor_2 = OpenStudio::Model::EnergyManagementSystemSensor.new(m, 'Schedule Value')
+sensor_2.setName("#{schedule.name} s")
+sensor_2.setKeyName(schedule.name.to_s)
+
+actuator = OpenStudio::Model::EnergyManagementSystemActuator.new(coil, 'Coil:Cooling:DX:SingleSpeed:ThermalStorage', 'Operating Mode')
+actuator.setName("#{coil.name} opmode")
+
+program = OpenStudio::Model::EnergyManagementSystemProgram.new(m)
+program.setName("#{coil.name} control")
+program.addLine("Set #{actuator.name} = #{sensor_2.name}")
+program.addLine("If (#{actuator.name} == 2)")
+program.addLine("If (#{sensor.name} > 0.99)")
+program.addLine("Set #{actuator.name} = 1")
+program.addLine("EndIf")
+program.addLine("EndIf")
+program.addLine("If (#{actuator.name} == 5)")
+program.addLine("If (#{sensor.name} < 0.01)")
+program.addLine("Set #{actuator.name} = 1")
+program.addLine("EndIf")
+program.addLine("EndIf")
+
+pcm = OpenStudio::Model::EnergyManagementSystemProgramCallingManager.new(m)
+pcm.setName("#{coil.name} pcm")
+pcm.setCallingPoint('AfterPredictorAfterHVACManagers')
+pcm.addProgram(program)
+
 # FanOnOff
 fan = OpenStudio::Model::FanOnOff.new(m)
 fan.setFanEfficiency(0.75)
