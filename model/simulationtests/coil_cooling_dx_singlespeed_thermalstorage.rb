@@ -1118,7 +1118,7 @@ coil = OpenStudio::Model::CoilCoolingDXSingleSpeedThermalStorage.new(m)
 coil.setAvailabilitySchedule(m.alwaysOnDiscreteSchedule)
 coil.setOperatingModeControlMethod('EMSControlled')
 coil.setStorageType('Ice')
-coil.autocalculateIceStorageCapacity
+coil.autosizeIceStorageCapacity
 coil.setStorageCapacitySizingFactor(6.0)
 coil.setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(7.913)
 coil.autosizeRatedEvaporatorAirFlowRate
@@ -1153,9 +1153,9 @@ coil.setCoolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve(cool_shr_fff
 
 # Cooling And Charge Mode = Yes
 coil.setCoolingAndChargeModeAvailable(true)
-coil.autocalculateCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity
+coil.autosizeCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity
 coil.setCoolingAndChargeModeCapacitySizingFactor(1.0)
-coil.autocalculateCoolingAndChargeModeRatedStorageChargingCapacity
+coil.autosizeCoolingAndChargeModeRatedStorageChargingCapacity
 coil.setCoolingAndChargeModeStorageCapacitySizingFactor(0.86)
 coil.setCoolingAndChargeModeRatedSensibleHeatRatio(0.7)
 coil.setCoolingAndChargeModeCoolingRatedCOP(3.66668442928701)
@@ -1185,7 +1185,7 @@ coil.setChargeOnlyModeAvailable(false)
 
 # Discharge Only Mode = Yes
 coil.setDischargeOnlyModeAvailable(true)
-coil.autocalculateDischargeOnlyModeRatedStorageDischargingCapacity
+coil.autosizeDischargeOnlyModeRatedStorageDischargingCapacity
 coil.setDischargeOnlyModeCapacitySizingFactor(1.70)
 coil.setDischargeOnlyModeRatedSensibleHeatRatio(0.64)
 coil.setDischargeOnlyModeRatedCOP(63.6)
