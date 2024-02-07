@@ -57,13 +57,13 @@ def curve_cubic(model, c_1constant, c_2x, c_3xPOW2, c_4xPOW3, minx, maxx)
   return curve
 end
 
-def curve_quadratic(model, c_1constant, c_2x, c_3xPOW2, minx = nil, maxx = nil, miny = nil, maxy = nil)
+def curve_quadratic(model, c_1constant, c_2x, c_3xPOW2, minx, maxx, miny = nil, maxy = nil)
   curve = OpenStudio::Model::CurveQuadratic.new(model)
   curve.setCoefficient1Constant(c_1constant)
   curve.setCoefficient2x(c_2x)
   curve.setCoefficient3xPOW2(c_3xPOW2)
-  curve.setMinimumValueofx(minx) if !minx.nil?
-  curve.setMaximumValueofx(maxx) if !maxx.nil?
+  curve.setMinimumValueofx(minx)
+  curve.setMaximumValueofx(maxx)
   curve.setMinimumCurveOutput(miny) if !miny.nil?
   curve.setMaximumCurveOutput(maxy) if !maxy.nil?
   return curve
