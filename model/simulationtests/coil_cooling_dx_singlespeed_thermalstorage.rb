@@ -1121,6 +1121,7 @@ coil.setStorageType('Ice')
 coil.autosizeIceStorageCapacity
 coil.setStorageCapacitySizingFactor(6.0)
 coil.setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(7.913)
+coil.setFluidStorageTankRatingTemperature(26.7)
 coil.autosizeRatedEvaporatorAirFlowRate
 coil.setAncillaryElectricPower(0.0)
 coil.setColdWeatherOperationMinimumOutdoorAirTemperature(2.0)
