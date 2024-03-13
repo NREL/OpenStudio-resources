@@ -830,15 +830,23 @@ zones[40].setZoneControlHumidistat(humidistat)
 
 air_loop_unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(m)
 coil = OpenStudio::Model::CoilCoolingDXSingleSpeedThermalStorage.new(m)
+# schedule = OpenStudio::Model::ScheduleConstant.new(m)
+# schedule.setValue(2)
+# coil.setOperationModeControlSchedule(schedule)
 coil.autosizeFluidStorageVolume
 coil.autosizeIceStorageCapacity
 coil.autosizeRatedEvaporatorAirFlowRate
+# coil.setCoolingOnlyModeAvailable(true)
 coil.autosizeCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity
+# coil.setCoolingAndChargeModeAvailable(true)
 coil.autosizeCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity
 coil.autosizeCoolingAndChargeModeRatedStorageChargingCapacity
+# coil.setCoolingAndDischargeModeAvailable(true)
 coil.autosizeCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity
 coil.autosizeCoolingAndDischargeModeRatedStorageDischargingCapacity
+# coil.setChargeOnlyModeAvailable(true)
 coil.autosizeChargeOnlyModeRatedStorageChargingCapacity
+# coil.setDischargeOnlyModeAvailable(true)
 coil.autosizeDischargeOnlyModeRatedStorageDischargingCapacity
 coil.autosizeCondenserDesignAirFlowRate
 coil.autosizeEvaporativeCondenserPumpRatedPowerConsumption
