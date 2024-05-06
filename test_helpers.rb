@@ -723,14 +723,20 @@ def sim_test(filename, options = {})
       FileUtils.cp(plugin_ori_path, python_target_path)
     end
 
-  when '.rb'
+  when '.rb', '.py'
 
     # Copy the generic OSW file, needed to add design days in particular when
     # running the measure to generate the OSM, and then of course for the sim
     FileUtils.cp($OswFile, in_osw)
 
+    # Needed for python to be able to load lib/baseline_model.py
+    python_opts = ''
+    if ext == '.py'
+      python_opts = "--python_path \"#{base_dir}\""
+    end
+
     # command to generate the initial osm
-    command = "\"#{$OpenstudioCli}\" #{$Cli_Subcommand} \"#{File.join(base_dir, filename)}\""
+    command = "\"#{$OpenstudioCli}\" #{$Cli_Subcommand} #{python_opts} \"#{File.join(base_dir, filename)}\""
     run_command(command, dir, 3600)
 
     # tests used to write out.osm
