@@ -36,7 +36,7 @@ spaces3 = sorted(zone3.spaces(), key=lambda s: s.nameString())
 
 # surfaces
 sub_surfaces1 = []
-surfaces1 = sorted(spaces1[0].surfaces(), key=lambda s: s.nameString())
+surfaces1 = sorted(spaces1[0].surfaces(), key=lambda s: s.azimuth())
 for surface in surfaces1:
     if surface.surfaceType() != "Wall":
         continue
@@ -44,7 +44,7 @@ for surface in surfaces1:
     sub_surfaces1 += sorted(surface.subSurfaces(), key=lambda ss: ss.nameString())
 
 sub_surfaces2 = []
-surfaces2 = sorted(spaces2[0].surfaces(), key=lambda s: s.nameString())
+surfaces2 = sorted(spaces2[0].surfaces(), key=lambda s: s.azimuth())
 for surface in surfaces2:
     if surface.surfaceType() != "Wall":
         continue
@@ -52,7 +52,7 @@ for surface in surfaces2:
     sub_surfaces2 += sorted(surface.subSurfaces(), key=lambda ss: ss.nameString())
 
 sub_surfaces3 = []
-surfaces3 = sorted(spaces3[0].surfaces(), key=lambda s: s.nameString())
+surfaces3 = sorted(spaces3[0].surfaces(), key=lambda s: s.azimuth())
 for surface in surfaces3:
     if surface.surfaceType() != "Wall":
         continue
