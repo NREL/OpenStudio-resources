@@ -495,12 +495,20 @@ module OsLib_Reporting
       query_gas = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='AnnualBuildingUtilityPerformanceSummary' and TableName='End Uses' and RowName= '#{end_use}' and ColumnName= 'Natural Gas'"
       query_add = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='AnnualBuildingUtilityPerformanceSummary' and TableName='End Uses' and RowName= '#{end_use}' and ColumnName= 'Additional Fuel'"
       query_dc = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='AnnualBuildingUtilityPerformanceSummary' and TableName='End Uses' and RowName= '#{end_use}' and ColumnName= 'District Cooling'"
-      query_dh = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='AnnualBuildingUtilityPerformanceSummary' and TableName='End Uses' and RowName= '#{end_use}' and ColumnName= 'District Heating'"
-      results_elec = sqlFile.execAndReturnFirstDouble(query_elec).get
       results_gas = sqlFile.execAndReturnFirstDouble(query_gas).get
       results_add = sqlFile.execAndReturnFirstDouble(query_add).get
       results_dc = sqlFile.execAndReturnFirstDouble(query_dc).get
-      results_dh = sqlFile.execAndReturnFirstDouble(query_dh).get
+      results_elec = sqlFile.execAndReturnFirstDouble(query_elec).get
+      # 23.2.0: District Heating was split in "District Heating Water" and "District Heating Steam"
+      if OpenStudio::energyPlusVersionMajor < 24 || (OpenStudio::energyPlusVersionMajor == 23 && OpenStudio::energyPlusVersionMinor < 2)
+        query_dh = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='AnnualBuildingUtilityPerformanceSummary' and TableName='End Uses' and RowName= '#{end_use}' and ColumnName= 'District Heating'"
+        results_dh = sqlFile.execAndReturnFirstDouble(query_dh).get
+      else
+        query_dh1 = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='AnnualBuildingUtilityPerformanceSummary' and TableName='End Uses' and RowName= '#{end_use}' and ColumnName= 'District Heating Water'"
+        query_dh2 = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='AnnualBuildingUtilityPerformanceSummary' and TableName='End Uses' and RowName= '#{end_use}' and ColumnName= 'District Heating Steam'"
+        results_dh = sqlFile.execAndReturnFirstDouble(query_dh1).get + sqlFile.execAndReturnFirstDouble(query_dh2).get
+      end
+
       total_end_use = results_elec + results_gas + results_add + results_dc + results_dh
       value = OpenStudio.convert(total_end_use, 'GJ', target_units).get
       value_neat = OpenStudio.toNeatString(value, 0, true)
