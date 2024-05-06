@@ -850,6 +850,12 @@ def success_sheet(df_files, model_test_cases=None, add_missing=True):
         # This messed up the order, 22.1.0 is now before 8.6.0
         success = success.loc[:, df_files.columns]
 
+    # Put N/A for python tests before 3.7.0
+    success.loc[
+        success.index.get_level_values('Type') == 'py',
+        success.columns.get_level_values('OS').map(lambda x: tuple(map(int, x.split('-')[0].split('.'))) < (3, 7, 0))
+    ] = 'N/A'
+
     # Create n_fail and order by that
     n_fail = (success == 'Fail').sum(axis=1)
     n_missing = (success == '').sum(axis=1)
