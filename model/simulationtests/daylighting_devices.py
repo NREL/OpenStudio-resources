@@ -29,7 +29,7 @@ spaces = sorted(thermal_zone.spaces(), key=lambda s: s.nameString())
 
 windows = []
 for space in spaces:
-    surfaces = sorted(space.surfaces(), key=lambda s: s.nameString())
+    surfaces = sorted(space.surfaces(), key=lambda s: s.azimuth())
     for surface in surfaces:
         sub_surfaces = sorted(surface.subSurfaces(), key=lambda ss: ss.nameString())
         for sub_surface in sub_surfaces:
@@ -39,8 +39,8 @@ for space in spaces:
             windows.append(sub_surface)
 
 
-window1 = windows[0]
-window2 = windows[1]
+window1 = windows[1]  # azimuth is 180 degrees
+window2 = windows[2]
 
 ###############################################################################
 #                          DaylightingDeviceTubular                           #
@@ -54,6 +54,7 @@ material.setSpecificHeat(837.4)
 construction = openstudio.model.Construction(model)
 construction.insertLayer(0, material)
 
+# Azimuth here is 180 degrees as well
 points = openstudio.Point3dVector()
 points.append(openstudio.Point3d(0, 1, 0.2))
 points.append(openstudio.Point3d(0, 0, 0.2))
