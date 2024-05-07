@@ -31,10 +31,10 @@ zones = sorted(model.getThermalZones(), key=lambda z: z.nameString())
 z = zones[0]
 z.setUseIdealAirLoads(True)
 
-# Get the first Outdoors Wall surface, sorting by name to ensure consistency just in case
+# Get the first Outdoors Wall surface, sorting by azimuth to ensure consistency just in case
 surfaces = sorted(
     [s for s in model.getSurfaces() if s.surfaceType() == "Wall" and s.outsideBoundaryCondition() == "Outdoors"],
-    key=lambda s: s.nameString(),
+    key=lambda s: s.azimuth(),
 )
 assert surfaces
 surface = surfaces[0]
