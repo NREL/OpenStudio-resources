@@ -116,10 +116,11 @@ if ENV['SAVE_IDF'].to_s.downcase == 'true'
 end
 
 $UseEplusSpaces = nil
-if ENV['USE_EPLUS_SPACES'].to_s.downcase == 'true'
+case ENV['USE_EPLUS_SPACES'].to_s.downcase
+when 'true'
   puts 'USE_EPLUS_SPACES=true: Will use the E+ Space Feature'
   $UseEplusSpaces = true
-elsif ENV['USE_EPLUS_SPACES'].to_s.downcase == 'false'
+when 'false'
   puts 'USE_EPLUS_SPACES=false: Will force not using the E+ Space Feature'
   $UseEplusSpaces = false
 end
@@ -385,13 +386,11 @@ def run_command(command, dir, timeout)
       # puts out
       # puts "\n\n"
       result = w.value.exitstatus
-      if result != 0
-        # If you can find an out.osw, don't throw. It means E+ fataled out
-        # https://github.com/NREL/OpenStudio/pull/4370 changed return code to 1
-        # puts "result=#{result}"
-        if !File.exist?(File.join(dir, 'out.osw'))
-          raise "Exit code #{result}:\n#{out}"
-        end
+      # If you can find an out.osw, don't throw. It means E+ fataled out
+      # https://github.com/NREL/OpenStudio/pull/4370 changed return code to 1
+      # puts "result=#{result}"
+      if result != 0 && !File.exist?(File.join(dir, 'out.osw'))
+        raise "Exit code #{result}:\n#{out}"
       end
     rescue Timeout::Error
       # Process.kill does not work on Windows
@@ -676,7 +675,8 @@ def sim_test(filename, options = {})
     FileUtils.cp(ori_file_path, in_osm)
 
     # Specific case for schedule_file_osm
-    if filename == 'schedule_file.osm'
+    case filename
+    when 'schedule_file.osm'
       # We need to manually copy the supporting schedule into
       # the testruns folder for the simulation to be able to find it
       sch_ori_path = File.join(File.dirname(__FILE__),
@@ -695,7 +695,7 @@ def sim_test(filename, options = {})
       end
 
       FileUtils.cp(sch_ori_path, sch_target_path)
-    elsif filename == 'chiller_electric_ashrae205.osm'
+    when 'chiller_electric_ashrae205.osm'
       # We need to manually copy the supporting schedule into
       # the testruns folder for the simulation to be able to find it
       cbor_ori_path = File.join(File.dirname(__FILE__),
@@ -708,7 +708,7 @@ def sim_test(filename, options = {})
       cbor_target_path = File.join(files_dir, File.basename(cbor_ori_path))
 
       FileUtils.cp(cbor_ori_path, cbor_target_path)
-    elsif filename == 'python_plugin.osm'
+    when 'python_plugin.osm'
       # We need to manually copy the supporting schedule into
       # the testruns folder for the simulation to be able to find it
       plugin_ori_path = File.join(File.dirname(__FILE__),
