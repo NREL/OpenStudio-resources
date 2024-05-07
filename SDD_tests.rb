@@ -449,6 +449,14 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('ghx_horizontal_trench_xing.osm')
   end
 
+  def test_FT_ghx_vertical_kusuda
+    sdd_ft_test('ghx_vertical_kusuda.osm')
+  end
+
+  def test_FT_ghx_vertical_xing
+    sdd_ft_test('ghx_vertical_xing.osm')
+  end
+
   def test_FT_headered_pumps
     sdd_ft_test('headered_pumps.osm')
   end
