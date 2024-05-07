@@ -820,7 +820,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.6.1
   # def test_ghx_vertical_kusuda_osm
-    # result = sim_test('ghx_vertical_kusuda.osm')
+  # result = sim_test('ghx_vertical_kusuda.osm')
   # end
 
   def test_ghx_vertical_xing_rb
@@ -829,7 +829,7 @@ class ModelTests < Minitest::Test
 
   # TODO: To be added in the next official release after: 3.6.1
   # def test_ghx_vertical_xing_osm
-    # result = sim_test('ghx_vertical_xing.osm')
+  # result = sim_test('ghx_vertical_xing.osm')
   # end
 
   def test_coil_waterheating_desuperheater_osm
