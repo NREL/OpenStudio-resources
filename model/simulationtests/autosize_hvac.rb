@@ -831,8 +831,8 @@ humidistat = OpenStudio::Model::ZoneControlHumidistat.new(model)
 humidistat.setHumidifyingRelativeHumiditySetpointSchedule(dehumidify_sch)
 zones[40].setZoneControlHumidistat(humidistat)
 
-air_loop_unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(m)
-coil = OpenStudio::Model::CoilCoolingDXSingleSpeedThermalStorage.new(m)
+air_loop_unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
+coil = OpenStudio::Model::CoilCoolingDXSingleSpeedThermalStorage.new(model)
 # schedule = OpenStudio::Model::ScheduleConstant.new(m)
 # schedule.setValue(2)
 # coil.setOperationModeControlSchedule(schedule)
@@ -853,15 +853,15 @@ coil.autosizeChargeOnlyModeRatedStorageChargingCapacity
 coil.autosizeDischargeOnlyModeRatedStorageDischargingCapacity
 coil.autosizeCondenserDesignAirFlowRate
 coil.autosizeEvaporativeCondenserPumpRatedPowerConsumption
-fan = OpenStudio::Model::FanOnOff.new(m)
-air_loop_unitary.setAvailabilitySchedule(m.alwaysOnDiscreteSchedule)
+fan = OpenStudio::Model::FanOnOff.new(model)
+air_loop_unitary.setAvailabilitySchedule(model.alwaysOnDiscreteSchedule)
 air_loop_unitary.setCoolingCoil(coil)
 air_loop_unitary.setSupplyFan(fan)
-air_loop = OpenStudio::Model::AirLoopHVAC.new(m)
+air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
 air_loop_unitary.addToNode(air_loop.supplyInletNode)
 air_loop_unitary.setControllingZoneorThermostatLocation(zones[43])
-atu = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(m, s1)
-air_loop.addBranchForZone(z, atu)
+atu = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
+air_loop.addBranchForZone(zones[43], atu)
 
 ### Zone HVAC and Terminals ###
 # Add one of every single kind of Zone HVAC equipment supported by OS
