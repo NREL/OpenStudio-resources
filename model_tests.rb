@@ -818,19 +818,25 @@ class ModelTests < Minitest::Test
     result = sim_test('ghx_vertical_kusuda.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.6.1
-  # def test_ghx_vertical_kusuda_osm
-  # result = sim_test('ghx_vertical_kusuda.osm')
-  # end
+  def test_ghx_vertical_kusuda_py
+    result = sim_test('ghx_vertical_kusuda.py')
+  end
+
+  def test_ghx_vertical_kusuda_osm
+    result = sim_test('ghx_vertical_kusuda.osm')
+  end
 
   def test_ghx_vertical_xing_rb
     result = sim_test('ghx_vertical_xing.rb')
   end
 
-  # TODO: To be added in the next official release after: 3.6.1
-  # def test_ghx_vertical_xing_osm
-  # result = sim_test('ghx_vertical_xing.osm')
-  # end
+  def test_ghx_vertical_xing_py
+    result = sim_test('ghx_vertical_xing.py')
+  end
+
+  def test_ghx_vertical_xing_osm
+    result = sim_test('ghx_vertical_xing.osm')
+  end
 
   def test_coil_waterheating_desuperheater_osm
     result = sim_test('coil_waterheating_desuperheater.osm')
