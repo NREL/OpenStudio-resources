@@ -1477,7 +1477,12 @@ module OsLib_Reporting
           if use_old_gem_code
             shgc = construction_root.calculated_solar_heat_gain_coefficient
           else
-            shgc = std.construction_calculated_solar_heat_gain_coefficient(construction_root)
+            if std.respond_to?('construction_calculated_solar_heat_gain_coefficient')
+              shgc = std.construction_calculated_solar_heat_gain_coefficient(construction_root)
+            else
+              # 0.6.0+
+              shgc = OpenstudioStandards::Constructions.construction_get_solar_transmittance(surface_construction)
+            end
           end
           shgc_neat = OpenStudio.toNeatString(shgc, 2, false)
           if use_old_gem_code
