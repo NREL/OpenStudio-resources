@@ -42,8 +42,8 @@ z = zones[0]
 zone_ideal_loads = OpenStudio::Model::ZoneHVACIdealLoadsAirSystem.new(model)
 zone_ideal_loads.addToThermalZone(z)
 
-# Get the first Outdoors Wall surface, sorting by name to ensure consistency just in case
-surfaces = model.getSurfaces.select { |s| (s.outsideBoundaryCondition == 'Outdoors') && (s.surfaceType == 'Wall') }.sort_by { |s| s.name.to_s }
+# Get the first Outdoors Wall surface, sorting by azimuth to ensure consistency just in case
+surfaces = model.getSurfaces.select { |s| (s.outsideBoundaryCondition == 'Outdoors') && (s.surfaceType == 'Wall') }.sort_by(&:azimuth)
 raise if surfaces.empty?
 
 surface = surfaces[0]
@@ -88,7 +88,7 @@ grassReflSch = OpenStudio::Model::ScheduleConstant.new(model)
 grassReflSch.setName('GndSurfs:GrassRefl')
 grassReflSch.setValue(0.2)
 
-# Note: because we allow not passing any of two schedules, you have to wrap the
+# NOTE: because we allow not passing any of two schedules, you have to wrap the
 # schedule in an OptionalSchedule for ruby/SWIG to understand the function
 # you're trying to call
 # Explicit via the GroundSurfacesGroup helper

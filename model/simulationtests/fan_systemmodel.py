@@ -248,6 +248,8 @@ for i, z in enumerate(zones):
         exhaustFan = openstudio.model.FanSystemModel(model)
 
         heatExchanger = openstudio.model.HeatExchangerAirToAirSensibleAndLatent(model)
+        if openstudio.VersionString(openstudio.openStudioVersion()) >= openstudio.VersionString("3.8.0"):
+            heatExchanger.assignHistoricalEffectivenessCurves()
         heatExchanger.setSupplyAirOutletTemperatureControl(False)
 
         zoneHVACEnergyRecoveryVentilator = openstudio.model.ZoneHVACEnergyRecoveryVentilator(

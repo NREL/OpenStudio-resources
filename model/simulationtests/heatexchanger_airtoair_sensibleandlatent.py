@@ -31,6 +31,8 @@ for s in air_systems:
     oa_node = s.airLoopHVACOutdoorAirSystem().get().outboardOANode().get()
 
     hx = openstudio.model.HeatExchangerAirToAirSensibleAndLatent(model)
+    if openstudio.VersionString(openstudio.openStudioVersion()) >= openstudio.VersionString("3.8.0"):
+        hx.assignHistoricalEffectivenessCurves()
 
     hx.addToNode(oa_node)
 

@@ -64,6 +64,8 @@ doas.addAirLoop(airloop2)
 
 # Equipment
 heatexchanger_airtoair_sensibleandlatent = openstudio.model.HeatExchangerAirToAirSensibleAndLatent(model)
+if openstudio.VersionString(openstudio.openStudioVersion()) >= openstudio.VersionString("3.8.0"):
+    heatexchanger_airtoair_sensibleandlatent.assignHistoricalEffectivenessCurves()
 fan = openstudio.model.FanSystemModel(model)
 heatexchanger_airtoair_sensibleandlatent.addToNode(oas.outboardOANode().get())
 fan.addToNode(oas.outboardOANode().get())
