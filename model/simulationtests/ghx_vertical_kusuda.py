@@ -5,10 +5,6 @@ from lib.baseline_model import BaselineModel
 model = BaselineModel()
 
 # No zones, just a LoadProfile:Plant
-# This is unfortunate but the only E+ example file that uses it is PlantHorizontalGroundHX.idf
-# and it has just a LoadProfile:Plant, and nothing autosized
-# We couldn't get this file to not throw a Plant run away temperature so we're
-# matching the E+ test instead
 
 # add design days to the model (Chicago)
 model.add_design_days()
@@ -32,23 +28,17 @@ pump = openstudio.model.PumpVariableSpeed(model)
 pump.addToNode(condenserWaterInletNode)
 
 hGroundHX1 = None
-if openstudio.VersionString(openstudio.openStudioVersion()) > openstudio.VersionString("3.5.1"):
+if openstudio.VersionString(openstudio.openStudioVersion()) > openstudio.VersionString("3.6.1"):
     kusudaAchenbach = openstudio.model.SiteGroundTemperatureUndisturbedKusudaAchenbach(model)
-    kusudaAchenbach.setSoilThermalConductivity(1.08)
-    kusudaAchenbach.setSoilDensity(962)
-    kusudaAchenbach.setSoilSpecificHeat(2576)
-    kusudaAchenbach.setAverageSoilSurfaceTemperature(15.5)
-    kusudaAchenbach.setAverageAmplitudeofSurfaceTemperature(12.8)
-    kusudaAchenbach.setPhaseShiftofMinimumSurfaceTemperature(17.3)
-    hGroundHX1 = openstudio.model.GroundHeatExchangerHorizontalTrench(model, kusudaAchenbach)
+    kusudaAchenbach.setSoilThermalConductivity(0.692626)
+    kusudaAchenbach.setSoilDensity(920.0)
+    kusudaAchenbach.setSoilSpecificHeat(0.234700e07 / 920.0)
+    kusudaAchenbach.setAverageSoilSurfaceTemperature(13.375)
+    kusudaAchenbach.setAverageAmplitudeofSurfaceTemperature(3.2)
+    kusudaAchenbach.setPhaseShiftofMinimumSurfaceTemperature(8.0)
+    hGroundHX1 = openstudio.model.GroundHeatExchangerVertical(model, kusudaAchenbach)
 else:
-    hGroundHX1 = openstudio.model.GroundHeatExchangerHorizontalTrench(model)
-    hGroundHX1.setSoilThermalConductivity(1.08)
-    hGroundHX1.setSoilDensity(962)
-    hGroundHX1.setSoilSpecificHeat(2576)
-    hGroundHX1.setKusudaAchenbachAverageSurfaceTemperature(15.5)
-    hGroundHX1.setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(12.8)
-    hGroundHX1.setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(17.3)
+    hGroundHX1 = openstudio.model.GroundHeatExchangerVertical(model)
 
 condenserWaterPlant.addSupplyBranchForComponent(hGroundHX1)
 
@@ -61,27 +51,27 @@ if USE_PIPE_INDOOR:
     pipe_const.insertLayer(0, pipe_mat)
 
     pipe = openstudio.model.PipeIndoor(model)
-    pipe.setAmbientTemperatureZone(zone)
+    pipe.setAmbientTemperatureZone(zone())
     pipe.setConstruction(pipe_const)
     condenserWaterPlant.addSupplyBranchForComponent(pipe)
 
     pipe2 = openstudio.model.PipeIndoor(model)
-    pipe2.setAmbientTemperatureZone(zone)
+    pipe2.setAmbientTemperatureZone(zone())
     pipe2.setConstruction(pipe_const)
     pipe2.addToNode(condenserWaterOutletNode)
 
     pipe3 = openstudio.model.PipeIndoor(model)
-    pipe3.setAmbientTemperatureZone(zone)
+    pipe3.setAmbientTemperatureZone(zone())
     pipe3.setConstruction(pipe_const)
     pipe3.addToNode(condenserWaterPlant.demandInletNode())
 
     pipe4 = openstudio.model.PipeIndoor(model)
-    pipe4.setAmbientTemperatureZone(zone)
+    pipe4.setAmbientTemperatureZone(zone())
     pipe4.setConstruction(pipe_const)
     pipe4.addToNode(condenserWaterPlant.demandOutletNode())
 
     pipe5 = openstudio.model.PipeIndoor(model)
-    pipe5.setAmbientTemperatureZone(zone)
+    pipe5.setAmbientTemperatureZone(zone())
     pipe5.setConstruction(pipe_const)
     condenserWaterPlant.addDemandBranchForComponent(pipe5)
 

@@ -55,27 +55,27 @@ if USE_PIPE_INDOOR:
     pipe_const.insertLayer(0, pipe_mat)
 
     pipe = openstudio.model.PipeIndoor(model)
-    pipe.setAmbientTemperatureZone(zone())
+    pipe.setAmbientTemperatureZone(zone)
     pipe.setConstruction(pipe_const)
     condenserWaterPlant.addSupplyBranchForComponent(pipe)
 
     pipe2 = openstudio.model.PipeIndoor(model)
-    pipe2.setAmbientTemperatureZone(zone())
+    pipe2.setAmbientTemperatureZone(zone)
     pipe2.setConstruction(pipe_const)
     pipe2.addToNode(condenserWaterOutletNode)
 
     pipe3 = openstudio.model.PipeIndoor(model)
-    pipe3.setAmbientTemperatureZone(zone())
+    pipe3.setAmbientTemperatureZone(zone)
     pipe3.setConstruction(pipe_const)
     pipe3.addToNode(condenserWaterPlant.demandInletNode())
 
     pipe4 = openstudio.model.PipeIndoor(model)
-    pipe4.setAmbientTemperatureZone(zone())
+    pipe4.setAmbientTemperatureZone(zone)
     pipe4.setConstruction(pipe_const)
     pipe4.addToNode(condenserWaterPlant.demandOutletNode())
 
     pipe5 = openstudio.model.PipeIndoor(model)
-    pipe5.setAmbientTemperatureZone(zone())
+    pipe5.setAmbientTemperatureZone(zone)
     pipe5.setConstruction(pipe_const)
     condenserWaterPlant.addDemandBranchForComponent(pipe5)
 

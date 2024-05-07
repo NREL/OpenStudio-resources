@@ -5,15 +5,14 @@ from lib.baseline_model import BaselineModel
 model = BaselineModel()
 
 # No zones, just a LoadProfile:Plant
-# This is unfortunate but the only E+ example file that uses it is PlantHorizontalGroundHX.idf
-# and it has just a LoadProfile:Plant, and nothing autosized
-# We couldn't get this file to not throw a Plant run away temperature so we're
-# matching the E+ test instead
 
 # add design days to the model (Chicago)
 model.add_design_days()
 
 USE_PIPE_INDOOR = False
+
+if openstudio.VersionString(openstudio.openStudioVersion()) <= openstudio.VersionString("3.5.1"):
+    raise ValueError("Cannot use XING on 3.5.1 and below")
 
 # Add a hot water plant to supply the water to air heat pump
 # This could be baked into HVAC templates in the future
@@ -31,26 +30,17 @@ condenserWaterInletNode = condenserWaterPlant.supplyInletNode()
 pump = openstudio.model.PumpVariableSpeed(model)
 pump.addToNode(condenserWaterInletNode)
 
-hGroundHX1 = None
-if openstudio.VersionString(openstudio.openStudioVersion()) > openstudio.VersionString("3.5.1"):
-    kusudaAchenbach = openstudio.model.SiteGroundTemperatureUndisturbedKusudaAchenbach(model)
-    kusudaAchenbach.setSoilThermalConductivity(1.08)
-    kusudaAchenbach.setSoilDensity(962)
-    kusudaAchenbach.setSoilSpecificHeat(2576)
-    kusudaAchenbach.setAverageSoilSurfaceTemperature(15.5)
-    kusudaAchenbach.setAverageAmplitudeofSurfaceTemperature(12.8)
-    kusudaAchenbach.setPhaseShiftofMinimumSurfaceTemperature(17.3)
-    hGroundHX1 = openstudio.model.GroundHeatExchangerHorizontalTrench(model, kusudaAchenbach)
-else:
-    hGroundHX1 = openstudio.model.GroundHeatExchangerHorizontalTrench(model)
-    hGroundHX1.setSoilThermalConductivity(1.08)
-    hGroundHX1.setSoilDensity(962)
-    hGroundHX1.setSoilSpecificHeat(2576)
-    hGroundHX1.setKusudaAchenbachAverageSurfaceTemperature(15.5)
-    hGroundHX1.setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(12.8)
-    hGroundHX1.setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(17.3)
-
-condenserWaterPlant.addSupplyBranchForComponent(hGroundHX1)
+xing = openstudio.model.SiteGroundTemperatureUndisturbedXing(model)
+xing.setSoilThermalConductivity(1.08)
+xing.setSoilDensity(962)
+xing.setSoilSpecificHeat(2576)
+xing.setAverageSoilSurfaceTemperature(11.1)
+xing.setSoilSurfaceTemperatureAmplitude1(13.4)
+xing.setSoilSurfaceTemperatureAmplitude2(0.7)
+xing.setPhaseShiftofTemperatureAmplitude1(25)
+xing.setPhaseShiftofTemperatureAmplitude2(30)
+hGroundHX2 = openstudio.model.GroundHeatExchangerVertical(model, xing)
+condenserWaterPlant.addSupplyBranchForComponent(hGroundHX2)
 
 if USE_PIPE_INDOOR:
     pipe_mat = openstudio.model.StandardOpaqueMaterial(model, "Smooth", 3.00e-03, 45.31, 7833.0, 500.0)
