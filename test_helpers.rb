@@ -919,9 +919,17 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     'OS:WaterHeater:Stratified' => 'all', # WH sizing object not wrapped
     'OS:WaterHeater:HeatPump' => 'all', # WH sizing object not wrapped
     'OS:WaterHeater:HeatPump:PumpedCondenser' => 'all', # WH sizing object not wrapped
-    'OS:Boiler:Steam' => 'all', # CoilHeatingSteam is not wrapped, cannot use steam boiler in OS
+    # CoilHeatingSteam, Pump:VariableSpeed:Condensate, Pipe:Adiabatic:Steam is not wrapped, cannot use steam in OS
+    'OS:Boiler:Steam' => 'all',
+    'OS:DistrictHeating:Steam' => 'all',
+
+    'OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage' => [
+      'autosizedFluidStorageVolume' # Only autosized if storage type is Water, but we use 'Ice' which has autosizedIceStorageCapacity
+    ],
+
     'OS:ChillerHeaterPerformance:Electric:EIR' => 'all', # TODO: Not in test model (central HP system)
     'OS:SolarCollector:FlatPlate:PhotovoltaicThermal' => 'all', # TODO: Not in test model
+
     'OS:Chiller:Absorption' => [
       'autosizedDesignGeneratorFluidFlowRate' # Generator loop not supported by OS
     ],
