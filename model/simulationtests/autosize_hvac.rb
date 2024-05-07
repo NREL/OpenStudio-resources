@@ -81,17 +81,94 @@ def curve_biquadratic(model, c_1constant, c_2x, c_3xPOW2, c_4y, c_5yPOW2, c_6xTI
   return curve
 end
 
-def curve_quadratic(model, c_1constant, c_2x, c_3xPOW2, minx, maxx, miny, maxy)
+def curve_quadratic(model, c_1constant, c_2x, c_3xPOW2, minx, maxx, miny = nil, maxy = nil)
   curve = OpenStudio::Model::CurveQuadratic.new(model)
   curve.setCoefficient1Constant(c_1constant)
   curve.setCoefficient2x(c_2x)
   curve.setCoefficient3xPOW2(c_3xPOW2)
   curve.setMinimumValueofx(minx)
   curve.setMaximumValueofx(maxx)
-  curve.setMinimumCurveOutput(miny)
-  curve.setMaximumCurveOutput(maxy)
+  curve.setMinimumCurveOutput(miny) if !miny.nil?
+  curve.setMaximumCurveOutput(maxy) if !maxy.nil?
   return curve
 end
+
+def make_tes_coil(model)
+  tes_coil = OpenStudio::Model::CoilCoolingDXSingleSpeedThermalStorage.new(model)
+  tes_op_schedule = OpenStudio::Model::ScheduleConstant.new(model)
+  tes_op_schedule.setValue(2) # 2 = Cooling Only Mode
+  tes_coil.setOperationModeControlSchedule(tes_op_schedule)
+  tes_coil.setStorageType("Ice")
+  tes_coil.autosizeFluidStorageVolume # Only autosized if Storage Type is Water
+  tes_coil.autosizeIceStorageCapacity
+  tes_coil.autosizeRatedEvaporatorAirFlowRate
+
+  # Obviously, don't use this in production code. We just assign all curves to
+  # a constant value to avoid E+ crashing on us, while not having to actually
+  # create 41 curves with potentially lots of values...
+  constant_univariate = OpenStudio::Model::CurveCubic.new(model)
+  constant_univariate.setName("Constant Univariate Curve")
+  constant_univariate.setCoefficient1Constant(1.0)
+  constant_univariate.setCoefficient4xPOW3(0.0)
+  constant_univariate.setMinimumValueofx(-100.0)
+  constant_univariate.setMaximumValueofx(100.0)
+
+  constant_bivariate = OpenStudio::Model::CurveBiquadratic.new(model)
+  constant_bivariate.setName("Constant Bivariate Curve")
+  constant_bivariate.setCoefficient1Constant(1.0)
+  constant_bivariate.setMinimumValueofx(-100.0)
+  constant_bivariate.setMaximumValueofx(100.0)
+  constant_bivariate.setMinimumValueofy(-100.0)
+  constant_bivariate.setMaximumValueofy(100.0)
+
+  constant_trivariate = OpenStudio::Model::CurveTriquadratic.new(model)
+  constant_trivariate.setCoefficient1Constant(1.0)
+  constant_trivariate.setMinimumValueofx(-100.0)
+  constant_trivariate.setMaximumValueofx(100.0)
+  constant_trivariate.setMinimumValueofy(-100.0)
+  constant_trivariate.setMaximumValueofy(100.0)
+  constant_trivariate.setMinimumValueofz(-100.0)
+  constant_trivariate.setMaximumValueofz(100.0)
+
+  object_list_to_curve = {
+    'UnivariateFunctions' => constant_univariate,
+    'BivariateFunctions' => constant_bivariate,
+    'TrivariateFunctions'=> constant_trivariate,
+  }
+
+  # Scan the curve fields, assign a constant curve with the right number of
+  # independent variables
+  iddObject = tes_coil.iddObject
+  iddObject.numFields.times do |i|
+    field = iddObject.getField(i).get()
+    field_name = field.name
+    next unless field_name.include?('Curve')
+    props = field.properties
+    olist = props.objectLists.first
+    setter = "set" + field_name.gsub(' ', '')
+    raise "Undefined method #{setter} for field_name=#{field_name} at index #{i}" unless tes_coil.respond_to?(setter)
+    tes_coil.send(setter, object_list_to_curve[olist])
+  end
+
+  tes_coil.setCondenserType("EvaporativelyCooled")
+
+  tes_coil.setCoolingOnlyModeAvailable(true)
+  tes_coil.autosizeCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity
+  tes_coil.setCoolingAndChargeModeAvailable(true)
+  tes_coil.autosizeCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity
+  tes_coil.autosizeCoolingAndChargeModeRatedStorageChargingCapacity
+  tes_coil.setCoolingAndDischargeModeAvailable(true)
+  tes_coil.autosizeCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity
+  tes_coil.autosizeCoolingAndDischargeModeRatedStorageDischargingCapacity
+  tes_coil.setChargeOnlyModeAvailable(true)
+  tes_coil.autosizeChargeOnlyModeRatedStorageChargingCapacity
+  tes_coil.setDischargeOnlyModeAvailable(true)
+  tes_coil.autosizeDischargeOnlyModeRatedStorageDischargingCapacity
+  tes_coil.autosizeCondenserDesignAirFlowRate
+  tes_coil.autosizeEvaporativeCondenserPumpRatedPowerConsumption
+  return tes_coil
+end
+
 ### High level constructs
 
 ### Declare loops
@@ -831,37 +908,19 @@ humidistat = OpenStudio::Model::ZoneControlHumidistat.new(model)
 humidistat.setHumidifyingRelativeHumiditySetpointSchedule(dehumidify_sch)
 zones[40].setZoneControlHumidistat(humidistat)
 
-air_loop_unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
-coil = OpenStudio::Model::CoilCoolingDXSingleSpeedThermalStorage.new(model)
-# schedule = OpenStudio::Model::ScheduleConstant.new(m)
-# schedule.setValue(2)
-# coil.setOperationModeControlSchedule(schedule)
-coil.autosizeFluidStorageVolume
-coil.autosizeIceStorageCapacity
-coil.autosizeRatedEvaporatorAirFlowRate
-# coil.setCoolingOnlyModeAvailable(true)
-coil.autosizeCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity
-# coil.setCoolingAndChargeModeAvailable(true)
-coil.autosizeCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity
-coil.autosizeCoolingAndChargeModeRatedStorageChargingCapacity
-# coil.setCoolingAndDischargeModeAvailable(true)
-coil.autosizeCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity
-coil.autosizeCoolingAndDischargeModeRatedStorageDischargingCapacity
-# coil.setChargeOnlyModeAvailable(true)
-coil.autosizeChargeOnlyModeRatedStorageChargingCapacity
-# coil.setDischargeOnlyModeAvailable(true)
-coil.autosizeDischargeOnlyModeRatedStorageDischargingCapacity
-coil.autosizeCondenserDesignAirFlowRate
-coil.autosizeEvaporativeCondenserPumpRatedPowerConsumption
+# TES Coil CoilCoolingDXSingleSpeedThermalStorage
+tes_air_loop_unitary = OpenStudio::Model::AirLoopHVACUnitarySystem.new(model)
+tes_coil = make_tes_coil(model)
 fan = OpenStudio::Model::FanOnOff.new(model)
-air_loop_unitary.setAvailabilitySchedule(model.alwaysOnDiscreteSchedule)
-air_loop_unitary.setCoolingCoil(coil)
-air_loop_unitary.setSupplyFan(fan)
-air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
-air_loop_unitary.addToNode(air_loop.supplyInletNode)
-air_loop_unitary.setControllingZoneorThermostatLocation(zones[43])
-atu = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
-air_loop.addBranchForZone(zones[43], atu)
+tes_air_loop_unitary.setAvailabilitySchedule(model.alwaysOnDiscreteSchedule)
+tes_air_loop_unitary.setCoolingCoil(tes_coil)
+tes_air_loop_unitary.setSupplyFan(fan)
+tes_air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
+tes_air_loop_unitary.addToNode(tes_air_loop.supplyInletNode)
+tes_air_loop_unitary.setControllingZoneorThermostatLocation(zones[43])
+tes_atu = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
+tes_air_loop.addBranchForZone(zones[43], tes_atu)
+tes_air_loop.setName("AirLoop with TES Coil")
 
 ### Zone HVAC and Terminals ###
 # Add one of every single kind of Zone HVAC equipment supported by OS
@@ -1122,10 +1181,13 @@ zones.each_with_index do |zn, zone_index|
     term.addToThermalZone(zn)
     vrf.addTerminal(term)
 
-  when 26, 27, 28, 29, 30, 31, 32, 33, 38, 40
+  when 26, 27, 28, 29, 30, 31, 32, 33, 38, 40, 43
     # Previously used for the unitary systems, dehum, etc
-  else
+  when 0, 44
+    # This wasn't assigned yet and is for grabs
     puts "Nothing added to #{zn.name}, index #{zone_index}"
+  else
+    raise "Nothing added to #{zn.name}, index #{zone_index}"
     # Do nothing
   end
 end

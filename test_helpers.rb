@@ -923,8 +923,13 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
     'OS:Boiler:Steam' => 'all',
     'OS:DistrictHeating:Steam' => 'all',
 
+    'OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage' => [
+      'autosizedFluidStorageVolume' # Only autosized if storage type is Water, but we use 'Ice' which has autosizedIceStorageCapacity
+    ],
+
     'OS:ChillerHeaterPerformance:Electric:EIR' => 'all', # TODO: Not in test model (central HP system)
     'OS:SolarCollector:FlatPlate:PhotovoltaicThermal' => 'all', # TODO: Not in test model
+
     'OS:Chiller:Absorption' => [
       'autosizedDesignGeneratorFluidFlowRate' # Generator loop not supported by OS
     ],
