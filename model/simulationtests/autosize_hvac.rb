@@ -430,6 +430,9 @@ oa_system.addToNode(in_1)
 
 # OA equipment
 erv = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(model)
+if Gem::Version.new(OpenStudio.openStudioVersion) >= Gem::Version.new('3.8.0')
+  erv.assignHistoricalEffectivenessCurves
+end
 erv.addToNode(oa_system.outboardOANode.get)
 spm_oa_pretreat = OpenStudio::Model::SetpointManagerOutdoorAirPretreat.new(model)
 spm_oa_pretreat.setMinimumSetpointTemperature(-99.0)
