@@ -98,7 +98,7 @@ def make_tes_coil(model)
   tes_op_schedule = OpenStudio::Model::ScheduleConstant.new(model)
   tes_op_schedule.setValue(2) # 2 = Cooling Only Mode
   tes_coil.setOperationModeControlSchedule(tes_op_schedule)
-  tes_coil.setStorageType("Ice")
+  tes_coil.setStorageType('Ice')
   tes_coil.autosizeFluidStorageVolume # Only autosized if Storage Type is Water
   tes_coil.autosizeIceStorageCapacity
   tes_coil.autosizeRatedEvaporatorAirFlowRate
@@ -107,14 +107,14 @@ def make_tes_coil(model)
   # a constant value to avoid E+ crashing on us, while not having to actually
   # create 41 curves with potentially lots of values...
   constant_univariate = OpenStudio::Model::CurveCubic.new(model)
-  constant_univariate.setName("Constant Univariate Curve")
+  constant_univariate.setName('Constant Univariate Curve')
   constant_univariate.setCoefficient1Constant(1.0)
   constant_univariate.setCoefficient4xPOW3(0.0)
   constant_univariate.setMinimumValueofx(-100.0)
   constant_univariate.setMaximumValueofx(100.0)
 
   constant_bivariate = OpenStudio::Model::CurveBiquadratic.new(model)
-  constant_bivariate.setName("Constant Bivariate Curve")
+  constant_bivariate.setName('Constant Bivariate Curve')
   constant_bivariate.setCoefficient1Constant(1.0)
   constant_bivariate.setMinimumValueofx(-100.0)
   constant_bivariate.setMaximumValueofx(100.0)
@@ -133,24 +133,26 @@ def make_tes_coil(model)
   object_list_to_curve = {
     'UnivariateFunctions' => constant_univariate,
     'BivariateFunctions' => constant_bivariate,
-    'TrivariateFunctions'=> constant_trivariate,
+    'TrivariateFunctions' => constant_trivariate
   }
 
   # Scan the curve fields, assign a constant curve with the right number of
   # independent variables
   iddObject = tes_coil.iddObject
   iddObject.numFields.times do |i|
-    field = iddObject.getField(i).get()
+    field = iddObject.getField(i).get
     field_name = field.name
     next unless field_name.include?('Curve')
+
     props = field.properties
     olist = props.objectLists.first
-    setter = "set" + field_name.gsub(' ', '')
+    setter = 'set' + field_name.gsub(' ', '')
     raise "Undefined method #{setter} for field_name=#{field_name} at index #{i}" unless tes_coil.respond_to?(setter)
+
     tes_coil.send(setter, object_list_to_curve[olist])
   end
 
-  tes_coil.setCondenserType("EvaporativelyCooled")
+  tes_coil.setCondenserType('EvaporativelyCooled')
 
   tes_coil.setCoolingOnlyModeAvailable(true)
   tes_coil.autosizeCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity
@@ -920,7 +922,7 @@ tes_air_loop_unitary.addToNode(tes_air_loop.supplyInletNode)
 tes_air_loop_unitary.setControllingZoneorThermostatLocation(zones[43])
 tes_atu = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat.new(model, s1)
 tes_air_loop.addBranchForZone(zones[43], tes_atu)
-tes_air_loop.setName("AirLoop with TES Coil")
+tes_air_loop.setName('AirLoop with TES Coil')
 
 ### Zone HVAC and Terminals ###
 # Add one of every single kind of Zone HVAC equipment supported by OS
