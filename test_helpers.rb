@@ -732,6 +732,9 @@ def sim_test(filename, options = {})
     # Needed for python to be able to load lib/baseline_model.py
     python_opts = ''
     if ext == '.py'
+      if $Cli_Subcommand == 'classic'
+        skip('Python tests not available with classic')
+      end
       python_opts = "--python_path \"#{base_dir}\""
     end
 
