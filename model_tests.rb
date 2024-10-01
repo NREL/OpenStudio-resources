@@ -2278,7 +2278,7 @@ class ModelTests < Minitest::Test
     # puts "workflow = #{workflow}"
 
     # assert(/0.2.7/.match(standards))
-    assert(/2.2.0/.match(workflow))
+    assert(/2.4.0/.match(workflow))
   end
 
   def test_model_articulation1_bundle_git_osw
@@ -2311,7 +2311,7 @@ class ModelTests < Minitest::Test
     # puts "workflow = #{workflow}"
 
     # assert(/0.2.7/.match(standards))
-    assert(/2.2.0/.match(workflow))
+    assert(/2.4.0/.match(workflow))
   end
 
   # intersection tests
