@@ -799,7 +799,7 @@ def success_sheet(df_files, model_test_cases=None, add_missing=True):
     * model_test_cases (pd.DataFrame): if not calls, `find_osm_test_versions()`
 
     """
-    success = df_files.applymap(parse_success)
+    success = df_files.map(parse_success)
     if model_test_cases is None:
         model_test_cases = find_osm_test_versions()
 
@@ -808,7 +808,7 @@ def success_sheet(df_files, model_test_cases=None, add_missing=True):
         if index[1] == "osm":
             test = index[0]
             version_osm = tuple(model_test_cases.loc[test, "OSM version"].split("."))
-            filt1 = [(tuple(x[1].split(".")) < version_osm) for x in row.index]
+            filt1 = row.index.map(lambda x: tuple(x[1].split(".")) < version_osm)
             filt2 = row == ""
             row[filt1 & filt2] = "N/A"
 
@@ -816,6 +816,7 @@ def success_sheet(df_files, model_test_cases=None, add_missing=True):
     if "osm" in success.index.get_level_values("Type"):
         success = success.unstack("Test").T
         success.loc[(success["osm"] == "N/A") & (success["rb"] == ""), "rb"] = "N/A"
+        success.loc[(success["osm"] == "N/A") & (success["py"] == ""), "py"] = "N/A"
         success = success.unstack("Test").swaplevel(axis=1).T
         # This messed up the order, 22.1.0 is now before 8.6.0
         success = success.loc[:, df_files.columns]

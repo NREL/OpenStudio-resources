@@ -289,6 +289,10 @@ class SddForwardTranslatorTests < Minitest::Test
     sdd_ft_test('coil_cooling_dx_airloop.osm')
   end
 
+  def test_FT_coil_cooling_dx_singlespeed_thermalstorage
+    sdd_ft_test('coil_cooling_dx_singlespeed_thermalstorage.osm')
+  end
+
   def test_FT_coilsystem_dxhx
     sdd_ft_test('coilsystem_dxhx.osm')
   end
