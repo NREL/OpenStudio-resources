@@ -91,7 +91,6 @@ pri_chw_pump.setMotorEfficiency(0.9)
 pri_chw_pump.setPumpControlType('Intermittent')
 pri_chw_pump.addToNode(chw_loop.supplyInletNode)
 
-
 ###############################################################################
 #                         A I R    S O U R C E    H P                         #
 ###############################################################################
@@ -143,12 +142,11 @@ hw_loop.addSupplyBranchForComponent(plhp_airsource_htg)
 # and swich the HP to a WaterSource one
 chw_loop.addDemandBranchForComponent(plhp_airsource_htg, tertiary)
 
-
 chw_loop.addSupplyBranchForComponent(plhp_airsource_clg)
 hw_loop.addDemandBranchForComponent(plhp_airsource_clg, tertiary)
 
 [plhp_airsource_htg, plhp_airsource_clg].each do |plhp|
-  raise unless plhp.condenserType == "AirSource"
+  raise unless plhp.condenserType == 'AirSource'
   raise unless plhp.sourceSideWaterLoop.empty?
   raise if plhp.loadSideWaterLoop.empty?
   raise if plhp.heatRecoveryLoop.empty?
