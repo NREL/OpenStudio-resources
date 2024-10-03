@@ -412,6 +412,7 @@ cw_loop.addDemandBranchForComponent(plhp_clg)
 
 # AirSource w/ Heat Recovery
 plhp_clg_hr = OpenStudio::Model::HeatPumpPlantLoopEIRCooling.new(model)
+plhp_clg_hr.setName('Heat Pump Plant Loop EIR Cooling Heat Recovery')
 plhp_clg_hr.setReferenceCapacity(400000)
 plhp_clg_hr.autosizeSourceSideReferenceFlowRate
 plhp_clg_hr.autosizeLoadSideReferenceFlowRate
@@ -482,6 +483,7 @@ cw_loop.addDemandBranchForComponent(plhp_htg)
 
 # AirSource w/ Heat Recovery
 plhp_htg_hr = OpenStudio::Model::HeatPumpPlantLoopEIRHeating.new(model)
+plhp_htg_hr.setName('Heat Pump Plant Loop EIR Heating Heat Recovery')
 plhp_htg_hr.setReferenceCapacity(80000)
 plhp_htg_hr.autosizeSourceSideReferenceFlowRate
 plhp_htg_hr.autosizeLoadSideReferenceFlowRate
