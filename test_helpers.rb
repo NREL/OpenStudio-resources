@@ -1138,11 +1138,11 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       end
     when 'HeatPumpPlantLoopEIRHeating' # Need to check a heat pump that has heat recovery or `autosizedHeatRecoveryReferenceFlowRate` won't work
       objs.sort.each do |o|
-        obj = o if o.name.get == 'Heat Pump Plant Loop EIR Heating Heat Recovery'
+        obj = o if o.heatRecoveryLoop.is_initialized
       end
     when 'HeatPumpPlantLoopEIRCooling' # Need to check a heat pump that has heat recovery or `autosizedHeatRecoveryReferenceFlowRate` won't work
       objs.sort.each do |o|
-        obj = o if o.name.get == 'Heat Pump Plant Loop EIR Cooling Heat Recovery'
+        obj = o if o.heatRecoveryLoop.is_initialized
       end
     end
 
