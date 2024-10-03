@@ -974,11 +974,11 @@ class ModelTests < Minitest::Test
   end
 
   # def test_heatrecovery_heatpump_py
-    # result = sim_test('heatrecovery_heatpump.py')
+  # result = sim_test('heatrecovery_heatpump.py')
   # end
 
   # def test_heatrecovery_heatpump_osm
-    # result = sim_test('heatrecovery_heatpump.osm')
+  # result = sim_test('heatrecovery_heatpump.osm')
   # end
 
   def test_hightemprad_rb
