@@ -403,6 +403,7 @@ plhp_clg.setReferenceCapacity(400000)
 # plhp_clg.autosizeReferenceCapacity
 plhp_clg.autosizeSourceSideReferenceFlowRate
 plhp_clg.autosizeLoadSideReferenceFlowRate
+plhp_clg.autosizeHeatRecoveryReferenceFlowRate
 plhp_clg.setSizingFactor(1)
 chw_loop.addSupplyBranchForComponent(plhp_clg)
 # The Source Side Volume Flow Rate is reported only for WaterSource apparently
@@ -462,6 +463,7 @@ plhp_htg.setReferenceCapacity(80000)
 # plhp_htg.autosizeReferenceCapacity()
 plhp_htg.autosizeSourceSideReferenceFlowRate
 plhp_htg.autosizeLoadSideReferenceFlowRate
+plhp_htg.autosizeHeatRecoveryReferenceFlowRate
 plhp_htg.setSizingFactor(1.0)
 hw_loop.addSupplyBranchForComponent(plhp_htg)
 # The Source Side Volume Flow Rate is reported only for WaterSource apparently
