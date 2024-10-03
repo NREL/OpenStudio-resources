@@ -945,6 +945,18 @@ class ModelTests < Minitest::Test
     result = sim_test('heatpump_plantloop_eir.osm')
   end
 
+  def test_heatpump_plantloop_eir_heatrecovery_rb
+    result = sim_test('heatpump_plantloop_eir_heatrecovery.rb')
+  end
+
+  # def test_heatpump_plantloop_eir_heatrecovery_py
+  #   result = sim_test('heatpump_plantloop_eir_heatrecovery.py')
+  # end
+
+  # def test_heatpump_plantloop_eir_heatrecovery_osm
+  #   result = sim_test('heatpump_plantloop_eir_heatrecovery.osm')
+  # end
+
   def test_heatpump_varspeed_rb
     result = sim_test('heatpump_varspeed.rb')
   end
@@ -968,18 +980,6 @@ class ModelTests < Minitest::Test
   def test_heatrecovery_chiller_osm
     result = sim_test('heatrecovery_chiller.osm')
   end
-
-  def test_heatrecovery_heatpump_rb
-    result = sim_test('heatrecovery_heatpump.rb')
-  end
-
-  # def test_heatrecovery_heatpump_py
-  # result = sim_test('heatrecovery_heatpump.py')
-  # end
-
-  # def test_heatrecovery_heatpump_osm
-  # result = sim_test('heatrecovery_heatpump.osm')
-  # end
 
   def test_hightemprad_rb
     result = sim_test('hightemprad.rb')

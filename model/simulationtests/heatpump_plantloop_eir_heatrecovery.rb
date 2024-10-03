@@ -91,87 +91,6 @@ pri_chw_pump.setMotorEfficiency(0.9)
 pri_chw_pump.setPumpControlType('Intermittent')
 pri_chw_pump.addToNode(chw_loop.supplyInletNode)
 
-############   C O N D E N S E R    S I D E  ##################
-
-cw_loop = OpenStudio::Model::PlantLoop.new(model)
-cw_loop.setName('Condenser Water Loop Water Source')
-cw_loop.setMaximumLoopTemperature(100)
-cw_loop.setMinimumLoopTemperature(3)
-cw_loop.setPlantLoopVolume(1.0)
-cw_temp_sizing_f = 102 # CW sized to deliver 102F
-cw_delta_t_r = 10 # 10F delta-T
-cw_temp_sizing_c = OpenStudio.convert(cw_temp_sizing_f, 'F', 'C').get
-cw_delta_t_k = OpenStudio.convert(cw_delta_t_r, 'R', 'K').get
-
-sizing_plant = cw_loop.sizingPlant
-sizing_plant.setLoopType('Condenser')
-sizing_plant.setDesignLoopExitTemperature(cw_temp_sizing_c)
-sizing_plant.setLoopDesignTemperatureDifference(cw_delta_t_k)
-
-cw_pump = OpenStudio::Model::PumpVariableSpeed.new(model)
-cw_pump.setName('Condenser Water Loop Pump Water Source')
-cw_pump_head_ft_h2o = 60.0
-cw_pump_head_press_pa = OpenStudio.convert(cw_pump_head_ft_h2o, 'ftH_{2}O', 'Pa').get
-cw_pump.setRatedPumpHead(cw_pump_head_press_pa)
-cw_pump.addToNode(cw_loop.supplyInletNode)
-
-groundHX = OpenStudio::Model::GroundHeatExchangerVertical.new(model)
-# THe default isn't the same as the E+ example file (and apparently wrong)
-groundHX.setUTubeDistance(5.1225E-02)
-
-cw_loop.addSupplyBranchForComponent(groundHX)
-
-ground_temp = OpenStudio::Model::SiteGroundTemperatureDeep.new(model)
-ground_temp.setAllMonthlyTemperatures(
-  [13.03, 13.03, 13.13, 13.30, 13.43, 13.52, 13.62, 13.77, 13.78, 13.55, 13.44, 13.20]
-)
-spm_ground = OpenStudio::Model::SetpointManagerFollowGroundTemperature.new(model)
-spm_ground.setControlVariable('Temperature')
-spm_ground.setOffsetTemperatureDifference(0.0)
-spm_ground.setMaximumSetpointTemperature(80.0)
-spm_ground.setMinimumSetpointTemperature(10.0)
-spm_ground.setReferenceGroundTemperatureObjectType('Site:GroundTemperature:Deep')
-spm_ground.addToNode(cw_loop.supplyOutletNode)
-
-############### HEAT RECOVERY  ###############
-
-heat_recovery_loop = OpenStudio::Model::PlantLoop.new(model)
-heat_recovery_loop.setName('HeatRecovery Loop')
-hr_pump = OpenStudio::Model::PumpVariableSpeed.new(model)
-hr_pump.setName("#{heat_recovery_loop.nameString} VSD Pump")
-hr_pump.addToNode(heat_recovery_loop.supplyInletNode)
-
-hr_spm_sch = OpenStudio::Model::ScheduleRuleset.new(model)
-hr_spm_sch.setName('Hot_Water_Temperature')
-hr_spm_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0, 24, 0, 0), 25.0)
-hr_spm = OpenStudio::Model::SetpointManagerScheduled.new(model, hr_spm_sch)
-hr_spm.addToNode(heat_recovery_loop.supplyOutletNode)
-
-# Water Heater Mixed
-water_heater_mixed = OpenStudio::Model::WaterHeaterMixed.new(model)
-water_heater_mixed.setName('Heat Recovery Tank')
-# The first addSupplyBranchForComponent / addToNode to a supply side will
-# connect the Use Side, so heating loop here
-hw_loop.addSupplyBranchForComponent(water_heater_mixed)
-raise if water_heater_mixed.plantLoop.empty?
-
-# The Second with a supply side node, if use side already connected, will
-# connect the Source Side. You can also be explicit and call
-# addToSourceSideNode
-
-# pipe = OpenStudio::Model::PipeAdiabatic.new(model)
-# heat_recovery_loop.addSupplyBranchForComponent(pipe)
-# water_heater_mixed.addToSourceSideNode(pipe.inletModelObject.get.to_Node.get)
-# pipe.remove
-heat_recovery_loop.addSupplyBranchForComponent(water_heater_mixed)
-
-raise if water_heater_mixed.plantLoop.empty?
-raise if water_heater_mixed.secondaryPlantLoop.empty?
-# More convenient name aliases
-raise if water_heater_mixed.useSidePlantLoop.empty?
-raise if water_heater_mixed.sourceSidePlantLoop.empty?
-raise if water_heater_mixed.useSidePlantLoop.get != hw_loop
-raise if water_heater_mixed.sourceSidePlantLoop.get != heat_recovery_loop
 
 ###############################################################################
 #                         A I R    S O U R C E    H P                         #
@@ -217,10 +136,23 @@ plhp_airsource_clg.capacityModifierFunctionofTemperatureCurve.setName('CapCurveF
 plhp_airsource_clg.electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setName('EIRCurveFuncTemp2 Air Source')
 plhp_airsource_clg.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.setName('EIRCurveFuncPLR2 Air Source')
 
+# Note: Heat Recovery is ONLY available for 'AirSource' HeatPumpPlantLoopEIRs
+tertiary = true
 hw_loop.addSupplyBranchForComponent(plhp_airsource_htg)
+# If not passing tertiary=true here, this would connect the Source Water Side
+# and swich the HP to a WaterSource one
+chw_loop.addDemandBranchForComponent(plhp_airsource_htg, tertiary)
+
+
 chw_loop.addSupplyBranchForComponent(plhp_airsource_clg)
-cw_loop.addDemandBranchForComponent(plhp_airsource_clg)
-heat_recovery_loop.addDemandBranchForComponent(plhp_airsource_clg)
+hw_loop.addDemandBranchForComponent(plhp_airsource_clg, tertiary)
+
+[plhp_airsource_htg, plhp_airsource_clg].each do |plhp|
+  raise unless plhp.condenserType == "AirSource"
+  raise unless plhp.sourceSideWaterLoop.empty?
+  raise if plhp.loadSideWaterLoop.empty?
+  raise if plhp.heatRecoveryLoop.empty?
+end
 
 ###############################################################
 
