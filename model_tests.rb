@@ -969,6 +969,18 @@ class ModelTests < Minitest::Test
     result = sim_test('heatrecovery_chiller.osm')
   end
 
+  def test_heatrecovery_heatpump_rb
+    result = sim_test('heatrecovery_heatpump.rb')
+  end
+
+  # def test_heatrecovery_heatpump_py
+    # result = sim_test('heatrecovery_heatpump.py')
+  # end
+
+  # def test_heatrecovery_heatpump_osm
+    # result = sim_test('heatrecovery_heatpump.osm')
+  # end
+
   def test_hightemprad_rb
     result = sim_test('hightemprad.rb')
   end
