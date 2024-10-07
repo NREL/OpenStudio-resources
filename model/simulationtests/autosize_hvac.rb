@@ -411,13 +411,13 @@ chw_loop.addSupplyBranchForComponent(plhp_clg)
 cw_loop.addDemandBranchForComponent(plhp_clg)
 
 # AirSource w/ Heat Recovery
-plhp_clg_hr = OpenStudio::Model::HeatPumpPlantLoopEIRCooling.new(model)
-plhp_clg_hr.setReferenceCapacity(400000)
-plhp_clg_hr.autosizeSourceSideReferenceFlowRate
-plhp_clg_hr.autosizeLoadSideReferenceFlowRate
-plhp_clg_hr.autosizeHeatRecoveryReferenceFlowRate
-plhp_clg_hr.setSizingFactor(1)
-chw_loop.addSupplyBranchForComponent(plhp_clg_hr)
+plhp_airsource_clg_hr = OpenStudio::Model::HeatPumpPlantLoopEIRCooling.new(model)
+plhp_airsource_clg_hr.setReferenceCapacity(400000)
+plhp_airsource_clg_hr.autosizeSourceSideReferenceFlowRate
+plhp_airsource_clg_hr.autosizeLoadSideReferenceFlowRate
+plhp_airsource_clg_hr.autosizeHeatRecoveryReferenceFlowRate
+plhp_airsource_clg_hr.setSizingFactor(1)
+chw_loop.addSupplyBranchForComponent(plhp_airsource_clg_hr)
 
 ffhp_airsource_clg = OpenStudio::Model::HeatPumpAirToWaterFuelFiredCooling.new(model)
 ffhp_airsource_clg.autosizeNominalCoolingCapacity
@@ -481,23 +481,26 @@ hw_loop.addSupplyBranchForComponent(plhp_htg)
 cw_loop.addDemandBranchForComponent(plhp_htg)
 
 # AirSource w/ Heat Recovery
-plhp_htg_hr = OpenStudio::Model::HeatPumpPlantLoopEIRHeating.new(model)
-plhp_htg_hr.setReferenceCapacity(80000)
-plhp_htg_hr.autosizeSourceSideReferenceFlowRate
-plhp_htg_hr.autosizeLoadSideReferenceFlowRate
-plhp_htg_hr.autosizeHeatRecoveryReferenceFlowRate
-plhp_htg_hr.setSizingFactor(1.0)
-hw_loop.addSupplyBranchForComponent(plhp_htg_hr)
+plhp_airsource_htg_hr = OpenStudio::Model::HeatPumpPlantLoopEIRHeating.new(model)
+plhp_airsource_htg_hr.setReferenceCapacity(80000)
+plhp_airsource_htg_hr.autosizeSourceSideReferenceFlowRate
+plhp_airsource_htg_hr.autosizeLoadSideReferenceFlowRate
+plhp_airsource_htg_hr.autosizeHeatRecoveryReferenceFlowRate
+plhp_airsource_htg_hr.setSizingFactor(1.0)
+hw_loop.addSupplyBranchForComponent(plhp_airsource_htg_hr)
 
 # WaterSource
 plhp_clg.setCompanionHeatingHeatPump(plhp_htg)
 plhp_htg.setCompanionCoolingHeatPump(plhp_clg)
 
 # AirSource w/ Heat Recovery
-plhp_clg_hr.setCompanionHeatingHeatPump(plhp_htg_hr)
-plhp_htg_hr.setCompanionCoolingHeatPump(plhp_clg_hr)
-chw_loop.addDemandBranchForComponent(plhp_htg_hr, true)
-hw_loop.addDemandBranchForComponent(plhp_clg_hr, true)
+plhp_airsource_clg_hr.setCompanionHeatingHeatPump(plhp_airsource_htg_hr)
+plhp_airsource_htg_hr.setCompanionCoolingHeatPump(plhp_airsource_clg_hr)
+# If not passing tertiary=true here, this would connect the Source Water Side
+# and swich the HP to a WaterSource one
+tertiary = true
+chw_loop.addDemandBranchForComponent(plhp_airsource_htg_hr, tertiary)
+hw_loop.addDemandBranchForComponent(plhp_airsource_clg_hr, tertiary)
 
 ffhp_airsource_htg = OpenStudio::Model::HeatPumpAirToWaterFuelFiredHeating.new(model)
 ffhp_airsource_htg.autosizeNominalHeatingCapacity
