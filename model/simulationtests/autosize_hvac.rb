@@ -396,6 +396,7 @@ chw_storage.setSetpointTemperatureSchedule(chw_temp_sch)
 chw_loop.addSupplyBranchForComponent(chw_storage)
 storage_loop.addDemandBranchForComponent(chw_storage)
 
+# WaterSource
 # TODO: I CANNOT GET autosizeReferenceCapacity to work in E+: see https://github.com/NREL/EnergyPlus/issues/8948
 # Yet it is still reported... so whatever
 plhp_clg = OpenStudio::Model::HeatPumpPlantLoopEIRCooling.new(model)
@@ -403,10 +404,20 @@ plhp_clg.setReferenceCapacity(400000)
 # plhp_clg.autosizeReferenceCapacity
 plhp_clg.autosizeSourceSideReferenceFlowRate
 plhp_clg.autosizeLoadSideReferenceFlowRate
+# plhp_clg.autosizeHeatRecoveryReferenceFlowRate
 plhp_clg.setSizingFactor(1)
 chw_loop.addSupplyBranchForComponent(plhp_clg)
 # The Source Side Volume Flow Rate is reported only for WaterSource apparently
 cw_loop.addDemandBranchForComponent(plhp_clg)
+
+# AirSource w/ Heat Recovery
+plhp_airsource_clg_hr = OpenStudio::Model::HeatPumpPlantLoopEIRCooling.new(model)
+plhp_airsource_clg_hr.setReferenceCapacity(400000)
+plhp_airsource_clg_hr.autosizeSourceSideReferenceFlowRate
+plhp_airsource_clg_hr.autosizeLoadSideReferenceFlowRate
+plhp_airsource_clg_hr.autosizeHeatRecoveryReferenceFlowRate
+plhp_airsource_clg_hr.setSizingFactor(1)
+chw_loop.addSupplyBranchForComponent(plhp_airsource_clg_hr)
 
 ffhp_airsource_clg = OpenStudio::Model::HeatPumpAirToWaterFuelFiredCooling.new(model)
 ffhp_airsource_clg.autosizeNominalCoolingCapacity
@@ -456,19 +467,40 @@ hx = OpenStudio::Model::HeatExchangerFluidToFluid.new(model)
 hw_loop.addSupplyBranchForComponent(hx)
 cw_loop.addDemandBranchForComponent(hx)
 
+# WaterSource
 # TODO: I CANNOT GET autosizeReferenceCapacity to work in E+: see https://github.com/NREL/EnergyPlus/issues/8948
 plhp_htg = OpenStudio::Model::HeatPumpPlantLoopEIRHeating.new(model)
 plhp_htg.setReferenceCapacity(80000)
 # plhp_htg.autosizeReferenceCapacity()
 plhp_htg.autosizeSourceSideReferenceFlowRate
 plhp_htg.autosizeLoadSideReferenceFlowRate
+# plhp_htg.autosizeHeatRecoveryReferenceFlowRate
 plhp_htg.setSizingFactor(1.0)
 hw_loop.addSupplyBranchForComponent(plhp_htg)
 # The Source Side Volume Flow Rate is reported only for WaterSource apparently
 cw_loop.addDemandBranchForComponent(plhp_htg)
 
+# AirSource w/ Heat Recovery
+plhp_airsource_htg_hr = OpenStudio::Model::HeatPumpPlantLoopEIRHeating.new(model)
+plhp_airsource_htg_hr.setReferenceCapacity(80000)
+plhp_airsource_htg_hr.autosizeSourceSideReferenceFlowRate
+plhp_airsource_htg_hr.autosizeLoadSideReferenceFlowRate
+plhp_airsource_htg_hr.autosizeHeatRecoveryReferenceFlowRate
+plhp_airsource_htg_hr.setSizingFactor(1.0)
+hw_loop.addSupplyBranchForComponent(plhp_airsource_htg_hr)
+
+# WaterSource
 plhp_clg.setCompanionHeatingHeatPump(plhp_htg)
 plhp_htg.setCompanionCoolingHeatPump(plhp_clg)
+
+# AirSource w/ Heat Recovery
+plhp_airsource_clg_hr.setCompanionHeatingHeatPump(plhp_airsource_htg_hr)
+plhp_airsource_htg_hr.setCompanionCoolingHeatPump(plhp_airsource_clg_hr)
+# If not passing tertiary=true here, this would connect the Source Water Side
+# and swich the HP to a WaterSource one
+tertiary = true
+chw_loop.addDemandBranchForComponent(plhp_airsource_htg_hr, tertiary)
+hw_loop.addDemandBranchForComponent(plhp_airsource_clg_hr, tertiary)
 
 ffhp_airsource_htg = OpenStudio::Model::HeatPumpAirToWaterFuelFiredHeating.new(model)
 ffhp_airsource_htg.autosizeNominalHeatingCapacity
