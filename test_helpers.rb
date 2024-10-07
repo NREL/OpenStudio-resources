@@ -1136,20 +1136,20 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       objs.sort.each do |o|
         obj = o if o.airLoopHVAC.is_initialized
       end
-    when 'HeatPumpPlantLoopEIRHeating' # Need to check a heat pump that has heat recovery or `autosizedHeatRecoveryReferenceFlowRate` won't work
-      objs.sort.each do |o|
-        obj = o if o.heatRecoveryLoop.is_initialized
-      end
-    when 'HeatPumpPlantLoopEIRCooling' # Need to check a heat pump that has heat recovery or `autosizedHeatRecoveryReferenceFlowRate` won't work
-      objs.sort.each do |o|
-        obj = o if o.heatRecoveryLoop.is_initialized
-      end
     end
 
     # Test all autosizedFoo methods on this instance
     autosizable_field_names.each do |auto_field|
       # Make the getter name from the IDD field
       getter_name = "autosized#{auto_field.gsub(/\W/, '').strip}"
+
+      if ['HeatPumpPlantLoopEIRHeating', 'HeatPumpPlantLoopEIRCooling'].include?(type)
+        if getter_name == 'autosizedHeatRecoveryReferenceFlowRate'
+          obj = objs.sort.select { |o| o.heatRecoveryLoop.is_initialized }.first
+        else
+          obj = objs.sort.reject { |o| o.heatRecoveryLoop.is_initialized }.first
+        end
+      end
 
       # Replace the getter name with known alias, if one exists
       obj_aliases = getter_aliases[os_type]
