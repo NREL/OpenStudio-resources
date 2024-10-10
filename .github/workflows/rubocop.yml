@@ -16,7 +16,7 @@ on:
 
 jobs:
   rubocop:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Checkout for PR
@@ -35,7 +35,7 @@ jobs:
 
     - uses: actions/setup-python@v5
       with:
-        python-version: '3.8'
+        python-version: '3.12.2'
 
     - name: Run rubocop
       id: rubocop

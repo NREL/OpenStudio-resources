@@ -1143,6 +1143,14 @@ def autosizing_test(filename, weather_file = nil, model_measures = [], energyplu
       # Make the getter name from the IDD field
       getter_name = "autosized#{auto_field.gsub(/\W/, '').strip}"
 
+      if ['HeatPumpPlantLoopEIRHeating', 'HeatPumpPlantLoopEIRCooling'].include?(type)
+        if getter_name == 'autosizedHeatRecoveryReferenceFlowRate'
+          obj = objs.sort.select { |o| o.heatRecoveryLoop.is_initialized }.first
+        else
+          obj = objs.sort.reject { |o| o.heatRecoveryLoop.is_initialized }.first
+        end
+      end
+
       # Replace the getter name with known alias, if one exists
       obj_aliases = getter_aliases[os_type]
       if obj_aliases && !obj_aliases[getter_name].nil?
