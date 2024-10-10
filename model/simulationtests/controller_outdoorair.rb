@@ -101,11 +101,10 @@ zones = model.getThermalZones.sort_by { |z| z.name.to_s }
 zones.each do |zone|
   terminal = OpenStudio::Model::AirTerminalDualDuctVAV.new(model)
   air_loop.addBranchForZone(zone, terminal)
-end
 
-zone = zones[0]
-zone.setZoneControlHumidistat(humidistat)
-oa_controller.setHumidistatControlZone(zone)
+  zone.setZoneControlHumidistat(humidistat)
+  oa_controller.setHumidistatControlZone(zone)
+end
 
 # add thermostats
 model.add_thermostats({ 'heating_setpoint' => 24,
