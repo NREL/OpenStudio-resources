@@ -18,12 +18,9 @@ model.add_windows({ 'wwr' => 0.4,
                     'offset' => 1,
                     'application_type' => 'Above Floor' })
 
-# add ASHRAE System type 01, PTAC, Residential
-model.add_hvac({ 'ashrae_sys_num' => '01' })
-
 # add thermostats
-model.add_thermostats({ 'heating_setpoint' => 24,
-                        'cooling_setpoint' => 28 })
+model.add_thermostats({ 'heating_setpoint' => 19,
+                        'cooling_setpoint' => 26 })
 
 # assign constructions from a local library to the walls/windows/etc. in the model
 model.set_constructions
@@ -35,16 +32,31 @@ model.set_space_type
 model.add_design_days
 
 # In order to produce more consistent results between different runs,
-# we sort the zones by names
-thermal_zones = model.getThermalZones.sort_by { |z| z.name.to_s }
-# assign mrt weighting factors to all people in a single thermal zone
-thermal_zone = thermal_zones[0]
+# we sort the spaces by names
+spaces = model.getSpaces.sort_by { |s| s.name.to_s }
+
+# Collapse all spaces into one thermal zone
+thermal_zone = spaces[0].thermalZone.get
+spaces.each do |space|
+  z = space.thermalZone.get
+  space.setThermalZone(thermal_zone)
+  z.remove if z != thermal_zone
+end
+thermal_zone.setName('5 spaces zone')
+raise if model.getThermalZones.size != 1
+raise if thermal_zone.spaces.size != spaces.size
+
+# add windows at a 40% window-to-wall ratio
+model.add_windows({ 'wwr' => 0.4,
+                    'offset' => 1,
+                    'application_type' => 'Above Floor' })
 
 # create the zone property user view factors by surface name object
+# There are a number of preconditions you must meet:
+# * All People objects should be assigned directly to a space,
+# * All spaces should be assigned to the same Thermal Zone.
+# The Sum of the MRT Weighting Factors for all People objects in the same Thermal Zone must be < 1.0
 zonemrtcalc = thermal_zone.getZoneMRTCalculation
-
-# get all spaces in the zone
-spaces = thermal_zone.spaces.sort_by { |s| s.name.to_s }
 
 # create thermal comfort schedules
 workeffsch = OpenStudio::Model::ScheduleConstant.new(model)
@@ -82,11 +94,52 @@ spaces.each do |space|
   peoples << people2
 end
 
-# mrt weighting factors for people
-peoples = peoples.uniq.sort_by { |p| p.name.to_s }
-peoples.each do |people|
-  zonemrtcalc.addMRTWeightingFactor(people, 1.0 / peoples.size)
+# Extensible: MRT Weighting Factors for people
+
+people_one_mrt_weighting_factor = 0.37
+people_other_mrt_weighting_factor = (1 - people_one_mrt_weighting_factor) / (peoples.size - 1)
+# people, mrt_weighting_factor
+mrt_weighting_factor_infos = []
+mrt_weighting_factor_infos << [peoples[0], people_one_mrt_weighting_factor]
+peoples[1..-1].each do |people|
+  mrt_weighting_factor_infos << [people, people_other_mrt_weighting_factor]
 end
+# # To add a group, you can use the convenience method
+# bool addMRTWeightingFactor(const People&, double mRTWeightingFactor);
+zonemrtcalc.addMRTWeightingFactor(mrt_weighting_factor_infos[0][0], mrt_weighting_factor_infos[0][1])
+
+# This will in turn actually use the helper class MRTWeightingFactor
+zonemrtcalc.addMRTWeightingFactor(OpenStudio::Model::MRTWeightingFactor.new(mrt_weighting_factor_infos[1][0], mrt_weighting_factor_infos[1][1]))
+
+# NOTE: if you call addMRTWeightingFactor with a People object that is already in the list, it will update the
+# MRTWeightingFactor value for that People object.
+
+raise unless zonemrtcalc.numberofMRTWeightingFactors == 2
+# This is a vector of MRTWeightingFactor
+raise unless zonemrtcalc.mRTWeightingFactors.size == 2
+
+raise unless zonemrtcalc.mRTWeightingFactorIndex(peoples[0]).get == 0
+raise unless zonemrtcalc.mRTWeightingFactorIndex(peoples[1]).get == 1
+
+first_mrt_group = zonemrtcalc.mRTWeightingFactors.first
+# This returns an OptionalMRTWeightingFactor
+first_mrt_group_ = zonemrtcalc.getMRTWeightingFactor(0)
+raise unless first_mrt_group_.is_initialized
+raise unless first_mrt_group.people == first_mrt_group_.get.people
+
+zonemrtcalc.removeMRTWeightingFactor(0)
+raise unless zonemrtcalc.numberofMRTWeightingFactors == 1
+raise unless zonemrtcalc.numExtensibleGroups == 1
+raise unless zonemrtcalc.mRTWeightingFactorIndex(peoples[1]).get == 0
+
+zonemrtcalc.removeAllMRTWeightingFactors
+raise unless zonemrtcalc.numberofMRTWeightingFactors == 0
+raise unless zonemrtcalc.numExtensibleGroups == 0
+
+# There is also a batch add
+mrt_groups = mrt_weighting_factor_infos.map { |g| OpenStudio::Model::MRTWeightingFactor.new(g[0], g[1]) }
+zonemrtcalc.addMRTWeightingFactors(mrt_groups)
+raise unless zonemrtcalc.numberofMRTWeightingFactors == peoples.size
 
 # save the OpenStudio model (.osm)
 model.save_openstudio_osm({ 'osm_save_directory' => Dir.pwd,
