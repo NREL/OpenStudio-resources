@@ -2307,6 +2307,19 @@ class ModelTests < Minitest::Test
     result = sim_test('zone_mixing.py')
   end
 
+  def test_zonemrtcalculation_rb
+    result = sim_test('zonemrtcalculation.rb')
+  end
+
+  def test_zonemrtcalculation_py
+    result = sim_test('zonemrtcalculation.py')
+  end
+
+  # TODO: To be added in the next official release after: 3.11.0
+  # def test_zonemrtcalculation_osm
+  #   result = sim_test('zonemrtcalculation.osm')
+  # end
+
   def test_zoneventilation_windandstackopenarea_rb
     result = sim_test('zoneventilation_windandstackopenarea.rb')
   end
