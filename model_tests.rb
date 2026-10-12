@@ -517,11 +517,11 @@ class ModelTests < Minitest::Test
           assert_equal('Explicit', source.get, "#{surface.nameString} should be written to the surface")
         elsif space_level_prefixes.any? { |prefix| expected_construction.start_with?(prefix) }
           # Without E+ Spaces, they are hard-assigned by the FT
-          expected = ($UseEplusSpaces == false) ? 'Explicit' : 'Space'
+          expected = $UseEplusSpaces == false ? 'Explicit' : 'Space'
           assert_equal(expected, source.get, "Wrong Construction Assignment Source for #{surface.nameString}")
         else
           # Without E+ Spaces, combining the spaces of a zone hard-assigns their constructions
-          expected = ($UseEplusSpaces == false) ? ['Building', 'Explicit'] : ['Building']
+          expected = $UseEplusSpaces == false ? ['Building', 'Explicit'] : ['Building']
           assert_includes(expected, source.get, "Wrong Construction Assignment Source for #{surface.nameString}")
         end
         n_sources_checked += 1
